@@ -9,7 +9,7 @@
 ----- [Samples/Socket](Samples/Samples.Socket)  
 ----- [Samples/Tracking](Samples/Samples.Tracking)  
 ----- [Samples/Yolo-tiny](Samples/Samples.Yolo-tiny)  
------ [Samples/YoloModel-tiny](Samples/YoloModel-tiny) ... モデルのサンプル。独自モデルの作り方は[YoloSamples](https://github.com/husty530/YoloSamples)へ。  
+----- [Samples/YoloModel-tiny](Samples/YoloModel-tiny)  
 
 ### Tools
 ----- [Tools/NncDataArranger](Tools/Tools.NncDataArranger) ... Sony Neural Network Console の簡易なデータ作成ツール  
