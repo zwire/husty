@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>yamashita</Authors>
+    <Company>office</Company>
+    <Product>product</Product>
+    <Description>HOG, Fourier1D and Fourier2D which are expected to be used in Yamashita.ML.Svm.</Description>
+    <PackageProjectUrl>https://github.com/husty530/Yamashita-public/tree/master/LIB-sharp/Yamashita.Feature</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/husty530/Yamashita-public</RepositoryUrl>
+    <Version>1.0.6</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenCvSharp4" Version="4.5.0.20201013" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Husty\Husty.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
+    <PackageReference Include="Microsoft.Azure.Kinect.Sensor" Version="1.4.1" />
+    <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.1.20210210" />
+    <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.5.1.20210210" />
+    <PackageReference Include="ReactiveProperty" Version="7.5.1" />
+    <PackageReference Include="System.Reactive" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lib\cs\Husty.OpenCvSharp.DepthCamera\Husty.OpenCvSharp.DepthCamera.csproj" />
+  </ItemGroup>
+
+</Project>

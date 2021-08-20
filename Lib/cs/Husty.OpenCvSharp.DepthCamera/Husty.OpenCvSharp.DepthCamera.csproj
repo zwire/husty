@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+    <Authors>yamashita</Authors>
+    <Company>office</Company>
+    <Product>product</Product>
+    <Description>Azure Kinect, Intel Realsense</Description>
+    <PackageProjectUrl>https://github.com/husty530/Yamashita-public/tree/master/LIB-sharp/Yamashita.DepthCamera</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/husty530/Yamashita-public</RepositoryUrl>
+    <Version>1.0.16</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Intel.RealSenseWithNativeDll" Version="2.47.0" />
+    <PackageReference Include="Microsoft.Azure.Kinect.Sensor" Version="1.4.1" />
+    <PackageReference Include="OpenCvSharp4" Version="4.5.0.20201013" />
+    <PackageReference Include="System.Reactive" Version="5.0.0" />
+  </ItemGroup>
+
+</Project>
