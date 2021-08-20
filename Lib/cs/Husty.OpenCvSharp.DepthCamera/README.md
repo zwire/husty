@@ -1,4 +1,4 @@
-# Yamashita.DepthCamera
+# Husty.OpenCvSharp.DepthCamera
 
 Kinect, Realsenseが同一のインターフェースで動きます。  
 使い方はIDepthCamera.csのとおり, ConnectとDisconnectだけ。  
