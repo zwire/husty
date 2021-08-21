@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Samples.Tracking
+namespace Test.Tracking
 {
     /// <summary>
     /// Interaction logic for App.xaml

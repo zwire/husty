@@ -1,17 +1,16 @@
 ﻿using System;
 using OpenCvSharp;
-using Husty.TcpSocket;
 
-namespace Husty.OpenCvSharp.TcpSocketExtensions
+namespace Husty.TcpSocket.MatExtensions
 {
-    public static class TcpSocketExtensions
+    public static class MatExtensions
     {
 
         /// <summary>
         /// Send 'Mat' image as encoded byte array
         /// </summary>
         /// <param name="image"></param>
-        public static void SendImage(this TcpSocketBase socketBase, Mat image)
+        public static void SendImage(this ITcpSocket socketBase, Mat image)
         {
             Cv2.ImEncode(".png", image, out byte[] buf);
             var data = Convert.ToBase64String(buf);
@@ -23,7 +22,7 @@ namespace Husty.OpenCvSharp.TcpSocketExtensions
         /// Receive byte array & convert 'Mat' image
         /// </summary>
         /// <returns></returns>
-        public static Mat ReceiveImage(this TcpSocketBase socketBase)
+        public static Mat ReceiveImage(this ITcpSocket socketBase)
         {
             var recv = socketBase.Receive<string>();
             var data = recv.Split(',')[1];

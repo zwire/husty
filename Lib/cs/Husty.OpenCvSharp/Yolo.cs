@@ -112,12 +112,12 @@ namespace Husty.OpenCvSharp
                 results.Add((_labels[classIds[i]], confidences[i], centers[i], new Size(boxes[i].Width, boxes[i].Height), boxes[i]));
                 switch (_draw)
                 {
-                    case (DrawingMode.Off):
+                    case DrawingMode.Off:
                         break;
-                    case (DrawingMode.Point):
+                    case DrawingMode.Point:
                         DrawPoint(image, classIds[i], centers[i]);
                         break;
-                    case (DrawingMode.Rectangle):
+                    case DrawingMode.Rectangle:
                         DrawRect(image, classIds[i], confidences[i], centers[i], new Size(boxes[i].Width, boxes[i].Height));
                         break;
                 }
@@ -195,7 +195,7 @@ namespace Husty.OpenCvSharp
         public List<Size> Sizes { private set; get; }
 
         /// <summary>
-        /// Detected Rectangles
+        /// Detected rectangles
         /// </summary>
         public List<Rect> Boxes { private set; get; }
 

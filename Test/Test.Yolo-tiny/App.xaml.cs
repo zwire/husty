@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Samples.Yolo_tiny
+namespace Test.Yolo_tiny
 {
     /// <summary>
     /// Interaction logic for App.xaml

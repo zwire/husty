@@ -12,7 +12,7 @@ using Husty.OpenCvSharp.DepthCamera;
 using Scalar = OpenCvSharp.Scalar;
 using Point = OpenCvSharp.Point;
 
-namespace Samples.DepthCameras
+namespace Test.DepthCameras
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

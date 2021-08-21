@@ -19,7 +19,7 @@ namespace Husty.OpenCvSharp
         // ------- Constructor ------- //
 
         /// <summary>
-        /// For Yamashita's private use
+        /// 
         /// </summary>
         /// <param name="mode">Train or Inference</param>
         /// <param name="modelPath">(.xml)</param>

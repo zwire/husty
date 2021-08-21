@@ -3,8 +3,9 @@ using System.Windows;
 using System.IO;
 using OpenCvSharp;
 using Husty.TcpSocket;
+using Husty.TcpSocket.MatExtensions;
 
-namespace Samples.Socket
+namespace Test.TcpSocket
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -35,8 +36,8 @@ namespace Samples.Socket
                         var path = recv.Split(";")[1];
                         if (File.Exists(path))
                         {
-                            Cv2.ImShow(" ", Cv2.ImRead(path));
-                            Cv2.WaitKey(0);
+                            var img = Cv2.ImRead(path);
+                            _server.SendImage(img);
                         }
                     }
                     recv = recv.Replace(",", "\n");

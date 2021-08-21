@@ -5,7 +5,7 @@ using System.Linq;
 using OpenCvSharp;
 using Husty.OpenCvSharp;
 
-namespace Samples.BayesBinarization
+namespace Test.BayesBinarization
 {
     class Program
     {

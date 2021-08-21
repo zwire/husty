@@ -8,7 +8,7 @@ using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Husty.OpenCvSharp;
 
-namespace Samples.Yolo_tiny
+namespace Test.Yolo_tiny
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -25,9 +25,9 @@ namespace Samples.Yolo_tiny
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
             var detector = new Yolo(
-                "..\\..\\..\\..\\YoloModel-tiny\\yolov4-tiny.cfg",
-                "..\\..\\..\\..\\YoloModel-tiny\\coco.names", 
-                "..\\..\\..\\..\\YoloModel-tiny\\yolov4-tiny.weights", 
+                "..\\..\\..\\..\\Test.YoloModel-tiny\\yolov4-tiny.cfg",
+                "..\\..\\..\\..\\Test.YoloModel-tiny\\coco.names", 
+                "..\\..\\..\\..\\Test.YoloModel-tiny\\yolov4-tiny.weights", 
                 new OpenCvSharp.Size(640, 480),
                 DrawingMode.Off
             );

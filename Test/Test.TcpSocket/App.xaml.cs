@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Samples.DepthCameras
+namespace Test.Socket
 {
     /// <summary>
     /// Interaction logic for App.xaml
