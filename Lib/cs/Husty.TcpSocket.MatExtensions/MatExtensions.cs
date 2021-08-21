@@ -7,10 +7,10 @@ namespace Husty.TcpSocket.MatExtensions
     {
 
         /// <summary>
-        /// Send 'Mat' image as encoded byte array
+        /// Send Mat as encoded byte array
         /// </summary>
         /// <param name="image"></param>
-        public static void SendImage(this ITcpSocket socketBase, Mat image)
+        public static void SendMat(this ITcpSocket socketBase, Mat image)
         {
             Cv2.ImEncode(".png", image, out byte[] buf);
             var data = Convert.ToBase64String(buf);
@@ -19,10 +19,10 @@ namespace Husty.TcpSocket.MatExtensions
         }
 
         /// <summary>
-        /// Receive byte array & convert 'Mat' image
+        /// Receive byte array & convert Mat
         /// </summary>
         /// <returns></returns>
-        public static Mat ReceiveImage(this ITcpSocket socketBase)
+        public static Mat ReceiveMat(this ITcpSocket socketBase)
         {
             var recv = socketBase.Receive<string>();
             var data = recv.Split(',')[1];

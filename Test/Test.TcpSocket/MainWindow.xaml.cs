@@ -37,7 +37,7 @@ namespace Test.TcpSocket
                         if (File.Exists(path))
                         {
                             var img = Cv2.ImRead(path);
-                            _server.SendImage(img);
+                            _server.SendMat(img);
                         }
                     }
                     recv = recv.Replace(",", "\n");

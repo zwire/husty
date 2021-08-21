@@ -25,7 +25,7 @@ namespace Test.TcpSocket
             _client.Send(msg);
             if (msg.Length > 6 && msg.Substring(0, 6) == "image;")
             {
-                var img = _client.ReceiveImage();
+                var img = _client.ReceiveMat();
                 Cv2.ImShow(" ", img);
                 Cv2.WaitKey(0);
             }
