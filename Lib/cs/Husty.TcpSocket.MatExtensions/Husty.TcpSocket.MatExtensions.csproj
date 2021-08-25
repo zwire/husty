@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Authors>Husty</Authors>
+    <Company>Husty</Company>
+    <Product>Husty</Product>
   </PropertyGroup>
 
   <ItemGroup>

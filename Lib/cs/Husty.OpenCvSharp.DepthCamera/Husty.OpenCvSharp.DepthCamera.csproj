@@ -3,13 +3,13 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Platforms>AnyCPU;x64;x86</Platforms>
-    <Authors>yamashita</Authors>
-    <Company>office</Company>
-    <Product>product</Product>
+    <Authors>Husty</Authors>
+    <Company>Husty</Company>
+    <Product>Husty</Product>
     <Description>Azure Kinect, Intel Realsense</Description>
-    <PackageProjectUrl>https://github.com/husty530/Yamashita-public/tree/master/LIB-sharp/Yamashita.DepthCamera</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/husty530/Yamashita-public</RepositoryUrl>
-    <Version>1.0.16</Version>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl></RepositoryUrl>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

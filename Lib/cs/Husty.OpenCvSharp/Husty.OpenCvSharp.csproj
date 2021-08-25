@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Authors>yamashita</Authors>
-    <Company>office</Company>
-    <Product>product</Product>
-    <Description>HOG, Fourier1D and Fourier2D which are expected to be used in Yamashita.ML.Svm.</Description>
-    <PackageProjectUrl>https://github.com/husty530/Yamashita-public/tree/master/LIB-sharp/Yamashita.Feature</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/husty530/Yamashita-public</RepositoryUrl>
-    <Version>1.0.6</Version>
+    <Authors>Husty</Authors>
+    <Company>Husty</Company>
+    <Product>Husty</Product>
+    <Description></Description>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl></RepositoryUrl>
+    <Version>1.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
