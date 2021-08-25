@@ -38,54 +38,58 @@ namespace Husty.OpenCvSharp
         /// <summary>
         /// Discrete Fourier Transformation
         /// </summary>
-        /// <param name="result">Histogram of frequency and value</param>
-        unsafe public void Dft(out List<(double Frequency, float Value)> result)
+        /// <returns>Histogram of frequency and value</returns>
+        unsafe public List<(double Frequency, float Value)> DftWithHistogram()
         {
             Cv2.Dft(_complex, _complex);
             Cv2.Split(_complex, out var planes);
             Cv2.Magnitude(planes[0], planes[1], planes[0]);
             var data = (float*)planes[0].Data;
-            result = new List<(double Frequency, float Value)>();
+            var result = new List<(double Frequency, float Value)>();
             for (int i = 0; i < _sampleCount / 2; i++)
                 result.Add(((double)i / _sampleCount * _samplingRate, data[i]));
+            return result;
         }
 
         /// <summary>
         /// Discrete Fourier Transformation
         /// </summary>
-        /// <param name="feature">Feature of values</param>
-        public void Dft(out float[] feature)
+        /// <returns>Feature of values</returns>
+        public float[] Dft()
         {
-            Dft(out List<(double Frequency, float Value)> list);
-            feature = new float[list.Count];
+            var list = DftWithHistogram();
+            var feature = new float[list.Count];
             for (int i = 0; i < feature.Length; i++)
                 feature[i] = list[i].Value;
+            return feature;
         }
 
         /// <summary>
         /// Inverse Discrete Fourier Transformation
         /// </summary>
-        /// <param name="result">Time and value</param>
-        unsafe public void Idft(out List<(double Time, float Value)> result)
+        /// <returns>Time and value</returns>
+        unsafe public List<(double Time, float Value)> IdftWithTime()
         {
             Cv2.Idft(_complex, _complex, DftFlags.Scale);
             Cv2.Split(_complex, out var planes);
             var data = (float*)planes[0].Data;
-            result = new List<(double Time, float Value)>();
+            var result = new List<(double Time, float Value)>();
             for (int i = 0; i < _sampleCount; i++)
                 result.Add((i / _samplingRate, data[i]));
+            return result;
         }
 
         /// <summary>
         /// Inverse Discrete Fourier Transformation
         /// </summary>
-        /// <param name="feature">Feature of values</param>
-        public void Idft(out float[] feature)
+        /// <returns>Feature of values</returns>
+        public float [] Idft()
         {
-            Idft(out List<(double Time, float Value)> list);
-            feature = new float[list.Count];
+            var list = IdftWithTime();
+            var feature = new float[list.Count];
             for (int i = 0; i < feature.Length; i++)
                 feature[i] = list[i].Value;
+            return feature;
         }
 
         /// <summary>

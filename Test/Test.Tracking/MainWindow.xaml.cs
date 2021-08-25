@@ -18,17 +18,16 @@ namespace Test.Tracking
     {
 
         private IDisposable _connector;
-        private readonly Yolo detector;
+        private readonly YoloDetector _detector;
 
         public MainWindow()
         {
             InitializeComponent();
-            detector = new Yolo(
+            _detector = new(
                 "..\\..\\..\\..\\Test.YoloModel-tiny\\yolov4-tiny.cfg",
                 "..\\..\\..\\..\\Test.YoloModel-tiny\\coco.names",
                 "..\\..\\..\\..\\Test.YoloModel-tiny\\yolov4-tiny.weights",
-                new OpenCvSharp.Size(640, 480),
-                DrawingMode.Off
+                new OpenCvSharp.Size(640, 480)
                 );
         }
 
@@ -43,8 +42,8 @@ namespace Test.Tracking
                     .Subscribe(frame =>
                     {
                         Cv2.Resize(frame, frame, new OpenCvSharp.Size(512, 288));
-                        detector.Run(ref frame, out var results);
-                        tracker.Update(ref frame, results.Select(r => (r.Label, r.Center, r.Size)).ToList(), out var _);
+                        var results = _detector.Run(frame).Select(r => (r.Label, r.Center, new OpenCvSharp.Size(r.Box.Width, r.Box.Height))).ToList();
+                        tracker.Update(ref frame, results, out var _);
                         Dispatcher.Invoke(() => Image.Source = frame.ToBitmapSource());
                     });
             }
@@ -58,8 +57,8 @@ namespace Test.Tracking
                     .Subscribe(frame =>
                     {
                         Cv2.Resize(frame, frame, new OpenCvSharp.Size(512, 288));
-                        detector.Run(ref frame, out var results);
-                        tracker.Update(ref frame, results.Select(r => (r.Label, r.Center, r.Size)).ToList(), out var _);
+                        var results = _detector.Run(frame).Select(r => (r.Label, r.Center, new OpenCvSharp.Size(r.Box.Width, r.Box.Height))).ToList();
+                        tracker.Update(ref frame, results, out var _);
                         Dispatcher.Invoke(() => Image.Source = frame.ToBitmapSource());
                     });
         }

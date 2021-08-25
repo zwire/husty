@@ -24,12 +24,11 @@ namespace Test.Yolo_tiny
 
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
-            var detector = new Yolo(
+            var detector = new YoloDetector(
                 "..\\..\\..\\..\\Test.YoloModel-tiny\\yolov4-tiny.cfg",
                 "..\\..\\..\\..\\Test.YoloModel-tiny\\coco.names", 
                 "..\\..\\..\\..\\Test.YoloModel-tiny\\yolov4-tiny.weights", 
-                new OpenCvSharp.Size(640, 480),
-                DrawingMode.Off
+                new OpenCvSharp.Size(640, 480)
             );
             var op = new OpenFileDialog { Filter = "Image or Video(*.png, *.jpg, *.mp4, *.avi)|*.png;*.jpg;*mp4;*.avi" };
             if (op.ShowDialog() == true)
@@ -44,12 +43,12 @@ namespace Test.Yolo_tiny
                         var frame = new Mat();
                         while (cap.Read(frame))
                         {
-                            detector.Run(ref frame, out var results);
-                            results
+                            detector
+                                .Run(frame)
                                 .Where(r => r.Label == "person")
-                                .Where(r => r.Confidence > 0.5)
+                                .Where(r => r.Confidence > 0.8)
                                 .ToList()
-                                .ForEach(r => Cv2.Rectangle(frame, r.Box, new Scalar(0, 0, 255), 2));
+                                .ForEach(r => r.DrawRect(frame, new Scalar(0, 0, 255)));
                             Dispatcher.Invoke(() => Image.Source = frame.ToBitmapSource());
                         }
                         
@@ -58,7 +57,10 @@ namespace Test.Yolo_tiny
                 else
                 {
                     var img = Cv2.ImRead(file);
-                    detector.Run(ref img, out var results);
+                    detector
+                        .Run(img)
+                        .ToList()
+                        .ForEach(r => r.DrawRect(img, new Scalar(0, 0, 255)));
                     Image.Source = img.ToBitmapSource();
                 }
             }
@@ -71,12 +73,12 @@ namespace Test.Yolo_tiny
                     var frame = new Mat();
                     while (cap.Read(frame))
                     {
-                        detector.Run(ref frame, out var results);
-                        results
+                        detector
+                            .Run(frame)
                             .Where(r => r.Label == "person")
-                            .Where(r => r.Confidence > 0.5)
+                            .Where(r => r.Confidence > 0.8)
                             .ToList()
-                            .ForEach(r => Cv2.Rectangle(frame, r.Box, new Scalar(0, 0, 255), 2));
+                            .ForEach(r => r.DrawRect(frame, new Scalar(0, 0, 255)));
                         Dispatcher.Invoke(() => Image.Source = frame.ToBitmapSource());
                     }
 

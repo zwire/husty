@@ -45,41 +45,36 @@ namespace Husty.OpenCvSharp
             bayes.Save(_modelPath);
         }
 
-        public override void Predict(List<float[]> input, out List<float> output)
+        public override List<float> Predict(List<float[]> input)
         {
             if (_mode != Mode.Inference) new Exception("Mode should be 'Inference'.");
+            var output = new List<float>();
             if (input.Count == 0)
-            {
-                output = new List<float>();
-                return;
-            }
+                return output;
             using var inputMat = new Mat(input.Count, input[0].Length, MatType.CV_32F, input.SelectMany(i => i).ToArray());
             using var outputMat = new Mat();
             _classifier.Predict(inputMat, outputMat);
-            output = new List<float>();
             for (int i = 0; i < outputMat.Rows; i++) output.Add(outputMat.At<float>(i, 0));
+            return output;
         }
 
-        public void PredictProb(List<float[]> input, out List<float> output, out List<float> probability)
+        public (List<float> Output, List<float> Probability) PredictProb(List<float[]> input)
         {
             if (_mode != Mode.Inference) new Exception("Mode should be 'Inference'.");
+            var output = new List<float>();
+            var probability = new List<float>();
             if (input.Count == 0)
-            {
-                output = new List<float>();
-                probability = new List<float>();
-                return;
-            }
+                return (output, probability);
             using var inputMat = new Mat(input.Count, input[0].Length, MatType.CV_32F, input.SelectMany(i => i).ToArray());
             using var outputMat = new Mat();
             using var probMat = new Mat();
             _classifier.PredictProb(inputMat, outputMat, probMat);
-            output = new List<float>();
-            probability = new List<float>();
             for (int i = 0; i < outputMat.Rows; i++)
             {
                 output.Add(outputMat.At<float>(i, 0));
                 probability.Add(probMat.At<float>(i, 0));
             }
+            return (output, probability);
         }
 
     }

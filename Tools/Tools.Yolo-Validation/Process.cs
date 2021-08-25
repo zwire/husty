@@ -10,7 +10,7 @@ namespace Tools.Yolo_Validation
 {
     static class Process
     {
-        private static Yolo _detector;
+        private static YoloDetector _detector;
         private static List<(string Name, Mat Image, List<(int Label, Point Center, Size Size)> Labels)> _dataSet;
         private static string _className;
         private static int _width;
@@ -43,7 +43,7 @@ namespace Tools.Yolo_Validation
 
                 var watch = new Stopwatch();
                 watch.Start();
-                _detector.Run(ref img, out var results);
+                var results = _detector.Run(img);
                 watch.Stop();
                 var time = watch.ElapsedMilliseconds;
 
@@ -55,7 +55,7 @@ namespace Tools.Yolo_Validation
                     var iou = 0.0;
                     foreach (var l in ds.Labels)
                     {
-                        iou = CalcIou(r.Center, r.Size, l.Center, l.Size);
+                        iou = CalcIou(r.Box, new Rect(new Point(l.Center.X - l.Size.Width / 2, l.Center.Y - l.Size.Height / 2), l.Size));
                         if (iou >= _iouThresh)
                         {
                             tp++;
@@ -120,7 +120,7 @@ namespace Tools.Yolo_Validation
             if (_iouThresh < 0.0 || _iouThresh > 1.0) return "Invalid IoU Threshold Range Error";
             try
             {
-                _detector = new Yolo(cfg, names, weights, new Size(_width, _height), DrawingMode.Off, 0.25f, 0.01f);
+                _detector = new YoloDetector(cfg, names, weights, new Size(_width, _height), 0.25f);
             }
             catch
             {
@@ -182,12 +182,10 @@ namespace Tools.Yolo_Validation
             return "Success";
         }
 
-        private static double CalcIou(Point p1, Size s1, Point p2, Size s2)
+        private static double CalcIou(Rect r1, Rect r2)
         {
-            var area1 = s1.Width * s1.Height;
-            var area2 = s2.Width * s2.Height;
-            var r1 = new Rect(p1, s1);
-            var r2 = new Rect(p2, s2);
+            var area1 = r1.Width * r1.Height;
+            var area2 = r2.Width * r2.Height;
             if (r1.Left > r2.Right || r2.Left > r1.Right || r1.Top > r2.Bottom || r2.Top > r1.Bottom) return 0.0;
             var left = Math.Max(r1.Left, r2.Left);
             var right = Math.Min(r1.Right, r2.Right);

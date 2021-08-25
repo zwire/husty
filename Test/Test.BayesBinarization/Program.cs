@@ -46,7 +46,7 @@ namespace Test.BayesBinarization
                 {
                     var bgrs = ImageToNormalizedList(image);
                     var bay = new BayesClassifier(Mode.Inference);
-                    bay.PredictProb(bgrs, out var output, out var probability);
+                    var (output, probability) = bay.PredictProb(bgrs);
                     Console.WriteLine("'Binary' is 0. 'Probability' is 1.");
                     Console.Write("Input : ");
                     var choice = int.Parse(Console.ReadLine());

@@ -98,7 +98,7 @@ namespace Husty.OpenCvSharp
 
         public abstract void Train(bool append, double? param);
 
-        public abstract void Predict(List<float[]> input, out List<float> output);
+        public abstract List<float> Predict(List<float[]> input);
 
         protected abstract void LoadModel();
 

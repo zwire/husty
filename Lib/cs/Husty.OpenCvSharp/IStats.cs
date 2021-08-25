@@ -41,7 +41,7 @@ namespace Husty.OpenCvSharp
         /// <summary>
         /// </summary>
         /// <param name="input">Feature Vecto</param>
-        /// <param name="output">0 or 1</param>
-        public void Predict(List<float[]> input, out List<float> output);
+        /// <returns>Sequence of 0 or 1</returns>
+        public List<float> Predict(List<float[]> input);
     }
 }

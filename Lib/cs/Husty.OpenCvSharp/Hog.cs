@@ -41,12 +41,12 @@ namespace Husty.OpenCvSharp
         /// Process one frame.
         /// </summary>
         /// <param name="input">8 bit gray-scale image. It's going to be resized automatically.</param>
-        /// <param name="result">Feature of values</param>
-        public void Compute(Mat input, out float[] result)
+        /// <returns>Feature of values</returns>
+        public float[] Compute(Mat input)
         {
             if (input.Type() != MatType.CV_8U) new Exception("MatType should be 'CV_8U'.");
             Cv2.Resize(input, input, _imageSize);
-            result = _hog.Compute(input);
+            return _hog.Compute(input);
         }
 
     }

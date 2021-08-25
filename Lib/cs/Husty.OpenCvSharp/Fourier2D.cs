@@ -45,14 +45,14 @@ namespace Husty.OpenCvSharp
         /// <summary>
         /// Discrete Fourier Transformation
         /// </summary>
-        /// <param name="feature">Frequency feature of image data</param>
-        unsafe public void Dft(out float[] feature)
+        /// <remarks>Frequency feature of image data</remarks>
+        unsafe public float[] Dft()
         {
             Cv2.Dft(_complex, _complex);
             Cv2.Split(_complex, out var planes);
             Cv2.Magnitude(planes[0], planes[1], planes[0]);
             var tmp = planes[0];
-            feature = new float[tmp.Rows * tmp.Cols];
+            var feature = new float[tmp.Rows * tmp.Cols];
             var data = (float*)tmp.Data;
             for (int i = 0; i < feature.Length; i++)
                 feature[i] = data[i];
@@ -75,23 +75,25 @@ namespace Husty.OpenCvSharp
             tr1.CopyTo(ViewImage[bl]);
             bl1.CopyTo(ViewImage[tr]);
             br1.CopyTo(ViewImage[tl]);
+            return feature;
         }
 
         /// <summary>
         /// Inverse Discrete Fourier Transformation
         /// </summary>
-        /// <param name="feature">Feature of values</param>
-        unsafe public void Idft(out float[] feature)
+        /// <returns>Feature of values</returns>
+        unsafe public float[] Idft()
         {
             Cv2.Idft(_complex, _complex, DftFlags.Scale);
             Cv2.Split(_complex, out Mat[] planes);
             using var tmp = planes[0][new Rect(0, 0, planes[0].Width, planes[0].Height)].Clone();
-            feature = new float[tmp.Rows * tmp.Cols];
+            var feature = new float[tmp.Rows * tmp.Cols];
             var data = (float*)tmp.Data;
             for (int i = 0; i < feature.Length; i++)
                 feature[i] = data[i];
             Cv2.Normalize(tmp, tmp, 255, 0, NormTypes.MinMax);
             tmp.ConvertTo(ViewImage, MatType.CV_8U);
+            return feature;
         }
 
     }
