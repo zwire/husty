@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Authors>Husty</Authors>
+    <Authors>yamashita</Authors>
     <Company>Husty</Company>
     <Product>Husty</Product>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenCvSharp4" Version="4.5.0.20201013" />
+    <PackageReference Include="OpenCvSharp4" Version="4.5.3.20210725" />
   </ItemGroup>
 
   <ItemGroup>
