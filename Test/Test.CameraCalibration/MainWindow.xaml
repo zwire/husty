@@ -23,7 +23,7 @@
             <ColumnDefinition Width="8*"/>
         </Grid.ColumnDefinitions>
         <Viewbox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="5">
-            <Button x:Name="OpenCameraButton" Content="OpenCamera" Width="100" Click="OpenCameraButton_Click"/>
+            <Button x:Name="OpenButton" Content="OpenSource" Width="100" Click="OpenButton_Click"/>
         </Viewbox>
         <Viewbox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="5">
             <Button x:Name="ShutterButton" Content="Shutter" Width="100" Click="ShutterButton_Click"/>

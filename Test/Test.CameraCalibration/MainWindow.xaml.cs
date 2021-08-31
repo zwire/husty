@@ -7,9 +7,11 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Husty.OpenCvSharp;
+using System.Threading;
 
 namespace Test.CameraCalibration
 {
@@ -37,15 +39,28 @@ namespace Test.CameraCalibration
             ShutterButton.Content = "SaveLoadIntrinstic";
         }
 
-        private void OpenCameraButton_Click(object sender, RoutedEventArgs e)
+        private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
             _isSampling = false;
             if (!_cameraOn)
             {
-                _cap = new(0);
+                using var cofd = new CommonOpenFileDialog()
+                {
+                    InitialDirectory = "C:",
+                    IsFolderPicker = false
+                };
+                cofd.Filters.Add(new CommonFileDialogFilter("Video", "*.mp4;*.avi"));
+                if (cofd.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    _cap = new(cofd.FileName);
+                }
+                else
+                {
+                    _cap = new(0);
+                }
                 if (_cap.IsOpened())
                 {
-                    OpenCameraButton.Content = "CloseCamera";
+                    OpenButton.Content = "Stop/Close";
                     ShutterButton.IsEnabled = true;
                     ShutterButton.Content = "Shutter";
                     _cameraOn = true;
@@ -54,22 +69,27 @@ namespace Test.CameraCalibration
                         .Where(_ => (bool)_cap?.Read(_frame))
                         .Subscribe(_ =>
                         {
-                            if (_paramIn != null)
+                            try
                             {
-                                _frame = _frame.Undistort(_paramIn.CameraMatrix, _paramIn.DistortionCoeffs);
+                                if (_paramIn != null)
+                                {
+                                    _frame = _frame?.Undistort(_paramIn.CameraMatrix, _paramIn.DistortionCoeffs);
+                                }
+                                Dispatcher.Invoke(() =>
+                                {
+                                    Image.Width = _frame.Width;
+                                    Image.Height = _frame.Height;
+                                    Image.Source = _frame.ToBitmapSource();
+                                });
+                                Thread.Sleep(1000 / (int)_cap.Fps);
                             }
-                            Dispatcher.Invoke(() =>
-                            {
-                                Image.Width = _frame.Width;
-                                Image.Height = _frame.Height;
-                                Image.Source = _frame.ToBitmapSource();
-                            });
+                            catch { }
                         });
                 }
             }
             else
             {
-                OpenCameraButton.Content = "OpenCamera";
+                OpenButton.Content = "OpenSource";
                 ShutterButton.Content = "SaveLoadIntrinstic";
                 _cameraConnector?.Dispose();
                 _cap?.Dispose();
@@ -92,17 +112,17 @@ namespace Test.CameraCalibration
                 var dir = Directory.GetCurrentDirectory();
                 var files = Directory.GetFiles(dir, "*.png");
                 var chess = new Chessboard(7, 10, 32.5f);
-                _paramIn = IntrinsticCameraCalibrator.CalibrateWithChessboardImages(chess, files);
+                _paramIn = IntrinsicCameraCalibrator.CalibrateWithChessboardImages(chess, files);
                 _paramIn.Save("intrinstic.txt");
                 foreach (var f in files)
                 {
                     var img = Cv2.ImRead(f, ImreadModes.Grayscale);
                     var corners = chess.FindCorners(img);
-                    chess.DrawCorners(img, corners);
-                    Cv2.ImShow(" ", img);
-                    Cv2.WaitKey(500);
+                    //chess.DrawCorners(img, corners);
+                    //Cv2.ImShow(" ", img);
+                    //Cv2.WaitKey(500);
                 }
-                Cv2.DestroyAllWindows();
+                //Cv2.DestroyAllWindows();
             }
         }
 
@@ -118,9 +138,9 @@ namespace Test.CameraCalibration
             else
             {
                 _paramIn = IntrinsicCameraParameters.Load("intrinstic.txt");
-                _paramEx = ExtrinsticCameraCalibrator.CalibrateWithGroundCoordinates(_points, _paramIn);
+                _paramEx = ExtrinsicCameraCalibrator.CalibrateWithGroundCoordinates(_points, _paramIn);
                 _paramEx.Save("extrinstic.txt");
-                _trs = new(_paramIn, _paramEx);
+                _trs = new(_paramIn.CameraMatrix, _paramEx);
                 _isSampling = false;
                 ApplyButton.IsEnabled = false;
                 SamplingSaveButton.Content = "Sampling";
@@ -145,7 +165,7 @@ namespace Test.CameraCalibration
             {
                 _paramIn = IntrinsicCameraParameters.Load("intrinstic.txt");
                 _paramEx = ExtrinsicCameraParameters.Load("extrinstic.txt");
-                _trs = new(_paramIn, _paramEx);
+                _trs = new(_paramIn.CameraMatrix, _paramEx);
                 var p = _trs.ConvertToWorldCoordinate(new(x2, y2));
                 X3d.Text = $"{(int)p.X}";
                 Y3d.Text = $"{(int)p.Y}";

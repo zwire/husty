@@ -4,7 +4,7 @@ using OpenCvSharp;
 
 namespace Husty.OpenCvSharp
 {
-	public static class IntrinsticCameraCalibrator
+	public static class IntrinsicCameraCalibrator
 	{
 
 		public static IntrinsicCameraParameters CalibrateWithChessboardImages(Chessboard chessboard, IEnumerable<Mat> images)

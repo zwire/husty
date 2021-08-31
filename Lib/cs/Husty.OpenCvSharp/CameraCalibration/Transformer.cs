@@ -1,4 +1,5 @@
-﻿using OpenCvSharp;
+﻿using System;
+using OpenCvSharp;
 
 namespace Husty.OpenCvSharp
 {
@@ -32,9 +33,11 @@ namespace Husty.OpenCvSharp
         private readonly Mat _RInv_T;
         private readonly Mat _RInv_AInv;
 
-        public Transformer(IntrinsicCameraParameters paramIn, ExtrinsicCameraParameters paramEx)
+        public Transformer(Mat cameraMatrix, ExtrinsicCameraParameters paramEx)
         {
-            _A = paramIn.CameraMatrix;
+            if (cameraMatrix.Rows != 3 || cameraMatrix.Cols != 3)
+                throw new ArgumentException("Requires: 3x3 matrix.", nameof(cameraMatrix));
+            _A = cameraMatrix;
             _T = paramEx.TranslationVector;
             _R = paramEx.RotationMatrix;
             _AInv = _A.Inv();

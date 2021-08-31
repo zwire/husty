@@ -5,7 +5,7 @@ using OpenCvSharp;
 
 namespace Husty.OpenCvSharp
 {
-    public static class ExtrinsticCameraCalibrator
+    public static class ExtrinsicCameraCalibrator
     {
 
         public static ExtrinsicCameraParameters CalibrateWithGroundCoordinates(
