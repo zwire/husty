@@ -3,13 +3,13 @@
 # Contents
 詳細は各プロジェクトフォルダに記載しました。  
 
-### Samples
------ [Samples/BayesBinarization](Samples/Samples.BayesBinarization)  
------ [Samples/DepthCameras](Samples/Samples.DepthCameras)  
------ [Samples/Socket](Samples/Samples.Socket)  
------ [Samples/Tracking](Samples/Samples.Tracking)  
------ [Samples/Yolo-tiny](Samples/Samples.Yolo-tiny)  
------ [Samples/YoloModel-tiny](Samples/YoloModel-tiny)  
+### Test
+----- [Test/BayesBinarization](Test/Test.BayesBinarization)  
+----- [Test/DepthCameras](Test/Test.DepthCameras)  
+----- [Test/TcpSocket](Test/Test.TcpSocket)  
+----- [Test/Tracking](Test/Test.Tracking)  
+----- [Test/Yolo-tiny](Test/Test.Yolo-tiny)  
+----- [Test/YoloModel-tiny](Test/YoloModel-tiny)  
 
 ### Tools
 ----- [Tools/NncDataArranger](Tools/Tools.NncDataArranger) ... Sony Neural Network Console の簡易なデータ作成ツール  
