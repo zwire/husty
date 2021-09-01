@@ -41,7 +41,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         // ------- Fields ------- //
 
         private readonly BinaryWriter _binWriter;
-        private readonly List<long> _indexes = new List<long>();
+        private readonly List<long> _indexes = new();
         private readonly DateTimeOffset _firstTime;
 
 
@@ -77,7 +77,6 @@ namespace Husty.OpenCvSharp.DepthCamera
             _binWriter.Write(bgr);
             _binWriter.Write(xyz.Length);
             _binWriter.Write(xyz);
-
         }
 
         /// <summary>

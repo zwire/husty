@@ -26,7 +26,7 @@ namespace Husty.OpenCvSharp.DepthCamera
             //var filePath = $"{saveDirectory}\\Image_{baseName}{zipFileNumber:D4}.zip";
 
             var time = DateTime.Now;
-            var filePath = $"{saveDirectory}\\Image_{baseName}{time.Year}{time.Month}{time.Day}{time.Hour}{time.Minute}{time.Second}{time.Millisecond}.zip";
+            var filePath = $"{saveDirectory}\\Image_{baseName}{time.Year}{time.Month:d2}{time.Day:d2}{time.Hour:d2}{time.Minute:d2}{time.Second:d2}{time.Millisecond:d2}.zip";
             Cv2.ImWrite($"{filePath}_C.png", input.BGR);
             Cv2.ImWrite($"{filePath}_D.png", input.Depth16);
             Cv2.ImWrite($"{filePath}_P.png", input.XYZ);

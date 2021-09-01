@@ -27,8 +27,8 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         // ------- Properties ------- //
 
-        public (int Width, int Height) DepthFrameSize { private set; get; }
-        public (int Width, int Height) ColorFrameSize { private set; get; }
+        public Size DepthFrameSize { private set; get; }
+        public Size ColorFrameSize { private set; get; }
 
 
         // ------- Constructor ------- //
@@ -40,7 +40,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <param name="height">Regulated by each device configuration</param>
         public Realsense(int width, int height)
         {
-            DepthFrameSize = (width, height);
+            DepthFrameSize = new(width, height);
             ColorFrameSize = DepthFrameSize;
             _pipeline = new Pipeline();
             var cfg = new Config();
@@ -66,8 +66,8 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <param name="dHeight">Regulated by each device configuration</param>
         public Realsense(int cWidth, int cHeight, int dWidth, int dHeight)
         {
-            ColorFrameSize = (cWidth, cHeight);
-            DepthFrameSize = (dWidth, dHeight);
+            ColorFrameSize = new(cWidth, cHeight);
+            DepthFrameSize = new(dWidth, dHeight);
             _pipeline = new Pipeline();
             var cfg = new Config();
             cfg.EnableStream(Stream.Depth, dWidth, dHeight);
@@ -97,17 +97,20 @@ namespace Husty.OpenCvSharp.DepthCamera
             var observable = Observable.Range(0, int.MaxValue, ThreadPoolScheduler.Instance)
                 .Select(i =>
                 {
+                    GC.Collect();
                     var frames = _pipeline.WaitForFrames();
                     if (_alignOn) frames = _align.Process(frames).AsFrameSet();
                     using var color = frames.ColorFrame.DisposeWith(frames);
                     using var depth = frames.DepthFrame.DisposeWith(frames);
-                    var filterd = _dfill.Process(depth);
-                    filterd = _depthto.Process(filterd);
-                    filterd = _sfill.Process(filterd);
-                    filterd = _tfill.Process(filterd);
-                    filterd = _todepth.Process(filterd);
+                    var filtered = _dfill.Process(depth);
+                    filtered = _depthto.Process(filtered);
+                    filtered = _sfill.Process(filtered);
+                    filtered = _tfill.Process(filtered);
+                    filtered = _todepth.Process(filtered);
                     _converter.ToColorMat(color, ref colorMat);
-                    _converter.ToPointCloudMat(filterd, ref pointCloudMat);
+                    _converter.ToPointCloudMat(filtered, ref pointCloudMat);
+                    filtered.Dispose();
+                    frames.Dispose();
                     return new BgrXyzMat(colorMat, pointCloudMat);
                 })
                 .Publish()

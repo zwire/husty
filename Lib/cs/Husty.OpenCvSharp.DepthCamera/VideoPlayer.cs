@@ -92,9 +92,11 @@ namespace Husty.OpenCvSharp.DepthCamera
         {
             if (position > -1 && position < FrameCount) _positionIndex = position;
             var observable = Observable.Range(0, FrameCount - position, ThreadPoolScheduler.Instance)
+                .Synchronize()
                 .Select(i =>
                 {
                     Thread.Sleep(Interval);
+                    GC.Collect();
                     return (ReadFrames().Frames, position++);
                 })
                 .Publish()
@@ -119,8 +121,8 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// </summary>
         public void Dispose()
         {
-            _binReader.Close();
-            _binReader.Dispose();
+            _binReader?.Close();
+            _binReader?.Dispose();
         }
 
         private (BgrXyzMat Frames, long Time) ReadFrames()

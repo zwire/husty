@@ -32,19 +32,19 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         public void ToColorMat(VideoFrame frame, ref Mat colorMat)
         {
-            colorMat = new Mat(_cHeight, _cWidth, MatType.CV_8UC3);
+            using var tmpMat = new Mat(_cHeight, _cWidth, MatType.CV_8UC3);
             unsafe
             {
                 var rgbData = (byte*)frame.Data;
-                var pixels = colorMat.DataPointer;
-                for (int i = 0; i < colorMat.Width * colorMat.Height; i++)
+                var pixels = tmpMat.DataPointer;
+                for (int i = 0; i < tmpMat.Width * tmpMat.Height; i++)
                 {
                     pixels[i * 3 + 0] = rgbData[i * 3 + 2];
                     pixels[i * 3 + 1] = rgbData[i * 3 + 1];
                     pixels[i * 3 + 2] = rgbData[i * 3 + 0];
                 }
             }
-            Cv2.Resize(colorMat, colorMat, new Size(_cWidth / 2, _cHeight / 2));
+            Cv2.Resize(tmpMat, colorMat, new Size(_cWidth / 2, _cHeight / 2));
         }
 
         public void ToPointCloudMat(Frame frame, ref Mat pointCloudMat)

@@ -74,7 +74,7 @@ namespace Husty.OpenCvSharp.DepthCamera
                 ColorResolution = ColorResolution.R720p,
                 DepthMode = DepthMode.NFOV_2x2Binned,
                 SynchronizedImagesOnly = true,
-                CameraFPS = FPS.FPS15
+                CameraFPS = FPS.FPS30
             },
             matching, pitchDeg, yawDeg, rollDeg)
         { }
@@ -93,16 +93,19 @@ namespace Husty.OpenCvSharp.DepthCamera
             var observable = Observable.Range(0, int.MaxValue, ThreadPoolScheduler.Instance)
                 .Select(i =>
                 {
+                    GC.Collect();
                     using var capture = _device.GetCapture();
                     Image colorImg;
                     if (_matching != Matching.On)
                         colorImg = capture.Color;
                     else
                         colorImg = _transformation.ColorImageToDepthCamera(capture);
-                    using var pointCloudImg = _transformation.DepthImageToPointCloud(capture.Depth);
+                    var pointCloudImg = _transformation.DepthImageToPointCloud(capture.Depth);
                     _converter.ToColorMat(colorImg, ref colorMat);
                     _converter.ToPointCloudMat(pointCloudImg, ref pointCloudMat);
-                    return BgrXyzMat.Create(colorMat, pointCloudMat).Rotate(_pitchRad, _yawRad, _rollRad);
+                    colorImg.Dispose();
+                    pointCloudImg.Dispose();
+                    return BgrXyzMat.Create(colorMat.Clone(), pointCloudMat.Clone()).Rotate(_pitchRad, _yawRad, _rollRad);
                 })
                 .Publish()
                 .RefCount();
