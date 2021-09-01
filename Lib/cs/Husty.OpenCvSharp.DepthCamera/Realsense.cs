@@ -16,11 +16,12 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         private readonly Pipeline _pipeline;
         private readonly Align _align;
-        private readonly DecimationFilter _dfill;
+        //private readonly DecimationFilter _dfill;
         private readonly DisparityTransform _depthto;
         private readonly DisparityTransform _todepth;
         private readonly SpatialFilter _sfill;
         private readonly TemporalFilter _tfill;
+        private readonly HoleFillingFilter _hfill;
         private readonly RealsenseConverter _converter;
         private readonly bool _alignOn;
 
@@ -47,13 +48,13 @@ namespace Husty.OpenCvSharp.DepthCamera
             cfg.EnableStream(Stream.Depth, width, height);
             cfg.EnableStream(Stream.Color, Format.Rgb8);
             _pipeline.Start(cfg);
-            _align = new Align(Stream.Depth);
-            _dfill = new DecimationFilter();
-            _depthto = new DisparityTransform(true);
-            _todepth = new DisparityTransform(false);
-            _sfill = new SpatialFilter();
-            _tfill = new TemporalFilter();
-            _converter = new RealsenseConverter(width, height, width, height);
+            _align = new(Stream.Depth);
+            _depthto = new(true);
+            _todepth = new(false);
+            _sfill = new();
+            _tfill = new();
+            _hfill = new();
+            _converter = new(width, height, width, height);
             _alignOn = true;
         }
 
@@ -73,13 +74,13 @@ namespace Husty.OpenCvSharp.DepthCamera
             cfg.EnableStream(Stream.Depth, dWidth, dHeight);
             cfg.EnableStream(Stream.Color, cWidth, cHeight, Format.Rgb8);
             _pipeline.Start(cfg);
-            _align = new Align(Stream.Color);
-            _dfill = new DecimationFilter();
-            _depthto = new DisparityTransform(true);
-            _todepth = new DisparityTransform(false);
-            _sfill = new SpatialFilter();
-            _tfill = new TemporalFilter();
-            _converter = new RealsenseConverter(cWidth, cHeight, dWidth, dHeight);
+            _align = new(Stream.Color);
+            _depthto = new(true);
+            _todepth = new(false);
+            _sfill = new();
+            _tfill = new();
+            _hfill = new();
+            _converter = new(cWidth, cHeight, dWidth, dHeight);
             _alignOn = false;
         }
 
@@ -102,11 +103,11 @@ namespace Husty.OpenCvSharp.DepthCamera
                     if (_alignOn) frames = _align.Process(frames).AsFrameSet();
                     using var color = frames.ColorFrame.DisposeWith(frames);
                     using var depth = frames.DepthFrame.DisposeWith(frames);
-                    var filtered = _dfill.Process(depth);
-                    filtered = _depthto.Process(filtered);
+                    var filtered = _depthto.Process(depth);
                     filtered = _sfill.Process(filtered);
                     filtered = _tfill.Process(filtered);
                     filtered = _todepth.Process(filtered);
+                    filtered = _hfill.Process(filtered);
                     _converter.ToColorMat(color, ref colorMat);
                     _converter.ToPointCloudMat(filtered, ref pointCloudMat);
                     filtered.Dispose();

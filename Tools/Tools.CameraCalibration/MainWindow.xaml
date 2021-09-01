@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Camera Calibration" Height="720" Width="960" Background="{DynamicResource AccentSelectedColorBrush}"
-        BorderThickness="1" GlowBrush="{DynamicResource AccentColorBrush4}" TitleCharacterCasing="Normal">
+        BorderThickness="2" GlowBrush="{DynamicResource AccentColorBrush4}" TitleCharacterCasing="Normal">
     <mahApps:MetroWindow.Resources>
         <Style TargetType="Button">
             <Setter Property="FontFamily" Value="Comic Sans MS"/>

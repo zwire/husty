@@ -1,11 +1,24 @@
-﻿<Window x:Class="Test.DepthCameras.MainWindow"
+﻿<mahApps:MetroWindow x:Class="Tools.DepthCamera.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mahApps="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Samples.DepthCameras"
+        xmlns:local="clr-namespace:Tools.DepthCamera"
         mc:Ignorable="d"
-        Title="Depth Cameras" Height="600" Width="800" Background="Black">
+        Title="Depth Cameras" Height="800" Width="1200" Background="Black"
+        BorderThickness="2" GlowBrush="{DynamicResource AccentColorBrush2}" TitleCharacterCasing="Normal">
+    <mahApps:MetroWindow.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontFamily" Value="Comic Sans MS"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="FontFamily" Value="Comic Sans MS"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="Comic Sans MS"/>
+        </Style>
+    </mahApps:MetroWindow.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -22,34 +35,35 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Viewbox Grid.Row="0" Grid.Column="0" Margin="5">
-            <Button x:Name="StartPauseButton" Content="{Binding StartButtonFace.Value}" Width="50" Click="StartPauseButton_Click"/>
+            <Button x:Name="StartPauseButton" Content="Open" Width="50" Background="DarkGray" Click="StartPauseButton_Click"/>
         </Viewbox>
         <Viewbox Grid.Row="0" Grid.Column="1" Margin="5">
-            <Button x:Name="ShutterButton" Content="Shutter" Width="50" Click="ShutterButton_Click"/>
+            <Button x:Name="ShutterButton" Content="Shutter" Width="50" Background="DarkGray" Click="ShutterButton_Click"/>
         </Viewbox>
         <Viewbox Grid.Row="0" Grid.Column="2" Margin="5">
-            <Button x:Name="RecButton" Content="Rec" Width="50" Click="RecButton_Click"/>
+            <Button x:Name="RecButton" Content="Rec" Width="50" Background="DarkGray" Click="RecButton_Click"/>
         </Viewbox>
         <Viewbox Grid.Row="0" Grid.Column="3" Margin="5">
-            <Button x:Name="SelectDirButton" Content="SaveDir" Width="50" Click="SelectDirButton_Click"/>
+            <Button x:Name="SelectDirButton" Content="SaveDir" Width="50" Background="DarkGray" Click="SelectDirButton_Click"/>
         </Viewbox>
+
         <Viewbox Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Margin="5">
-            <Label Content="{Binding SaveDir.Value}" Foreground="White"/>
+            <Label x:Name="SaveDir" Foreground="White"/>
         </Viewbox>
-        <Viewbox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5">
-            <Label Content="{Binding LR.Value}" Foreground="White"/>
+        <!--<Viewbox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="5">
+            <Label x:Name="LR" Foreground="White"/>
         </Viewbox>
-        <Viewbox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Margin="5">
-            <Label Content="{Binding TB.Value}" Foreground="White"/>
-        </Viewbox>
+        <Viewbox Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Margin="5">
+            <Label x:Name="TB" Foreground="White"/>
+        </Viewbox>-->
         <Viewbox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="10">
-            <Image Source="{Binding ColorFrame.Value}"/>
+            <Image x:Name="ColorFrame"/>
         </Viewbox>
         <Viewbox Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" Margin="10">
-            <Image Source="{Binding DepthFrame.Value}"/>
+            <Image x:Name="DepthFrame"/>
         </Viewbox>
         <Viewbox Grid.Row="3" Grid.Column="0" Margin="5">
-            <Button x:Name="PlayButton" Content="Play" Width="50" Click="PlayButton_Click"/>
+            <Button x:Name="PlayButton" Content="Play" Width="50" Background="DarkGray" Click="PlayButton_Click"/>
         </Viewbox>
         <Viewbox Grid.Row="3" Grid.Column="1" Margin="5">
             <Button x:Name="PlayPauseButton" Content="▶" Foreground="Green" Width="50" Click="PlayPauseButton_Click" IsEnabled="False" Visibility="Hidden"/>
@@ -58,4 +72,4 @@
             <Slider x:Name="PlaySlider" Width="250" IsEnabled="False" Visibility="Hidden" PreviewMouseLeftButtonUp="PlaySlider_PreviewMouseLeftButtonUp"/>
         </Viewbox>
     </Grid>
-</Window>
+</mahApps:MetroWindow>

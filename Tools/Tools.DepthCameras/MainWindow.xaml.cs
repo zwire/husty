@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.IO;
 using System.Reactive.Linq;
-using Reactive.Bindings;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.Azure.Kinect.Sensor;
 using OpenCvSharp.WpfExtensions;
@@ -12,59 +12,54 @@ using Husty.OpenCvSharp.DepthCamera;
 using Scalar = OpenCvSharp.Scalar;
 using Point = OpenCvSharp.Point;
 
-namespace Test.DepthCameras
+namespace Tools.DepthCamera
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
     {
 
         private IDepthCamera _camera;
         private IDisposable _cameraConnector;
         private IDisposable _videoConnector;
         private bool _isConnected;
+        private string _saveDir = "";
         private string _videoDir = "";
         private VideoPlayer _player;
+        //private Scalar red = new Scalar(0, 0, 255);
         //private Scalar red = new Scalar(0, 0, 255);
         //private Point left = new Point(130, 144);
         //private Point right = new Point(190, 144);
         //private Point top = new Point(160, 114);
         //private Point bottom = new Point(160, 174);
 
-        public ReactiveProperty<string> StartButtonFace { private set; get; } = new ReactiveProperty<string>();
-        public ReactiveProperty<string> RecButtonFace { private set; get; } = new ReactiveProperty<string>();
-        public ReactiveProperty<string> SaveDir { private set; get; } = new ReactiveProperty<string>();
-        public ReactiveProperty<string> LR { private set; get; } = new ReactiveProperty<string>();
-        public ReactiveProperty<string> TB { private set; get; } = new ReactiveProperty<string>();
-        public ReactiveProperty<BitmapSource> ColorFrame { private set; get; } = new ReactiveProperty<BitmapSource>();
-        public ReactiveProperty<BitmapSource> DepthFrame { private set; get; } = new ReactiveProperty<BitmapSource>();
-
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
             _isConnected = false;
-            StartButtonFace.Value = "Open";
+            StartPauseButton.Content = "Open";
             ShutterButton.IsEnabled = false;
             if (File.Exists("cache.txt"))
             {
                 var lines = File.ReadAllText("cache.txt").Split("\n");
                 if (lines.Length > 1)
                 {
-                    SaveDir.Value = lines[0].TrimEnd();
+                    _saveDir = lines[0].TrimEnd();
                     _videoDir = lines[1].TrimEnd();
                 }
             }
-            if (!Directory.Exists(SaveDir.Value))
-                SaveDir.Value = "C:";
+            if (!Directory.Exists(_saveDir))
+                _saveDir = "C:";
             if (!Directory.Exists(_videoDir))
                 _videoDir = "C:";
+            SaveDir.Content = _saveDir;
             Closed += (sender, args) =>
             {
                 GC.Collect();
                 using var sw = new StreamWriter("cache.txt", false);
-                sw.WriteLine(SaveDir.Value);
+                sw.WriteLine(_saveDir);
                 sw.WriteLine(_videoDir);
                 _videoConnector?.Dispose();
                 _cameraConnector?.Dispose();
@@ -78,7 +73,8 @@ namespace Test.DepthCameras
             _player?.Dispose();
             if (!_isConnected)
             {
-                StartButtonFace.Value = "Close";
+                StartPauseButton.Content = "Close";
+                StartPauseButton.Background = Brushes.Red;
                 RecButton.IsEnabled = false;
                 PlayButton.IsEnabled = false;
                 PlayPauseButton.IsEnabled = false;
@@ -100,14 +96,15 @@ namespace Test.DepthCameras
                         {
                             //LR.Value = $"↔ {r.Z - l.Z} mm";
                             //TB.Value = $"↕ {b.Z - t.Z} mm";
-                            ColorFrame.Value = imgs.BGR.ToBitmapSource();
-                            DepthFrame.Value = d8.ToBitmapSource();
+                            ColorFrame.Source = imgs.BGR.ToBitmapSource();
+                            DepthFrame.Source = d8.ToBitmapSource();
                         });
                     });
             }
             else
             {
-                StartButtonFace.Value = "Open";
+                StartPauseButton.Content = "Open";
+                StartPauseButton.Background = Brushes.DarkGray;
                 RecButton.IsEnabled = true;
                 PlayButton.IsEnabled = true;
                 ShutterButton.IsEnabled = false;
@@ -126,7 +123,7 @@ namespace Test.DepthCameras
                     .TakeWhile(imgs =>
                     {
                         if (imgs.Empty()) return true;
-                        ImageIO.SaveAsZip(SaveDir.Value, "", imgs);
+                        ImageIO.SaveAsZip(_saveDir, "", imgs);
                         return false;
                     })
                     .Subscribe();
@@ -134,7 +131,7 @@ namespace Test.DepthCameras
             if (_player != null)
             {
                 var frame = _player.GetOneFrameSet((int)PlaySlider.Value);
-                ImageIO.SaveAsZip(SaveDir.Value, "", frame);
+                ImageIO.SaveAsZip(_saveDir, "", frame);
             }
         }
 
@@ -144,7 +141,8 @@ namespace Test.DepthCameras
             _player?.Dispose();
             if (!_isConnected)
             {
-                RecButtonFace.Value = "Stop";
+                RecButton.Content = "Stop";
+                RecButton.Background = Brushes.Red;
                 StartPauseButton.IsEnabled = false;
                 PlayButton.IsEnabled = false;
                 PlayPauseButton.IsEnabled = false;
@@ -157,7 +155,7 @@ namespace Test.DepthCameras
                 //while (File.Exists($"{SaveDir.Value}\\Movie_{fileNumber:D4}.yms")) fileNumber++;
 
                 var time = DateTimeOffset.Now;
-                var filePath = $"{SaveDir.Value}\\Movie_{time.Year}{time.Month:d2}{time.Day:d2}{time.Hour:d2}{time.Minute:d2}{time.Second:d2}{time.Millisecond:d2}.yms";
+                var filePath = $"{_saveDir}\\Movie_{time.Year}{time.Month:d2}{time.Day:d2}{time.Hour:d2}{time.Minute:d2}{time.Second:d2}{time.Millisecond:d2}.yms";
                 var writer = new VideoRecorder(filePath);
                 _cameraConnector = _camera.Connect()
                     .Finally(() => writer?.Dispose())
@@ -173,14 +171,15 @@ namespace Test.DepthCameras
                         {
                             //LR.Value = $"↔ {r.Z - l.Z} mm";
                             //TB.Value = $"↕ {b.Z - t.Z} mm";
-                            ColorFrame.Value = imgs.BGR.ToBitmapSource();
-                            DepthFrame.Value = d8.ToBitmapSource();
+                            ColorFrame.Source = imgs.BGR.ToBitmapSource();
+                            DepthFrame.Source = d8.ToBitmapSource();
                         });
                     });
             }
             else
             {
-                RecButtonFace.Value = "Rec";
+                RecButton.Content = "Rec";
+                RecButton.Background = Brushes.DarkGray;
                 StartPauseButton.IsEnabled = true;
                 PlayButton.IsEnabled = true;
                 _isConnected = false;
@@ -195,10 +194,11 @@ namespace Test.DepthCameras
             using var cofd = new CommonOpenFileDialog()
             {
                 Title = "フォルダを選択してください",
-                InitialDirectory = SaveDir.Value,
+                InitialDirectory = _saveDir,
                 IsFolderPicker = true,
             };
-            if (cofd.ShowDialog() == CommonFileDialogResult.Ok) SaveDir.Value = cofd.FileName;
+            if (cofd.ShowDialog() == CommonFileDialogResult.Ok) _saveDir = cofd.FileName;
+            SaveDir.Content = _saveDir;
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
@@ -228,8 +228,8 @@ namespace Test.DepthCameras
                         using var d8 = ww.Frames.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
-                            ColorFrame.Value = ww.Frames.BGR.ToBitmapSource();
-                            DepthFrame.Value = d8.ToBitmapSource();
+                            ColorFrame.Source = ww.Frames.BGR.ToBitmapSource();
+                            DepthFrame.Source = d8.ToBitmapSource();
                             PlaySlider.Value = ww.Position;
                         });
                     });
@@ -259,8 +259,8 @@ namespace Test.DepthCameras
                         using var d8 = ww.Frames.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
-                            ColorFrame.Value = ww.Frames.BGR.ToBitmapSource();
-                            DepthFrame.Value = d8.ToBitmapSource();
+                            ColorFrame.Source = ww.Frames.BGR.ToBitmapSource();
+                            DepthFrame.Source = d8.ToBitmapSource();
                             PlaySlider.Value = ww.Position;
                         });
                     });
@@ -270,8 +270,8 @@ namespace Test.DepthCameras
         private void PlaySlider_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var imgs = _player.GetOneFrameSet((int)PlaySlider.Value);
-            ColorFrame.Value = imgs.BGR.ToBitmapSource();
-            DepthFrame.Value = imgs.Depth8(300, 5000).ToBitmapSource();
+            ColorFrame.Source = imgs.BGR.ToBitmapSource();
+            DepthFrame.Source = imgs.Depth8(300, 5000).ToBitmapSource();
         }
 
         private bool AttemptConnection()
