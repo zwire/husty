@@ -30,7 +30,7 @@ namespace Test.CameraCalibration
         private List<(Point2f, Point3f)> _points;
         private IntrinsicCameraParameters _paramIn;
         private ExtrinsicCameraParameters _paramEx;
-        private Transformer _trs;
+        private PerspectiveTransformer _trs;
 
         public MainWindow()
         {

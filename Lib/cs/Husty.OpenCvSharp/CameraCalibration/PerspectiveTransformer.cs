@@ -4,7 +4,7 @@ using OpenCvSharp;
 namespace Husty.OpenCvSharp
 {
 
-    public class Transformer
+    public class PerspectiveTransformer
     {
 
         // 
@@ -33,7 +33,7 @@ namespace Husty.OpenCvSharp
         private readonly Mat _RInv_T;
         private readonly Mat _RInv_AInv;
 
-        public Transformer(Mat cameraMatrix, ExtrinsicCameraParameters paramEx)
+        public PerspectiveTransformer(Mat cameraMatrix, ExtrinsicCameraParameters paramEx)
         {
             if (cameraMatrix.Rows != 3 || cameraMatrix.Cols != 3)
                 throw new ArgumentException("Requires: 3x3 matrix.", nameof(cameraMatrix));
