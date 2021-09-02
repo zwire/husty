@@ -37,11 +37,13 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <summary>
         /// Open device
         /// </summary>
-        /// <param name="width">Regulated by each device configuration</param>
-        /// <param name="height">Regulated by each device configuration</param>
-        public Realsense(int width, int height)
+        /// <param name="size">Regulated by each device configuration</param>
+        public Realsense(Size size, 
+            bool disparityTransform = true, bool spatialFilter = true, bool temporalFilter = true, bool holeFillingFilter = true)
         {
-            DepthFrameSize = new(width, height);
+            var width = size.Width;
+            var height = size.Height;
+            DepthFrameSize = size;
             ColorFrameSize = DepthFrameSize;
             _pipeline = new Pipeline();
             var cfg = new Config();
@@ -49,11 +51,23 @@ namespace Husty.OpenCvSharp.DepthCamera
             cfg.EnableStream(Stream.Color, Format.Rgb8);
             _pipeline.Start(cfg);
             _align = new(Stream.Depth);
-            _depthto = new(true);
-            _todepth = new(false);
-            _sfill = new();
-            _tfill = new();
-            _hfill = new();
+            if (disparityTransform)
+            {
+                _depthto = new(true);
+                _todepth = new(false);
+            }
+            if (spatialFilter)
+            {
+                _sfill = new();
+            }
+            if (temporalFilter)
+            {
+                _tfill = new();
+            }
+            if (holeFillingFilter)
+            {
+                _hfill = new();
+            }
             _converter = new(width, height, width, height);
             _alignOn = true;
         }
@@ -61,25 +75,40 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <summary>
         /// Open device
         /// </summary>
-        /// <param name="cWidth">Regulated by each device configuration</param>
-        /// <param name="cHeight">Regulated by each device configuration</param>
-        /// <param name="dWidth">Regulated by each device configuration</param>
-        /// <param name="dHeight">Regulated by each device configuration</param>
-        public Realsense(int cWidth, int cHeight, int dWidth, int dHeight)
+        /// <param name="colorSize">Regulated by each device configuration</param>
+        /// <param name="depthSize">Regulated by each device configuration</param>
+        public Realsense(Size colorSize, Size depthSize, 
+            bool disparityTransform = true, bool spatialFilter = true, bool temporalFilter = true, bool holeFillingFilter = true)
         {
-            ColorFrameSize = new(cWidth, cHeight);
-            DepthFrameSize = new(dWidth, dHeight);
+            var cWidth = colorSize.Width;
+            var cHeight = colorSize.Height;
+            var dWidth = depthSize.Width;
+            var dHeight = depthSize.Height;
+            ColorFrameSize = colorSize;
+            DepthFrameSize = depthSize;
             _pipeline = new Pipeline();
             var cfg = new Config();
             cfg.EnableStream(Stream.Depth, dWidth, dHeight);
             cfg.EnableStream(Stream.Color, cWidth, cHeight, Format.Rgb8);
             _pipeline.Start(cfg);
             _align = new(Stream.Color);
-            _depthto = new(true);
-            _todepth = new(false);
-            _sfill = new();
-            _tfill = new();
-            _hfill = new();
+            if (disparityTransform)
+            {
+                _depthto = new(true);
+                _todepth = new(false);
+            }
+            if (spatialFilter)
+            {
+                _sfill = new();
+            }
+            if (temporalFilter)
+            {
+                _tfill = new();
+            }
+            if (holeFillingFilter)
+            {
+                _hfill = new();
+            }
             _converter = new(cWidth, cHeight, dWidth, dHeight);
             _alignOn = false;
         }
@@ -102,15 +131,15 @@ namespace Husty.OpenCvSharp.DepthCamera
                     var frames = _pipeline.WaitForFrames();
                     if (_alignOn) frames = _align.Process(frames).AsFrameSet();
                     using var color = frames.ColorFrame.DisposeWith(frames);
-                    using var depth = frames.DepthFrame.DisposeWith(frames);
-                    var filtered = _depthto.Process(depth);
-                    filtered = _sfill.Process(filtered);
-                    filtered = _tfill.Process(filtered);
-                    filtered = _todepth.Process(filtered);
-                    filtered = _hfill.Process(filtered);
+                    Frame depth = frames.DepthFrame.DisposeWith(frames);
+                    depth = _depthto?.Process(depth) ?? depth;
+                    depth = _sfill?.Process(depth) ?? depth;
+                    depth = _tfill?.Process(depth) ?? depth;
+                    depth = _todepth?.Process(depth) ?? depth;
+                    depth = _hfill?.Process(depth) ?? depth;
                     _converter.ToColorMat(color, ref colorMat);
-                    _converter.ToPointCloudMat(filtered, ref pointCloudMat);
-                    filtered.Dispose();
+                    _converter.ToPointCloudMat(depth, ref pointCloudMat);
+                    depth.Dispose();
                     frames.Dispose();
                     return new BgrXyzMat(colorMat, pointCloudMat);
                 })
