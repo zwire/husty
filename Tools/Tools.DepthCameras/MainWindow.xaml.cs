@@ -27,6 +27,8 @@ namespace Tools.DepthCamera
         private string _saveDir = "";
         private string _videoDir = "";
         private VideoPlayer _player;
+        private BgrXyzMat _framesPool;
+        private object _lockobj = new();
         //private Scalar red = new Scalar(0, 0, 255);
         //private Scalar red = new Scalar(0, 0, 255);
         //private Point left = new Point(130, 144);
@@ -91,6 +93,8 @@ namespace Tools.DepthCamera
                         //var r = imgs.GetPointInfo(right);
                         //var t = imgs.GetPointInfo(top);
                         //var b = imgs.GetPointInfo(bottom);
+                        lock (_lockobj)
+                            _framesPool = imgs;
                         var d8 = imgs.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
@@ -166,6 +170,8 @@ namespace Tools.DepthCamera
                         //var r = imgs.GetPointInfo(right);
                         //var t = imgs.GetPointInfo(top);
                         //var b = imgs.GetPointInfo(bottom);
+                        lock (_lockobj)
+                            _framesPool = imgs;
                         using var d8 = imgs.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
@@ -225,6 +231,8 @@ namespace Tools.DepthCamera
                 _videoConnector = _player.Start(0)
                     .Subscribe(ww =>
                     {
+                        lock (_lockobj)
+                            _framesPool = ww.Frames;
                         using var d8 = ww.Frames.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
@@ -256,6 +264,8 @@ namespace Tools.DepthCamera
                 _videoConnector = _player.Start((int)PlaySlider.Value)
                     .Subscribe(ww =>
                     {
+                        lock (_lockobj)
+                            _framesPool = ww.Frames;
                         using var d8 = ww.Frames.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
@@ -272,6 +282,31 @@ namespace Tools.DepthCamera
             var imgs = _player.GetOneFrameSet((int)PlaySlider.Value);
             ColorFrame.Source = imgs.BGR.ToBitmapSource();
             DepthFrame.Source = imgs.Depth8(300, 5000).ToBitmapSource();
+        }
+
+        private void ColorFrame_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var p = e.GetPosition(ColorFrame);
+            ImageClicked((int)p.X, (int)p.Y);
+        }
+
+        private void DepthFrame_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var p = e.GetPosition(DepthFrame);
+            ImageClicked((int)p.X, (int)p.Y);
+        }
+
+        private void ImageClicked(int x, int y)
+        {
+            BGRXYZ info;
+            if (_framesPool != null)
+            {
+                lock (_lockobj)
+                {
+                    info = _framesPool.GetPointInfo(new(x, y));
+                }
+                XYZ.Content = $"XYZ = ({info.X}, {info.Y}, {info.Z})";
+            }
         }
 
         private bool AttemptConnection()
@@ -302,6 +337,7 @@ namespace Tools.DepthCamera
             }
             return true;
         }
+
 
     }
 }
