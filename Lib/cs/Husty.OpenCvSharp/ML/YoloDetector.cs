@@ -17,7 +17,7 @@ namespace Husty.OpenCvSharp
 
         private readonly Net _net;
         private readonly Size _blobSize;
-        private readonly float _threshold;
+        private readonly float _confidenceThreshold;
         private readonly string[] _labels;
 
 
@@ -27,13 +27,13 @@ namespace Husty.OpenCvSharp
         /// Initialize detector
         /// </summary>
         /// <param name="cfg">(.cfg) file</param>
-        /// <param name="names">(.names) file</param>
         /// <param name="weights">(.weights) file</param>
+        /// <param name="names">(.names) file</param>
         /// <param name="blobSize">Must be multiple of 32</param>
-        /// <param name="threshold"></param>
-        public YoloDetector(string cfg, string names, string weights, Size blobSize, float threshold = 0.5f)
+        /// <param name="confidenceThreshold"></param>
+        public YoloDetector(string cfg, string weights, string names, Size blobSize, float confidenceThreshold = 0.5f)
         {
-            _threshold = threshold;
+            _confidenceThreshold = confidenceThreshold;
             _blobSize = blobSize;
             _net = CvDnn.ReadNetFromDarknet(cfg, weights);
             _labels = File.ReadAllLines(names);
@@ -47,7 +47,7 @@ namespace Husty.OpenCvSharp
         /// </summary>
         /// <param name="frame">input image</param>
         /// <returns></returns>
-        public List<YoloResult> Run(Mat frame)
+        public IReadOnlyList<YoloResult> Run(Mat frame)
         {
 
             using var blob = CvDnn.BlobFromImage(frame, 1.0 / 255, _blobSize, new Scalar(), true, false);
@@ -58,9 +58,8 @@ namespace Husty.OpenCvSharp
 
             var classIds = new List<int>();
             var confidences = new List<float>();
-            var boxes = new List<Rect>();
-            var w = frame.Width;
-            var h = frame.Height;
+            var probabilityies = new List<float>();
+            var boxes = new List<Rect2d>();
             unsafe 
             {
                 foreach (var pred in outs)
@@ -69,36 +68,24 @@ namespace Husty.OpenCvSharp
                     for (var i = 0; i < pred.Rows; i++, p += pred.Cols)
                     {
                         var confidence = p[4];
-                        if (confidence > _threshold)
+                        if (confidence > _confidenceThreshold)
                         {
                             Cv2.MinMaxLoc(pred.Row(i).ColRange(5, pred.Cols), out _, out Point classIdPoint);
-                            if (p[classIdPoint.X + 5] > _threshold)
-                            {
-                                var centerX = (int)(p[0] * w);
-                                var centerY = (int)(p[1] * h);
-                                var width = (int)(p[2] * w);
-                                var height = (int)(p[3] * h);
-                                classIds.Add(classIdPoint.X);
-                                confidences.Add(confidence);
-                                boxes.Add(new Rect(centerX - width / 2, centerY - height / 2, width, height));
-                            }
+                            var centerX = p[0];
+                            var centerY = p[1];
+                            var width = p[2];
+                            var height = p[3];
+                            classIds.Add(classIdPoint.X);
+                            confidences.Add(confidence);
+                            probabilityies.Add(p[classIdPoint.X + 5]);
+                            boxes.Add(new Rect2d(centerX - width / 2, centerY - height / 2, width, height));
                         }
                     }
+                    pred.Dispose();
                 }
             }
-            CvDnn.NMSBoxes(boxes, confidences, _threshold, 0.3f, out int[] indices);
-            var results = new List<YoloResult>();
-            foreach (var i in indices)
-            {
-                results.Add(new YoloResult
-                {
-                    Label = _labels[classIds[i]],
-                    Confidence = confidences[i],
-                    Box = boxes[i]
-                });
-            }
-            return results;
-
+            CvDnn.NMSBoxes(boxes, confidences, _confidenceThreshold, 0.3f, out int[] indices);
+            return indices.Select(i => new YoloResult(_labels[classIds[i]], confidences[i], probabilityies[i], boxes[i])).ToArray();
         }
 
     }
