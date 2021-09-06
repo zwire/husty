@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenCvSharp;
+using System;
 
 namespace Husty.OpenCvSharp.DepthCamera
 {
@@ -7,6 +8,12 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// </summary>
     public interface IDepthCamera
     {
+
+        public double Fps { get; }
+
+        public Size ColorFrameSize { get; }
+
+        public Size DepthFrameSize { get; }
 
         /// <summary>
         /// Start streaming

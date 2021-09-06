@@ -25,14 +25,17 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         // ------- Properties ------- //
 
+        public double Fps { get; }
+
         /// <summary>
         /// For device setup (resolution, fps, matching mode etc.)
         /// </summary>
-        public DeviceConfiguration Config { private set; get; }
+        public DeviceConfiguration Config { get; }
 
-        public Size ColorFrameSize { private set; get; }
+        public Size ColorFrameSize { get; }
 
-        public Size DepthFrameSize { private set; get; }
+        public Size DepthFrameSize { get; }
+
 
         /// <summary>
         /// Whether each pixel is matched or seperated
@@ -62,6 +65,13 @@ namespace Husty.OpenCvSharp.DepthCamera
             if (_matching == Matching.On) ColorFrameSize = DepthFrameSize;
             Config = config;
             _converter = new KinectConverter(ColorFrameSize, DepthFrameSize);
+            Fps = config.CameraFPS switch
+            {
+                FPS.FPS5 => 5,
+                FPS.FPS15 => 15,
+                FPS.FPS30 => 30,
+                _ => -1
+            };
         }
 
         /// <summary>
@@ -74,7 +84,7 @@ namespace Husty.OpenCvSharp.DepthCamera
                 ColorResolution = ColorResolution.R720p,
                 DepthMode = DepthMode.NFOV_2x2Binned,
                 SynchronizedImagesOnly = true,
-                CameraFPS = FPS.FPS30
+                CameraFPS = FPS.FPS15
             },
             matching, pitchDeg, yawDeg, rollDeg)
         { }
