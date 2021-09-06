@@ -31,6 +31,15 @@ namespace Husty.OpenCvSharp.DepthCamera
         // ------- Constructor ------- //
 
         /// <summary>
+        /// Create empty instance.
+        /// </summary>
+        public BgrXyzMat()
+        {
+            BGR = new();
+            XYZ = new();
+        }
+
+        /// <summary>
         /// Hold Point Cloud with Color.
         /// </summary>
         /// <param name="bgr">Color image</param>
