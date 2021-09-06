@@ -6,6 +6,7 @@ using System.Threading;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Linq;
+using OpenCvSharp;
 
 namespace Husty.OpenCvSharp.DepthCamera
 {
@@ -51,11 +52,15 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         // ------- Properties ------- //
 
+        public int Fps { set; get; }
+
+        private int Interval => 800 / Fps;
+
         public int FrameCount => _indexes.Length;
 
-        public int FPS { set; get; }
+        public Size ColorFrameSize { get; }
 
-        private int Interval => 800 / FPS;
+        public Size DepthFrameSize { get; }
 
 
         // ------- Constructor ------- //
@@ -77,7 +82,16 @@ namespace Husty.OpenCvSharp.DepthCamera
             while (_binReader.BaseStream.Position < _binReader.BaseStream.Length) indexes.Add(_binReader.ReadInt64());
             _indexes = indexes.ToArray();
             _binReader.BaseStream.Position = 0;
-            FPS = fps;
+            Fps = fps;
+            _binReader.BaseStream.Seek(_indexes[0], SeekOrigin.Begin);
+            _binReader.ReadInt64();
+            var bgrDataSize = _binReader.ReadInt32();
+            var bgrBytes = _binReader.ReadBytes(bgrDataSize);
+            var xyzDataSize = _binReader.ReadInt32();
+            var xyzBytes = _binReader.ReadBytes(xyzDataSize);
+            var bgrxyz = new BgrXyzMat(bgrBytes, xyzBytes);
+            ColorFrameSize = new(bgrxyz.BGR.Width, bgrxyz.BGR.Height);
+            DepthFrameSize = new(bgrxyz.Depth16.Width, bgrxyz.Depth16.Height);
         }
 
 
