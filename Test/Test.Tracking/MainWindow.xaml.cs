@@ -41,8 +41,10 @@ namespace Test.Tracking
                 _connector = PlayVideo(op.FileName)
                     .Subscribe(frame =>
                     {
-                        Cv2.Resize(frame, frame, new OpenCvSharp.Size(512, 288));
-                        var results = _detector.Run(frame).Select(r => (r.Label, r.Center, new OpenCvSharp.Size(r.Box.Width, r.Box.Height))).ToList();
+                        var w = 512;
+                        var h = 288;
+                        Cv2.Resize(frame, frame, new OpenCvSharp.Size(w, h));
+                        var results = _detector.Run(frame).Select(r => (r.Label, r.ScaledCenter(w, h), new OpenCvSharp.Size(r.Box.Width, r.Box.Height)));
                         tracker.Update(ref frame, results, out var _);
                         Dispatcher.Invoke(() => Image.Source = frame.ToBitmapSource());
                     });
@@ -56,8 +58,10 @@ namespace Test.Tracking
             _connector = ConnectCamera(0)
                     .Subscribe(frame =>
                     {
-                        Cv2.Resize(frame, frame, new OpenCvSharp.Size(512, 288));
-                        var results = _detector.Run(frame).Select(r => (r.Label, r.Center, new OpenCvSharp.Size(r.Box.Width, r.Box.Height))).ToList();
+                        var w = 512;
+                        var h = 288;
+                        Cv2.Resize(frame, frame, new OpenCvSharp.Size(w, h));
+                        var results = _detector.Run(frame).Select(r => (r.Label, r.ScaledCenter(w, h), new OpenCvSharp.Size(r.Box.Width, r.Box.Height))).ToList();
                         tracker.Update(ref frame, results, out var _);
                         Dispatcher.Invoke(() => Image.Source = frame.ToBitmapSource());
                     });

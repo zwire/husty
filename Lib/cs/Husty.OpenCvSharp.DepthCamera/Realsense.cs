@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Threading;
 using System.Reactive.Linq;
 using System.Reactive.Concurrency;
 using OpenCvSharp;
 using Intel.RealSense;
-using System.Threading;
 
 namespace Husty.OpenCvSharp.DepthCamera
 {
@@ -43,7 +43,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// Open device
         /// </summary>
         /// <param name="size">Regulated by each device configuration</param>
-        public Realsense(Size size, double fps = 15,
+        public Realsense(Size size, double fps = 15, bool align = true,
             bool disparityTransform = true, bool spatialFilter = true, bool temporalFilter = true, bool holeFillingFilter = true)
         {
             var width = size.Width;
@@ -74,7 +74,7 @@ namespace Husty.OpenCvSharp.DepthCamera
                 _hfill = new();
             }
             _converter = new(width, height, width, height);
-            _alignOn = true;
+            _alignOn = align;
             _fps = fps;
         }
 
@@ -83,7 +83,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// </summary>
         /// <param name="colorSize">Regulated by each device configuration</param>
         /// <param name="depthSize">Regulated by each device configuration</param>
-        public Realsense(Size colorSize, Size depthSize, double fps = 15,
+        public Realsense(Size colorSize, Size depthSize, double fps = 15, bool align = true,
             bool disparityTransform = true, bool spatialFilter = true, bool temporalFilter = true, bool holeFillingFilter = true)
         {
             var cWidth = colorSize.Width;
@@ -116,7 +116,7 @@ namespace Husty.OpenCvSharp.DepthCamera
                 _hfill = new();
             }
             _converter = new(cWidth, cHeight, dWidth, dHeight);
-            _alignOn = false;
+            _alignOn = align;
             _fps = fps;
         }
 

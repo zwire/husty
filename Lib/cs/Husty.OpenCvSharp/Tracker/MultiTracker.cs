@@ -49,7 +49,7 @@ namespace Husty.OpenCvSharp
 
         // ------- Methods ------- //
 
-        public void Update(ref Mat frame, List<(string Label, Point Center, Size Size)> detections, out List<(int Id, string Label, float Iou, Point Center, Size Size, Rect Box)> results)
+        public void Update(ref Mat frame, IEnumerable<(string Label, Point Center, Size Size)> detections, out IEnumerable<(int Id, string Label, float Iou, Point Center, Size Size, Rect Box)> results)
         {
             Assign(detections);
             results = UpdateMemory(frame).ToList();
@@ -61,7 +61,7 @@ namespace Husty.OpenCvSharp
             _trackers.Remove(target);
         }
 
-        private void Assign(List<(string Label, Point Center, Size Size)> detections)
+        private void Assign(IEnumerable<(string Label, Point Center, Size Size)> detections)
         {
             foreach (var detection in detections)
             {

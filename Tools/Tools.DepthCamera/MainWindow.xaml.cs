@@ -65,14 +65,18 @@ namespace Tools.DepthCamera
                 sw.WriteLine(_videoDir);
                 _videoConnector?.Dispose();
                 _cameraConnector?.Dispose();
+                _cameraConnector = null;
                 _camera?.Disconnect();
+                _camera = null;
             };
         }
 
         private void StartPauseButton_Click(object sender, RoutedEventArgs e)
         {
             _videoConnector?.Dispose();
+            _videoConnector = null;
             _player?.Dispose();
+            _player = null;
             if (!_isConnected)
             {
                 StartPauseButton.Content = "Close";
@@ -114,8 +118,9 @@ namespace Tools.DepthCamera
                 ShutterButton.IsEnabled = false;
                 _isConnected = false;
                 _cameraConnector?.Dispose();
-                _camera?.Disconnect();
                 _cameraConnector = null;
+                _camera?.Disconnect();
+                _camera = null;
             }
         }
 
@@ -142,7 +147,9 @@ namespace Tools.DepthCamera
         private void RecButton_Click(object sender, RoutedEventArgs e)
         {
             _videoConnector?.Dispose();
+            _videoConnector = null;
             _player?.Dispose();
+            _player = null;
             if (!_isConnected)
             {
                 RecButton.Content = "Stop";
@@ -190,6 +197,7 @@ namespace Tools.DepthCamera
                 PlayButton.IsEnabled = true;
                 _isConnected = false;
                 _cameraConnector?.Dispose();
+                _cameraConnector = null;
                 _camera?.Disconnect();
                 _cameraConnector = null;
             }
@@ -210,7 +218,9 @@ namespace Tools.DepthCamera
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             _videoConnector?.Dispose();
+            _videoConnector = null;
             _player?.Dispose();
+            _player = null;
             using var cofd = new CommonOpenFileDialog()
             {
                 Title = "動画を選択してください",
@@ -298,12 +308,12 @@ namespace Tools.DepthCamera
 
         private void ImageClicked(int x, int y)
         {
-            BGRXYZ info;
+            Vector3 info;
             if (_framesPool != null)
             {
                 lock (_lockobj)
                 {
-                    info = _framesPool.GetPointInfo(new(x, y));
+                    info = _framesPool.GetPointInfo(new(x, y)).Vector3;
                 }
                 XYZ.Content = $"XYZ = ({info.X}, {info.Y}, {info.Z})";
             }
@@ -327,7 +337,7 @@ namespace Tools.DepthCamera
             {
                 try
                 {
-                    _camera = new Realsense(new(640, 360), new(640, 360), 15, true, true, true, true); // D
+                    _camera = new Realsense(new(640, 360), 15); // D
                     //_camera = new Realsense(new(640, 480)); // L
                 }
                 catch

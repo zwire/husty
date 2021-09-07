@@ -48,13 +48,12 @@ namespace Husty.OpenCvSharp.DepthCamera
         private readonly BinaryReader _binReader;
         private readonly long[] _indexes;
         private int _positionIndex;
+        private int _interval => 800 / Fps;
 
 
         // ------- Properties ------- //
 
-        public int Fps { set; get; }
-
-        private int Interval => 800 / Fps;
+        public int Fps { get; }
 
         public int FrameCount => _indexes.Length;
 
@@ -71,7 +70,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <param name="filePath"></param>
         public VideoPlayer(string filePath, int fps = 15)
         {
-            if (!File.Exists(filePath)) throw new Exception("File doesn't Exist!");
+            if (!File.Exists(filePath)) throw new Exception("File doesn't exist!");
             _binReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read), Encoding.ASCII);
             var fileFormatCode = Encoding.ASCII.GetString(_binReader.ReadBytes(8));
             if (fileFormatCode != "HUSTY000") throw new Exception();
@@ -109,7 +108,7 @@ namespace Husty.OpenCvSharp.DepthCamera
                 .Synchronize()
                 .Select(i =>
                 {
-                    Thread.Sleep(Interval);
+                    Thread.Sleep(_interval);
                     GC.Collect();
                     return (ReadFrames().Frames, position++);
                 })

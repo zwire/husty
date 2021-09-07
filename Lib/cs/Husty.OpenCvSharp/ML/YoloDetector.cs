@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using OpenCvSharp;
@@ -33,6 +34,10 @@ namespace Husty.OpenCvSharp
         /// <param name="confidenceThreshold"></param>
         public YoloDetector(string cfg, string weights, string names, Size blobSize, float confidenceThreshold = 0.5f)
         {
+            if (blobSize.Width % 32 != 0 || blobSize.Height % 32 != 0)
+                throw new ArgumentException("Blob width and height value must be multiple of 32.");
+            if (confidenceThreshold < 0 || confidenceThreshold > 1)
+                throw new ArgumentOutOfRangeException("must be 0.0 - 1.0");
             _confidenceThreshold = confidenceThreshold;
             _blobSize = blobSize;
             _net = CvDnn.ReadNetFromDarknet(cfg, weights);

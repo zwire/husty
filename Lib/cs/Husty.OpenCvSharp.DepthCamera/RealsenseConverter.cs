@@ -6,7 +6,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// <summary>
     /// Native API type -> OpenCvSharp format
     /// </summary>
-    public class RealsenseConverter
+    internal class RealsenseConverter
     {
 
         // ------- Fields ------- //
@@ -19,7 +19,7 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         // ------- Constructor ------- //
 
-        public RealsenseConverter(int cWidth, int cHeight, int dWidth, int dHeight)
+        internal RealsenseConverter(int cWidth, int cHeight, int dWidth, int dHeight)
         {
             _cWidth = cWidth;
             _cHeight = cHeight;
@@ -30,7 +30,7 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         // ------- Methods ------- //
 
-        public void ToColorMat(VideoFrame frame, ref Mat colorMat)
+        internal void ToColorMat(VideoFrame frame, ref Mat colorMat)
         {
             if (colorMat.Type() != MatType.CV_8UC3) colorMat = new Mat(_cHeight, _cWidth, MatType.CV_8UC3);
             unsafe
@@ -46,7 +46,7 @@ namespace Husty.OpenCvSharp.DepthCamera
             }
         }
 
-        public void ToPointCloudMat(Frame frame, ref Mat pointCloudMat)
+        internal void ToPointCloudMat(Frame frame, ref Mat pointCloudMat)
         {
             if (pointCloudMat.Type() != MatType.CV_16UC3) pointCloudMat = new Mat(_dHeight, _dWidth, MatType.CV_16UC3);
             unsafe

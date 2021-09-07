@@ -182,7 +182,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <param name="roll">Roll angle (rad, clockwise of Z axis)</param>
         public unsafe BgrXyzMat Rotate(float pitch, float yaw, float roll)
         {
-            Mat rot = ZRot(roll) * YRot(yaw) * XRot(pitch);
+            Mat rot = Vector3.ZRot(roll) * Vector3.YRot(yaw) * Vector3.XRot(pitch);
             var d = (float*)rot.Data;
             var s = (short*)XYZ.Data;
             for (int i = 0; i < XYZ.Rows * XYZ.Cols * 3; i += 3)
@@ -197,46 +197,16 @@ namespace Husty.OpenCvSharp.DepthCamera
             return this;
         }
 
-
-        private Mat XRot(float rad)
-            => new Mat(3, 3, MatType.CV_32F, new float[] { 1, 0, 0, 0, (float)Math.Cos(rad), -(float)Math.Sin(rad), 0, (float)Math.Sin(rad), (float)Math.Cos(rad) });
-
-        private Mat YRot(float rad)
-            => new Mat(3, 3, MatType.CV_32F, new float[] { (float)Math.Cos(rad), 0, (float)Math.Sin(rad), 0, 1, 0, -(float)Math.Sin(rad), 0, (float)Math.Cos(rad) });
-
-        private Mat ZRot(float rad)
-            => new Mat(3, 3, MatType.CV_32F, new float[] { (float)Math.Cos(rad), -(float)Math.Sin(rad), 0, (float)Math.Sin(rad), (float)Math.Cos(rad), 0, 0, 0, 1 });
-
     }
 
 
     /// <summary>
-    /// Struct of Point and Color
+    /// Record of Point and Color
     /// </summary>
-    public struct BGRXYZ
+    public record BGRXYZ(byte B, byte G, byte R, short X, short Y, short Z)
     {
 
-        public BGRXYZ(byte b, byte g, byte r, short x, short y, short z)
-        {
-            B = b;
-            G = g;
-            R = r;
-            X = x;
-            Y = y;
-            Z = z;
-        }
-
-        public byte B { private set; get; }
-
-        public byte G { private set; get; }
-
-        public byte R { private set; get; }
-
-        public short X { private set; get; }
-
-        public short Y { private set; get; }
-
-        public short Z { private set; get; }
+        public Vector3 Vector3 => new(X, Y, Z);
 
     }
 

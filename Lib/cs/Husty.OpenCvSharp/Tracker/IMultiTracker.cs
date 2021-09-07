@@ -18,8 +18,8 @@ namespace Husty.OpenCvSharp
         /// <param name="results"></param>
         public void Update(
             ref Mat frame,
-            List<(string Label, Point Center, Size Size)> detections,
-            out List<(int Id, string Label, float Iou, Point Center, Size Size, Rect Box)> results
+            IEnumerable<(string Label, Point Center, Size Size)> detections,
+            out IEnumerable<(int Id, string Label, float Iou, Point Center, Size Size, Rect Box)> results
             );
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Husty.OpenCvSharp
     /// <summary>
     /// For management by MultiTracker
     /// </summary>
-    class Individual
+    internal class Individual
     {
 
         // ------- Fields ------- //
@@ -44,30 +44,30 @@ namespace Husty.OpenCvSharp
 
         // ------- Properties ------- //
 
-        public string Label { set; get; }
+        internal string Label { set; get; }
 
-        public float Iou { set; get; }
+        internal float Iou { set; get; }
 
-        public Point Center { set; get; }
+        internal Point Center { set; get; }
 
-        public Size Size { set; get; }
+        internal Size Size { set; get; }
 
-        public Point NextCenter { set; get; }
+        internal Point NextCenter { set; get; }
 
-        public Size NextSize { set; get; }
+        internal Size NextSize { set; get; }
 
-        public int DetectCount { set; get; }
+        internal int DetectCount { set; get; }
 
-        public int MissCount { set; get; }
+        internal int MissCount { set; get; }
 
-        public int Id { private set; get; }
+        internal int Id { private set; get; }
 
-        public string Mark { private set; get; }
+        internal string Mark { private set; get; }
 
 
         // ------- Constructor ------- //
 
-        public Individual(Point center, Size size, int id, double dt, double filterStrength = 1.0, string label = "", string mark = "")
+        internal Individual(Point center, Size size, int id, double dt, double filterStrength = 1.0, string label = "", string mark = "")
         {
             Id = id;
             Label = label;
@@ -97,7 +97,7 @@ namespace Husty.OpenCvSharp
 
         // ------- Methods ------- //
 
-        public void Predict(Point center, Size size)
+        internal void Predict(Point center, Size size)
         {
             var (correct, predict) = _filter.Update(new double[] { center.X, center.Y, size.Width, size.Height });
             Center = new Point(correct[0], correct[1]);
@@ -105,5 +105,6 @@ namespace Husty.OpenCvSharp
             NextCenter = new Point(predict[0], predict[1]);
             NextSize = new Size(predict[4], predict[5]);
         }
+
     }
 }

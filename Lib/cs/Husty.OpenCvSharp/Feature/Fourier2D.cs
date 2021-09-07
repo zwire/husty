@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using OpenCvSharp;
 
 namespace Husty.OpenCvSharp
@@ -46,7 +47,7 @@ namespace Husty.OpenCvSharp
         /// Discrete Fourier Transformation
         /// </summary>
         /// <remarks>Frequency feature of image data</remarks>
-        unsafe public float[] Dft()
+        unsafe public IEnumerable<float> Dft()
         {
             Cv2.Dft(_complex, _complex);
             Cv2.Split(_complex, out var planes);
@@ -82,7 +83,7 @@ namespace Husty.OpenCvSharp
         /// Inverse Discrete Fourier Transformation
         /// </summary>
         /// <returns>Feature of values</returns>
-        unsafe public float[] Idft()
+        unsafe public IEnumerable<float> Idft()
         {
             Cv2.Idft(_complex, _complex, DftFlags.Scale);
             Cv2.Split(_complex, out Mat[] planes);

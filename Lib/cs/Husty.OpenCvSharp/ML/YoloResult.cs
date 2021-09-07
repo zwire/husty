@@ -7,6 +7,11 @@ namespace Husty.OpenCvSharp
 
         public Point2d Center => new(Box.Left + Box.Width / 2, Box.Top + Box.Height / 2);
 
+        public Point ScaledCenter(int width, int height) => new(Center.X * width, Center.Y * height);
+
+        public Rect ScaledBox(int width, int height) => new(new(Box.Left * width, Box.Top * height), new(Box.Width * width, Box.Height * height));
+
+
         public void DrawCenterPoint(Mat image, Scalar color, int pointSize)
         {
             var c = new Point(Center.X * image.Width, Center.Y * image.Height);

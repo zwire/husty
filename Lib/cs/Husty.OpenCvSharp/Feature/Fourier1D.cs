@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using OpenCvSharp;
 
 namespace Husty.OpenCvSharp
@@ -23,10 +24,10 @@ namespace Husty.OpenCvSharp
         /// </summary>
         /// <param name="inputList">List of value</param>
         /// <param name="dt">Sampling time</param>
-        public Fourier1D(List<double> inputList, double dt)
+        public Fourier1D(IEnumerable<double> inputList, double dt)
         {
             _samplingRate = 1.0 / dt;
-            _sampleCount = inputList.Count;
+            _sampleCount = inputList.Count();
             using var real = new Mat(_sampleCount, 1, MatType.CV_32F, inputList.ToArray());
             _complex = new Mat();
             Cv2.Merge(new Mat[] { real, new Mat(_sampleCount, 1, MatType.CV_32F, 0.0) }, _complex);
@@ -68,7 +69,7 @@ namespace Husty.OpenCvSharp
         /// Inverse Discrete Fourier Transformation
         /// </summary>
         /// <returns>Time and value</returns>
-        unsafe public List<(double Time, float Value)> IdftWithTime()
+        unsafe public IEnumerable<(double Time, float Value)> IdftWithTime()
         {
             Cv2.Idft(_complex, _complex, DftFlags.Scale);
             Cv2.Split(_complex, out var planes);
@@ -83,13 +84,9 @@ namespace Husty.OpenCvSharp
         /// Inverse Discrete Fourier Transformation
         /// </summary>
         /// <returns>Feature of values</returns>
-        public float [] Idft()
+        public IEnumerable<float> Idft()
         {
-            var list = IdftWithTime();
-            var feature = new float[list.Count];
-            for (int i = 0; i < feature.Length; i++)
-                feature[i] = list[i].Value;
-            return feature;
+            return IdftWithTime().Select(i => i.Value);
         }
 
         /// <summary>
