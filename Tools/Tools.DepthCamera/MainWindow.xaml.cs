@@ -327,7 +327,7 @@ namespace Tools.DepthCamera
             {
                 try
                 {
-                    _camera = new Realsense(new(640, 360), new(640, 360), 100, true, true, true, true); // D
+                    _camera = new Realsense(new(640, 360), new(640, 360), 15, true, true, true, true); // D
                     //_camera = new Realsense(new(640, 480)); // L
                 }
                 catch

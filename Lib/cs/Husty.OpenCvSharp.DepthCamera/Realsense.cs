@@ -43,7 +43,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// Open device
         /// </summary>
         /// <param name="size">Regulated by each device configuration</param>
-        public Realsense(Size size, double fps = 30,
+        public Realsense(Size size, double fps = 15,
             bool disparityTransform = true, bool spatialFilter = true, bool temporalFilter = true, bool holeFillingFilter = true)
         {
             var width = size.Width;
@@ -83,7 +83,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// </summary>
         /// <param name="colorSize">Regulated by each device configuration</param>
         /// <param name="depthSize">Regulated by each device configuration</param>
-        public Realsense(Size colorSize, Size depthSize, double fps = 30,
+        public Realsense(Size colorSize, Size depthSize, double fps = 15,
             bool disparityTransform = true, bool spatialFilter = true, bool temporalFilter = true, bool holeFillingFilter = true)
         {
             var cWidth = colorSize.Width;
@@ -148,7 +148,7 @@ namespace Husty.OpenCvSharp.DepthCamera
                     _converter.ToPointCloudMat(depth, ref pointCloudMat);
                     depth.Dispose();
                     frames.Dispose();
-                    Thread.Sleep(100 / (int)_fps);
+                    Thread.Sleep(1000 / (int)_fps);
                     return new BgrXyzMat(colorMat, pointCloudMat);
                 })
                 .Publish()
