@@ -331,13 +331,13 @@ namespace Tools.DepthCamera
                         DepthMode = DepthMode.NFOV_2x2Binned,
                         SynchronizedImagesOnly = true,
                         CameraFPS = FPS.FPS15
-                    }, Kinect.Matching.On);
+                    });
             }
             catch
             {
                 try
                 {
-                    _camera = new Realsense(new(640, 360), 15); // D
+                    _camera = new Realsense(new(640, 360), 30); // D
                     //_camera = new Realsense(new(640, 480)); // L
                 }
                 catch

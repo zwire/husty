@@ -17,7 +17,6 @@ namespace Husty.OpenCvSharp.DepthCamera
         private readonly Device _device;
         private readonly KinectConverter _converter;
         private readonly Transformation _transformation;
-        private readonly Matching _matching;
         private readonly float _pitchRad;
         private readonly float _yawRad;
         private readonly float _rollRad;
@@ -32,15 +31,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// </summary>
         public DeviceConfiguration Config { get; }
 
-        public Size ColorFrameSize { get; }
-
-        public Size DepthFrameSize { get; }
-
-
-        /// <summary>
-        /// Whether each pixel is matched or seperated
-        /// </summary>
-        public enum Matching { On, Off }
+        public Size FrameSize { get; }
 
 
         // ------- Constructor ------- //
@@ -49,9 +40,8 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// Open device
         /// </summary>
         /// <param name="config">User settings</param>
-        public Kinect(DeviceConfiguration config, Matching matching = Matching.On, float pitchDeg = -5.8f, float yawDeg = -1.3f, float rollDeg = 0f)
+        public Kinect(DeviceConfiguration config, float pitchDeg = -5.8f, float yawDeg = -1.3f, float rollDeg = 0f)
         {
-            _matching = matching;
             _pitchRad = (float)(pitchDeg * Math.PI / 180);
             _yawRad = (float)(yawDeg * Math.PI / 180);
             _rollRad = (float)(rollDeg * Math.PI / 180);
@@ -60,11 +50,9 @@ namespace Husty.OpenCvSharp.DepthCamera
             _transformation = _device.GetCalibration().CreateTransformation();
             var dcal = _device.GetCalibration().DepthCameraCalibration;
             var ccal = _device.GetCalibration().ColorCameraCalibration;
-            DepthFrameSize = new Size(dcal.ResolutionWidth, dcal.ResolutionHeight);
-            ColorFrameSize = new Size(ccal.ResolutionWidth, ccal.ResolutionHeight);
-            if (_matching == Matching.On) ColorFrameSize = DepthFrameSize;
+            FrameSize = new Size(dcal.ResolutionWidth, dcal.ResolutionHeight);
             Config = config;
-            _converter = new KinectConverter(ColorFrameSize, DepthFrameSize);
+            _converter = new KinectConverter(FrameSize.Width, FrameSize.Height);
             Fps = config.CameraFPS switch
             {
                 FPS.FPS5 => 5,
@@ -77,7 +65,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <summary>
         /// Open device (default)
         /// </summary>
-        public Kinect(Matching matching = Matching.On, float pitchDeg = -5.8f, float yawDeg = -1.3f, float rollDeg = 0f)
+        public Kinect(float pitchDeg = -5.8f, float yawDeg = -1.3f, float rollDeg = 0f)
             : this(new DeviceConfiguration
             {
                 ColorFormat = ImageFormat.ColorBGRA32,
@@ -86,7 +74,7 @@ namespace Husty.OpenCvSharp.DepthCamera
                 SynchronizedImagesOnly = true,
                 CameraFPS = FPS.FPS15
             },
-            matching, pitchDeg, yawDeg, rollDeg)
+            pitchDeg, yawDeg, rollDeg)
         { }
 
 
@@ -105,16 +93,10 @@ namespace Husty.OpenCvSharp.DepthCamera
                 {
                     GC.Collect();
                     using var capture = _device.GetCapture();
-                    Image colorImg;
-                    if (_matching != Matching.On)
-                        colorImg = capture.Color;
-                    else
-                        colorImg = _transformation.ColorImageToDepthCamera(capture);
-                    var pointCloudImg = _transformation.DepthImageToPointCloud(capture.Depth);
+                    using var colorImg = _transformation.ColorImageToDepthCamera(capture);
+                    using var pointCloudImg = _transformation.DepthImageToPointCloud(capture.Depth);
                     _converter.ToColorMat(colorImg, ref colorMat);
                     _converter.ToPointCloudMat(pointCloudImg, ref pointCloudMat);
-                    colorImg.Dispose();
-                    pointCloudImg.Dispose();
                     return BgrXyzMat.Create(colorMat.Clone(), pointCloudMat.Clone()).Rotate(_pitchRad, _yawRad, _rollRad);
                 })
                 .Publish()

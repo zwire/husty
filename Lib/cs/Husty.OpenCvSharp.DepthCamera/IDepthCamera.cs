@@ -11,9 +11,7 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         public double Fps { get; }
 
-        public Size ColorFrameSize { get; }
-
-        public Size DepthFrameSize { get; }
+        public Size FrameSize { get; }
 
         /// <summary>
         /// Start streaming

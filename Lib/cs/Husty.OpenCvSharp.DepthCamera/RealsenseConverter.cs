@@ -11,20 +11,16 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         // ------- Fields ------- //
 
-        private readonly int _cWidth;
-        private readonly int _cHeight;
-        private readonly int _dWidth;
-        private readonly int _dHeight;
+        private readonly int _width;
+        private readonly int _height;
 
 
         // ------- Constructor ------- //
 
-        internal RealsenseConverter(int cWidth, int cHeight, int dWidth, int dHeight)
+        internal RealsenseConverter(int width, int height)
         {
-            _cWidth = cWidth;
-            _cHeight = cHeight;
-            _dWidth = dWidth;
-            _dHeight = dHeight;
+            _width = width;
+            _height = height;
         }
 
 
@@ -32,7 +28,7 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         internal void ToColorMat(VideoFrame frame, ref Mat colorMat)
         {
-            if (colorMat.Type() != MatType.CV_8UC3) colorMat = new Mat(_cHeight, _cWidth, MatType.CV_8UC3);
+            if (colorMat.Type() != MatType.CV_8UC3) colorMat = new Mat(_height, _width, MatType.CV_8UC3);
             unsafe
             {
                 var rgbData = (byte*)frame.Data;
@@ -48,7 +44,7 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         internal void ToPointCloudMat(Frame frame, ref Mat pointCloudMat)
         {
-            if (pointCloudMat.Type() != MatType.CV_16UC3) pointCloudMat = new Mat(_dHeight, _dWidth, MatType.CV_16UC3);
+            if (pointCloudMat.Type() != MatType.CV_16UC3) pointCloudMat = new Mat(_height, _width, MatType.CV_16UC3);
             unsafe
             {
                 var pData = (float*)(new PointCloud().Process(frame).Data);

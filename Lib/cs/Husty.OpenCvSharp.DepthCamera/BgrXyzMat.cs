@@ -7,7 +7,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// <summary>
     /// Point Cloud with Color
     /// </summary>
-    public class BgrXyzMat
+    public class BgrXyzMat : IDisposable
     {
 
         // ------- Properties ------- //
@@ -15,17 +15,25 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <summary>
         /// Color image
         /// </summary>
-        public Mat BGR { private set; get; }
+        public Mat BGR { get; }
 
         /// <summary>
         /// Point Cloud image
         /// </summary>
-        public Mat XYZ { private set; get; }
+        public Mat XYZ { get; }
 
         /// <summary>
         /// Depth image (0-65535)(mm)
         /// </summary>
         public Mat Depth16 => XYZ.Split()[2];
+
+        public int Width => BGR.Width;
+
+        public int Height => BGR.Height;
+
+        public int Rows => BGR.Rows;
+
+        public int Cols => BGR.Cols;
 
 
         // ------- Constructor ------- //
@@ -48,6 +56,8 @@ namespace Husty.OpenCvSharp.DepthCamera
         {
             BGR = bgr;
             XYZ = xyz;
+            if (BGR.Width != XYZ.Width || BGR.Height != XYZ.Height)
+                throw new InvalidOperationException("Require: BGR size == XYZ size");
         }
 
         /// <summary>
@@ -59,10 +69,19 @@ namespace Husty.OpenCvSharp.DepthCamera
         {
             BGR = Cv2.ImDecode(BGRBytes, ImreadModes.Unchanged);
             XYZ = Cv2.ImDecode(XYZBytes, ImreadModes.Unchanged);
+            if (BGR.Width != XYZ.Width || BGR.Height != XYZ.Height)
+                throw new InvalidOperationException("Require: BGR size == XYZ size");
         }
 
 
         // ------- Methods ------- //
+
+
+        public void Dispose()
+        {
+            BGR?.Dispose();
+            XYZ?.Dispose();
+        }
 
         /// <summary>
         /// Same function as constructor.
@@ -71,7 +90,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <param name="xyz">Point Cloud Image (must be same size of Color Image)</param>
         /// <returns></returns>
         public static BgrXyzMat Create(Mat bgr, Mat xyz)
-            => new BgrXyzMat(bgr, xyz);
+            => new(bgr, xyz);
 
         /// <summary>
         /// Decode from byte array.
@@ -80,7 +99,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <param name="XYZBytes"></param>
         /// <returns></returns>
         public static BgrXyzMat YmsDecode(byte[] BGRBytes, byte[] XYZBytes)
-            => new BgrXyzMat(Cv2.ImDecode(BGRBytes, ImreadModes.Unchanged), Cv2.ImDecode(XYZBytes, ImreadModes.Unchanged));
+            => new(Cv2.ImDecode(BGRBytes, ImreadModes.Unchanged), Cv2.ImDecode(XYZBytes, ImreadModes.Unchanged));
 
         /// <summary>
         /// Output encoded byte array.
@@ -99,7 +118,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// Create deep copy of this object.
         /// </summary>
         /// <returns></returns>
-        public BgrXyzMat Clone() => new BgrXyzMat(BGR.Clone(), XYZ.Clone());
+        public BgrXyzMat Clone() => new(BGR.Clone(), XYZ.Clone());
 
         /// <summary>
         /// Get Depth image (Normalize value in 0-255)

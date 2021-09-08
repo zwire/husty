@@ -53,7 +53,8 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <param name="filePath"></param>
         public VideoRecorder(string filePath)
         {
-            if (!Directory.Exists(Path.GetDirectoryName(filePath))) throw new Exception("Directory doesn't Exist!");
+            if (!Directory.Exists(Path.GetDirectoryName(filePath)))
+                filePath = Path.GetFileName(filePath);
             _binWriter = new BinaryWriter(File.Open(filePath, FileMode.Create), Encoding.ASCII);
             var fileFormatCode = Encoding.ASCII.GetBytes("HUSTY000");
             _binWriter.Write(fileFormatCode);
