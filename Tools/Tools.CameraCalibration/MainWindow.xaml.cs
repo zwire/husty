@@ -194,6 +194,8 @@ namespace Tools.CameraCalibration
                     {
                         _imageSourceDir = Path.GetDirectoryName(cofd.FileName);
                         _frame = Cv2.ImRead(cofd.FileName);
+                        Image.Width = _frame.Width;
+                        Image.Height = _frame.Height;
                         Image.Source = _frame.ToBitmapSource();
                         _points = new();
                         Count2D.Content = "0";
@@ -253,6 +255,8 @@ namespace Tools.CameraCalibration
                         chess.DrawCorners(_frame, corners);
                         Dispatcher.Invoke(() =>
                         {
+                            Image.Width = _frame.Width;
+                            Image.Height = _frame.Height;
                             Image.Source = _frame.ToBitmapSource();
                             Thread.Sleep(500);
                         });
@@ -358,7 +362,7 @@ namespace Tools.CameraCalibration
         {
             if (_exMode)
             {
-                if (float.TryParse(X3D.Text, out var x) && float.TryParse(Y3D.Text, out var y))
+                if (_isSampling && float.TryParse(X3D.Text, out var x) && float.TryParse(Y3D.Text, out var y))
                 {
                     AppendButton.IsEnabled = true;
                 }
@@ -373,7 +377,7 @@ namespace Tools.CameraCalibration
         {
             if (_exMode)
             {
-                if (float.TryParse(X3D.Text, out var x) && float.TryParse(Y3D.Text, out var y))
+                if (_isSampling && float.TryParse(X3D.Text, out var x) && float.TryParse(Y3D.Text, out var y))
                 {
                     AppendButton.IsEnabled = true;
                 }
@@ -386,26 +390,29 @@ namespace Tools.CameraCalibration
 
         private void Image_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (!_isSampling && !_testExOn) return;
+            var p = e.GetPosition(Image);
+            X2D.Content = $"{(int)p.X}";
+            Y2D.Content = $"{(int)p.Y}";
+            X3D.IsEnabled = true;
+            Y3D.IsEnabled = true;
             lock (_locker)
             {
-                var p = e.GetPosition(Image);
-                if (_isSampling && _frame != null && !_frame.Empty())
+                if (_frame != null && !_frame.Empty())
                 {
-                    X2D.Content = $"{(int)p.X}";
-                    Y2D.Content = $"{(int)p.Y}";
-                    X3D.IsEnabled = true;
-                    Y3D.IsEnabled = true;
                     Cv2.Circle(_frame, (int)p.X, (int)p.Y, 3, new(0, 0, 255), 3);
+                    Image.Width = _frame.Width;
+                    Image.Height = _frame.Height;
                     Image.Source = _frame.ToBitmapSource();
                 }
-                if (_trs != null && _testExOn)
-                {
-                    X2D.Content = $"{(int)p.X}";
-                    Y2D.Content = $"{(int)p.Y}";
-                    var p3 = _trs.ConvertToWorldCoordinate(new((int)p.X, (int)p.Y));
-                    X3D.Text = $"{p3.X:f1}";
-                    Y3D.Text = $"{p3.Y:f1}";
-                }
+            }
+            if (_trs != null && _testExOn)
+            {
+                X2D.Content = $"{(int)p.X}";
+                Y2D.Content = $"{(int)p.Y}";
+                var p3 = _trs.ConvertToWorldCoordinate(new((int)p.X, (int)p.Y));
+                X3D.Text = $"{p3.X:f1}";
+                Y3D.Text = $"{p3.Y:f1}";
             }
         }
 
