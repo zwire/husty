@@ -28,7 +28,7 @@ namespace Tools.DepthCamera
         private string _videoDir = "";
         private VideoPlayer _player;
         private BgrXyzMat _framesPool;
-        private object _lockobj = new();
+        private readonly object _lockobj = new();
         //private Scalar red = new Scalar(0, 0, 255);
         //private Scalar red = new Scalar(0, 0, 255);
         //private Point left = new Point(130, 144);
@@ -89,6 +89,7 @@ namespace Tools.DepthCamera
                 PlaySlider.Visibility = Visibility.Hidden;
                 _isConnected = AttemptConnection();
                 if (!_isConnected) new Exception("Couldn't connect device!");
+
                 ShutterButton.IsEnabled = true;
                 _cameraConnector = _camera.Connect()
                     .Subscribe(imgs =>
@@ -315,6 +316,7 @@ namespace Tools.DepthCamera
                 {
                     info = _framesPool.GetPointInfo(new(x, y)).Vector3;
                 }
+                UV.Content = $"UV = ({x}, {y})";
                 XYZ.Content = $"XYZ = ({info.X}, {info.Y}, {info.Z})";
             }
         }
@@ -328,7 +330,7 @@ namespace Tools.DepthCamera
                     {
                         ColorFormat = ImageFormat.ColorBGRA32,
                         ColorResolution = ColorResolution.R720p,
-                        DepthMode = DepthMode.NFOV_2x2Binned,
+                        DepthMode = DepthMode.WFOV_2x2Binned,
                         SynchronizedImagesOnly = true,
                         CameraFPS = FPS.FPS15
                     });

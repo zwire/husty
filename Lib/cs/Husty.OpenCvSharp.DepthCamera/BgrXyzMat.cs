@@ -162,7 +162,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <summary>
         /// Move all Point Cloud.
         /// </summary>
-        /// <param name="delta">3D vector of transform (mm)</param>
+        /// <param name="delta">3D vector of translation (mm)</param>
         public unsafe BgrXyzMat Move(Vector3 delta)
         {
             var s = (short*)XYZ.Data;
@@ -201,8 +201,18 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <param name="roll">Roll angle (rad, clockwise of Z axis)</param>
         public unsafe BgrXyzMat Rotate(float pitch, float yaw, float roll)
         {
-            Mat rot = Vector3.ZRot(roll) * Vector3.YRot(yaw) * Vector3.XRot(pitch);
-            var d = (float*)rot.Data;
+            Rotate(Vector3.ZRot(roll) * Vector3.YRot(yaw) * Vector3.XRot(pitch));
+            return this;
+        }
+
+        /// <summary>
+        /// Rotate 3D of right hand system.
+        /// </summary>
+        /// <param name="rotationMat">Rotation Matrix</param>
+        /// <returns></returns>
+        public unsafe BgrXyzMat Rotate(Mat rotationMat)
+        {
+            var d = (float*)rotationMat.Data;
             var s = (short*)XYZ.Data;
             for (int i = 0; i < XYZ.Rows * XYZ.Cols * 3; i += 3)
             {
