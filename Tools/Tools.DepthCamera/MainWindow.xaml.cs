@@ -57,7 +57,7 @@ namespace Tools.DepthCamera
             }
             var t = DateTimeOffset.Now;
             var name = $"log_{t.Year}{t.Month:d2}{t.Day:d2}_{t.Hour:d2}{t.Minute:d2}{t.Second:d2}.csv";
-            _log = new($"{name}");
+            _log = new($"{_saveDir}\\{name}");
             _log.WriteLine("device,u,v,x,y,z,tx,ty,tz");
             if (!Directory.Exists(_saveDir))
                 _saveDir = "C:";
@@ -329,7 +329,7 @@ namespace Tools.DepthCamera
                 XYZ1.Content = $"XYZ ({info.X}, {info.Y}, {info.Z})";
 
                 var xx = info.Z;
-                var yy = info.X;
+                var yy = (short)-info.X;
                 var zz = (short)-info.Y;
                 if (xx == 0)
                 {
@@ -350,7 +350,7 @@ namespace Tools.DepthCamera
                 {
                     // Realsense
                     var xxx = (short)(0.7355 * xx - 0.0130 * yy + 0.7006 * zz + 196.1);
-                    var yyy = (short)(0.0099 * xx + 1.0359 * yy + 0.0012 * zz - 12.30);
+                    var yyy = (short)(0.0099 * xx + 1.0359 * yy + 0.0012 * zz - 12.30) + 60;
                     var zzz = (short)(-0.700 * xx - 0.0052 * yy + 0.7701 * zz - 51.10);
                     XYZ2.Content = $"Transform ({xxx}, {yyy}, {zzz})";
                     _log.WriteLine($"realsense,{x},{y},{info.X},{info.Y},{info.Z},{xxx},{yyy},{zzz}");
