@@ -36,6 +36,9 @@ namespace Tools.DepthCamera
         //private Point top = new Point(160, 114);
         //private Point bottom = new Point(160, 174);
 
+        private readonly StreamWriter _log;
+        private bool _isKinect;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -52,6 +55,10 @@ namespace Tools.DepthCamera
                     _videoDir = lines[1].TrimEnd();
                 }
             }
+            var t = DateTimeOffset.Now;
+            var name = $"log_{t.Year}{t.Month:d2}{t.Day:d2}_{t.Hour:d2}{t.Minute:d2}{t.Second:d2}.csv";
+            _log = new($"{name}");
+            _log.WriteLine("device,u,v,x,y,z,tx,ty,tz");
             if (!Directory.Exists(_saveDir))
                 _saveDir = "C:";
             if (!Directory.Exists(_videoDir))
@@ -60,6 +67,8 @@ namespace Tools.DepthCamera
             Closed += (sender, args) =>
             {
                 GC.Collect();
+                _log.Close();
+                _log.Dispose();
                 using var sw = new StreamWriter("cache.txt", false);
                 sw.WriteLine(_saveDir);
                 sw.WriteLine(_videoDir);
@@ -316,8 +325,36 @@ namespace Tools.DepthCamera
                 {
                     info = _framesPool.GetPointInfo(new(x, y)).Vector3;
                 }
-                UV.Content = $"UV = ({x}, {y})";
-                XYZ.Content = $"XYZ = ({info.X}, {info.Y}, {info.Z})";
+                UV.Content = $"UV ({x}, {y})";
+                XYZ1.Content = $"XYZ ({info.X}, {info.Y}, {info.Z})";
+
+                var xx = info.Z;
+                var yy = info.X;
+                var zz = (short)-info.Y;
+                if (xx == 0)
+                {
+                    XYZ2.Content = $"Transform (--, --, --)";
+                    return;
+                };
+
+                if (_isKinect)
+                {
+                    // Kinect
+                    var xxx = (short)(0.80567 * xx + 0.020847 * yy + 0.462340 * zz + 313.58);
+                    var yyy = (short)(-0.04243 * xx + 1.008600 * yy + 0.041622 * zz + 1.3942);
+                    var zzz = (short)(-0.36180 * xx - 0.050545 * yy + 0.882870 * zz - 110.03);
+                    XYZ2.Content = $"Transform ({xxx}, {yyy}, {zzz})";
+                    _log.WriteLine($"kinect,{x},{y},{info.X},{info.Y},{info.Z},{xxx},{yyy},{zzz}");
+                }
+                else
+                {
+                    // Realsense
+                    var xxx = (short)(0.7355 * xx - 0.0130 * yy + 0.7006 * zz + 196.1);
+                    var yyy = (short)(0.0099 * xx + 1.0359 * yy + 0.0012 * zz - 12.30);
+                    var zzz = (short)(-0.700 * xx - 0.0052 * yy + 0.7701 * zz - 51.10);
+                    XYZ2.Content = $"Transform ({xxx}, {yyy}, {zzz})";
+                    _log.WriteLine($"realsense,{x},{y},{info.X},{info.Y},{info.Z},{xxx},{yyy},{zzz}");
+                }
             }
         }
 
@@ -334,6 +371,7 @@ namespace Tools.DepthCamera
                         SynchronizedImagesOnly = true,
                         CameraFPS = FPS.FPS15
                     });
+                _isKinect = true;
             }
             catch
             {
@@ -341,6 +379,7 @@ namespace Tools.DepthCamera
                 {
                     _camera = new Realsense(new(640, 360), 30); // D
                     //_camera = new Realsense(new(640, 480)); // L
+                    _isKinect = false;
                 }
                 catch
                 {

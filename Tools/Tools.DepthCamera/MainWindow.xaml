@@ -56,17 +56,20 @@
         <Viewbox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Margin="5">
             <Label x:Name="TB" Foreground="White"/>
         </Viewbox>-->
-        <Viewbox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Margin="5">
+        <Viewbox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5">
             <Label x:Name="UV" Foreground="White" Width="180"/>
         </Viewbox>
-        <Viewbox Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2" Margin="5">
-            <Label x:Name="XYZ" Foreground="White" Width="180"/>
+        <Viewbox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Margin="5">
+            <Label x:Name="XYZ1" Foreground="White" Width="180"/>
         </Viewbox>
-        <Viewbox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" Margin="10">
+        <Viewbox Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2" Margin="5">
+            <Label x:Name="XYZ2" Foreground="White" Width="180"/>
+        </Viewbox>
+        <Viewbox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="10">
             <Image x:Name="ColorFrame" PreviewMouseLeftButtonDown="ColorFrame_PreviewMouseLeftButtonDown"/>
         </Viewbox>
         <Viewbox Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" Margin="10">
-            <Image x:Name="DepthFrame" Visibility="Hidden" PreviewMouseLeftButtonDown="DepthFrame_PreviewMouseLeftButtonDown"/>
+            <Image x:Name="DepthFrame" PreviewMouseLeftButtonDown="DepthFrame_PreviewMouseLeftButtonDown"/>
         </Viewbox>
         <Viewbox Grid.Row="3" Grid.Column="0" Margin="5">
             <Button x:Name="PlayButton" Content="Play" Width="50" Background="DarkGray" Click="PlayButton_Click"/>
