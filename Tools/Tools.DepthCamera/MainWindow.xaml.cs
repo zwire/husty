@@ -350,7 +350,7 @@ namespace Tools.DepthCamera
                 {
                     // Realsense
                     var xxx = (short)(0.7355 * xx - 0.0130 * yy + 0.7006 * zz + 196.1);
-                    var yyy = (short)(0.0099 * xx + 1.0359 * yy + 0.0012 * zz - 12.30) + 60;
+                    var yyy = (short)(0.0099 * xx + 1.0359 * yy + 0.0012 * zz - 12.30) + 55;
                     var zzz = (short)(-0.700 * xx - 0.0052 * yy + 0.7701 * zz - 51.10);
                     XYZ2.Content = $"Transform ({xxx}, {yyy}, {zzz})";
                     _log.WriteLine($"realsense,{x},{y},{info.X},{info.Y},{info.Z},{xxx},{yyy},{zzz}");
