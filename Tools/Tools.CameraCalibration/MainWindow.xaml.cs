@@ -1,27 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Concurrency;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Husty.OpenCvSharp;
 using Path = System.IO.Path;
-using Point = OpenCvSharp.Point;
 
 namespace Tools.CameraCalibration
 {
@@ -194,9 +186,9 @@ namespace Tools.CameraCalibration
                     {
                         _imageSourceDir = Path.GetDirectoryName(cofd.FileName);
                         _frame = Cv2.ImRead(cofd.FileName);
-                        if (File.Exists("intrinsic.txt"))
+                        if (File.Exists("intrinsic.json"))
                         {
-                            _paramIn = IntrinsicCameraParameters.Load("intrinsic.txt");
+                            _paramIn = IntrinsicCameraParameters.Load("intrinsic.json");
                             _frame = _frame.Undistort(_paramIn.CameraMatrix, _paramIn.DistortionCoeffs);
                         }
                         Image.Width = _frame.Width;
@@ -246,7 +238,7 @@ namespace Tools.CameraCalibration
                 if (_imgFilesIn == null || _imgFilesIn.Count == 0) return;
                 var chess = new Chessboard(7, 10, 32.5f);
                 _paramIn = IntrinsicCameraCalibrator.CalibrateWithChessboardImages(chess, _imgFilesIn);
-                _paramIn.Save("intrinsic.txt");
+                _paramIn.Save("intrinsic.json");
                 TestIntrinsicButton.IsEnabled = true;
                 Task.Run(() =>
                 {
@@ -267,11 +259,11 @@ namespace Tools.CameraCalibration
             }
             else
             {
-                if (!File.Exists("intrinsic.txt"))
+                if (!File.Exists("intrinsic.json"))
                     throw new Exception("Please prepare intrinsic params file!");
-                _paramIn = IntrinsicCameraParameters.Load("intrinsic.txt");
+                _paramIn = IntrinsicCameraParameters.Load("intrinsic.json");
                 _paramEx = ExtrinsicCameraCalibrator.CalibrateWithGroundCoordinates(_points, _paramIn);
-                _paramEx.Save("extrinsic.txt");
+                _paramEx.Save("extrinsic.json");
                 _trs = new(_paramIn.CameraMatrix, _paramEx);
                 TestIntrinsicButton.IsEnabled = true;
                 TestExtrinsicButton.IsEnabled = true;
@@ -420,23 +412,23 @@ namespace Tools.CameraCalibration
 
         private void LoadIntrinsicButton_Click(object sender, RoutedEventArgs e)
         {
-            if (File.Exists("intrinsic.txt"))
+            if (File.Exists("intrinsic.json"))
             {
-                _paramIn = IntrinsicCameraParameters.Load("intrinsic.txt");
+                _paramIn = IntrinsicCameraParameters.Load("intrinsic.json");
                 TestIntrinsicButton.IsEnabled = true;
             }
         }
 
         private void LoadExtrinsicButton_Click(object sender, RoutedEventArgs e)
         {
-            if (File.Exists("intrinsic.txt"))
+            if (File.Exists("intrinsic.json"))
             {
-                _paramIn = IntrinsicCameraParameters.Load("intrinsic.txt");
+                _paramIn = IntrinsicCameraParameters.Load("intrinsic.json");
                 TestIntrinsicButton.IsEnabled = true;
             }
-            if (File.Exists("extrinsic.txt"))
+            if (File.Exists("extrinsic.json"))
             {
-                _paramEx = ExtrinsicCameraParameters.Load("extrinsic.txt");
+                _paramEx = ExtrinsicCameraParameters.Load("extrinsic.json");
                 _trs = new(_paramIn.CameraMatrix, _paramEx);
                 TestExtrinsicButton.IsEnabled = true;
             }

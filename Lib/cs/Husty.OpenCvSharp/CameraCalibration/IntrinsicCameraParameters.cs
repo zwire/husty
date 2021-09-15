@@ -34,44 +34,16 @@ namespace Husty.OpenCvSharp
 			=> new(ImageSize, CameraMatrix, DistortionCoeffs);
 
 		public void Save(string fileName)
-			=> File.WriteAllText(fileName, ToText());
-
-		public static IntrinsicCameraParameters Load(string fileName)
-			=> ParseText(File.ReadAllText(fileName));
-
-		private string ToText()
-        {
-			var str = "";
-			str += $"ImageSize,{ImageSize.Width},{ImageSize.Height}\n";
-			str += $"CameraMatrix,";
-			for (int i = 0; i < 3; i++)
-				for (int j = 0; j < 3; j++)
-					str += $"{CameraMatrix.At<double>(i, j)},";
-			str += "\n";
-			str += $"DistortionCoeffs,";
-			for (int i = 0; i < DistortionCoeffs.Rows; i++)
-					str += $"{DistortionCoeffs.At<double>(i)},";
-			return str;
+		{
+			var obj = new IntrinsicJson(this);
+			File.WriteAllText(fileName, obj.Serialize());
 		}
 
-		private static IntrinsicCameraParameters ParseText(string str)
-        {
-			var lines = str.Split("\n");
-			var l0 = lines[0].Split(",");
-			var l1 = lines[1].Split(",");
-			var l2 = lines[2].Split(",");
-			if (l0[0] != "ImageSize" || l1[0] != "CameraMatrix" || l2[0] != "DistortionCoeffs")
-				throw new InvalidDataException();
-			var size = new Size(int.Parse(l0[1]), int.Parse(l0[2]));
-			var cam = new Mat(3, 3, MatType.CV_64F);
-			for (int i = 0; i < 3; i++)
-				for (int j = 0; j < 3; j++)
-					cam.At<double>(i, j) = double.Parse(l1[1 + i * 3 + j]);
-			var dis = new Mat(l2.Length - 2, 1, MatType.CV_64F);
-			for (int i = 0; i < dis.Rows; i++)
-				dis.At<double>(i) = double.Parse(l2[1 + i]);
-			return new(size, cam, dis);
-        }
+		public static IntrinsicCameraParameters Load(string fileName)
+		{
+			var str = File.ReadAllText(fileName);
+			return IntrinsicJson.Deserialize(str);
+		}
 
 	}
 
