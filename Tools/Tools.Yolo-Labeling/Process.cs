@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using OpenCvSharp;
 
-namespace Tools.Yolo_Labeller
+namespace Tools.Yolo_Labeling
 {
     static class Process
     {
+
         private static Size _size;
         private static List<(Rect Rect, int LabelIndex)>[] _items;
         private static Point _temp;
@@ -14,24 +15,34 @@ namespace Tools.Yolo_Labeller
         private static string[] _imgPaths;
         private static Scalar[] _colors;
         private static string _saveDirectory;
+
         public static int FrameNumber { set; get; }
         public static int FileCount => _imgPaths.Length;
         public static int RectCount => _items[FrameNumber].Count;
 
-        public static Mat Initialize(string dir, string saveDir, string[] labels, int width, int height)
+        public static Mat Initialize(string dir, string saveDir, string[] labels)
         {
             FrameNumber = 0;
             _saveDirectory = saveDir;
-            _size = new Size(width, height);
             var imgPaths = new List<string>();
             imgPaths.AddRange(Directory.GetFiles(dir, $"*.png"));
             imgPaths.AddRange(Directory.GetFiles(dir, $"*.jpg"));
             _imgPaths = imgPaths.ToArray();
             _items = new List<(Rect, int)>[_imgPaths.Length];
-            if (_imgPaths.Length == 0) return new Mat(height, width, MatType.CV_8U, 0);
+            if (_imgPaths.Length == 0) return new Mat(100, 100, MatType.CV_8U, 0);
             _colors = Enumerable.Repeat(false, labels.Length).Select(i => Scalar.RandomColor()).ToArray();
             for (int i = 0; i < _imgPaths.Length; i++)
             {
+                using var img = Cv2.ImRead(_imgPaths[i]);
+                var size = img.Size();
+                if (i == 0)
+                {
+                    _size = size;
+                }
+                else if (size.Width != _size.Width || size.Height != _size.Height)
+                {
+                    throw new InvalidDataException("Images must have same size");
+                }
                 _items[i] = new List<(Rect, int)>();
                 var labelPath = Path.ChangeExtension(_imgPaths[i], ".txt");
                 if (File.Exists(labelPath))

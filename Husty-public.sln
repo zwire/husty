@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools.Yolo-Labeller", "Tools\Tools.Yolo-Labeller\Tools.Yolo-Labeller.csproj", "{9FF32727-32B9-4AFE-A284-BA5ACE40C940}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools.Yolo-Validation", "Tools\Tools.Yolo-Validation\Tools.Yolo-Validation.csproj", "{399B626E-CF40-453B-B0E6-400A1CFCA91B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools.NncDataArranger", "Tools\Tools.NncDataArranger\Tools.NncDataArranger.csproj", "{190AA290-6741-443B-AE53-769D84ED72E1}"
@@ -35,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools.CameraCalibration", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools.DepthCamera", "Tools\Tools.DepthCamera\Tools.DepthCamera.csproj", "{E21CFFFF-A12B-44DF-BECE-12AEFC785B8B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools.Yolo-Labeling", "Tools\Tools.Yolo-Labeling\Tools.Yolo-Labeling.csproj", "{1A19612E-2313-4CDC-B4D8-A19B5E7E272B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,18 +45,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9FF32727-32B9-4AFE-A284-BA5ACE40C940}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FF32727-32B9-4AFE-A284-BA5ACE40C940}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9FF32727-32B9-4AFE-A284-BA5ACE40C940}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9FF32727-32B9-4AFE-A284-BA5ACE40C940}.Debug|x64.Build.0 = Debug|Any CPU
-		{9FF32727-32B9-4AFE-A284-BA5ACE40C940}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9FF32727-32B9-4AFE-A284-BA5ACE40C940}.Debug|x86.Build.0 = Debug|Any CPU
-		{9FF32727-32B9-4AFE-A284-BA5ACE40C940}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9FF32727-32B9-4AFE-A284-BA5ACE40C940}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9FF32727-32B9-4AFE-A284-BA5ACE40C940}.Release|x64.ActiveCfg = Release|Any CPU
-		{9FF32727-32B9-4AFE-A284-BA5ACE40C940}.Release|x64.Build.0 = Release|Any CPU
-		{9FF32727-32B9-4AFE-A284-BA5ACE40C940}.Release|x86.ActiveCfg = Release|Any CPU
-		{9FF32727-32B9-4AFE-A284-BA5ACE40C940}.Release|x86.Build.0 = Release|Any CPU
 		{399B626E-CF40-453B-B0E6-400A1CFCA91B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{399B626E-CF40-453B-B0E6-400A1CFCA91B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{399B626E-CF40-453B-B0E6-400A1CFCA91B}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -231,6 +219,18 @@ Global
 		{E21CFFFF-A12B-44DF-BECE-12AEFC785B8B}.Release|x64.Build.0 = Release|x64
 		{E21CFFFF-A12B-44DF-BECE-12AEFC785B8B}.Release|x86.ActiveCfg = Release|Any CPU
 		{E21CFFFF-A12B-44DF-BECE-12AEFC785B8B}.Release|x86.Build.0 = Release|Any CPU
+		{1A19612E-2313-4CDC-B4D8-A19B5E7E272B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A19612E-2313-4CDC-B4D8-A19B5E7E272B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A19612E-2313-4CDC-B4D8-A19B5E7E272B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1A19612E-2313-4CDC-B4D8-A19B5E7E272B}.Debug|x64.Build.0 = Debug|Any CPU
+		{1A19612E-2313-4CDC-B4D8-A19B5E7E272B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1A19612E-2313-4CDC-B4D8-A19B5E7E272B}.Debug|x86.Build.0 = Debug|Any CPU
+		{1A19612E-2313-4CDC-B4D8-A19B5E7E272B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A19612E-2313-4CDC-B4D8-A19B5E7E272B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A19612E-2313-4CDC-B4D8-A19B5E7E272B}.Release|x64.ActiveCfg = Release|Any CPU
+		{1A19612E-2313-4CDC-B4D8-A19B5E7E272B}.Release|x64.Build.0 = Release|Any CPU
+		{1A19612E-2313-4CDC-B4D8-A19B5E7E272B}.Release|x86.ActiveCfg = Release|Any CPU
+		{1A19612E-2313-4CDC-B4D8-A19B5E7E272B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
