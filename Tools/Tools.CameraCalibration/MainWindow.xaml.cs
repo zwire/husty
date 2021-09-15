@@ -194,6 +194,11 @@ namespace Tools.CameraCalibration
                     {
                         _imageSourceDir = Path.GetDirectoryName(cofd.FileName);
                         _frame = Cv2.ImRead(cofd.FileName);
+                        if (File.Exists("intrinsic.txt"))
+                        {
+                            _paramIn = IntrinsicCameraParameters.Load("intrinsic.txt");
+                            _frame = _frame.Undistort(_paramIn.CameraMatrix, _paramIn.DistortionCoeffs);
+                        }
                         Image.Width = _frame.Width;
                         Image.Height = _frame.Height;
                         Image.Source = _frame.ToBitmapSource();
@@ -210,12 +215,9 @@ namespace Tools.CameraCalibration
             {
                 var count = 0;
                 while (File.Exists($"{count:d2}.png")) count++;
-                lock (_locker)
+                if (_frame != null && !_frame.Empty())
                 {
-                    if (_frame != null && !_frame.Empty())
-                    {
-                        Cv2.ImWrite($"{count:d2}.png", _frame);
-                    }
+                    Cv2.ImWrite($"{count:d2}.png", _frame);
                 }
             }
         }
