@@ -14,6 +14,7 @@ using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Husty.OpenCvSharp;
 using Path = System.IO.Path;
+using System.Diagnostics;
 
 namespace Tools.CameraCalibration
 {
@@ -124,7 +125,7 @@ namespace Tools.CameraCalibration
                             {
                                 try
                                 {
-                                    if (_paramIn != null && _testInOn)
+                                    if (_paramIn != null && (_testInOn || _testExOn))
                                     {
                                         _frame = _frame?.Undistort(_paramIn.CameraMatrix, _paramIn.DistortionCoeffs);
                                     }
@@ -189,6 +190,8 @@ namespace Tools.CameraCalibration
                         if (File.Exists("intrinsic.json"))
                         {
                             _paramIn = IntrinsicCameraParameters.Load("intrinsic.json");
+                            DebugMat2D(_paramIn.CameraMatrix, "Camera");
+                            DebugMat2D(_paramIn.DistortionCoeffs, "Distortion");
                             _frame = _frame.Undistort(_paramIn.CameraMatrix, _paramIn.DistortionCoeffs);
                         }
                         Image.Width = _frame.Width;
@@ -238,6 +241,8 @@ namespace Tools.CameraCalibration
                 if (_imgFilesIn == null || _imgFilesIn.Count == 0) return;
                 var chess = new Chessboard(7, 10, 32.5f);
                 _paramIn = IntrinsicCameraCalibrator.CalibrateWithChessboardImages(chess, _imgFilesIn);
+                DebugMat2D(_paramIn.CameraMatrix, "Camera");
+                DebugMat2D(_paramIn.DistortionCoeffs, "Distortion");
                 _paramIn.Save("intrinsic.json");
                 TestIntrinsicButton.IsEnabled = true;
                 Task.Run(() =>
@@ -262,7 +267,9 @@ namespace Tools.CameraCalibration
                 if (!File.Exists("intrinsic.json"))
                     throw new Exception("Please prepare intrinsic params file!");
                 _paramIn = IntrinsicCameraParameters.Load("intrinsic.json");
-                _paramEx = ExtrinsicCameraCalibrator.CalibrateWithGroundCoordinates(_points, _paramIn);
+                _paramEx = ExtrinsicCameraCalibrator.CalibrateWithGroundCoordinates(_points, _paramIn.WithoutDistCoeffs);
+                DebugMat2D(_paramEx.RotationMatrix, "Rotation");
+                DebugMat2D(_paramEx.TranslationVector, "Translation");
                 _paramEx.Save("extrinsic.json");
                 _trs = new(_paramIn.CameraMatrix, _paramEx);
                 TestIntrinsicButton.IsEnabled = true;
@@ -415,6 +422,8 @@ namespace Tools.CameraCalibration
             if (File.Exists("intrinsic.json"))
             {
                 _paramIn = IntrinsicCameraParameters.Load("intrinsic.json");
+                DebugMat2D(_paramIn.CameraMatrix, "Camera");
+                DebugMat2D(_paramIn.DistortionCoeffs, "Distortion");
                 TestIntrinsicButton.IsEnabled = true;
             }
         }
@@ -424,14 +433,34 @@ namespace Tools.CameraCalibration
             if (File.Exists("intrinsic.json"))
             {
                 _paramIn = IntrinsicCameraParameters.Load("intrinsic.json");
+                DebugMat2D(_paramIn.CameraMatrix, "Camera");
+                DebugMat2D(_paramIn.DistortionCoeffs, "Distortion");
                 TestIntrinsicButton.IsEnabled = true;
             }
             if (File.Exists("extrinsic.json"))
             {
                 _paramEx = ExtrinsicCameraParameters.Load("extrinsic.json");
+                DebugMat2D(_paramEx.RotationMatrix, "Rotation");
+                DebugMat2D(_paramEx.TranslationVector, "Translation");
                 _trs = new(_paramIn.CameraMatrix, _paramEx);
                 TestExtrinsicButton.IsEnabled = true;
             }
+        }
+
+        // for debug
+        private void DebugMat2D(Mat mat, string name)
+        {
+            Debug.WriteLine(name);
+            var r = mat.Rows;
+            var c = mat.Cols;
+            for (int y = 0; y < r; y++)
+            {
+                for (int x = 0; x < c; x++)
+                {
+                    Debug.WriteLine($"Row {y} : Col {x} : {mat.At<double>(y, x)}");
+                }
+            }
+            Debug.WriteLine("\n");
         }
 
     }

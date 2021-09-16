@@ -74,7 +74,7 @@ namespace Husty.OpenCvSharp
     internal record JMat(int Rows, int Cols, double[][] Data) { }
 
 
-    internal static class ConverterEx
+    internal static class ConverterExtensions
     {
 
         internal static JSize ToJSize(this Size size)
@@ -93,13 +93,13 @@ namespace Husty.OpenCvSharp
                 throw new ArgumentException("Require: Type == CV_64F");
             var r = mat.Rows;
             var c = mat.Cols;
-            var array = new double[c][];
-            for (int x = 0; x < c; x++)
+            var array = new double[r][];
+            for (int y = 0; y < r; y++)
             {
-                array[x] = new double[r];
-                for (int y = 0; y < r; y++)
+                array[y] = new double[c];
+                for (int x = 0; x < c; x++)
                 {
-                    array[x][y] = mat.At<double>(x, y);
+                    array[y][x] = mat.At<double>(y, x);
                 }
             }
             return new JMat(r, c, array);
@@ -115,7 +115,7 @@ namespace Husty.OpenCvSharp
             {
                 for (int x = 0; x < c; x++)
                 {
-                    mat.At<double>(x, y) = array[x][y];
+                    mat.At<double>(y, x) = array[y][x];
                 }
             }
             return mat;
