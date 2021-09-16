@@ -40,15 +40,15 @@ namespace Husty.OpenCvSharp
         /// Discrete Fourier Transformation
         /// </summary>
         /// <returns>Histogram of frequency and value</returns>
-        unsafe public List<(double Frequency, float Value)> DftWithHistogram()
+        unsafe public (double Frequency, float Value)[] DftWithHistogram()
         {
             Cv2.Dft(_complex, _complex);
             Cv2.Split(_complex, out var planes);
             Cv2.Magnitude(planes[0], planes[1], planes[0]);
             var data = (float*)planes[0].Data;
-            var result = new List<(double Frequency, float Value)>();
+            var result = new (double Frequency, float Value)[_sampleCount];
             for (int i = 0; i < _sampleCount / 2; i++)
-                result.Add(((double)i / _sampleCount * _samplingRate, data[i]));
+                result[i] = ((double)i / _sampleCount * _samplingRate, data[i]);
             return result;
         }
 
@@ -59,7 +59,7 @@ namespace Husty.OpenCvSharp
         public float[] Dft()
         {
             var list = DftWithHistogram();
-            var feature = new float[list.Count];
+            var feature = new float[list.Length];
             for (int i = 0; i < feature.Length; i++)
                 feature[i] = list[i].Value;
             return feature;
@@ -69,14 +69,14 @@ namespace Husty.OpenCvSharp
         /// Inverse Discrete Fourier Transformation
         /// </summary>
         /// <returns>Time and value</returns>
-        unsafe public IEnumerable<(double Time, float Value)> IdftWithTime()
+        unsafe public (double Time, float Value)[] IdftWithTime()
         {
             Cv2.Idft(_complex, _complex, DftFlags.Scale);
             Cv2.Split(_complex, out var planes);
             var data = (float*)planes[0].Data;
-            var result = new List<(double Time, float Value)>();
+            var result = new (double Time, float Value)[_sampleCount];
             for (int i = 0; i < _sampleCount; i++)
-                result.Add((i / _samplingRate, data[i]));
+                result[i] = (i / _samplingRate, data[i]);
             return result;
         }
 
@@ -84,9 +84,9 @@ namespace Husty.OpenCvSharp
         /// Inverse Discrete Fourier Transformation
         /// </summary>
         /// <returns>Feature of values</returns>
-        public IEnumerable<float> Idft()
+        public float[] Idft()
         {
-            return IdftWithTime().Select(i => i.Value);
+            return IdftWithTime().Select(i => i.Value).ToArray();
         }
 
         /// <summary>

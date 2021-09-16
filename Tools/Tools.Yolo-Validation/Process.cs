@@ -10,6 +10,7 @@ namespace Tools.Yolo_Validation
 {
     static class Process
     {
+
         private static YoloDetector _detector;
         private static List<(string Name, Mat Image, List<(int Label, Point Center, Size Size)> Labels)> _dataSet;
         private static string _className;
@@ -55,7 +56,7 @@ namespace Tools.Yolo_Validation
                     var iou = 0.0;
                     foreach (var l in ds.Labels)
                     {
-                        iou = CalcIou(r.Box, new Rect(new Point(l.Center.X - l.Size.Width / 2, l.Center.Y - l.Size.Height / 2), l.Size));
+                        iou = CalcIou(r.Box.Scale(img.Width, img.Height).ToRect(), new Rect(new Point(l.Center.X - l.Size.Width / 2, l.Center.Y - l.Size.Height / 2), l.Size));
                         if (iou >= _iouThresh)
                         {
                             tp++;
@@ -65,7 +66,7 @@ namespace Tools.Yolo_Validation
                     }
                     allList.Add(((float)(r.Confidence * iou), correct));
                 }
-                var fp = results.Count - tp;
+                var fp = results.Length - tp;
                 var fn = ds.Labels.Count - tp;
 
                 strs.Add($"{ds.Name},{time},{tp},{fp},{fn}");

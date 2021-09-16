@@ -2,20 +2,12 @@
 
 namespace Husty.OpenCvSharp
 {
-    public record YoloResult(string Label, float Confidence, float Probability, Rect2d Box)
+    public record YoloResult(Rect2d Box, float Confidence, string Label, float Probability)
     {
-
-        public Point2d Center => new(Box.Left + Box.Width / 2, Box.Top + Box.Height / 2);
-
-        public Point ScaledCenter(int width, int height) => new(Center.X * width, Center.Y * height);
-
-        public Rect ScaledBox(int width, int height) => new(new(Box.Left * width, Box.Top * height), new(Box.Width * width, Box.Height * height));
-
 
         public void DrawCenterPoint(Mat image, Scalar color, int pointSize)
         {
-            var c = new Point(Center.X * image.Width, Center.Y * image.Height);
-            image.Circle(c, pointSize, color, pointSize + 2);
+            image.Circle(Box.Scale(image.Width, image.Height).ToRect().GetCenter(), pointSize, color, pointSize + 2);
         }
 
         public void DrawBox(Mat image, Scalar color, int lineWidth)
@@ -25,7 +17,7 @@ namespace Husty.OpenCvSharp
 
         public void DrawBox(Mat image, Scalar color, int lineWidth, bool putLabel, bool putProbability, double labelFontScale = 1.0)
         {
-            var b = new Rect((int)(Box.Left * image.Width), (int)(Box.Top * image.Height), (int)(Box.Width * image.Width), (int)(Box.Height * image.Height));
+            var b = Box.Scale(image.Width, image.Height).ToRect();
             Cv2.Rectangle(image, b, color, lineWidth);
             if (putLabel || putProbability)
             {

@@ -52,7 +52,7 @@ namespace Husty.OpenCvSharp
         /// </summary>
         /// <param name="frame">input image</param>
         /// <returns></returns>
-        public IReadOnlyList<YoloResult> Run(Mat frame)
+        public YoloResult[] Run(Mat frame)
         {
 
             using var blob = CvDnn.BlobFromImage(frame, 1.0 / 255, _blobSize, new Scalar(), true, false);
@@ -63,7 +63,7 @@ namespace Husty.OpenCvSharp
 
             var classIds = new List<int>();
             var confidences = new List<float>();
-            var probabilityies = new List<float>();
+            var probabilities = new List<float>();
             var boxes = new List<Rect2d>();
             unsafe 
             {
@@ -82,7 +82,7 @@ namespace Husty.OpenCvSharp
                             var height = p[3];
                             classIds.Add(classIdPoint.X);
                             confidences.Add(confidence);
-                            probabilityies.Add(p[classIdPoint.X + 5]);
+                            probabilities.Add(p[classIdPoint.X + 5]);
                             boxes.Add(new Rect2d(centerX - width / 2, centerY - height / 2, width, height));
                         }
                     }
@@ -90,7 +90,7 @@ namespace Husty.OpenCvSharp
                 }
             }
             CvDnn.NMSBoxes(boxes, confidences, _confidenceThreshold, 0.3f, out int[] indices);
-            return indices.Select(i => new YoloResult(_labels[classIds[i]], confidences[i], probabilityies[i], boxes[i])).ToArray();
+            return indices.Select(i => new YoloResult(boxes[i], confidences[i], _labels[classIds[i]], probabilities[i])).ToArray();
         }
 
     }
