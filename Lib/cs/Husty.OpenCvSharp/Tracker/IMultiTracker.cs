@@ -39,7 +39,7 @@ namespace Husty.OpenCvSharp
 
         // ------- Fields ------- //
 
-        private readonly IFilter _filter;
+        private readonly Filter.KalmanFilter _filter;
 
 
         // ------- Properties ------- //
@@ -91,7 +91,7 @@ namespace Husty.OpenCvSharp
                             0, 0, 0, 0, 1, 0,
                             0, 0, 0, 0, 0, 1  };
             var state = new double[] { Center.X, Center.Y, 0.0, 0.0, Size.Width, Size.Height };
-            _filter = new Husty.Filter.KalmanFilter(state, transitionMatrix, measurementMatrix, filterStrength);
+            _filter = new(state, transitionMatrix, measurementMatrix, filterStrength);
         }
 
 

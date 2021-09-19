@@ -1,6 +1,7 @@
 ﻿using OpenCvSharp;
-using Husty.TcpSocket;
-using Husty.TcpSocket.MatExtensions;
+using Husty.IO;
+using Husty.OpenCvSharp;
+using System.Threading.Tasks;
 
 namespace Test.TcpSocket
 {
@@ -10,25 +11,43 @@ namespace Test.TcpSocket
     public partial class SubWindow : System.Windows.Window
     {
 
-        private readonly ITcpSocket _client;
+        private readonly TcpSocketClient _client;
+        private readonly BidirectionalDataStream _stream;
 
         public SubWindow()
         {
             InitializeComponent();
-            _client = new Client("127.0.0.1", 3000);
-            Closed += (sender, args) => _client.Close();
+            _client = new TcpSocketClient("127.0.0.1", 3001, 3000);
+            _stream = _client.GetStream();
+            Closed += (sender, args) =>
+            {
+                _stream?.Dispose();
+                _client?.Dispose();
+            };
         }
 
         private void SendButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             var msg = InputBox.Text;
-            _client.Send(msg);
-            if (msg.Length > 6 && msg.Substring(0, 6) == "image;")
+            InputBox.Text = "";
+            Task.Run(() =>
             {
-                var img = _client.ReceiveMat();
-                Cv2.ImShow(" ", img);
-                Cv2.WaitKey(0);
-            }
+                if (_stream.WriteAsJson(msg))
+                {
+                    if (msg.Length > 6 && msg.Substring(0, 6) is "image;")
+                    {
+                        var img = _stream.ReadMat();
+                        Cv2.ImShow(" ", img);
+                        Cv2.WaitKey();
+                    }
+                }
+            });
+        }
+
+        private void Grid_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key is System.Windows.Input.Key.Enter)
+                SendButton_Click(null, null);
         }
     }
 }

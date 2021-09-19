@@ -5,12 +5,28 @@ using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
+// k ... State Vector Length
+// m ... Measurement Vector Length
+// n ... Control Vector Length
+// 
+// If you describe Matrix like,
+// 
+//     M = A B C
+//         D E F
+//         G H I
+//         
+// you should write code like this,
+// 
+// m = { a, b, c, d, e, f, g, h, i }
+// 
+// Simple version constructor is available if you need.
+
 namespace Husty.Filter
 {
     /// <summary>
     /// Filtering & control methods subject to Gaussian distribution
     /// </summary>
-    public class ParticleFilter : IFilter
+    public class ParticleFilter
     {
 
         // ------- Fields ------- //

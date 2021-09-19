@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:Samples.Socket"
         mc:Ignorable="d"
         Title="Client" Height="150" Width="400" Background="Black">
-    <Grid>
+    <Grid PreviewKeyDown="Grid_PreviewKeyDown">
         <StackPanel>
             <Viewbox>
-                <Label Content="↓どうぞ入力ください↓" Foreground="White" Width="250"/>
+                <Label Content="↓なんか入力してください↓" Foreground="White" Width="250"/>
             </Viewbox>
             <Viewbox>
                 <TextBox x:Name="InputBox" Width="200" Background="Black" Foreground="White"/>

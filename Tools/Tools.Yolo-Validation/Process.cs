@@ -105,14 +105,14 @@ namespace Tools.Yolo_Validation
             var weights = "";
             foreach (var file in Directory.GetFiles(modelFolder))
             {
-                if (Path.GetExtension(file) == ".cfg") cfg = file;
-                else if (Path.GetExtension(file) == ".names") names = file;
-                else if (Path.GetExtension(file) == ".weights") weights = file;
+                if (Path.GetExtension(file) is ".cfg") cfg = file;
+                else if (Path.GetExtension(file) is ".names") names = file;
+                else if (Path.GetExtension(file) is ".weights") weights = file;
             }
-            if (cfg == "" || names == "" || weights == "") return "Model Not Found Error";
+            if (cfg is "" || names is "" || weights is "") return "Model Not Found Error";
             var count = 0;
             using var sr = new StreamReader(names);
-            while (sr.Peek() != -1)
+            while (sr.Peek() is not -1)
             {
                 var className = sr.ReadLine();
                 if (count++ == classNum) _className = className;
@@ -206,7 +206,7 @@ namespace Tools.Yolo_Validation
 
             foreach (var item in list)
             {
-                if (item.Correct == false)
+                if (item.Correct is false)
                 {
                     fpCount++;
                 }

@@ -19,8 +19,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TcpSocket", "Lib\cpp\TcpSoc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Yolo", "Lib\cpp\Yolo\Yolo.vcxproj", "{7C13F57F-F90E-4462-8359-E8E74910187A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Husty.TcpSocket.MatExtensions", "Lib\cs\Husty.TcpSocket.MatExtensions\Husty.TcpSocket.MatExtensions.csproj", "{5DD97C96-A991-4E20-B2BA-D172EB7B302A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.BayesBinarization", "Test\Test.BayesBinarization\Test.BayesBinarization.csproj", "{47755BE8-2AE2-4E05-85DD-A5AD5B2A13EA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.TcpSocket", "Test\Test.TcpSocket\Test.TcpSocket.csproj", "{23B7963C-5FA3-43FD-BA45-496348E67A09}"
@@ -135,18 +133,6 @@ Global
 		{7C13F57F-F90E-4462-8359-E8E74910187A}.Release|x64.Build.0 = Release|x64
 		{7C13F57F-F90E-4462-8359-E8E74910187A}.Release|x86.ActiveCfg = Release|Win32
 		{7C13F57F-F90E-4462-8359-E8E74910187A}.Release|x86.Build.0 = Release|Win32
-		{5DD97C96-A991-4E20-B2BA-D172EB7B302A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5DD97C96-A991-4E20-B2BA-D172EB7B302A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5DD97C96-A991-4E20-B2BA-D172EB7B302A}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5DD97C96-A991-4E20-B2BA-D172EB7B302A}.Debug|x64.Build.0 = Debug|Any CPU
-		{5DD97C96-A991-4E20-B2BA-D172EB7B302A}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{5DD97C96-A991-4E20-B2BA-D172EB7B302A}.Debug|x86.Build.0 = Debug|Any CPU
-		{5DD97C96-A991-4E20-B2BA-D172EB7B302A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5DD97C96-A991-4E20-B2BA-D172EB7B302A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5DD97C96-A991-4E20-B2BA-D172EB7B302A}.Release|x64.ActiveCfg = Release|Any CPU
-		{5DD97C96-A991-4E20-B2BA-D172EB7B302A}.Release|x64.Build.0 = Release|Any CPU
-		{5DD97C96-A991-4E20-B2BA-D172EB7B302A}.Release|x86.ActiveCfg = Release|Any CPU
-		{5DD97C96-A991-4E20-B2BA-D172EB7B302A}.Release|x86.Build.0 = Release|Any CPU
 		{47755BE8-2AE2-4E05-85DD-A5AD5B2A13EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{47755BE8-2AE2-4E05-85DD-A5AD5B2A13EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47755BE8-2AE2-4E05-85DD-A5AD5B2A13EA}.Debug|x64.ActiveCfg = Debug|Any CPU
