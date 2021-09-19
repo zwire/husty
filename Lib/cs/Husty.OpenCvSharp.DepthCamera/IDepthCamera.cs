@@ -24,6 +24,12 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// </summary>
         public void Disconnect();
 
+        /// <summary>
+        /// Get current frame synchronously
+        /// </summary>
+        /// <returns></returns>
+        public BgrXyzMat Read();
+
     }
 
 }

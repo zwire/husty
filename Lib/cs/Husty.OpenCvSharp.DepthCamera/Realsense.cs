@@ -115,6 +115,30 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// </summary>
         public void Disconnect() => _pipeline?.Dispose();
 
+        /// <summary>
+        /// (Not recommend) Get current frame synchronously
+        /// </summary>
+        /// <returns></returns>
+        public BgrXyzMat Read()
+        {
+            var colorMat = new Mat();
+            var pointCloudMat = new Mat();
+            var frames = _pipeline.WaitForFrames();
+            frames = _align.Process(frames).AsFrameSet();
+            using var color = frames.ColorFrame.DisposeWith(frames);
+            Frame depth = frames.DepthFrame.DisposeWith(frames);
+            depth = _depthto?.Process(depth) ?? depth;
+            depth = _sfill?.Process(depth) ?? depth;
+            depth = _tfill?.Process(depth) ?? depth;
+            depth = _todepth?.Process(depth) ?? depth;
+            depth = _hfill?.Process(depth) ?? depth;
+            _converter.ToColorMat(color, ref colorMat);
+            _converter.ToPointCloudMat(depth, ref pointCloudMat);
+            depth.Dispose();
+            frames.Dispose();
+            return new BgrXyzMat(colorMat, pointCloudMat);
+        }
+
     }
 
 }

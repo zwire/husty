@@ -110,6 +110,22 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// </summary>
         public void Disconnect() => _device?.Dispose();
 
+        /// <summary>
+        /// (Not recommend) Get current frame synchronously
+        /// </summary>
+        /// <returns></returns>
+        public BgrXyzMat Read()
+        {
+            var colorMat = new Mat();
+            var pointCloudMat = new Mat();
+            using var capture = _device.GetCapture();
+            using var colorImg = _transformation.ColorImageToDepthCamera(capture);
+            using var pointCloudImg = _transformation.DepthImageToPointCloud(capture.Depth);
+            _converter.ToColorMat(colorImg, ref colorMat);
+            _converter.ToPointCloudMat(pointCloudImg, ref pointCloudMat);
+            return BgrXyzMat.Create(colorMat, pointCloudMat).Rotate(_pitchRad, _yawRad, _rollRad);
+        }
+
     }
 
 }
