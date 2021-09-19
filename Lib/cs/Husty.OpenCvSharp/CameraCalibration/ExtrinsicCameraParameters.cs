@@ -14,9 +14,9 @@ namespace Husty.OpenCvSharp
 
 		public ExtrinsicCameraParameters(Mat rotationMatrix, Mat translationVector)
 		{
-			if (!(rotationMatrix.Rows == 3 && rotationMatrix.Cols == 3))
+			if (!(rotationMatrix.Rows is 3 && rotationMatrix.Cols is 3))
 				throw new ArgumentException("Requires: 3x3 matrix.", nameof(rotationMatrix));
-			if (!(translationVector.Rows == 3 && translationVector.Cols == 1))
+			if (!(translationVector.Rows is 3 && translationVector.Cols is 1))
 				throw new ArgumentException("Requires: 3x1 matrix.", nameof(translationVector));
 			RotationMatrix = rotationMatrix;
 			TranslationVector = translationVector;

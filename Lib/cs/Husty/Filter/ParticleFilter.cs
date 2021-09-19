@@ -353,7 +353,7 @@ namespace Husty.Filter
 
         private IEnumerable<Vector<double>> PredictNextState(double[] controlVec)
         {
-            if (B == null || controlVec == null)
+            if (B is null || controlVec is null)
                 foreach (var p in Particles)
                     yield return MakeVectorRandom(A * p);
             else

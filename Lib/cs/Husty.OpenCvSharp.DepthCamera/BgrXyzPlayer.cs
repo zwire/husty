@@ -13,7 +13,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// <summary>
     /// Playback BGRXYZ movie from binary file.
     /// </summary>
-    public class VideoPlayer : IDisposable
+    public class BgrXyzPlayer : IDisposable
     {
 
         //
@@ -68,12 +68,12 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// Player for Movies captured by Depth Camera
         /// </summary>
         /// <param name="filePath"></param>
-        public VideoPlayer(string filePath, int fps = 15)
+        public BgrXyzPlayer(string filePath, int fps = 15)
         {
             if (!File.Exists(filePath)) throw new Exception("File doesn't exist!");
             _binReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read), Encoding.ASCII);
             var fileFormatCode = Encoding.ASCII.GetString(_binReader.ReadBytes(8));
-            if (fileFormatCode != "HUSTY000") throw new Exception();
+            if (fileFormatCode is not "HUSTY000") throw new Exception();
             var indexesPos = _binReader.ReadInt64();
             if (indexesPos <= 0) throw new Exception();
             _binReader.BaseStream.Position = indexesPos;
@@ -101,16 +101,15 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// </summary>
         /// <param name="position">Starting frame index</param>
         /// <returns>Observable instance contains BgrXyzMat</returns>
-        public IObservable<(BgrXyzMat Frames, int Position)> Start(int position)
+        public IObservable<(BgrXyzMat Frame, int Position)> Start(int position)
         {
             if (position > -1 && position < FrameCount) _positionIndex = position;
             var observable = Observable.Range(0, FrameCount - position, ThreadPoolScheduler.Instance)
-                .Synchronize()
                 .Select(i =>
                 {
                     Thread.Sleep(_interval);
                     GC.Collect();
-                    return (ReadFrames().Frames, position++);
+                    return (Read().Frame, position++);
                 })
                 .Publish()
                 .RefCount();
@@ -125,7 +124,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         public BgrXyzMat GetOneFrameSet(int position)
         {
             if (position > -1 && position < FrameCount) _positionIndex = position;
-            return ReadFrames().Frames;
+            return Read().Frame;
         }
 
         /// <summary>
@@ -138,7 +137,7 @@ namespace Husty.OpenCvSharp.DepthCamera
             _binReader?.Dispose();
         }
 
-        private (BgrXyzMat Frames, long Time) ReadFrames()
+        private (BgrXyzMat Frame, long Time) Read()
         {
             _binReader.BaseStream.Seek(_indexes[_positionIndex++], SeekOrigin.Begin);
             var time = _binReader.ReadInt64();

@@ -34,7 +34,7 @@ namespace Husty.OpenCvSharp
 
         public override void Train(bool append = true, double? param = 0.1)
         {
-            if (_mode != Mode.Train) new Exception("Mode should be 'Train'.");
+            if (_mode is not Mode.Train) throw new Exception("Mode should be 'Train'.");
             SaveDataset(append);
             using var svm = SVM.Create();
             svm.KernelType = SVM.KernelTypes.Rbf;
@@ -49,7 +49,7 @@ namespace Husty.OpenCvSharp
 
         public override List<float> Predict(List<float[]> input)
         {
-            if (_mode != Mode.Inference) new Exception("Mode should be 'Inference'.");
+            if (_mode is not Mode.Inference) throw new  Exception("Mode should be 'Inference'.");
             var output = new List<float>();
             if (input.Count == 0)
                 return output;

@@ -206,7 +206,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         }
 
         /// <summary>
-        /// Rotate 3D of right hand system.
+        /// Rotate 3D
         /// </summary>
         /// <param name="rotationMat">Rotation Matrix</param>
         /// <returns></returns>

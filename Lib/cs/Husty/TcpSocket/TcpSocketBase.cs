@@ -57,7 +57,7 @@ namespace Husty.TcpSocket
             do
             {
                 size = _stream.Read(bytes, 0, bytes.Length);
-                if (size == 0) break;
+                if (size is 0) break;
                 ms.Write(bytes, 0, size);
             } while (_stream.DataAvailable || bytes[size - 1] != '\n');
             return ms.ToArray();

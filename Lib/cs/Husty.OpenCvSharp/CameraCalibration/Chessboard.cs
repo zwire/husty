@@ -16,7 +16,7 @@ namespace Husty.OpenCvSharp
 		/// <param name="squareSize"> One side length of each square in the chessboard. </param>
 		public Chessboard(int patternRows, int patternCols, float squareSize)
 		{
-			if ((patternRows % 2 == 0 && patternCols % 2 == 0) || (patternRows % 2 != 0 && patternCols % 2 != 0))
+			if ((patternRows % 2 is 0 && patternCols % 2 is 0) || (patternRows % 2 is not 0 && patternCols % 2 is not 0))
 				throw new ArgumentException("Requires: comination of even & odd.");
 			_patternSize = new(patternRows, patternCols);
 			_squareSize = squareSize;

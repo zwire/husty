@@ -42,7 +42,7 @@ namespace Husty.OpenCvSharp
 				var (size, imageCorners) = func(source);
 				if (imageSize == Size.Zero) imageSize = size;
 				if (size != imageSize) throw new ArgumentException("All images must have a same size.");
-				if (imageCorners == null) continue;
+				if (imageCorners is null) continue;
 				imagePointsList.Add(imageCorners);
 				var worldCorners = chessboard.GetWorldCorners();
 				objectPointsList.Add(worldCorners);

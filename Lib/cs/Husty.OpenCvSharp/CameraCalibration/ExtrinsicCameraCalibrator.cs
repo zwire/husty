@@ -12,7 +12,7 @@ namespace Husty.OpenCvSharp
             List<(Point2f, Point3f)> points,
             IntrinsicCameraParameters intrinsticParams)
         {
-            if (points.Count == 0)
+            if (points.Count is 0)
                 throw new ArgumentException("Require: points count >= 1");
             var displayPoints = new List<Point2f>();
             var worldPoints = new List<Point3f>();

@@ -26,7 +26,7 @@ namespace Tools.DepthCamera
         private bool _isConnected;
         private string _saveDir = "";
         private string _videoDir = "";
-        private VideoPlayer _player;
+        private BgrXyzPlayer _player;
         private BgrXyzMat _framesPool;
         private readonly object _lockobj = new();
         //private Scalar red = new Scalar(0, 0, 255);
@@ -142,7 +142,7 @@ namespace Tools.DepthCamera
                     .TakeWhile(imgs =>
                     {
                         if (imgs.Empty()) return true;
-                        ImageIO.SaveAsZip(_saveDir, "", imgs);
+                        BgrXyzImageIO.SaveAsZip(_saveDir, "", imgs);
                         return false;
                     })
                     .Subscribe();
@@ -150,7 +150,7 @@ namespace Tools.DepthCamera
             if (_player != null)
             {
                 var frame = _player.GetOneFrameSet((int)PlaySlider.Value);
-                ImageIO.SaveAsZip(_saveDir, "", frame);
+                BgrXyzImageIO.SaveAsZip(_saveDir, "", frame);
             }
         }
 
@@ -171,13 +171,13 @@ namespace Tools.DepthCamera
                 PlayPauseButton.Visibility = Visibility.Hidden;
                 PlaySlider.Visibility = Visibility.Hidden;
                 _isConnected = AttemptConnection();
-                if (!_isConnected) new Exception("Couldn't connect device!");
+                if (!_isConnected) throw new Exception("Couldn't connect device!");
                 //var fileNumber = 0;
                 //while (File.Exists($"{SaveDir.Value}\\Movie_{fileNumber:D4}.yms")) fileNumber++;
 
                 var time = DateTimeOffset.Now;
                 var filePath = $"{_saveDir}\\Movie_{time.Year}{time.Month:d2}{time.Day:d2}{time.Hour:d2}{time.Minute:d2}{time.Second:d2}{time.Millisecond:d2}.yms";
-                var writer = new VideoRecorder(filePath);
+                var writer = new BgrXyzRecorder(filePath);
                 _cameraConnector = _camera.Connect()
                     .Finally(() => writer?.Dispose())
                     .Subscribe(imgs =>
@@ -246,17 +246,17 @@ namespace Tools.DepthCamera
                 PlayPauseButton.IsEnabled = true;
                 PlayPauseButton.Visibility = Visibility.Visible;
                 PlaySlider.Visibility = Visibility.Visible;
-                _player = new VideoPlayer(cofd.FileName);
+                _player = new BgrXyzPlayer(cofd.FileName);
                 PlaySlider.Maximum = _player.FrameCount;
                 _videoConnector = _player.Start(0)
                     .Subscribe(ww =>
                     {
                         lock (_lockobj)
-                            _framesPool = ww.Frames;
-                        using var d8 = ww.Frames.Depth8(300, 5000);
+                            _framesPool = ww.Frame;
+                        using var d8 = ww.Frame.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
-                            ColorFrame.Source = ww.Frames.BGR.ToBitmapSource();
+                            ColorFrame.Source = ww.Frame.BGR.ToBitmapSource();
                             DepthFrame.Source = d8.ToBitmapSource();
                             PlaySlider.Value = ww.Position;
                         });
@@ -285,11 +285,11 @@ namespace Tools.DepthCamera
                     .Subscribe(ww =>
                     {
                         lock (_lockobj)
-                            _framesPool = ww.Frames;
-                        using var d8 = ww.Frames.Depth8(300, 5000);
+                            _framesPool = ww.Frame;
+                        using var d8 = ww.Frame.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
-                            ColorFrame.Source = ww.Frames.BGR.ToBitmapSource();
+                            ColorFrame.Source = ww.Frame.BGR.ToBitmapSource();
                             DepthFrame.Source = d8.ToBitmapSource();
                             PlaySlider.Value = ww.Position;
                         });
@@ -319,7 +319,7 @@ namespace Tools.DepthCamera
         private void ImageClicked(int x, int y)
         {
             Vector3 info;
-            if (_framesPool != null)
+            if (_framesPool is not null)
             {
                 lock (_lockobj)
                 {

@@ -34,7 +34,7 @@ namespace Husty.OpenCvSharp
 
         public override void Train(bool append = true, double? param = null)
         {
-            if (_mode != Mode.Train) new Exception("Mode should be 'Train'.");
+            if (_mode is not Mode.Train) throw new Exception("Mode should be 'Train'.");
             SaveDataset(append);
             using var bayes = NormalBayesClassifier.Create();
             var list = new List<float>();
@@ -47,7 +47,7 @@ namespace Husty.OpenCvSharp
 
         public override List<float> Predict(List<float[]> input)
         {
-            if (_mode != Mode.Inference) new Exception("Mode should be 'Inference'.");
+            if (_mode is not Mode.Inference) throw new Exception("Mode should be 'Inference'.");
             var output = new List<float>();
             if (input.Count == 0)
                 return output;
@@ -60,7 +60,7 @@ namespace Husty.OpenCvSharp
 
         public (List<float> Output, List<float> Probability) PredictProb(List<float[]> input)
         {
-            if (_mode != Mode.Inference) new Exception("Mode should be 'Inference'.");
+            if (_mode is not Mode.Inference) throw new Exception("Mode should be 'Inference'.");
             var output = new List<float>();
             var probability = new List<float>();
             if (input.Count == 0)

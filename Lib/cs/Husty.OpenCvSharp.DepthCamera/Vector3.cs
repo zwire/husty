@@ -12,7 +12,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         // ------- Methods ------- //
 
         public int GetLength()
-            => (int)Math.Sqrt(X * Y + Y * Y + Z * Z);
+            => (int)Math.Sqrt(X * X + Y * Y + Z * Z);
 
         public Vector3 GetUnitVec()
             => this / GetLength();
@@ -54,6 +54,20 @@ namespace Husty.OpenCvSharp.DepthCamera
         {
             Mat rot = ZRot(roll) * YRot(yaw) * XRot(pitch);
             var d = (float*)rot.Data;
+            var x = (short)(d[0] * X + d[1] * Y + d[2] * Z);
+            var y = (short)(d[3] * X + d[4] * Y + d[5] * Z);
+            var z = (short)(d[6] * X + d[7] * Y + d[8] * Z);
+            return new(x, y, z);
+        }
+
+        /// <summary>
+        /// Rotate 3D
+        /// </summary>
+        /// <param name="rotationMat">Rotation Matrix</param>
+        /// <returns></returns>
+        public unsafe Vector3 Rotate(Mat rotationMat)
+        {
+            var d = (float*)rotationMat.Data;
             var x = (short)(d[0] * X + d[1] * Y + d[2] * Z);
             var y = (short)(d[3] * X + d[4] * Y + d[5] * Z);
             var z = (short)(d[6] * X + d[7] * Y + d[8] * Z);

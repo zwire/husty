@@ -35,7 +35,7 @@ namespace Husty.OpenCvSharp
 
         public PerspectiveTransformer(Mat cameraMatrix, ExtrinsicCameraParameters paramEx)
         {
-            if (cameraMatrix.Rows != 3 || cameraMatrix.Cols != 3)
+            if (cameraMatrix.Rows is not 3 || cameraMatrix.Cols is not 3)
                 throw new ArgumentException("Requires: 3x3 matrix.", nameof(cameraMatrix));
             _A = cameraMatrix;
             _T = paramEx.TranslationVector;

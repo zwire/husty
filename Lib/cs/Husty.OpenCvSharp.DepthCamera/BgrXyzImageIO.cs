@@ -8,7 +8,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// <summary>
     /// Saving & Loading for images captured by depth cameras
     /// </summary>
-    public static class ImageIO
+    public static class BgrXyzImageIO
     {
 
         // ------- Methods ------- //
@@ -48,9 +48,9 @@ namespace Husty.OpenCvSharp.DepthCamera
         {
             if (!File.Exists(filePath)) throw new Exception("File doesn't Exist!");
             using var archive = ZipFile.OpenRead(filePath);
-            archive.GetEntry("C.png").ExtractToFile(@"C.png", true);
-            archive.GetEntry("P.png").ExtractToFile(@"P.png", true);
-            return new BgrXyzMat(new Mat(@"C.png"), new Mat(@"P.png", ImreadModes.Unchanged));
+            archive.GetEntry("C.png").ExtractToFile("C.png", true);
+            archive.GetEntry("P.png").ExtractToFile("P.png", true);
+            return new BgrXyzMat(new Mat("C.png"), new Mat("P.png", ImreadModes.Unchanged));
         }
 
     }

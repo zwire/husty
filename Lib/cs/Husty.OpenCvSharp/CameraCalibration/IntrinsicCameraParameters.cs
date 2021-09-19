@@ -20,10 +20,10 @@ namespace Husty.OpenCvSharp
 
 		public IntrinsicCameraParameters(Size imageSize, Mat cameraMatrix, Mat distortionCoeffs)
 		{
-			if (!(cameraMatrix.Rows == 3 && cameraMatrix.Cols == 3))
+			if (!(cameraMatrix.Rows is 3 && cameraMatrix.Cols is 3))
 				throw new ArgumentException("Requires: 3x3 matrix.", nameof(cameraMatrix));
-			if (!(distortionCoeffs.Cols == 1 &&
-				(distortionCoeffs.Rows == 4 || distortionCoeffs.Rows == 5 || distortionCoeffs.Rows == 8 || distortionCoeffs.Rows == 14)))
+			if (!(distortionCoeffs.Cols is 1 &&
+				(distortionCoeffs.Rows is 4 || distortionCoeffs.Rows is 5 || distortionCoeffs.Rows is 8 || distortionCoeffs.Rows is 14)))
 				throw new ArgumentException("Requires: 4x1, 5x1, 8x1 or 14x1 matrix.", nameof(distortionCoeffs));
 			ImageSize = imageSize;
 			CameraMatrix = cameraMatrix;

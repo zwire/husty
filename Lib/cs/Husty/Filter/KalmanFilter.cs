@@ -303,7 +303,7 @@ namespace Husty.Filter
         public double[] Predict(double[] controlVec = null)
         {
             X = A * X;
-            if (controlVec != null)
+            if (controlVec is not null)
                 X += B * DenseVector.OfArray(controlVec);
             P = A * P * AT + Q;
             return X.ToArray();

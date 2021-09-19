@@ -8,7 +8,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// <summary>
     /// Save BGRXYZ movie as binary file.
     /// </summary>
-    public class VideoRecorder : IDisposable
+    public class BgrXyzRecorder : IDisposable
     {
 
         //
@@ -51,7 +51,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// Movie recorder for Depth camera
         /// </summary>
         /// <param name="filePath"></param>
-        public VideoRecorder(string filePath)
+        public BgrXyzRecorder(string filePath)
         {
             if (!Directory.Exists(Path.GetDirectoryName(filePath)))
                 filePath = Path.GetFileName(filePath);
