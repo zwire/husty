@@ -12,13 +12,13 @@ namespace Test.TcpSocket
     {
 
         private readonly TcpSocketClient _client;
-        private readonly BidirectionalDataStream _stream;
+        private BidirectionalDataStream _stream;
 
         public SubWindow()
         {
             InitializeComponent();
             _client = new TcpSocketClient("127.0.0.1", 3001, 3000);
-            _stream = _client.GetStream();
+            Task.Run(async () => _stream = await _client.GetStreamAsync());
             Closed += (sender, args) =>
             {
                 _stream?.Dispose();
@@ -30,16 +30,20 @@ namespace Test.TcpSocket
         {
             var msg = InputBox.Text;
             InputBox.Text = "";
-            Task.Run(() =>
+            Task.Run(async () =>
             {
-                if (_stream.WriteAsJson(msg))
+                if (await _stream.WriteAsJsonAsync(msg))
                 {
                     if (msg.Length > 6 && msg.Substring(0, 6) is "image;")
                     {
-                        var img = _stream.ReadMat();
+                        var img = await _stream.ReadMatAsync();
                         Cv2.ImShow(" ", img);
                         Cv2.WaitKey();
                     }
+                }
+                else
+                {
+                    Dispatcher.Invoke(() => Close());
                 }
             });
         }

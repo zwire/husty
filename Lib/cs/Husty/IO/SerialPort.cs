@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Ports;
+using System.Threading.Tasks;
 
 namespace Husty.IO
 {
@@ -34,10 +35,40 @@ namespace Husty.IO
 
         // ------- Methods ------- //
 
+        public bool WaitForConnect()
+        {
+            return WaitForConnectAsync().Result;
+        }
+
+        public async Task<bool> WaitForConnectAsync()
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    while (!_port.IsOpen) ;
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            });
+        }
+
         public BidirectionalDataStream GetStream()
         {
-            var stream = _port.BaseStream;
-            return new(stream, stream);
+            return GetStreamAsync().Result;
+        }
+
+        public async Task<BidirectionalDataStream> GetStreamAsync()
+        {
+            return await Task.Run(() =>
+            {
+                WaitForConnect();
+                var stream = _port.BaseStream;
+                return new BidirectionalDataStream(stream, stream);
+            });
         }
         
         public void Dispose()

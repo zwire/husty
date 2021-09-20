@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Pipes;
+using System.Threading.Tasks;
 
 namespace Husty.IO
 {
@@ -16,25 +17,59 @@ namespace Husty.IO
 
         public NamedPipeServer(string pipeName)
         {
-            try
+            _reader = new(pipeName + "ClientToServer", PipeDirection.In);
+            _writer = new(pipeName + "ServerToClient", PipeDirection.Out);
+            Task.Run(() =>
             {
-                _reader = new(pipeName + "ClientToServer", PipeDirection.In);
-                _writer = new(pipeName + "ServerToClient", PipeDirection.Out);
-                _reader.WaitForConnection();
-                _writer.WaitForConnection();
-            }
-            catch
-            {
-                throw new Exception("failed to connect!");
-            }
+                try
+                {
+                    _reader.WaitForConnection();
+                    _writer.WaitForConnection();
+                }
+                catch
+                {
+                    throw new Exception("failed to connect!");
+                }
+            });
         }
 
 
         // ------- Methods ------- //
 
+        public bool WaitForConnect()
+        {
+            return WaitForConnectAsync().Result;
+        }
+
+        public async Task<bool> WaitForConnectAsync()
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    while (!_writer.IsConnected) ;
+                    while (!_reader.IsConnected) ;
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            });
+        }
+
         public BidirectionalDataStream GetStream()
         {
-            return new(_writer, _reader);
+            return GetStreamAsync().Result;
+        }
+
+        public async Task<BidirectionalDataStream> GetStreamAsync()
+        {
+            return await Task.Run(() =>
+            {
+                WaitForConnect();
+                return new BidirectionalDataStream(_writer, _reader);
+            });
         }
 
         public void Dispose()
