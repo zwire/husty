@@ -17,6 +17,7 @@ namespace Husty.IO
         private TcpClient _client2;
         private readonly TcpListener _listener1;
         private readonly TcpListener _listener2;
+        private readonly Task _connectionTask;
 
 
         // ------- Constructors ------- //
@@ -25,7 +26,7 @@ namespace Husty.IO
         {
             _listener1 = new(IPAddress.Any, inoutPort);
             _listener1.Start();
-            Task.Run(() =>
+            _connectionTask = Task.Run(() =>
             {
                 try
                 {
@@ -44,7 +45,7 @@ namespace Husty.IO
             _listener2 = new(IPAddress.Any, outPort);
             _listener1.Start();
             _listener2.Start();
-            Task.Run(() =>
+            _connectionTask = Task.Run(() =>
             {
                 try
                 {
@@ -61,35 +62,6 @@ namespace Husty.IO
 
         // ------- Methods ------- //
 
-        public bool WaitForConnect()
-        {
-            return WaitForConnectAsync().Result;
-        }
-
-        public async Task<bool> WaitForConnectAsync()
-        {
-            return await Task.Run(() =>
-            {
-                try
-                {
-                    if (_listener2 is null)
-                    {
-                        while (_client1 is null) ;
-                    }
-                    else
-                    {
-                        while (_client1 is null) ;
-                        while (_client2 is null) ;
-                    }
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-            });
-        }
-
         public BidirectionalDataStream GetStream()
         {
             return GetStreamAsync().Result;
@@ -99,21 +71,21 @@ namespace Husty.IO
         {
             return await Task.Run(() =>
             {
-                WaitForConnect();
-                if (_client2 is not null)
+                _connectionTask.Wait();
+                if (_client1 is not null && _client2 is null)
+                {
+                    var stream = _client1.GetStream();
+                    return new BidirectionalDataStream(stream, stream);
+                }
+                else if (_client1 is not null && _client2 is not null)
                 {
                     var stream1 = _client1.GetStream();
                     var stream2 = _client2.GetStream();
                     return new BidirectionalDataStream(stream2, stream1);
                 }
-                else if (_client1 is not null)
-                {
-                    var stream = _client1.GetStream();
-                    return new BidirectionalDataStream(stream, stream);
-                }
                 else
                 {
-                    throw new Exception("Client instance has not been created yet!");
+                    throw new Exception("failed to get stream!");
                 }
             });
         }

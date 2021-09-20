@@ -11,6 +11,7 @@ namespace Husty.IO
 
         private readonly NamedPipeClientStream _writer;
         private readonly NamedPipeClientStream _reader;
+        private readonly Task _connectionTask;
 
 
         // ------- Constructors ------- //
@@ -19,7 +20,7 @@ namespace Husty.IO
         {
             _writer = new(serverName, pipeName + "ClientToServer", PipeDirection.Out);
             _reader = new(serverName, pipeName + "ServerToClient", PipeDirection.In);
-            Task.Run(() =>
+            _connectionTask = Task.Run(() =>
             {
                 try
                 {
@@ -36,28 +37,6 @@ namespace Husty.IO
 
         // ------- Methods ------- //
 
-        public bool WaitForConnect()
-        {
-            return WaitForConnectAsync().Result;
-        }
-
-        public async Task<bool> WaitForConnectAsync()
-        {
-            return await Task.Run(() =>
-            {
-                try
-                {
-                    while (!_writer.IsConnected) ;
-                    while (!_reader.IsConnected) ;
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-            });
-        }
-
         public BidirectionalDataStream GetStream()
         {
             return GetStreamAsync().Result;
@@ -67,7 +46,7 @@ namespace Husty.IO
         {
             return await Task.Run(() =>
             {
-                WaitForConnect();
+                _connectionTask.Wait();
                 return new BidirectionalDataStream(_writer, _reader);
             });
         }

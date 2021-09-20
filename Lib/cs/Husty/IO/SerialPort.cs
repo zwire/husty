@@ -10,51 +10,34 @@ namespace Husty.IO
         // ------- Fields ------- //
 
         private readonly System.IO.Ports.SerialPort _port;
+        private readonly Task _connectionTask;
 
 
         // ------- Constructor ------- //
 
         public SerialPort(string portName, int baudRate)
         {
-            try
+            _port = new();
+            _port.PortName = portName;
+            _port.BaudRate = baudRate;
+            _port.StopBits = StopBits.One;
+            _port.Handshake = Handshake.None;
+            _port.Parity = Parity.None;
+            _connectionTask = Task.Run(() =>
             {
-                _port = new();
-                _port.PortName = portName;
-                _port.BaudRate = baudRate;
-                _port.StopBits = StopBits.One;
-                _port.Handshake = Handshake.None;
-                _port.Parity = Parity.None;
-                _port.Open();
-            }
-            catch
-            {
-                throw new Exception("failed to open!");
-            }
+                try
+                {
+                    _port.Open();
+                }
+                catch
+                {
+                    throw new Exception("failed to open!");
+                }
+            });
         }
 
 
         // ------- Methods ------- //
-
-        public bool WaitForConnect()
-        {
-            return WaitForConnectAsync().Result;
-        }
-
-        public async Task<bool> WaitForConnectAsync()
-        {
-            return await Task.Run(() =>
-            {
-                try
-                {
-                    while (!_port.IsOpen) ;
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-            });
-        }
 
         public BidirectionalDataStream GetStream()
         {
@@ -65,7 +48,7 @@ namespace Husty.IO
         {
             return await Task.Run(() =>
             {
-                WaitForConnect();
+                _connectionTask.Wait();
                 var stream = _port.BaseStream;
                 return new BidirectionalDataStream(stream, stream);
             });

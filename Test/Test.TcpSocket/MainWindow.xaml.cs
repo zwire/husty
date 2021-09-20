@@ -31,7 +31,8 @@ namespace Test.TcpSocket
         private async void StartClientButton_Click(object sender, RoutedEventArgs e)
         {
             StartClientButton.Visibility = Visibility.Collapsed;
-            new SubWindow().Show();
+            var sub = new SubWindow();
+            sub.Show();
             while (true)
             {
                 await Task.Run(async () =>
@@ -56,7 +57,11 @@ namespace Test.TcpSocket
                     }
                     else
                     {
-                        Dispatcher.Invoke(() => Close());
+                        Dispatcher.Invoke(() =>
+                        {
+                            sub.Close();
+                            Close();
+                        });
                     }
                 });
             }
