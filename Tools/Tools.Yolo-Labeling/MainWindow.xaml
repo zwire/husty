@@ -50,7 +50,7 @@
         </Viewbox>
         
         <Viewbox Grid.Row="0" Grid.Column="8" Margin="5">
-            <ComboBox x:Name="ClassCombo" Width="100"/>
+            <ComboBox x:Name="ClassCombo" Width="100" PreviewKeyDown="ClassCombo_PreviewKeyDown"/>
         </Viewbox>
 
         <Viewbox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="9" Margin="5">

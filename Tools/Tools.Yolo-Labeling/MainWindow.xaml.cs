@@ -215,5 +215,9 @@ namespace Tools.Yolo_Labeling
             }
         }
 
+        private void ClassCombo_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }
