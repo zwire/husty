@@ -102,7 +102,7 @@ namespace Husty.OpenCvSharp.DepthCamera
                     _converter.ToPointCloudMat(depth, ref pointCloudMat);
                     depth.Dispose();
                     frames.Dispose();
-                    return new BgrXyzMat(colorMat, pointCloudMat);
+                    return new BgrXyzMat(colorMat.Clone(), pointCloudMat.Clone());
                 })
                 .Publish()
                 .RefCount();
