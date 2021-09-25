@@ -27,4 +27,8 @@
     <ProjectReference Include="..\Husty\Husty.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="OnnxModels\" />
+  </ItemGroup>
+
 </Project>

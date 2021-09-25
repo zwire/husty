@@ -218,5 +218,196 @@ namespace Husty
             return array2;
         }
 
+
+        // 3D array
+
+        public static byte[,,] AsByteArray<T>(this T[,,] array) where T : IConvertible, IComparable
+        {
+            if (double.TryParse((string)(object)array[0, 0, 0], out var _))
+                throw new ArgumentException();
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
+            var depth = array.GetLength(2);
+            var array2 = new byte[rows, cols, depth];
+            for (int y = 0; y < rows; y++)
+                for (int x = 0; x < cols; x++)
+                    for (int c = 0; c < depth; c++)
+                        array2[y, x, c] = (byte)(object)array[y, x, c];
+            return array2;
+        }
+
+        public static short[,,] AsShortArray<T>(this T[,,] array) where T : IConvertible, IComparable
+        {
+            if (double.TryParse((string)(object)array[0, 0, 0], out var _))
+                throw new ArgumentException();
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
+            var depth = array.GetLength(2);
+            var array2 = new short[rows, cols, depth];
+            for (int y = 0; y < rows; y++)
+                for (int x = 0; x < cols; x++)
+                    for (int c = 0; c < depth; c++)
+                        array2[y, x, c] = (short)(object)array[y, x, c];
+            return array2;
+        }
+
+        public static int[,,] AsIntArray<T>(this T[,,] array) where T : IConvertible, IComparable
+        {
+            if (double.TryParse((string)(object)array[0, 0, 0], out var _))
+                throw new ArgumentException();
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
+            var depth = array.GetLength(2);
+            var array2 = new int[rows, cols, depth];
+            for (int y = 0; y < rows; y++)
+                for (int x = 0; x < cols; x++)
+                    for (int c = 0; c < depth; c++)
+                        array2[y, x, c] = (int)(object)array[y, x, c];
+            return array2;
+        }
+
+        public static float[,,] AsFloatArray<T>(this T[,,] array) where T : IConvertible, IComparable
+        {
+            if (double.TryParse((string)(object)array[0, 0, 0], out var _))
+                throw new ArgumentException();
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
+            var depth = array.GetLength(2);
+            var array2 = new float[rows, cols, depth];
+            for (int y = 0; y < rows; y++)
+                for (int x = 0; x < cols; x++)
+                    for (int c = 0; c < depth; c++)
+                        array2[y, x, c] = (float)(object)array[y, x, c];
+            return array2;
+        }
+
+        public static double[,,] AsDoubleArray<T>(this T[,,] array) where T : IConvertible, IComparable
+        {
+            if (double.TryParse((string)(object)array[0, 0, 0], out var _))
+                throw new ArgumentException();
+            var rows = array.GetLength(0);
+            var cols = array.GetLength(1);
+            var depth = array.GetLength(2);
+            var array2 = new double[rows, cols, depth];
+            for (int y = 0; y < rows; y++)
+                for (int x = 0; x < cols; x++)
+                    for (int c = 0; c < depth; c++)
+                        array2[y, x, c] = (double)(object)array[y, x, c];
+            return array2;
+        }
+
+
+        // 3D jagged array
+
+        public static byte[][][] AsByteArray<T>(this T[][][] array) where T : IConvertible, IComparable
+        {
+            if (double.TryParse((string)(object)array[0][0][0], out var _))
+                throw new ArgumentException();
+            var rows = array.Length;
+            var array2 = new byte[rows][][];
+            for (int y = 0; y < rows; y++)
+            {
+                var cols = array[y].Length;
+                array2[y] = new byte[cols][];
+                for (int x = 0; x < cols; x++)
+                {
+                    var depth = array[y][x].Length;
+                    for (int c = 0; c < depth; c++)
+                    {
+                        array2[y][x][c] = (byte)(object)array[y][x][c];
+                    }
+                }
+            }
+            return array2;
+        }
+
+        public static short[][][] AsShortArray<T>(this T[][][] array) where T : IConvertible, IComparable
+        {
+            if (double.TryParse((string)(object)array[0][0][0], out var _))
+                throw new ArgumentException();
+            var rows = array.Length;
+            var array2 = new short[rows][][];
+            for (int y = 0; y < rows; y++)
+            {
+                var cols = array[y].Length;
+                array2[y] = new short[cols][];
+                for (int x = 0; x < cols; x++)
+                {
+                    var depth = array[y][x].Length;
+                    for (int c = 0; c < depth; c++)
+                    {
+                        array2[y][x][c] = (short)(object)array[y][x][c];
+                    }
+                }
+            }
+            return array2;
+        }
+
+        public static int[][][] AsIntArray<T>(this T[][][] array) where T : IConvertible, IComparable
+        {
+            if (double.TryParse((string)(object)array[0][0][0], out var _))
+                throw new ArgumentException();
+            var rows = array.Length;
+            var array2 = new int[rows][][];
+            for (int y = 0; y < rows; y++)
+            {
+                var cols = array[y].Length;
+                array2[y] = new int[cols][];
+                for (int x = 0; x < cols; x++)
+                {
+                    var depth = array[y][x].Length;
+                    for (int c = 0; c < depth; c++)
+                    {
+                        array2[y][x][c] = (int)(object)array[y][x][c];
+                    }
+                }
+            }
+            return array2;
+        }
+
+        public static float[][][] AsFloatArray<T>(this T[][][] array) where T : IConvertible, IComparable
+        {
+            if (double.TryParse((string)(object)array[0][0][0], out var _))
+                throw new ArgumentException();
+            var rows = array.Length;
+            var array2 = new float[rows][][];
+            for (int y = 0; y < rows; y++)
+            {
+                var cols = array[y].Length;
+                array2[y] = new float[cols][];
+                for (int x = 0; x < cols; x++)
+                {
+                    var depth = array[y][x].Length;
+                    for (int c = 0; c < depth; c++)
+                    {
+                        array2[y][x][c] = (float)(object)array[y][x][c];
+                    }
+                }
+            }
+            return array2;
+        }
+
+        public static double[][][] AsDoubleArray<T>(this T[][][] array) where T : IConvertible, IComparable
+        {
+            if (double.TryParse((string)(object)array[0][0][0], out var _))
+                throw new ArgumentException();
+            var rows = array.Length;
+            var array2 = new double[rows][][];
+            for (int y = 0; y < rows; y++)
+            {
+                var cols = array[y].Length;
+                array2[y] = new double[cols][];
+                for (int x = 0; x < cols; x++)
+                {
+                    var depth = array[y][x].Length;
+                    for (int c = 0; c < depth; c++)
+                    {
+                        array2[y][x][c] = (double)(object)array[y][x][c];
+                    }
+                }
+            }
+            return array2;
+        }
+
     }
 }

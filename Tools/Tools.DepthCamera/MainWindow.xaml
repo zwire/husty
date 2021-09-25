@@ -78,7 +78,7 @@
             <Button x:Name="PlayPauseButton" Content="▶" Foreground="Green" Width="50" Click="PlayPauseButton_Click" IsEnabled="False" Visibility="Hidden"/>
         </Viewbox>
         <Viewbox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="4" Margin="5">
-            <Slider x:Name="PlaySlider" Width="250" IsEnabled="False" Visibility="Hidden" PreviewMouseLeftButtonUp="PlaySlider_PreviewMouseLeftButtonUp"/>
+            <Slider x:Name="PlaySlider" Width="320" IsEnabled="False" Visibility="Hidden" PreviewMouseLeftButtonUp="PlaySlider_PreviewMouseLeftButtonUp"/>
         </Viewbox>
     </Grid>
 </mahApps:MetroWindow>

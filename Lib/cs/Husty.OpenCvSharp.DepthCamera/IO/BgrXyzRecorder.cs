@@ -43,6 +43,8 @@ namespace Husty.OpenCvSharp.DepthCamera
         private readonly BinaryWriter _binWriter;
         private readonly List<long> _indexes = new();
         private readonly DateTimeOffset _firstTime;
+        private readonly object _locker = new();
+        private bool _isDisposed;
 
 
         // ------- Constructor ------- //
@@ -69,15 +71,21 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// Write frames of the time.
         /// </summary>
         /// <param name="Bgrxyz"></param>
-        public void WriteFrames(BgrXyzMat Bgrxyz)
+        public void WriteFrame(BgrXyzMat Bgrxyz)
         {
-            _indexes.Add(_binWriter.BaseStream.Position);
-            _binWriter.Write((DateTimeOffset.Now - _firstTime).Ticks);
-            var (bgr, xyz) = Bgrxyz.YmsEncode();
-            _binWriter.Write(bgr.Length);
-            _binWriter.Write(bgr);
-            _binWriter.Write(xyz.Length);
-            _binWriter.Write(xyz);
+            lock (_locker)
+            {
+                if (!_isDisposed)
+                {
+                    _indexes.Add(_binWriter.BaseStream.Position);
+                    _binWriter.Write((DateTimeOffset.Now - _firstTime).Ticks);
+                    var (bgr, xyz) = Bgrxyz.YmsEncode();
+                    _binWriter.Write(bgr.Length);
+                    _binWriter.Write(bgr);
+                    _binWriter.Write(xyz.Length);
+                    _binWriter.Write(xyz);
+                }
+            }
         }
 
         /// <summary>
@@ -85,13 +93,17 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// </summary>
         public void Dispose()
         {
-            _binWriter.Seek(8, SeekOrigin.Begin);
-            _binWriter.Write(_binWriter.BaseStream.Length);
-            _binWriter.Seek(0, SeekOrigin.End);
-            _indexes.ForEach(p => _binWriter.Write(p));
-            _binWriter.Flush();
-            _binWriter.Close();
-            _binWriter.Dispose();
+            lock (_locker)
+            {
+                _isDisposed = true;
+                _binWriter.Seek(8, SeekOrigin.Begin);
+                _binWriter.Write(_binWriter.BaseStream.Length);
+                _binWriter.Seek(0, SeekOrigin.End);
+                _indexes.ForEach(p => _binWriter.Write(p));
+                _binWriter.Flush();
+                _binWriter.Close();
+                _binWriter.Dispose();
+            }
         }
 
     }

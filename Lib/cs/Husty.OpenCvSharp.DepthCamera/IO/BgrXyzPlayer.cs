@@ -2,7 +2,6 @@
 using System.Text;
 using System.IO;
 using System.Collections.Generic;
-using System.Threading;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Linq;
@@ -48,7 +47,6 @@ namespace Husty.OpenCvSharp.DepthCamera
         private readonly BinaryReader _binReader;
         private readonly long[] _indexes;
         private int _positionIndex;
-        private int _interval => 800 / Fps;
 
 
         // ------- Properties ------- //
@@ -68,7 +66,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// Player for Movies captured by Depth Camera
         /// </summary>
         /// <param name="filePath"></param>
-        public BgrXyzPlayer(string filePath, int fps = 15)
+        public BgrXyzPlayer(string filePath, int fps = 5)
         {
             if (!File.Exists(filePath)) throw new Exception("File doesn't exist!");
             _binReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read), Encoding.ASCII);
@@ -104,16 +102,10 @@ namespace Husty.OpenCvSharp.DepthCamera
         public IObservable<(BgrXyzMat Frame, int Position)> Start(int position)
         {
             if (position > -1 && position < FrameCount) _positionIndex = position;
-            var observable = Observable.Range(0, FrameCount - position, ThreadPoolScheduler.Instance)
-                .Select(i =>
-                {
-                    Thread.Sleep(_interval);
-                    GC.Collect();
-                    return (Read().Frame, position++);
-                })
-                .Publish()
-                .RefCount();
-            return observable;
+            return Observable.Interval(TimeSpan.FromMilliseconds(1000 / Fps), ThreadPoolScheduler.Instance)
+                .Where(_ => position < FrameCount)
+                .Select(_ => (Read().Frame, ++position))
+                .Publish().RefCount();
         }
 
         /// <summary>
@@ -139,6 +131,8 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         private (BgrXyzMat Frame, long Time) Read()
         {
+            GC.Collect();
+            if (_positionIndex == _indexes.Length - 1) _positionIndex--;
             _binReader.BaseStream.Seek(_indexes[_positionIndex++], SeekOrigin.Begin);
             var time = _binReader.ReadInt64();
             var bgrDataSize = _binReader.ReadInt32();

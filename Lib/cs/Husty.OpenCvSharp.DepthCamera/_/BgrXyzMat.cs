@@ -201,7 +201,10 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <param name="roll">Roll angle (rad, clockwise of Z axis)</param>
         public unsafe BgrXyzMat Rotate(float pitch, float yaw, float roll)
         {
-            Rotate(Vector3.ZRot(roll) * Vector3.YRot(yaw) * Vector3.XRot(pitch));
+            using var zRot = Vector3.ZRot(roll);
+            using var yRot = Vector3.YRot(yaw);
+            using var xRot = Vector3.XRot(pitch);
+            Rotate(zRot * yRot * xRot);
             return this;
         }
 
