@@ -11,7 +11,7 @@ namespace Husty.OpenCvSharp
     /// <summary>
     /// Well-known object detection algorithm
     /// </summary>
-    public class YoloDetector
+    public class YoloDetector : IDisposable
     {
 
         // ------- Fields ------- //
@@ -34,7 +34,7 @@ namespace Husty.OpenCvSharp
         /// <param name="confidenceThreshold"></param>
         public YoloDetector(string cfg, string weights, string names, Size blobSize, float confidenceThreshold = 0.5f)
         {
-            if (blobSize.Width % 32 != 0 || blobSize.Height % 32 != 0)
+            if (blobSize.Width % 32 is not 0 || blobSize.Height % 32 is not 0)
                 throw new ArgumentException("Blob width and height value must be multiple of 32.");
             if (confidenceThreshold < 0 || confidenceThreshold > 1)
                 throw new ArgumentOutOfRangeException("must be 0.0 - 1.0");
@@ -91,6 +91,11 @@ namespace Husty.OpenCvSharp
             }
             CvDnn.NMSBoxes(boxes, confidences, _confidenceThreshold, 0.3f, out int[] indices);
             return indices.Select(i => new YoloResult(boxes[i], confidences[i], _labels[classIds[i]], probabilities[i])).ToArray();
+        }
+
+        public void Dispose()
+        {
+            _net.Dispose();
         }
 
     }
