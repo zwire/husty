@@ -118,6 +118,13 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <returns></returns>
         public BgrXyzMat Clone() => new(BGR.Clone(), XYZ.Clone());
 
+        public BgrXyzMat Resize(Size size)
+        {
+            Cv2.Resize(BGR, BGR, size);
+            Cv2.Resize(XYZ, XYZ, size);
+            return this;
+        }
+
         /// <summary>
         /// Get Depth image (Normalize value in 0-255)
         /// </summary>
