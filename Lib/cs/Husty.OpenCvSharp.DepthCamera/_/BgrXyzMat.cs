@@ -56,8 +56,6 @@ namespace Husty.OpenCvSharp.DepthCamera
         {
             BGR = bgr;
             XYZ = xyz;
-            if (BGR.Width != XYZ.Width || BGR.Height != XYZ.Height)
-                throw new InvalidOperationException("Require: BGR size == XYZ size");
         }
 
         /// <summary>
@@ -147,6 +145,8 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <returns>Real 3D coordinate with color</returns>
         public unsafe BGRXYZ GetPointInfo(Point point)
         {
+            if (BGR.Width != XYZ.Width || BGR.Height != XYZ.Height)
+                throw new InvalidOperationException("Require: BGR size == XYZ size");
             var index = (point.Y * BGR.Cols + point.X) * 3;
             var bgr = BGR.DataPointer;
             var xyz = (short*)XYZ.Data;
