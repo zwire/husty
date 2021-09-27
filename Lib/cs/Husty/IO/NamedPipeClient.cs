@@ -39,16 +39,13 @@ namespace Husty.IO
 
         public BidirectionalDataStream GetStream()
         {
-            return GetStreamAsync().Result;
+            _connectionTask.Wait();
+            return new BidirectionalDataStream(_writer, _reader);
         }
 
         public async Task<BidirectionalDataStream> GetStreamAsync()
         {
-            return await Task.Run(() =>
-            {
-                _connectionTask.Wait();
-                return new BidirectionalDataStream(_writer, _reader);
-            });
+            return await Task.Run(() => GetStream());
         }
 
         public void Dispose()

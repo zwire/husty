@@ -58,30 +58,27 @@ namespace Husty.IO
 
         public BidirectionalDataStream GetStream()
         {
-            return GetStreamAsync().Result;
+            _connectionTask.Wait();
+            if (_client1 is not null && _client2 is null)
+            {
+                var stream = _client1.GetStream();
+                return new BidirectionalDataStream(stream, stream);
+            }
+            else if (_client1 is not null && _client2 is not null)
+            {
+                var stream1 = _client1.GetStream();
+                var stream2 = _client2.GetStream();
+                return new BidirectionalDataStream(stream1, stream2);
+            }
+            else
+            {
+                throw new Exception("failed to get stream!");
+            }
         }
 
         public async Task<BidirectionalDataStream> GetStreamAsync()
         {
-            return await Task.Run(() =>
-            {
-                _connectionTask.Wait();
-                if (_client1 is not null && _client2 is null)
-                {
-                    var stream = _client1.GetStream();
-                    return new BidirectionalDataStream(stream, stream);
-                }
-                else if (_client1 is not null && _client2 is not null)
-                {
-                    var stream1 = _client1.GetStream();
-                    var stream2 = _client2.GetStream();
-                    return new BidirectionalDataStream(stream1, stream2);
-                }
-                else
-                {
-                    throw new Exception("failed to get stream!");
-                }
-            });
+            return await Task.Run(() => GetStream());
         }
 
         public void Dispose()
