@@ -23,13 +23,15 @@ namespace Husty.IO
         /// </summary>
         public bool Available => _writingStream is not null && _readingStream is not null;
 
-        
+
         // ------- Constructors ------- //
 
-        public BidirectionalDataStream(Stream writingStream, Stream readingStream)
+        public BidirectionalDataStream(Stream writingStream, Stream readingStream, int readTimeout, int writeTimeout)
         {
             _writingStream = writingStream;
             _readingStream = readingStream;
+            _writingStream.WriteTimeout = writeTimeout;
+            _readingStream.ReadTimeout = readTimeout;
         }
 
 
@@ -47,7 +49,15 @@ namespace Husty.IO
         /// <param name="bytes"></param>
         public bool WriteBinary(byte[] bytes)
         {
-            return WriteBinaryAsync(bytes).Result;
+            try
+            {
+                _writingStream.Write(bytes, 0, bytes.Length);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -73,7 +83,23 @@ namespace Husty.IO
         /// <returns>byte array, and if some error occured it returns null</returns>
         public byte[] ReadBinary()
         {
-            return ReadBinaryAsync().Result;
+            try
+            {
+                using var ms = new MemoryStream();
+                var bytes = new byte[2048];
+                var size = 0;
+                do
+                {
+                    size = _readingStream.Read(bytes, 0, bytes.Length);
+                    if (size is 0) break;
+                    ms.Write(bytes, 0, size);
+                } while (size is 2048);
+                return ms.ToArray();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -107,7 +133,14 @@ namespace Husty.IO
         /// <param name="sendmsg"></param>
         public bool WriteString(string sendmsg)
         {
-            return WriteStringAsync(sendmsg).Result;
+            try
+            {
+                return WriteBinary(Encoding.UTF8.GetBytes(sendmsg));
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -116,7 +149,14 @@ namespace Husty.IO
         /// <param name="sendmsg"></param>
         public async Task<bool> WriteStringAsync(string sendmsg)
         {
-            return await WriteBinaryAsync(Encoding.UTF8.GetBytes(sendmsg));
+            try
+            {
+                return await WriteBinaryAsync(Encoding.UTF8.GetBytes(sendmsg));
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -125,7 +165,14 @@ namespace Husty.IO
         /// <returns>string value, and if some error occured it returns null</returns>
         public string ReadString()
         {
-            return ReadStringAsync().Result;
+            try
+            {
+                return Encoding.UTF8.GetString(ReadBinary());
+            }
+            catch
+            {
+                return "";
+            }
         }
 
         /// <summary>
@@ -134,7 +181,14 @@ namespace Husty.IO
         /// <returns>string value, and if some error occured it returns null</returns>
         public async Task<string> ReadStringAsync()
         {
-            return Encoding.UTF8.GetString(await ReadBinaryAsync());
+            try
+            {
+                return Encoding.UTF8.GetString(await ReadBinaryAsync());
+            }
+            catch
+            {
+                return "";
+            }
         }
 
         /// <summary>
@@ -145,7 +199,14 @@ namespace Husty.IO
         /// <returns></returns>
         public bool WriteAsJson<T>(T sendmsg)
         {
-            return WriteAsJsonAsync(sendmsg).Result;
+            try
+            {
+                return WriteString(JsonSerializer.Serialize(sendmsg));
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -156,7 +217,14 @@ namespace Husty.IO
         /// <returns></returns>
         public async Task<bool> WriteAsJsonAsync<T>(T sendmsg)
         {
-            return await WriteStringAsync(JsonSerializer.Serialize(sendmsg));
+            try
+            {
+                return await WriteStringAsync(JsonSerializer.Serialize(sendmsg));
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -166,7 +234,14 @@ namespace Husty.IO
         /// <returns>deserialized JSON object, and if some error occured it returns null</returns>
         public T ReadAsJson<T>()
         {
-            return ReadAsJsonAsync<T>().Result;
+            try
+            {
+                return JsonSerializer.Deserialize<T>(ReadString());
+            }
+            catch
+            {
+                return default;
+            }
         }
 
         /// <summary>

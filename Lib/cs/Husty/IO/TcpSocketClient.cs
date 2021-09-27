@@ -17,6 +17,13 @@ namespace Husty.IO
         private readonly Task _connectionTask;
 
 
+        // ------- Properties ------- //
+
+        public int ReadTimeout { set; get; } = -1;
+
+        public int WriteTimeout { set; get; } = -1;
+
+
         // ------- Constructors ------- //
 
         public TcpSocketClient(string ip, int inoutPort)
@@ -62,13 +69,13 @@ namespace Husty.IO
             if (_client1 is not null && _client2 is null)
             {
                 var stream = _client1.GetStream();
-                return new BidirectionalDataStream(stream, stream);
+                return new BidirectionalDataStream(stream, stream, ReadTimeout, WriteTimeout);
             }
             else if (_client1 is not null && _client2 is not null)
             {
                 var stream1 = _client1.GetStream();
                 var stream2 = _client2.GetStream();
-                return new BidirectionalDataStream(stream1, stream2);
+                return new BidirectionalDataStream(stream1, stream2, ReadTimeout, WriteTimeout);
             }
             else
             {

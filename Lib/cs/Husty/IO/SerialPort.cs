@@ -12,6 +12,12 @@ namespace Husty.IO
         private readonly System.IO.Ports.SerialPort _port;
         private readonly Task _connectionTask;
 
+        // ------- Properties ------- //
+
+        public int ReadTimeout { set; get; } = -1;
+
+        public int WriteTimeout { set; get; } = -1;
+
 
         // ------- Constructor ------- //
 
@@ -43,14 +49,14 @@ namespace Husty.IO
         {
             _connectionTask.Wait();
             var stream = _port.BaseStream;
-            return new BidirectionalDataStream(stream, stream);
+            return new BidirectionalDataStream(stream, stream, ReadTimeout, WriteTimeout);
         }
 
         public async Task<BidirectionalDataStream> GetStreamAsync()
         {
             return await Task.Run(() => GetStream());
         }
-        
+
         public void Dispose()
         {
             _port?.Close();

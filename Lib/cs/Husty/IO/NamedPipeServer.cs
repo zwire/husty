@@ -14,6 +14,13 @@ namespace Husty.IO
         private readonly Task _connectionTask;
 
 
+        // ------- Properties ------- //
+
+        public int ReadTimeout { set; get; } = -1;
+
+        public int WriteTimeout { set; get; } = -1;
+
+
         // ------- Constructors ------- //
 
         public NamedPipeServer(string pipeName)
@@ -40,7 +47,7 @@ namespace Husty.IO
         public BidirectionalDataStream GetStream()
         {
             _connectionTask.Wait();
-            return new BidirectionalDataStream(_writer, _reader);
+            return new BidirectionalDataStream(_writer, _reader, ReadTimeout, WriteTimeout);
         }
 
         public async Task<BidirectionalDataStream> GetStreamAsync()
@@ -53,6 +60,5 @@ namespace Husty.IO
             _writer?.Dispose();
             _reader?.Dispose();
         }
-
     }
 }
