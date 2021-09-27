@@ -23,15 +23,17 @@ namespace Husty.IO
         /// </summary>
         public bool Available => _writingStream is not null && _readingStream is not null;
 
-
+        
         // ------- Constructors ------- //
 
-        public BidirectionalDataStream(Stream writingStream, Stream readingStream, int readTimeout, int writeTimeout)
+        public BidirectionalDataStream(Stream writingStream, Stream readingStream, int writeTimeout, int readTimeout)
         {
             _writingStream = writingStream;
             _readingStream = readingStream;
-            _writingStream.WriteTimeout = writeTimeout;
-            _readingStream.ReadTimeout = readTimeout;
+            if (_writingStream.CanTimeout)
+                _writingStream.WriteTimeout = writeTimeout;
+            if (_readingStream.CanTimeout)
+                _readingStream.ReadTimeout = readTimeout;
         }
 
 

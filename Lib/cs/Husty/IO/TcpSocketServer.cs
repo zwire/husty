@@ -75,13 +75,13 @@ namespace Husty.IO
             if (_client1 is not null && _client2 is null)
             {
                 var stream = _client1.GetStream();
-                return new BidirectionalDataStream(stream, stream, ReadTimeout, WriteTimeout);
+                return new BidirectionalDataStream(stream, stream, WriteTimeout, ReadTimeout);
             }
             else if (_client1 is not null && _client2 is not null)
             {
                 var stream1 = _client1.GetStream();
                 var stream2 = _client2.GetStream();
-                return new BidirectionalDataStream(stream2, stream1, ReadTimeout, WriteTimeout);
+                return new BidirectionalDataStream(stream2, stream1, WriteTimeout, ReadTimeout);
             }
             else
             {

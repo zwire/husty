@@ -47,7 +47,7 @@ namespace Husty.IO
         public BidirectionalDataStream GetStream()
         {
             _connectionTask.Wait();
-            return new BidirectionalDataStream(_writer, _reader, ReadTimeout, WriteTimeout);
+            return new BidirectionalDataStream(_writer, _reader, WriteTimeout, ReadTimeout);
         }
 
         public async Task<BidirectionalDataStream> GetStreamAsync()
