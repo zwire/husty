@@ -24,6 +24,8 @@ namespace Husty.OpenCvSharp
         // 
         // s = (R^-1 * T) / (R^-1 * A^-1 * x)
         // 
+        // detail --> see: http://www.cyber.t.u-tokyo.ac.jp/~tani/class/mech_enshu/enshu2011mi2.pdf
+        //
 
         private readonly Mat _A;
         private readonly Mat _T;
