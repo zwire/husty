@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using OpenCvSharp;
 
-namespace Tools.NncDataArranger
+namespace Tools.NnDataArranger
 {
-    class ImgResize
+    internal static class ImgResize
     {
-        public static void Run(string inputDir, string outputDir, Size outputSize)
+        internal static void Run(string inputDir, string outputDir, Size outputSize)
         {
             var files = Directory.GetFiles(inputDir);
             foreach (var file in files)

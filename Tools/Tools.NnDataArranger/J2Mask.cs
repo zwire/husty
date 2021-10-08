@@ -4,11 +4,11 @@ using OpenCvSharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Tools.NncDataArranger
+namespace Tools.NnDataArranger
 {
-    static class J2Mask
+    internal static class J2Mask
     {
-        public static void Run(string jsonDir, string outputDir, Size size)
+        internal static void Run(string jsonDir, string outputDir, Size size)
         {
             var files = Directory.GetFiles(jsonDir);
             foreach (var file in files)

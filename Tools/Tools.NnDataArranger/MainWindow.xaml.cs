@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Tools.NncDataArranger
+namespace Tools.NnDataArranger
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -38,9 +38,9 @@ namespace Tools.NncDataArranger
             {
                 Title = "Select Input File / Directory.",
                 InitialDirectory = _selectedPath,
-                IsFolderPicker = ModeCombo.SelectedIndex == 0 || ModeCombo.SelectedIndex == 1 ? false : true,
+                IsFolderPicker = ModeCombo.SelectedIndex is 0 || ModeCombo.SelectedIndex is 1 ? false : true,
             };
-            if (cofd.ShowDialog() == CommonFileDialogResult.Ok)
+            if (cofd.ShowDialog() is CommonFileDialogResult.Ok)
             {
                 _selectedPath = Path.GetDirectoryName(cofd.FileName);
                 InputLabel.Value = cofd.FileName;
@@ -55,7 +55,7 @@ namespace Tools.NncDataArranger
                 InitialDirectory = _selectedPath,
                 IsFolderPicker = true,
             };
-            if (cofd.ShowDialog() == CommonFileDialogResult.Ok)
+            if (cofd.ShowDialog() is CommonFileDialogResult.Ok)
             {
                 _selectedPath = Path.GetDirectoryName(cofd.FileName);
                 OutputLabel.Value = cofd.FileName;
@@ -88,7 +88,15 @@ namespace Tools.NncDataArranger
                 case 4:             // Image-Mask Assignment
                     ImgAssign.Run(InputLabel.Value, OutputLabel.Value);
                     break;
-                case 5:             // Extract Zip
+                case 5:             // Disperse Brightness
+                    var rate1 = double.Parse(CfgTx.Value);
+                    BrightnessDisperser.Run(InputLabel.Value, OutputLabel.Value, rate1);
+                    break;
+                case 6:             // Horizonal Flip
+                    var rate2 = double.Parse(CfgTx.Value);
+                    HorizonalFlipper.Run(InputLabel.Value, OutputLabel.Value, rate2);
+                    break;
+                case 7:             // Extract Zip
                     Zip2Img.Run(InputLabel.Value, OutputLabel.Value, CfgTx.Value);
                     break;
             }
@@ -128,7 +136,19 @@ namespace Tools.NncDataArranger
                     Instruction.Value = "";
                     CfgTx.Value = "";
                     break;
-                case 5:             // Extract Zip
+                case 5:             // Disperse Brightness
+                    InputButtonContent.Value = "Input Dir";
+                    OutputButtonContent.Value = "Mask Dir";
+                    Instruction.Value = "Rate";
+                    CfgTx.Value = "0.2";
+                    break;
+                case 6:             // Horizonal Flip
+                    InputButtonContent.Value = "Input Dir";
+                    OutputButtonContent.Value = "Mask Dir";
+                    Instruction.Value = "Rate";
+                    CfgTx.Value = "0.2";
+                    break;
+                case 7:             // Extract Zip
                     InputButtonContent.Value = "Input Dir";
                     OutputButtonContent.Value = "Output Dir";
                     Instruction.Value = "C D P";

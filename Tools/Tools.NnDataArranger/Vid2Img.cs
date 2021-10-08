@@ -1,11 +1,11 @@
 ﻿using OpenCvSharp;
 using System.IO;
 
-namespace Tools.NncDataArranger
+namespace Tools.NnDataArranger
 {
-    static class Vid2Img
+    internal static class Vid2Img
     {
-        public static void Run(string inputFile, string outputDir, Size outputSize, int skip)
+        internal static void Run(string inputFile, string outputDir, Size outputSize, int skip)
         {
             using var cap = new VideoCapture(inputFile);
             cap.Set(VideoCaptureProperties.Fps, 1000);
@@ -15,7 +15,7 @@ namespace Tools.NncDataArranger
             var img = new Mat();
             while (cap.Read(img))
             {
-                if (count++ % skip == 0)
+                if (count++ % skip is 0)
                 {
                     Cv2.Resize(img, img, outputSize);
                     while (File.Exists($"{outputDir}\\{imnum:d3}.png")) imnum++;

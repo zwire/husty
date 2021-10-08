@@ -2,12 +2,12 @@
 using System.IO.Compression;
 using OpenCvSharp;
 
-namespace Tools.NncDataArranger
+namespace Tools.NnDataArranger
 {
-    public static class Zip2Img
+    internal static class Zip2Img
     {
 
-        public static void Run(string inputDir, string outputDir, string which)
+        internal static void Run(string inputDir, string outputDir, string which)
         {
             var zips = Directory.GetFiles(inputDir);
             var count = 0;

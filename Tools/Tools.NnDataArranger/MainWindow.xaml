@@ -1,11 +1,11 @@
-﻿<Window x:Class="Tools.NncDataArranger.MainWindow"
+﻿<Window x:Class="Tools.NnDataArranger.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Tools.NncDataArranger"
+        xmlns:local="clr-namespace:Tools.NnDataArranger"
         mc:Ignorable="d"
-        Title="NNC Data Arranger" Background="Black" Height="200" Width="400">
+        Title="NN Data Arranger" Background="Black" Height="200" Width="400">
     
     <Grid>
         
@@ -29,6 +29,8 @@
                 <ComboBoxItem Content="Image Resize"/>
                 <ComboBoxItem Content="Json to Binary Mask Image"/>
                 <ComboBoxItem Content="Image-Mask Assignment"/>
+                <ComboBoxItem Content="Disperse Brightness"/>
+                <ComboBoxItem Content="Horizonal Flip"/>
                 <ComboBoxItem Content="Extract Zip"/>
             </ComboBox>
         </Viewbox>

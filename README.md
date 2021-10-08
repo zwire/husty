@@ -13,7 +13,7 @@
 ### Tools
 ----- [Tools/DepthCamera](Tools/Tools.DepthCamera)  
 ----- [Tools/CameraCalibration](Tools/Tools.CameraCalibration)  
------ [Tools/NncDataArranger](Tools/Tools.NncDataArranger) ... Sony Neural Network Console の簡易なデータ作成ツール  
+----- [Tools/NnDataArranger](Tools/Tools.NnDataArranger) ... 機械学習の簡易なデータ作成ツール  
 ----- [Tools/Yolo-Labeller](Tools/Tools.Yolo-Labeller) ... Yoloの学習データを作るラベリングツール  
 ----- [Tools/Yolo-Validation](Tools/Tools.Yolo-Validation) ... Yoloのモデルを評価するプログラム  
 

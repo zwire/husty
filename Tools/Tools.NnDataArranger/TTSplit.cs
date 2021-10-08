@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace Tools.NncDataArranger
+namespace Tools.NnDataArranger
 {
-    static class TTSplit
+    internal static class TTSplit
     {
-        public static void Run(string inputFile, string outputDir, double testRate)
+        internal static void Run(string inputFile, string outputDir, double testRate)
         {
 
             using var sw_train = new StreamWriter($"{outputDir}\\Train.csv");
             using var sw_test = new StreamWriter($"{outputDir}\\Test.csv");
             using var sr = new StreamReader(inputFile);
             var strs = new List<string[]>();
-            while (sr.Peek() != -1)
+            while (sr.Peek() is not -1)
                 strs.Add(sr.ReadLine().Split(","));
             for (int i = 0; i < strs[0].Length; i++)
             {
@@ -32,7 +32,7 @@ namespace Tools.NncDataArranger
             else if (testRate > 1) testRate = 1.0;
             for (int i = 1; i < strs.Count; i++)
             {
-                if (count++ % (1.0 / testRate) == 0)
+                if (count++ % (1.0 / testRate) is 0)
                 {
                     for (int j = 0; j < strs[i].Length; j++)
                     {

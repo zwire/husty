@@ -1,11 +1,11 @@
 ﻿using System.IO;
 
-namespace Tools.NncDataArranger
+namespace Tools.NnDataArranger
 {
-    class ImgAssign
+    internal static class ImgAssign
     {
 
-        public static void Run(string dataDir, string maskDir)
+        internal static void Run(string dataDir, string maskDir)
         {
 
             var x = Directory.GetFiles(dataDir);
