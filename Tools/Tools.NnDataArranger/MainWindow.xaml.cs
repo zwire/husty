@@ -96,8 +96,16 @@ namespace Tools.NnDataArranger
                     var rate2 = double.Parse(CfgTx.Value);
                     HorizonalFlipper.Run(InputLabel.Value, OutputLabel.Value, rate2);
                     break;
-                case 7:             // Extract Zip
+                case 7:             // Equalize Value
+                    var rate3 = double.Parse(CfgTx.Value);
+                    ValueEqualizer.Run(InputLabel.Value, OutputLabel.Value, rate3);
+                    break;
+                case 8:             // Extract Zip
                     Zip2Img.Run(InputLabel.Value, OutputLabel.Value, CfgTx.Value);
+                    break;
+                case 9:             // for Keras or PyTorch
+                    var rate4 = double.Parse(CfgTx.Value);
+                    TTSplitFolder.Run(InputLabel.Value, OutputLabel.Value, rate4);
                     break;
             }
         }
@@ -148,11 +156,23 @@ namespace Tools.NnDataArranger
                     Instruction.Value = "Rate";
                     CfgTx.Value = "0.2";
                     break;
-                case 7:             // Extract Zip
+                case 7:             // Equalize Value
+                    InputButtonContent.Value = "Input Dir";
+                    OutputButtonContent.Value = "Mask Dir";
+                    Instruction.Value = "Rate";
+                    CfgTx.Value = "0.2";
+                    break;
+                case 8:             // Extract Zip
                     InputButtonContent.Value = "Input Dir";
                     OutputButtonContent.Value = "Output Dir";
                     Instruction.Value = "C D P";
                     CfgTx.Value = "C";
+                    break;
+                case 9:             // for Keras or PyTorch
+                    InputButtonContent.Value = "Input Dir";
+                    OutputButtonContent.Value = "Mask Dir";
+                    Instruction.Value = "Rate";
+                    CfgTx.Value = "0.2";
                     break;
             }
         }
