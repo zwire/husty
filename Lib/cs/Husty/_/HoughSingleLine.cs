@@ -111,8 +111,7 @@
                                 if (voteTable[t, r] > max)
                                 {
                                     max = voteTable[t, r];
-                                    maxloc.Item1 = t;
-                                    maxloc.Item2 = r;
+                                    maxloc = (t, r);
                                 }
                                 break;
                             }
