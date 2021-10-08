@@ -5,18 +5,17 @@
 
         // ------ Fields ------ //
 
+        private readonly int _rhoCount;
+        private readonly int _thetaCount;
         private readonly double _xMin;
         private readonly double _xMax;
         private readonly double _yMin;
         private readonly double _yMax;
-        private readonly int _rhoCount;
-        private readonly int _thetaCount;
         private readonly double[] _xArray;
         private readonly double[] _yArray;
         private readonly double[] _thetas;
         private readonly double[] _rhos;
         private readonly double[,,] _rhoTable;
-        private int[,] _voteTable;
 
 
         // ------ Constructors ------ //
@@ -83,7 +82,7 @@
             // max value and its location to be updated
             var max = 0;
             var maxloc = new int[] { 0, 0 };
-            _voteTable = new int[_thetaCount, _rhoCount];
+            var voteTable = new int[_thetaCount, _rhoCount];
 
             // make loop by input data (x, y)
             for (int i = 0; i < xyArray.Length; i++)
@@ -108,10 +107,10 @@
                         {
                             if (rho < _rhos[r])
                             {
-                                _voteTable[t, r]++;
-                                if (_voteTable[t, r] > max)
+                                voteTable[t, r]++;
+                                if (voteTable[t, r] > max)
                                 {
-                                    max = _voteTable[t, r];
+                                    max = voteTable[t, r];
                                     maxloc[0] = t;
                                     maxloc[1] = r;
                                 }
