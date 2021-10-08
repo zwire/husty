@@ -42,6 +42,12 @@
                 <RadioButton x:Name="RadioEx" Content="Extrinsic  " Checked="RadioEx_Checked"/>
             </StackPanel>
         </Viewbox>
+        <Viewbox Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2">
+            <StackPanel Orientation="Horizontal" Width="200">
+                <Label Content="ImageSize"/>
+                <TextBox x:Name="SizeTx" Foreground="Black" Width="100"/>
+            </StackPanel>
+        </Viewbox>
 
         <Viewbox Grid.Row="1" Grid.Column="0" Margin="5">
             <Button x:Name="ImageStreamButton" Content="Stream ON" Foreground="White" Background="{DynamicResource AccentColorBrush2}" Width="100" Click="ImageStreamButton_Click"/>

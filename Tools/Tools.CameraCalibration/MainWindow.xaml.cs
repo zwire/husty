@@ -12,6 +12,7 @@ using System.Windows.Input;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
+using Husty;
 using Husty.OpenCvSharp;
 using Path = System.IO.Path;
 using System.Diagnostics;
@@ -34,6 +35,7 @@ namespace Tools.CameraCalibration
         private string _imageSourceDir = "";
         private string _videoSourceDir = "";
         private IDisposable _streamConnector;
+        private OpenCvSharp.Size _size;
         private Mat _frame;
         private List<string> _imgFilesIn;
         private VideoCapture _cap;
@@ -41,7 +43,9 @@ namespace Tools.CameraCalibration
         private IntrinsicCameraParameters _paramIn;
         private ExtrinsicCameraParameters _paramEx;
         private PerspectiveTransformer _trs;
+        private UserSetting<Setting> _setting;
 
+        public record Setting(string BoardImageDir, string ImageSourceDir, string VIdeoSourceDir, int Width, int Height);
 
         public MainWindow()
         {
@@ -60,22 +64,16 @@ namespace Tools.CameraCalibration
             TestIntrinsicButton.Visibility = Visibility.Visible;
             TestExtrinsicButton.Visibility = Visibility.Hidden;
             AppendButton.Visibility = Visibility.Hidden;
-            if (File.Exists("cache.txt"))
-            {
-                var lines = File.ReadAllText("cache.txt").Split("\n");
-                if (lines.Length > 2)
-                {
-                    _boardImageDir = lines[0].TrimEnd();
-                    _imageSourceDir = lines[1].TrimEnd();
-                    _videoSourceDir = lines[2].TrimEnd();
-                }
-            }
+            _setting = new(new("C:", "C:", "C:", 640, 480));
+            var val = _setting.Load();
+            _boardImageDir = val.BoardImageDir;
+            _imageSourceDir = val.ImageSourceDir;
+            _videoSourceDir = val.VIdeoSourceDir;
+            _size = new(val.Width, val.Height);
+            SizeTx.Text = $"{_size.Width},{_size.Height}";
             Closed += (s, e) =>
             {
-                using var sw = new StreamWriter("cache.txt", false);
-                sw.WriteLine(_boardImageDir);
-                sw.WriteLine(_imageSourceDir);
-                sw.WriteLine(_videoSourceDir);
+                _setting.Save(new(_boardImageDir, _imageSourceDir, _videoSourceDir, _size.Width, _size.Height));
             };
         }
 
@@ -84,13 +82,16 @@ namespace Tools.CameraCalibration
             _isSampling = false;
             if (!_streamAlive)
             {
+                if (int.TryParse(SizeTx.Text.Split(",")[0], out var w) &&
+                    int.TryParse(SizeTx.Text.Split(",")[1], out var h))
+                        _size = new(w, h);
                 using var cofd = new CommonOpenFileDialog()
                 {
                     InitialDirectory = _videoSourceDir,
                     IsFolderPicker = false
                 };
                 cofd.Filters.Add(new CommonFileDialogFilter("Video", "*.mp4;*.avi"));
-                if (cofd.ShowDialog() == CommonFileDialogResult.Ok)
+                if (cofd.ShowDialog() is CommonFileDialogResult.Ok)
                 {
                     _cap = new(cofd.FileName);
                     _videoSourceDir = Path.GetDirectoryName(cofd.FileName);
@@ -109,13 +110,14 @@ namespace Tools.CameraCalibration
                     ShutterButton.IsEnabled = true;
                     _streamAlive = true;
                     _frame = new Mat();
-                    _streamConnector = Observable.Range(0, int.MaxValue, ThreadPoolScheduler.Instance)
+                    _streamConnector = Observable.Repeat(0, ThreadPoolScheduler.Instance)
                         .Where(_ =>
                         {
                             var suc = false;
                             lock (_locker)
                             {
                                 suc = (bool)_cap?.Read(_frame);
+                                Cv2.Resize(_frame, _frame, _size);
                             }
                             return suc;
                         })
@@ -125,7 +127,7 @@ namespace Tools.CameraCalibration
                             {
                                 try
                                 {
-                                    if (_paramIn != null && (_testInOn || _testExOn))
+                                    if (_paramIn is not null && (_testInOn || _testExOn))
                                     {
                                         _frame = _frame?.Undistort(_paramIn.CameraMatrix, _paramIn.DistortionCoeffs);
                                     }
@@ -160,7 +162,7 @@ namespace Tools.CameraCalibration
                     InitialDirectory = _boardImageDir,
                     IsFolderPicker = true
                 };
-                if (cofd.ShowDialog() == CommonFileDialogResult.Ok)
+                if (cofd.ShowDialog() is CommonFileDialogResult.Ok)
                 {
                     _imgFilesIn = new(Directory.GetFiles(cofd.FileName, "*.png"));
                     _boardImageDir = Path.GetDirectoryName(cofd.FileName);
@@ -176,17 +178,21 @@ namespace Tools.CameraCalibration
         {
             if (_exMode)
             {
+                if (int.TryParse(SizeTx.Text.Split(",")[0], out var w) &&
+                    int.TryParse(SizeTx.Text.Split(",")[1], out var h))
+                        _size = new(w, h);
                 using var cofd = new CommonOpenFileDialog()
                 {
                     InitialDirectory = _imageSourceDir,
                     IsFolderPicker = false
                 };
-                if (cofd.ShowDialog() == CommonFileDialogResult.Ok)
+                if (cofd.ShowDialog() is CommonFileDialogResult.Ok)
                 {
                     if (File.Exists(cofd.FileName))
                     {
                         _imageSourceDir = Path.GetDirectoryName(cofd.FileName);
                         _frame = Cv2.ImRead(cofd.FileName);
+                        Cv2.Resize(_frame, _frame, _size);
                         if (File.Exists("intrinsic.json"))
                         {
                             _paramIn = IntrinsicCameraParameters.Load("intrinsic.json");
@@ -210,7 +216,7 @@ namespace Tools.CameraCalibration
             {
                 var count = 0;
                 while (File.Exists($"{count:d2}.png")) count++;
-                if (_frame != null && !_frame.Empty())
+                if (_frame is not null && !_frame.Empty())
                 {
                     Cv2.ImWrite($"{count:d2}.png", _frame);
                 }
@@ -238,7 +244,10 @@ namespace Tools.CameraCalibration
         {
             if (!_exMode)
             {
-                if (_imgFilesIn == null || _imgFilesIn.Count == 0) return;
+                if (_imgFilesIn is null || _imgFilesIn.Count is 0) return;
+                if (int.TryParse(SizeTx.Text.Split(",")[0], out var w) &&
+                    int.TryParse(SizeTx.Text.Split(",")[1], out var h))
+                        _size = new(w, h);
                 var chess = new Chessboard(7, 10, 32.5f);
                 _paramIn = IntrinsicCameraCalibrator.CalibrateWithChessboardImages(chess, _imgFilesIn);
                 DebugMat2D(_paramIn.CameraMatrix, "Camera");
@@ -250,6 +259,7 @@ namespace Tools.CameraCalibration
                     foreach (var f in _imgFilesIn)
                     {
                         _frame = Cv2.ImRead(f, ImreadModes.Grayscale);
+                        Cv2.Resize(_frame, _frame, _size);
                         var corners = chess.FindCorners(_frame);
                         chess.DrawCorners(_frame, corners);
                         Dispatcher.Invoke(() =>
@@ -327,7 +337,7 @@ namespace Tools.CameraCalibration
         {
             _exMode = false;
             _points = new();
-            if (DoCalibrationButton != null)
+            if (DoCalibrationButton is not null)
             {
                 DoCalibrationButton.IsEnabled = false;
                 OpenFolderButton.Visibility = Visibility.Visible;
@@ -345,7 +355,7 @@ namespace Tools.CameraCalibration
             _exMode = true;
             _points = new();
             Count2D.Content = "0";
-            if (DoCalibrationButton != null)
+            if (DoCalibrationButton is not null)
             {
                 DoCalibrationButton.IsEnabled = false;
                 AppendButton.IsEnabled = false;
@@ -399,7 +409,7 @@ namespace Tools.CameraCalibration
             Y3D.IsEnabled = true;
             lock (_locker)
             {
-                if (_frame != null && !_frame.Empty())
+                if (_frame is not null && !_frame.Empty())
                 {
                     Cv2.Circle(_frame, (int)p.X, (int)p.Y, 3, new(0, 0, 255), 3);
                     Image.Width = _frame.Width;
@@ -407,7 +417,7 @@ namespace Tools.CameraCalibration
                     Image.Source = _frame.ToBitmapSource();
                 }
             }
-            if (_trs != null && _testExOn)
+            if (_trs is not null && _testExOn)
             {
                 X2D.Content = $"{(int)p.X}";
                 Y2D.Content = $"{(int)p.Y}";
