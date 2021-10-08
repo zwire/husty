@@ -81,7 +81,7 @@
 
             // max value and its location to be updated
             var max = 0;
-            var maxloc = new int[] { 0, 0 };
+            var maxloc = (0, 0);
             var voteTable = new int[_thetaCount, _rhoCount];
 
             // make loop by input data (x, y)
@@ -111,8 +111,8 @@
                                 if (voteTable[t, r] > max)
                                 {
                                     max = voteTable[t, r];
-                                    maxloc[0] = t;
-                                    maxloc[1] = r;
+                                    maxloc.Item1 = t;
+                                    maxloc.Item2 = r;
                                 }
                                 break;
                             }
@@ -120,7 +120,7 @@
                     }
                 }
             }
-            return (_thetas[maxloc[0]], _rhos[maxloc[1]]);
+            return (_thetas[maxloc.Item1], _rhos[maxloc.Item2]);
 
         }
 
