@@ -5,12 +5,12 @@ using System.Threading;
 
 namespace Husty
 {
-    public class ThreadMole<T> : IDisposable
+    public class Channel<T> : IDisposable
     {
 
         // ------ Fields ------ //
 
-        private readonly Channel<T> _channel;
+        private readonly System.Threading.Channels.Channel<T> _channel;
         private readonly CancellationTokenSource _wcts;
         private readonly CancellationTokenSource _rcts;
 
@@ -23,7 +23,7 @@ namespace Husty
 
         // ------ Constructors ------ //
 
-        public ThreadMole(int readTimeout = -1, int writeTimeout = -1)
+        public Channel(int readTimeout = -1, int writeTimeout = -1)
         {
             ReadTimeout = readTimeout;
             WriteTimeout = writeTimeout;

@@ -9,7 +9,7 @@ namespace Test.MultiThreading
     {
         static void Main(string[] args)
         {
-            var mole = new ThreadMole<Mat>();
+            var mole = new Channel<Mat>();
             var img = new Mat(1000, 1000, MatType.CV_8U, 0);
             Task.Run(async () =>
             {
