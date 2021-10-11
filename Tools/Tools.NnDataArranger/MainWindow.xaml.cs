@@ -83,7 +83,8 @@ namespace Tools.NnDataArranger
                 case 3:             // Json to Binary Mask Image
                     var w3 = int.Parse(CfgTx.Value.Split(",")[0]);
                     var h3 = int.Parse(CfgTx.Value.Split(",")[1]);
-                    J2Mask.Run(InputLabel.Value, OutputLabel.Value, new OpenCvSharp.Size(w3, h3));
+                    var val = int.Parse(CfgTx.Value.Split(",")[2]);
+                    J2Mask.Run(InputLabel.Value, OutputLabel.Value, new OpenCvSharp.Size(w3, h3), val);
                     break;
                 case 4:             // Image-Mask Assignment
                     ImgAssign.Run(InputLabel.Value, OutputLabel.Value);
@@ -136,7 +137,7 @@ namespace Tools.NnDataArranger
                     InputButtonContent.Value = "Input Dir";
                     OutputButtonContent.Value = "Output Dir";
                     Instruction.Value = "Size";
-                    CfgTx.Value = "640,480";
+                    CfgTx.Value = "640,480,255";
                     break;
                 case 4:             // Image-Mask Assignment
                     InputButtonContent.Value = "Image Dir";

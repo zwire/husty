@@ -14,6 +14,7 @@ namespace Husty
         private readonly CancellationTokenSource _wcts;
         private readonly CancellationTokenSource _rcts;
 
+
         // ------ Properties ------ //
 
         public int ReadTimeout { private set; get; }

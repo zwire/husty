@@ -13,12 +13,16 @@ namespace Husty
 
     public class LayerInfo
     {
+
         public string Name { get; set; }
+
         public Type ElementType { get; set; }
+
         public int[] Shape { get; set; }
+
     }
 
-    public abstract class OnnxBase<TInput, TOutput>
+    public abstract class OnnxBase<TInput, TOutput> : IDisposable
     {
 
         // ------- Fields ------- //
@@ -76,6 +80,8 @@ namespace Husty
             }).ToArray();
             return _session.Run(container).ToDictionary(r => r.Name, r => r.AsTensor<float>().ToArray());
         }
+
+        public void Dispose() => _session.Dispose();
 
         public abstract TOutput Run(TInput input);
 

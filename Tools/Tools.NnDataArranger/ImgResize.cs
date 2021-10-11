@@ -11,7 +11,7 @@ namespace Tools.NnDataArranger
             foreach (var file in files)
             {
                 var ex = Path.GetExtension(file);
-                if (ex != ".png" && ex != ".jpg") continue;
+                if (ex is not ".png" && ex is not ".jpg") continue;
                 var names = file.Split("\\");
                 var name = names[names.Length - 1];
                 var img = Cv2.ImRead(file, ImreadModes.Unchanged);

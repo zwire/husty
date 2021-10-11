@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using OpenCvSharp;
+using Husty.OpenCvSharp;
 using static System.Math;
 
 namespace Test.HoughSingleLine
@@ -25,31 +25,22 @@ namespace Test.HoughSingleLine
             var yStep = 2;
 
             // initialize
-            var hough = new Husty.HoughSingleLine(
+            var hough = new Husty.OpenCvSharp.HoughSingleLine(
                 thetaMin, thetaMax,rhoMin, rhoMax,
                 xMin, xMax, yMin, yMax,
                 thetaStep, rhoStep, xStep, yStep);
 
             // load images and get points
-            var img = Cv2.ImRead(@"..\..\..\line1.png", ImreadModes.Grayscale);
+            using var img = Cv2.ImRead(@"..\..\..\line1.png", ImreadModes.Grayscale);
             Cv2.BitwiseNot(img, img);
             Cv2.Threshold(img, img, 100, 255, ThresholdTypes.Binary);
             Cv2.Resize(img, img, new Size(800, 400));
-            var xyList = new List<(double X, double Y)>();
-            for (int h = 0; h < img.Height; h++)
-                for (int w = 0; w < img.Width; w++)
-                    if (img.At<byte>(h, w) is not 0)
-                        xyList.Add((w, h));
+            var result = hough.Run(img.GetNonZeroLocations());
+            Console.WriteLine($"Theta = {result.ThetaDegree}, Rho = {result.Rho}");
 
-            // y = a * x + b
-            // x = ... にすると発散しちゃうかも?
-            var (th, rh) = hough.Run(xyList.ToArray());
-            Console.WriteLine($"Theta = {th / PI * 180}, Rho = {rh}");
-
-            var a = -1.0 / Tan(th);
-            var b = rh / Sin(th);
-            var p1 = new Point(0, b);
-            var p2 = new Point(img.Width, a * img.Width + b);
+            var line = result.ToLine2D();
+            var p1 = new Point(0, line.GetY(0));
+            var p2 = new Point(img.Width, line.GetY(img.Width));
             Cv2.CvtColor(img, img, ColorConversionCodes.GRAY2BGR);
             Cv2.Line(img, p1, p2, new Scalar(0, 0, 255), 2);
             Cv2.ImShow(" ", img);

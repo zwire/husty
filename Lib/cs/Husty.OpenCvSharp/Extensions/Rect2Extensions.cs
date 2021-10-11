@@ -3,7 +3,7 @@
 namespace Husty.OpenCvSharp
 {
 
-    public static class RectExtensions
+    public static class Rect2Extensions
     {
 
         public static Rect ToRect(this Rect2f rect)

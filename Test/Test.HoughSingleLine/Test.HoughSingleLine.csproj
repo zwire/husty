@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Lib\cs\Husty\Husty.csproj" />
+    <ProjectReference Include="..\..\Lib\cs\Husty.OpenCvSharp\Husty.OpenCvSharp.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,18 @@
-﻿namespace Husty
+﻿using System;
+using OpenCvSharp;
+
+namespace Husty.OpenCvSharp
 {
+
+    public record HoughCoordinateSystem(double ThetaRadian, double Rho)
+    {
+
+        public double ThetaDegree => ThetaRadian * 180 / Math.PI;
+
+        public Line2D ToLine2D() => new(this);
+
+    }
+
     public class HoughSingleLine
     {
 
@@ -64,7 +77,7 @@
                     _xArray[w] = x + xStep;
                     for (int t = 0; t < _thetaCount; t++)
                     {
-                        var rho = x * System.Math.Cos(_thetas[t]) + y * System.Math.Sin(_thetas[t]);
+                        var rho = x * Math.Cos(_thetas[t]) + y * Math.Sin(_thetas[t]);
                         if (rho > rhoMin && rho < rhoMax)
                             _rhoTable[h, w, t] = rho;
                     }
@@ -76,7 +89,7 @@
 
         // ------ Methods ------ //
 
-        public (double Theta, double Rho) Run((double X, double Y)[] xyArray)
+        public HoughCoordinateSystem Run(Point[] points)
         {
 
             // max value and its location to be updated
@@ -84,11 +97,11 @@
             var maxloc = (0, 0);
             var voteTable = new int[_thetaCount, _rhoCount];
 
-            // make loop by input data (x, y)
-            for (int i = 0; i < xyArray.Length; i++)
+            // make loop by input data
+            for (int i = 0; i < points.Length; i++)
             {
-                var x = xyArray[i].X;
-                var y = xyArray[i].Y;
+                var x = points[i].X;
+                var y = points[i].Y;
                 if (x > _xMin && x < _xMax && y > _yMin && y < _yMax)
                 {
 
@@ -119,9 +132,8 @@
                     }
                 }
             }
-            return (_thetas[maxloc.Item1], _rhos[maxloc.Item2]);
+            return new(_thetas[maxloc.Item1], _rhos[maxloc.Item2]);
 
         }
-
     }
 }

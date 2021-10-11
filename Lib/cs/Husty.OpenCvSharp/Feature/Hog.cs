@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using OpenCvSharp;
 
 namespace Husty.OpenCvSharp
@@ -43,7 +42,7 @@ namespace Husty.OpenCvSharp
         /// </summary>
         /// <param name="input">8 bit gray-scale image. It's going to be resized automatically.</param>
         /// <returns>Feature of values</returns>
-        public IEnumerable<float> Compute(Mat input)
+        public float[] Compute(Mat input)
         {
             if (input.Type() != MatType.CV_8U) new Exception("MatType should be 'CV_8U'.");
             Cv2.Resize(input, input, _imageSize);

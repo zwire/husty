@@ -8,12 +8,12 @@ namespace Tools.NnDataArranger
 {
     internal static class J2Mask
     {
-        internal static void Run(string jsonDir, string outputDir, Size size)
+        internal static void Run(string jsonDir, string outputDir, Size size, int maxValue)
         {
             var files = Directory.GetFiles(jsonDir);
             foreach (var file in files)
             {
-                if (Path.GetExtension(file) != ".json") continue;
+                if (Path.GetExtension(file) is not ".json") continue;
                 var json = (JObject)JsonConvert.DeserializeObject(File.ReadAllText(file));
                 var w = (int)json["imageWidth"];
                 var h = (int)json["imageHeight"];
@@ -23,7 +23,7 @@ namespace Tools.NnDataArranger
                     var poly = new List<Point>();
                     foreach (var p in j["points"])
                         poly.Add(new Point((int)p[0], (int)p[1]));
-                    Cv2.FillPoly(img, new List<Point>[] { poly }, 255);
+                    Cv2.FillPoly(img, new List<Point>[] { poly }, maxValue);
                 }
                 Cv2.Resize(img, img, size);
                 Cv2.ImWrite($"{outputDir}\\{Path.GetFileNameWithoutExtension(file)}.png", img);
