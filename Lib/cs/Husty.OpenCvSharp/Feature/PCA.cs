@@ -5,9 +5,9 @@ using OpenCvSharp;
 namespace Husty.OpenCvSharp
 {
 
-    public record PCAResult(Point Center, double Val1, double Val2, double AngleRadian);
+    public record PCAResult(Point2d Center, double Val1, double Val2, double AngleRadian);
 
-    public static class PCA
+    public static class Pca
     {
 
         public static PCAResult Compute(Mat input)
@@ -16,7 +16,7 @@ namespace Husty.OpenCvSharp
             using var eigenVec = new Mat();
             using var eigenVal = new Mat();
             Cv2.PCACompute(input, mean, eigenVec, eigenVal, 2);
-            var center = new Point(mean.At<float>(0, 0), mean.At<float>(0, 1));
+            var center = new Point2d(mean.At<float>(0, 0), mean.At<float>(0, 1));
             var val1 = Math.Sqrt(eigenVal.At<float>(0, 0));
             var val2 = Math.Sqrt(eigenVal.At<float>(1, 0));
             var angle = Math.Atan2(eigenVec.At<float>(0, 1), eigenVec.At<float>(0, 0));
@@ -25,7 +25,7 @@ namespace Husty.OpenCvSharp
             return new(center, val1, val2, angle);
         }
 
-        public static PCAResult Compute(IEnumerable<Point> input)
+        public static PCAResult Compute(IEnumerable<Point2d> input)
         {
             using var mat = input.AsFloatMat();
             return Compute(mat);

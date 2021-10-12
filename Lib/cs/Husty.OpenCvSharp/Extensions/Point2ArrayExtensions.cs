@@ -108,6 +108,84 @@ namespace Husty.OpenCvSharp
             return mat;
         }
 
+        public unsafe static Mat AsIntMat(this IEnumerable<Point2f> points)
+        {
+            var mat = new Mat(points.Count(), 2, MatType.CV_32S);
+            var d = (int*)mat.Data;
+            var p = points.ToArray();
+            for (int y = 0; y < mat.Rows; y++)
+            {
+                d[y * 2 + 0] = (int)p[y].X;
+                d[y * 2 + 1] = (int)p[y].Y;
+            }
+            return mat;
+        }
+
+        public unsafe static Mat AsFloatMat(this IEnumerable<Point2f> points)
+        {
+            var mat = new Mat(points.Count(), 2, MatType.CV_32F);
+            var d = (float*)mat.Data;
+            var p = points.ToArray();
+            for (int y = 0; y < mat.Rows; y++)
+            {
+                d[y * 2 + 0] = p[y].X;
+                d[y * 2 + 1] = p[y].Y;
+            }
+            return mat;
+        }
+
+        public unsafe static Mat AsDoubleMat(this IEnumerable<Point2f> points)
+        {
+            var mat = new Mat(points.Count(), 2, MatType.CV_64F);
+            var d = (double*)mat.Data;
+            var p = points.ToArray();
+            for (int y = 0; y < mat.Rows; y++)
+            {
+                d[y * 2 + 0] = p[y].X;
+                d[y * 2 + 1] = p[y].Y;
+            }
+            return mat;
+        }
+
+        public unsafe static Mat AsIntMat(this IEnumerable<Point2d> points)
+        {
+            var mat = new Mat(points.Count(), 2, MatType.CV_32S);
+            var d = (int*)mat.Data;
+            var p = points.ToArray();
+            for (int y = 0; y < mat.Rows; y++)
+            {
+                d[y * 2 + 0] = (int)p[y].X;
+                d[y * 2 + 1] = (int)p[y].Y;
+            }
+            return mat;
+        }
+
+        public unsafe static Mat AsFloatMat(this IEnumerable<Point2d> points)
+        {
+            var mat = new Mat(points.Count(), 2, MatType.CV_32F);
+            var d = (float*)mat.Data;
+            var p = points.ToArray();
+            for (int y = 0; y < mat.Rows; y++)
+            {
+                d[y * 2 + 0] = (float)p[y].X;
+                d[y * 2 + 1] = (float)p[y].Y;
+            }
+            return mat;
+        }
+
+        public unsafe static Mat AsDoubleMat(this IEnumerable<Point2d> points)
+        {
+            var mat = new Mat(points.Count(), 2, MatType.CV_64F);
+            var d = (double*)mat.Data;
+            var p = points.ToArray();
+            for (int y = 0; y < mat.Rows; y++)
+            {
+                d[y * 2 + 0] = p[y].X;
+                d[y * 2 + 1] = p[y].Y;
+            }
+            return mat;
+        }
+
         public static Point Mean(this IEnumerable<Point> points)
         {
             var x = 0;
