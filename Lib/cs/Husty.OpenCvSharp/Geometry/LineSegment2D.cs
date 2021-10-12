@@ -56,5 +56,25 @@ namespace Husty.OpenCvSharp
             return points;
         }
 
+        public Point2d GetNearestPoint(Point2d point)
+        {
+            var perf = GetPerpendicularFoot(point);
+            if (perf.X < Start.X && perf.X < End.X)
+            {
+                if (Start.X < End.X)
+                    return Start;
+                else
+                    return End;
+            }
+            else if (perf.X > Start.X && perf.X > End.X)
+            {
+                if (Start.X > End.X)
+                    return Start;
+                else
+                    return End;
+            }
+            return perf;
+        }
+
     }
 }

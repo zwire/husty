@@ -7,5 +7,6 @@ namespace Husty.OpenCvSharp
 
         public Point2d[] GetEquallySpacedPoints(double interval);
 
+
     }
 }
