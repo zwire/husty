@@ -26,12 +26,12 @@ namespace Husty.OpenCvSharp
         /// <param name="cellSize">Unit size for computation</param>
         public Hog(Size? imageSize = null, Size? blockSize = null, Size? blockStride = null, Size? cellSize = null)
         {
-            var s1 = (imageSize == null) ? new Size(64, 64) : imageSize;
-            var s2 = (blockSize == null) ? new Size(16, 16) : blockSize;
-            var s3 = (blockStride == null) ? new Size(8, 8) : blockStride;
-            var s4 = (cellSize == null) ? new Size(8, 8) : cellSize;
+            var s1 = imageSize ?? new Size(64, 64);
+            var s2 = blockSize ?? new Size(16, 16);
+            var s3 = blockStride ?? new Size(8, 8);
+            var s4 = cellSize ?? new Size(8, 8);
             _hog = new HOGDescriptor(s1, s2, s3, s4);
-            _imageSize = (Size)s1;
+            _imageSize = s1;
         }
 
 
