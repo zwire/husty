@@ -317,12 +317,12 @@ namespace Tools.DepthCamera
 
         private void ImageClicked(int x, int y)
         {
-            Vector3 info;
+            BGRXYZ info;
             if (_framesPool is not null)
             {
                 lock (_lockobj)
                 {
-                    info = _framesPool.GetPointInfo(new(x, y)).Vector3;
+                    info = _framesPool.GetPointInfo(new(x, y));
                 }
                 UV.Content = $"UV ({x}, {y})";
                 XYZ1.Content = $"XYZ ({info.X}, {info.Y}, {info.Z})";

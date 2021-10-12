@@ -72,6 +72,8 @@ namespace Husty.OpenCvSharp
     public static class VectorExtensions
     {
 
+        // ------------------------- //
+
         public static double Norm(this Vec2b vec)
         {
             return vec.Item0 * vec.Item0 + vec.Item1 * vec.Item1;
@@ -132,65 +134,69 @@ namespace Husty.OpenCvSharp
             return vec.Item0 * vec.Item0 + vec.Item1 * vec.Item1 + vec.Item2 * vec.Item2;
         }
 
-        public static Vec2b Normalize(this Vec2b vec)
+        // ------------------------- //
+
+        public static Vec2b GetUnitVec(this Vec2b vec)
         {
             return vec / vec.Norm();
         }
 
-        public static Vec2w Normalize(this Vec2w vec)
+        public static Vec2w GetUnitVec(this Vec2w vec)
         {
             return vec / vec.Norm();
         }
 
-        public static Vec2s Normalize(this Vec2s vec)
+        public static Vec2s GetUnitVec(this Vec2s vec)
         {
             return vec / vec.Norm();
         }
 
-        public static Vec2i Normalize(this Vec2i vec)
+        public static Vec2i GetUnitVec(this Vec2i vec)
         {
             return vec / vec.Norm();
         }
 
-        public static Vec2f Normalize(this Vec2f vec)
+        public static Vec2f GetUnitVec(this Vec2f vec)
         {
             return vec / vec.Norm();
         }
 
-        public static Vec2d Normalize(this Vec2d vec)
+        public static Vec2d GetUnitVec(this Vec2d vec)
         {
             return vec / vec.Norm();
         }
 
-        public static Vec3b Normalize(this Vec3b vec)
+        public static Vec3b GetUnitVec(this Vec3b vec)
         {
             return vec / vec.Norm();
         }
 
-        public static Vec3w Normalize(this Vec3w vec)
+        public static Vec3w GetUnitVec(this Vec3w vec)
         {
             return vec / vec.Norm();
         }
 
-        public static Vec3s Normalize(this Vec3s vec)
+        public static Vec3s GetUnitVec(this Vec3s vec)
         {
             return vec / vec.Norm();
         }
 
-        public static Vec3i Normalize(this Vec3i vec)
+        public static Vec3i GetUnitVec(this Vec3i vec)
         {
             return vec / vec.Norm();
         }
 
-        public static Vec3f Normalize(this Vec3f vec)
+        public static Vec3f GetUnitVec(this Vec3f vec)
         {
             return vec / vec.Norm();
         }
 
-        public static Vec3d Normalize(this Vec3d vec)
+        public static Vec3d GetUnitVec(this Vec3d vec)
         {
             return vec / vec.Norm();
         }
+
+        // ------------------------- //
 
         public static Point ToPoint(this Vec2b vec)
         {
@@ -251,6 +257,8 @@ namespace Husty.OpenCvSharp
         {
             return new(vec.Item0, vec.Item1, vec.Item2);
         }
+
+        // ------------------------- //
 
         public static Vec2s Rotate(this Vec2s vec, double radian)
         {

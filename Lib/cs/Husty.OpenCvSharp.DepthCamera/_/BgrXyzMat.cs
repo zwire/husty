@@ -170,15 +170,15 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// Move all Point Cloud.
         /// </summary>
         /// <param name="delta">3D vector of translation (mm)</param>
-        public unsafe BgrXyzMat Move(Vector3 delta)
+        public unsafe BgrXyzMat Move(Vec3s delta)
         {
             var s = (short*)XYZ.Data;
             var index = 0;
             for (int i = 0; i < XYZ.Rows * XYZ.Cols; i++)
             {
-                s[index++] += delta.X;
-                s[index++] += delta.Y;
-                s[index++] += delta.Z;
+                s[index++] += delta.Item0;
+                s[index++] += delta.Item1;
+                s[index++] += delta.Item2;
             }
             return this;
         }
@@ -187,15 +187,15 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// Change Point Cloud scale.
         /// </summary>
         /// <param name="delta">Scale of XYZ direction</param>
-        public unsafe BgrXyzMat Scale(Vector3 delta)
+        public unsafe BgrXyzMat Scale(Vec3s delta)
         {
             var s = (short*)XYZ.Data;
             var index = 0;
             for (int i = 0; i < XYZ.Rows * XYZ.Cols; i++)
             {
-                s[index++] *= delta.X;
-                s[index++] *= delta.Y;
-                s[index++] *= delta.Z;
+                s[index++] *= delta.Item0;
+                s[index++] *= delta.Item1;
+                s[index++] *= delta.Item2;
             }
             return this;
         }
@@ -208,11 +208,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <param name="roll">Roll angle (rad, clockwise of Z axis)</param>
         public unsafe BgrXyzMat Rotate(float pitch, float yaw, float roll)
         {
-            using var zRot = Vector3.ZRot(roll);
-            using var yRot = Vector3.YRot(yaw);
-            using var xRot = Vector3.XRot(pitch);
-            Rotate(zRot * yRot * xRot);
-            return this;
+            return Rotate(ZRot(roll) * YRot(yaw) * XRot(pitch));
         }
 
         /// <summary>
@@ -236,6 +232,16 @@ namespace Husty.OpenCvSharp.DepthCamera
             return this;
         }
 
+        private static Mat XRot(float rad)
+            => new(3, 3, MatType.CV_32F, new float[] { 1, 0, 0, 0, (float)Math.Cos(rad), -(float)Math.Sin(rad), 0, (float)Math.Sin(rad), (float)Math.Cos(rad) });
+
+        private static Mat YRot(float rad)
+            => new(3, 3, MatType.CV_32F, new float[] { (float)Math.Cos(rad), 0, (float)Math.Sin(rad), 0, 1, 0, -(float)Math.Sin(rad), 0, (float)Math.Cos(rad) });
+
+        private static Mat ZRot(float rad)
+            => new(3, 3, MatType.CV_32F, new float[] { (float)Math.Cos(rad), -(float)Math.Sin(rad), 0, (float)Math.Sin(rad), (float)Math.Cos(rad), 0, 0, 0, 1 });
+
+
     }
 
 
@@ -245,7 +251,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     public record BGRXYZ(byte B, byte G, byte R, short X, short Y, short Z)
     {
 
-        public Vector3 Vector3 => new(X, Y, Z);
+        public Vec3s Vector3 => new(X, Y, Z);
 
     }
 

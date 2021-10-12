@@ -49,7 +49,7 @@ namespace Husty.OpenCvSharp
         public Point2d[] GetEquallySpacedPoints(double interval)
         {
             var count = (int)(Start.DistanceTo(End) / interval);
-            var step = (Vector.CreateVec2d(Start, End).Normalize() * interval).ToPoint2d();
+            var step = (Vector.CreateVec2d(Start, End).GetUnitVec() * interval).ToPoint2d();
             var points = new Point2d[count];
             for (int i = 0; i < count; i++)
                 points[i] = Start + step * i;
