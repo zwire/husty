@@ -20,6 +20,11 @@ namespace Husty.IO
 
         // ------ Constructors ------ //
 
+        public StdOutReader(string cmd)
+        {
+            _cmd = cmd;
+        }
+
         public StdOutReader(string pythonExe, string pythonFile, string[] args = null)
         {
             var arguments = pythonFile;
