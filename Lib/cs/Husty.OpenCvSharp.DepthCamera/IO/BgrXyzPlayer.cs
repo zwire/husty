@@ -6,6 +6,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Linq;
 using OpenCvSharp;
+using Reactive.Bindings;
 
 namespace Husty.OpenCvSharp.DepthCamera
 {
@@ -59,6 +60,8 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         public Size DepthFrameSize { get; }
 
+        public ReactivePropertySlim<BgrXyzMat> ReactiveFrame { private set; get; }
+
 
         // ------- Constructor ------- //
 
@@ -89,6 +92,7 @@ namespace Husty.OpenCvSharp.DepthCamera
             var bgrxyz = new BgrXyzMat(bgrBytes, xyzBytes);
             ColorFrameSize = new(bgrxyz.BGR.Width, bgrxyz.BGR.Height);
             DepthFrameSize = new(bgrxyz.Depth16.Width, bgrxyz.Depth16.Height);
+            ReactiveFrame = new();
         }
 
 
@@ -139,7 +143,9 @@ namespace Husty.OpenCvSharp.DepthCamera
             var bgrBytes = _binReader.ReadBytes(bgrDataSize);
             var xyzDataSize = _binReader.ReadInt32();
             var xyzBytes = _binReader.ReadBytes(xyzDataSize);
-            return (new BgrXyzMat(bgrBytes, xyzBytes), time);
+            var frame = new BgrXyzMat(bgrBytes, xyzBytes);
+            ReactiveFrame.Value = frame;
+            return (frame.Clone(), time);
         }
 
     }

@@ -9,13 +9,13 @@ using System.Reactive.Concurrency;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Diagnostics;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Husty;
 using Husty.OpenCvSharp;
 using Path = System.IO.Path;
-using System.Diagnostics;
 
 namespace Tools.CameraCalibration
 {
@@ -30,20 +30,19 @@ namespace Tools.CameraCalibration
         private bool _exMode;
         private bool _testInOn;
         private bool _testExOn;
-        private readonly object _locker = new();
         private string _boardImageDir = "";
         private string _imageSourceDir = "";
         private string _videoSourceDir = "";
         private IDisposable _streamConnector;
         private OpenCvSharp.Size _size;
-        private Mat _frame;
+        private readonly Channel<Mat> _channel;
         private List<string> _imgFilesIn;
         private VideoCapture _cap;
         private List<(Point2f, Point3f)> _points;
         private IntrinsicCameraParameters _paramIn;
         private ExtrinsicCameraParameters _paramEx;
         private PerspectiveTransformer _trs;
-        private UserSetting<Setting> _setting;
+        private readonly UserSetting<Setting> _setting;
 
         public record Setting(string BoardImageDir, string ImageSourceDir, string VIdeoSourceDir, int Width, int Height);
 
@@ -71,6 +70,7 @@ namespace Tools.CameraCalibration
             _videoSourceDir = val.VIdeoSourceDir;
             _size = new(val.Width, val.Height);
             SizeTx.Text = $"{_size.Width},{_size.Height}";
+            _channel = new();
             Closed += (s, e) =>
             {
                 _setting.Save(new(_boardImageDir, _imageSourceDir, _videoSourceDir, _size.Width, _size.Height));
@@ -94,13 +94,19 @@ namespace Tools.CameraCalibration
                 if (cofd.ShowDialog() is CommonFileDialogResult.Ok)
                 {
                     _cap = new(cofd.FileName);
+                    _cap.Set(VideoCaptureProperties.FrameWidth, _size.Width);
+                    _cap.Set(VideoCaptureProperties.FrameHeight, _size.Height);
+                    _cap.Set(VideoCaptureProperties.Fps, 30);
                     _videoSourceDir = Path.GetDirectoryName(cofd.FileName);
                 }
                 else
                 {
                     try
                     {
-                        _cap = new(0);
+                        _cap = new(1);
+                        _cap.Set(VideoCaptureProperties.FrameWidth, _size.Width);
+                        _cap.Set(VideoCaptureProperties.FrameHeight, _size.Height);
+                        _cap.Set(VideoCaptureProperties.Fps, 30);
                     }
                     catch { }
                 }
@@ -109,34 +115,30 @@ namespace Tools.CameraCalibration
                     ImageStreamButton.Content = "Stream OFF";
                     ShutterButton.IsEnabled = true;
                     _streamAlive = true;
-                    _frame = new Mat();
                     _streamConnector = Observable.Repeat(0, ThreadPoolScheduler.Instance)
-                        .Where(_ =>
+                        .Subscribe(async _ =>
                         {
+                            var frame = new Mat();
                             var suc = false;
-                            lock (_locker)
+                            suc = (bool)_cap?.Read(frame);
+                            if (!frame.Empty())
                             {
-                                suc = (bool)_cap?.Read(_frame);
-                                Cv2.Resize(_frame, _frame, _size);
-                            }
-                            return suc;
-                        })
-                        .Subscribe(_ =>
-                        {
-                            lock (_locker)
-                            {
+                                // 田植え機用
+                                Cv2.Flip(frame, frame, FlipMode.XY);
                                 try
                                 {
                                     if (_paramIn is not null && (_testInOn || _testExOn))
                                     {
-                                        _frame = _frame?.Undistort(_paramIn.CameraMatrix, _paramIn.DistortionCoeffs);
+                                        frame = frame?.Undistort(_paramIn.CameraMatrix, _paramIn.DistortionCoeffs);
                                     }
+                                    await _channel.WriteAsync(frame.Clone());
                                     Dispatcher.Invoke(() =>
                                     {
-                                        Image.Width = _frame.Width;
-                                        Image.Height = _frame.Height;
-                                        Image.Source = _frame.ToBitmapSource();
+                                        Image.Width = frame.Width;
+                                        Image.Height = frame.Height;
+                                        Image.Source = frame.ToBitmapSource();
                                     });
+                                    frame.Dispose();
                                     Thread.Sleep(1000 / (int)_cap.Fps);
                                 }
                                 catch { }
@@ -174,7 +176,7 @@ namespace Tools.CameraCalibration
             }
         }
 
-        private void OpenImageButton_Click(object sender, RoutedEventArgs e)
+        private async void OpenImageButton_Click(object sender, RoutedEventArgs e)
         {
             if (_exMode)
             {
@@ -191,18 +193,20 @@ namespace Tools.CameraCalibration
                     if (File.Exists(cofd.FileName))
                     {
                         _imageSourceDir = Path.GetDirectoryName(cofd.FileName);
-                        _frame = Cv2.ImRead(cofd.FileName);
-                        Cv2.Resize(_frame, _frame, _size);
+                        var frame = Cv2.ImRead(cofd.FileName);
+                        Cv2.Resize(frame, frame, _size);
                         if (File.Exists("intrinsic.json"))
                         {
                             _paramIn = IntrinsicCameraParameters.Load("intrinsic.json");
                             DebugMat2D(_paramIn.CameraMatrix, "Camera");
                             DebugMat2D(_paramIn.DistortionCoeffs, "Distortion");
-                            _frame = _frame.Undistort(_paramIn.CameraMatrix, _paramIn.DistortionCoeffs);
+                            frame = frame.Undistort(_paramIn.CameraMatrix, _paramIn.DistortionCoeffs);
                         }
-                        Image.Width = _frame.Width;
-                        Image.Height = _frame.Height;
-                        Image.Source = _frame.ToBitmapSource();
+                        await _channel.WriteAsync(frame.Clone());
+                        Image.Width = frame.Width;
+                        Image.Height = frame.Height;
+                        Image.Source = frame.ToBitmapSource();
+                        frame.Dispose();
                         _points = new();
                         Count2D.Content = "0";
                     }
@@ -210,15 +214,16 @@ namespace Tools.CameraCalibration
             }
         }
 
-        private void ShutterButton_Click(object sender, RoutedEventArgs e)
+        private async void ShutterButton_Click(object sender, RoutedEventArgs e)
         {
             if (!_exMode)
             {
                 var count = 0;
                 while (File.Exists($"{count:d2}.png")) count++;
-                if (_frame is not null && !_frame.Empty())
+                var frame = (await _channel.ReadAsync()).Value;
+                if (frame is not null && !frame.Empty())
                 {
-                    Cv2.ImWrite($"{count:d2}.png", _frame);
+                    Cv2.ImWrite($"{count:d2}.png", frame);
                 }
             }
         }
@@ -258,15 +263,15 @@ namespace Tools.CameraCalibration
                 {
                     foreach (var f in _imgFilesIn)
                     {
-                        _frame = Cv2.ImRead(f, ImreadModes.Grayscale);
-                        Cv2.Resize(_frame, _frame, _size);
-                        var corners = chess.FindCorners(_frame);
-                        chess.DrawCorners(_frame, corners);
+                        using var frame = Cv2.ImRead(f, ImreadModes.Grayscale);
+                        Cv2.Resize(frame, frame, _size);
+                        var corners = chess.FindCorners(frame);
+                        chess.DrawCorners(frame, corners);
                         Dispatcher.Invoke(() =>
                         {
-                            Image.Width = _frame.Width;
-                            Image.Height = _frame.Height;
-                            Image.Source = _frame.ToBitmapSource();
+                            Image.Width = frame.Width;
+                            Image.Height = frame.Height;
+                            Image.Source = frame.ToBitmapSource();
                             Thread.Sleep(500);
                         });
                     }
@@ -399,7 +404,7 @@ namespace Tools.CameraCalibration
             }
         }
 
-        private void Image_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private async void Image_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (!_isSampling && !_testExOn) return;
             var p = e.GetPosition(Image);
@@ -407,15 +412,14 @@ namespace Tools.CameraCalibration
             Y2D.Content = $"{(int)p.Y}";
             X3D.IsEnabled = true;
             Y3D.IsEnabled = true;
-            lock (_locker)
+            var frame = (await _channel.ReadAsync()).Value;
+            if (frame is not null && !frame.Empty())
             {
-                if (_frame is not null && !_frame.Empty())
-                {
-                    Cv2.Circle(_frame, (int)p.X, (int)p.Y, 3, new(0, 0, 255), 3);
-                    Image.Width = _frame.Width;
-                    Image.Height = _frame.Height;
-                    Image.Source = _frame.ToBitmapSource();
-                }
+                Cv2.Circle(frame, (int)p.X, (int)p.Y, 3, new(0, 0, 255), 3);
+                Image.Width = frame.Width;
+                Image.Height = frame.Height;
+                Image.Source = frame.ToBitmapSource();
+                await _channel.WriteAsync(frame);
             }
             if (_trs is not null && _testExOn)
             {

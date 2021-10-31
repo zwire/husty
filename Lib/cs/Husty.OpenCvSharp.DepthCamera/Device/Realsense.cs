@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using System.Reactive.Concurrency;
 using OpenCvSharp;
 using Intel.RealSense;
+using Reactive.Bindings;
 
 namespace Husty.OpenCvSharp.DepthCamera
 {
@@ -29,6 +30,8 @@ namespace Husty.OpenCvSharp.DepthCamera
         public int Fps { get; }
 
         public Size FrameSize { get; }
+
+        public ReactivePropertySlim<BgrXyzMat> ReactiveFrame { private set; get; }
 
 
         // ------- Constructor ------- //
@@ -75,6 +78,7 @@ namespace Husty.OpenCvSharp.DepthCamera
             if (fps < 1) fps = 1;
             if (fps > 50) fps = 50;
             Fps = fps;
+            ReactiveFrame = new();
         }
 
 
@@ -91,10 +95,10 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// Close device.
         /// And must not forget 'Dispose' subscribing instance.
         /// </summary>
-        public void Disconnect() => _pipeline?.Dispose();
+        public void Dispose() => _pipeline?.Dispose();
 
         /// <summary>
-        /// (Not recommend) Get current frame synchronously
+        /// Get current frame synchronously
         /// </summary>
         /// <returns></returns>
         public BgrXyzMat Read()
@@ -110,7 +114,9 @@ namespace Husty.OpenCvSharp.DepthCamera
             using var depth6 = _hfill?.Process(depth5) ?? depth5;
             using var colorMat = color.ToColorMat();
             using var pointCloudMat = depth6.ToPointCloudMat(color.Width, color.Height);
-            return BgrXyzMat.Create(colorMat, pointCloudMat).Clone();
+            var frame = BgrXyzMat.Create(colorMat, pointCloudMat);
+            ReactiveFrame.Value = frame;
+            return frame.Clone();
         }
 
     }

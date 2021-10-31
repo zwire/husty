@@ -3,6 +3,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using OpenCvSharp;
 using Microsoft.Azure.Kinect.Sensor;
+using Reactive.Bindings;
 
 namespace Husty.OpenCvSharp.DepthCamera
 {
@@ -32,6 +33,8 @@ namespace Husty.OpenCvSharp.DepthCamera
         public DeviceConfiguration Config { get; }
 
         public Size FrameSize { get; }
+
+        public ReactivePropertySlim<BgrXyzMat> ReactiveFrame { private set; get; }
 
 
         // ------- Constructor ------- //
@@ -65,6 +68,7 @@ namespace Husty.OpenCvSharp.DepthCamera
                 FPS.FPS30   => 30,
                 _           => -1
             };
+            ReactiveFrame = new();
         }
 
         /// <summary>
@@ -96,10 +100,10 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// Close device.
         /// Must not forget 'Dispose' subscribing instance.
         /// </summary>
-        public void Disconnect() => _device?.Dispose();
+        public void Dispose() => _device?.Dispose();
 
         /// <summary>
-        /// (Not recommend) Get current frame synchronously
+        /// Get current frame synchronously
         /// </summary>
         /// <returns></returns>
         public BgrXyzMat Read()
@@ -113,7 +117,9 @@ namespace Husty.OpenCvSharp.DepthCamera
                 using var pointCloudFrame = _transformation.DepthImageToPointCloud(depthFrame, CalibrationDeviceType.Color);
                 using var colorMat = colorFrame.ToColorMat();
                 using var pointCloudMat = pointCloudFrame.ToPointCloudMat();
-                return BgrXyzMat.Create(colorMat, pointCloudMat).Rotate(_pitchRad, _yawRad, _rollRad).Clone();
+                var frame = BgrXyzMat.Create(colorMat, pointCloudMat).Rotate(_pitchRad, _yawRad, _rollRad);
+                ReactiveFrame.Value = frame;
+                return frame.Clone();
             }
             else
             {
@@ -121,7 +127,9 @@ namespace Husty.OpenCvSharp.DepthCamera
                 using var pointCloudFrame = _transformation.DepthImageToPointCloud(capture.Depth);
                 using var colorMat = colorFrame.ToColorMat();
                 using var pointCloudMat = pointCloudFrame.ToPointCloudMat();
-                return BgrXyzMat.Create(colorMat, pointCloudMat).Rotate(_pitchRad, _yawRad, _rollRad).Clone();
+                var frame = BgrXyzMat.Create(colorMat, pointCloudMat).Rotate(_pitchRad, _yawRad, _rollRad);
+                ReactiveFrame.Value = frame;
+                return frame.Clone();
             }
         }
 

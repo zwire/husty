@@ -1,4 +1,5 @@
 ﻿using OpenCvSharp;
+using Reactive.Bindings;
 using System;
 
 namespace Husty.OpenCvSharp.DepthCamera
@@ -9,12 +10,14 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// <summary>
     /// Now supporting for Microsoft Azure Kinect & Intel RealSense D415 - 455, L515
     /// </summary>
-    public interface IDepthCamera
+    public interface IDepthCamera : IDisposable
     {
 
         public int Fps { get; }
 
         public Size FrameSize { get; }
+
+        public ReactivePropertySlim<BgrXyzMat> ReactiveFrame { get; }
 
         /// <summary>
         /// Start streaming
@@ -25,7 +28,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <summary>
         /// Stop streaming
         /// </summary>
-        public void Disconnect();
+        public void Dispose();
 
         /// <summary>
         /// Get current frame synchronously

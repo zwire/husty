@@ -75,8 +75,10 @@ namespace Tools.DepthCamera
                 _videoConnector?.Dispose();
                 _cameraConnector?.Dispose();
                 _cameraConnector = null;
-                _camera?.Disconnect();
+                _camera?.Dispose();
                 _camera = null;
+                _player?.Dispose();
+                _player = null;
             };
         }
 
@@ -129,7 +131,7 @@ namespace Tools.DepthCamera
                 _isConnected = false;
                 _cameraConnector?.Dispose();
                 _cameraConnector = null;
-                _camera?.Disconnect();
+                _camera?.Dispose();
                 _camera = null;
             }
         }
@@ -207,7 +209,7 @@ namespace Tools.DepthCamera
                 PlayButton.IsEnabled = true;
                 _isConnected = false;
                 _cameraConnector?.Dispose();
-                _camera?.Disconnect();
+                _camera?.Dispose();
                 _cameraConnector = null;
             }
         }
@@ -237,7 +239,7 @@ namespace Tools.DepthCamera
                 IsFolderPicker = false,
             };
             cofd.Filters.Add(new("YMSファイル", "*.yms"));
-            if (cofd.ShowDialog() == CommonFileDialogResult.Ok)
+            if (cofd.ShowDialog() is CommonFileDialogResult.Ok)
             {
                 _videoDir = Path.GetDirectoryName(cofd.FileName);
                 _isConnected = true;

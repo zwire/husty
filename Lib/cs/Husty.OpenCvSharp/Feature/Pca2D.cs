@@ -7,7 +7,7 @@ namespace Husty.OpenCvSharp
 
     public record PcaResult(Point2d Center, double Val1, double Val2, double AngleRadian);
 
-    public static class Pca
+    public static class Pca2D
     {
 
         public static PcaResult Compute(Mat input)
