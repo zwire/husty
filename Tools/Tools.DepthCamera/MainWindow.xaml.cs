@@ -163,7 +163,7 @@ namespace Tools.DepthCamera
         {
             using var cofd = new CommonOpenFileDialog()
             {
-                Title = "フォルダを選択してください",
+                Title = "Select Saving Folder",
                 InitialDirectory = _saveDir,
                 IsFolderPicker = true,
             };
@@ -177,11 +177,11 @@ namespace Tools.DepthCamera
             _player = null;
             using var cofd = new CommonOpenFileDialog()
             {
-                Title = "動画を選択してください",
+                Title = "Select Video File",
                 InitialDirectory = _videoDir,
                 IsFolderPicker = false,
             };
-            cofd.Filters.Add(new("YMSファイル", "*.yms"));
+            cofd.Filters.Add(new("YMS file", "*.yms"));
             if (cofd.ShowDialog() is CommonFileDialogResult.Ok)
             {
                 _videoDir = Path.GetDirectoryName(cofd.FileName);
@@ -264,10 +264,10 @@ namespace Tools.DepthCamera
 
         private async void ImageClicked(int x, int y)
         {
-            using var frame = (await _channel.ReadAsync()).Value;
+            var frame = (await _channel.ReadAsync()).Value;
             var info = frame.GetPointInfo(new(x, y));
-            UV.Content = $"UV ({x}, {y})";
-            XYZ1.Content = $"XYZ ({info.X}, {info.Y}, {info.Z})";
+            UV.Content = $"UV = ({x}, {y})";
+            XYZ1.Content = $"XYZ = ({info.X}, {info.Y}, {info.Z})";
         }
 
         private bool AttemptConnection()
