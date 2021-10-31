@@ -6,12 +6,6 @@ namespace Husty.Lawicel
     public class CanMessage
     {
 
-        private readonly uint _id;
-        private readonly uint _timestamp;
-        private readonly byte _flags;
-        private readonly byte _len;
-        private readonly ulong _data;
-
         public const string BAUD_BTR_1M = "0x00:0x14";
         public const string BAUD_BTR_500K = "0x00:0x1C";
         public const string BAUD_BTR_250K = "0x01:0x1C";
@@ -55,27 +49,38 @@ namespace Husty.Lawicel
         public const uint FLUSH_EMPTY_INQUEUE = 2;
 
 
+        public uint Id { get; }
+
+        public uint Timestamp { get; }
+
+        public byte Flags { get; }
+
+        public byte Length { get; }
+
+        public ulong Data { get; }
+
+
         public CanMessage(uint id, uint timestamp, byte flags, byte len, ulong data)
         {
-            _id = id;
-            _timestamp = timestamp;
-            _flags = flags;
-            _len = len;
-            _data = data;
+            Id = id;
+            Timestamp = timestamp;
+            Flags = flags;
+            Length = len;
+            Data = data;
         }
 
         public CanMessage(uint id, uint timestamp, byte flags, byte len, byte[] data)
         {
             if (data.Length is not 8) throw new ArgumentException("data length must be 8.");
-            _id = id;
-            _timestamp = timestamp;
-            _flags = flags;
-            _len = len;
-            _data = BitConverter.ToUInt64(data);
+            Id = id;
+            Timestamp = timestamp;
+            Flags = flags;
+            Length = len;
+            Data = BitConverter.ToUInt64(data);
         }
 
         internal CANMsg ToCANMsg() 
-            => new(_id, _timestamp, _flags, _len, _data);
+            => new(Id, Timestamp, Flags, Length, Data);
 
         internal static CanMessage FromCANMsg(CANMsg msg) 
             => new(msg.id, msg.timestamp, msg.flags, msg.len, msg.data);

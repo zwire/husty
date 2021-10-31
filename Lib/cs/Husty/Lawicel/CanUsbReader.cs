@@ -10,27 +10,26 @@ namespace Husty.Lawicel
     public class CanUsbReader : CanUsbAdapter
     {
 
-        private IDisposable _connector;
-
-        public ReactivePropertySlim<CanMessage> ReactiveMessage { private set; get; }
+        public ReadOnlyReactivePropertySlim<CanMessage> ReactiveMessage { private set; get; }
 
 
         public CanUsbReader(string adapterName) : base(adapterName)
         {
-            ReactiveMessage = new();
+
         }
 
         public void Open()
         {
             OpenAdapter();
-            _connector = Observable.Repeat(0, ThreadPoolScheduler.Instance)
+            ReactiveMessage = Observable.Repeat(0, ThreadPoolScheduler.Instance)
                 .Finally(() => CloseAdapter())
-                .Subscribe(_ =>
+                .Select(_ =>
                 {
                     var ret = canusb_Read(Handle, out var message);
                     if (ret is not ERROR_OK) throw new Exception("Failed to receive the message.");
-                    ReactiveMessage.Value = FromCANMsg(message);
-                });
+                    return FromCANMsg(message);
+                })
+                .ToReadOnlyReactivePropertySlim();
         }
 
         public CanMessage Read()
@@ -46,7 +45,7 @@ namespace Husty.Lawicel
 
         public override void Close()
         {
-            _connector?.Dispose();
+            ReactiveMessage?.Dispose();
             CloseAdapter();
         }
 

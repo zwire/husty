@@ -9,19 +9,27 @@ namespace Test.CanConnection
         static void Main(string[] args)
         {
             var names = CanUsbAdapter.FindAdapterNames();
-            var sender = new CanUsbWriter(names[0]);
-            sender.Open();
+            var receiver = new CanUsbReader(names[0]);
+            receiver.Open();
             Console.WriteLine("Open");
-            while (true)
-            {
-                sender.Write(new(0, 0, 0, 0, 0));
-                Console.WriteLine("Write");
-                Thread.Sleep(1000);
-                if (Console.KeyAvailable)
-                    if (Console.ReadKey().Key is ConsoleKey.Q)
-                        break;
-            }
-            sender.Close();
+
+            receiver.ReadAtInterval(TimeSpan.FromSeconds(1))
+                .Subscribe(msg => Console.WriteLine(msg is null ? "null" : msg.Id));
+
+            Console.ReadKey();
+
+            //while (true)
+            //{
+            //    var rcv = receiver.Read();
+            //    if (rcv is null) continue;
+            //    Console.WriteLine("Read ID : " + rcv.Id);
+            //    Thread.Sleep(1000);
+            //    if (Console.KeyAvailable)
+            //        if (Console.ReadKey().Key is ConsoleKey.Q)
+            //            break;
+            //}
+
+            receiver.Close();
             Console.WriteLine("Close");
             Console.ReadKey();
         }
