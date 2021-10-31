@@ -10,7 +10,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// <summary>
     /// Intel RealSense D415 - 455, L515 C# wrapper
     /// </summary>
-    public class Realsense : IDepthCamera
+    public class Realsense : IImageStream<BgrXyzMat>
     {
 
         // ------- Fields ------- //
@@ -29,9 +29,13 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         public int Fps { get; }
 
+        public int Channels => 6;
+
         public Size FrameSize { get; }
 
-        public ReactivePropertySlim<BgrXyzMat> ReactiveFrame { private set; get; }
+        public bool HasFrame { private set; get; }
+
+        public ReadOnlyReactivePropertySlim<BgrXyzMat> ReactiveFrame { private set; get; }
 
 
         // ------- Constructor ------- //
@@ -78,29 +82,15 @@ namespace Husty.OpenCvSharp.DepthCamera
             if (fps < 1) fps = 1;
             if (fps > 50) fps = 50;
             Fps = fps;
-            ReactiveFrame = new();
+            ReactiveFrame = Observable
+                .Repeat(0, ThreadPoolScheduler.Instance)
+                .Select(_ => Read())
+                .ToReadOnlyReactivePropertySlim();
         }
 
 
         // ------- Methods ------- //
 
-        /// <summary>
-        /// Please 'Subscribe', which is a Rx function.
-        /// </summary>
-        /// <returns>Observable instance contains BgrXyzMat</returns>
-        public IObservable<BgrXyzMat> Connect()
-            => Observable.Repeat(0, ThreadPoolScheduler.Instance).Select(_ => Read()).Publish().RefCount();
-
-        /// <summary>
-        /// Close device.
-        /// And must not forget 'Dispose' subscribing instance.
-        /// </summary>
-        public void Dispose() => _pipeline?.Dispose();
-
-        /// <summary>
-        /// Get current frame synchronously
-        /// </summary>
-        /// <returns></returns>
         public BgrXyzMat Read()
         {
             using var frames1 = _pipeline.WaitForFrames();
@@ -115,8 +105,15 @@ namespace Husty.OpenCvSharp.DepthCamera
             using var colorMat = color.ToColorMat();
             using var pointCloudMat = depth6.ToPointCloudMat(color.Width, color.Height);
             var frame = BgrXyzMat.Create(colorMat, pointCloudMat);
-            ReactiveFrame.Value = frame;
+            HasFrame = true;
             return frame.Clone();
+        }
+
+        public void Dispose()
+        {
+            HasFrame = false;
+            ReactiveFrame.Dispose();
+            _pipeline?.Dispose();
         }
 
     }

@@ -2,15 +2,14 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.IO;
 using System.Reactive.Linq;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.Azure.Kinect.Sensor;
 using OpenCvSharp.WpfExtensions;
+using Husty;
+using Husty.OpenCvSharp;
 using Husty.OpenCvSharp.DepthCamera;
-using Scalar = OpenCvSharp.Scalar;
-using Point = OpenCvSharp.Point;
 
 namespace Tools.DepthCamera
 {
@@ -20,24 +19,13 @@ namespace Tools.DepthCamera
     public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
     {
 
-        private IDepthCamera _camera;
-        private IDisposable _cameraConnector;
-        private IDisposable _videoConnector;
+        private IImageStream<BgrXyzMat> _camera;
+        private BgrXyzPlayer _player;
         private bool _isConnected;
         private string _saveDir = "";
         private string _videoDir = "";
-        private BgrXyzPlayer _player;
-        private BgrXyzMat _framesPool;
-        private readonly object _lockobj = new();
-        //private Scalar red = new Scalar(0, 0, 255);
-        //private Scalar red = new Scalar(0, 0, 255);
-        //private Point left = new Point(130, 144);
-        //private Point right = new Point(190, 144);
-        //private Point top = new Point(160, 114);
-        //private Point bottom = new Point(160, 174);
-
-        //private readonly StreamWriter _log;
-        private bool _isKinect;
+        private readonly Channel<BgrXyzMat> _channel;
+        private record Preset(string SaveDir, string VideoDir);
 
         public MainWindow()
         {
@@ -46,35 +34,17 @@ namespace Tools.DepthCamera
             _isConnected = false;
             StartPauseButton.Content = "Open";
             ShutterButton.IsEnabled = false;
-            if (File.Exists("cache.txt"))
-            {
-                var lines = File.ReadAllText("cache.txt").Split("\n");
-                if (lines.Length > 1)
-                {
-                    _saveDir = lines[0].TrimEnd();
-                    _videoDir = lines[1].TrimEnd();
-                }
-            }
+            var settings = new UserSetting<Preset>(new("C:", "C:"));
+            var preset = settings.Load();
+            _saveDir = preset.SaveDir;
+            _videoDir = preset.VideoDir;
             var t = DateTimeOffset.Now;
-            var name = $"log_{t.Year}{t.Month:d2}{t.Day:d2}_{t.Hour:d2}{t.Minute:d2}{t.Second:d2}.csv";
-            //_log = new($"{_saveDir}\\{name}");
-            //_log.WriteLine("device,u,v,x,y,z,tx,ty,tz");
-            if (!Directory.Exists(_saveDir))
-                _saveDir = "C:";
-            if (!Directory.Exists(_videoDir))
-                _videoDir = "C:";
             SaveDir.Content = _saveDir;
+            _channel = new();
             Closed += (sender, args) =>
             {
                 GC.Collect();
-                //_log.Close();
-                //_log.Dispose();
-                using var sw = new StreamWriter("cache.txt", false);
-                sw.WriteLine(_saveDir);
-                sw.WriteLine(_videoDir);
-                _videoConnector?.Dispose();
-                _cameraConnector?.Dispose();
-                _cameraConnector = null;
+                settings.Save(new(_saveDir, _videoDir));
                 _camera?.Dispose();
                 _camera = null;
                 _player?.Dispose();
@@ -84,8 +54,6 @@ namespace Tools.DepthCamera
 
         private void StartPauseButton_Click(object sender, RoutedEventArgs e)
         {
-            _videoConnector?.Dispose();
-            _videoConnector = null;
             _player?.Dispose();
             _player = null;
             if (!_isConnected)
@@ -102,21 +70,15 @@ namespace Tools.DepthCamera
                 if (!_isConnected) new Exception("Couldn't connect device!");
 
                 ShutterButton.IsEnabled = true;
-                _cameraConnector = _camera.Connect()
-                    .Subscribe(imgs =>
+                _camera.ReactiveFrame
+                    .Where(_ => _camera.HasFrame)
+                    .Subscribe(async frame =>
                     {
-                        //var l = imgs.GetPointInfo(left);
-                        //var r = imgs.GetPointInfo(right);
-                        //var t = imgs.GetPointInfo(top);
-                        //var b = imgs.GetPointInfo(bottom);
-                        lock (_lockobj)
-                            _framesPool = imgs;
-                        using var d8 = imgs.Depth8(300, 5000);
+                        await _channel.WriteAsync(frame);
+                        using var d8 = frame.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
-                            //LR.Value = $"↔ {r.Z - l.Z} mm";
-                            //TB.Value = $"↕ {b.Z - t.Z} mm";
-                            ColorFrame.Source = imgs.BGR.ToBitmapSource();
+                            ColorFrame.Source = frame.BGR.ToBitmapSource();
                             DepthFrame.Source = d8.ToBitmapSource();
                         });
                     });
@@ -129,8 +91,6 @@ namespace Tools.DepthCamera
                 PlayButton.IsEnabled = true;
                 ShutterButton.IsEnabled = false;
                 _isConnected = false;
-                _cameraConnector?.Dispose();
-                _cameraConnector = null;
                 _camera?.Dispose();
                 _camera = null;
             }
@@ -138,28 +98,22 @@ namespace Tools.DepthCamera
 
         private void ShutterButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_cameraConnector != null)
+            if (_camera is not null)
             {
-                _camera.Connect()
-                    .TakeWhile(imgs =>
-                    {
-                        if (imgs.Empty()) return true;
-                        BgrXyzImageIO.SaveAsZip(_saveDir, "", imgs);
-                        return false;
-                    })
-                    .Subscribe();
+                var frame = _camera.ReactiveFrame.Value;
+                if (frame.Empty()) return;
+                BgrXyzImageIO.SaveAsZip(_saveDir, "", frame);
             }
             if (_player != null)
             {
-                var frame = _player.GetOneFrameSet((int)PlaySlider.Value);
+                _player.Seek((int)PlaySlider.Value);
+                var frame = _player.Read();
                 BgrXyzImageIO.SaveAsZip(_saveDir, "", frame);
             }
         }
 
         private void RecButton_Click(object sender, RoutedEventArgs e)
         {
-            _videoConnector?.Dispose();
-            _videoConnector = null;
             _player?.Dispose();
             _player = null;
             if (!_isConnected)
@@ -174,29 +128,21 @@ namespace Tools.DepthCamera
                 PlaySlider.Visibility = Visibility.Hidden;
                 _isConnected = AttemptConnection();
                 if (!_isConnected) throw new Exception("Couldn't connect device!");
-                //var fileNumber = 0;
-                //while (File.Exists($"{SaveDir.Value}\\Movie_{fileNumber:D4}.yms")) fileNumber++;
 
                 var time = DateTimeOffset.Now;
                 var filePath = $"{_saveDir}\\Movie_{time.Year}{time.Month:d2}{time.Day:d2}{time.Hour:d2}{time.Minute:d2}{time.Second:d2}{time.Millisecond:d2}.yms";
                 var writer = new BgrXyzRecorder(filePath);
-                _cameraConnector = _camera.Connect()
+                _camera.ReactiveFrame
+                    .Where(_ => _camera.HasFrame)
                     .Finally(() => writer?.Dispose())
-                    .Subscribe(imgs =>
+                    .Subscribe(async frame =>
                     {
-                        writer?.WriteFrame(imgs);
-                        //var l = imgs.GetPointInfo(left);
-                        //var r = imgs.GetPointInfo(right);
-                        //var t = imgs.GetPointInfo(top);
-                        //var b = imgs.GetPointInfo(bottom);
-                        lock (_lockobj)
-                            _framesPool = imgs;
-                        using var d8 = imgs.Depth8(300, 5000);
+                        writer?.WriteFrame(frame);
+                        await _channel.WriteAsync(frame);
+                        using var d8 = frame.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
-                            //LR.Value = $"↔ {r.Z - l.Z} mm";
-                            //TB.Value = $"↕ {b.Z - t.Z} mm";
-                            ColorFrame.Source = imgs.BGR.ToBitmapSource();
+                            ColorFrame.Source = frame.BGR.ToBitmapSource();
                             DepthFrame.Source = d8.ToBitmapSource();
                         });
                     });
@@ -208,9 +154,8 @@ namespace Tools.DepthCamera
                 StartPauseButton.IsEnabled = true;
                 PlayButton.IsEnabled = true;
                 _isConnected = false;
-                _cameraConnector?.Dispose();
                 _camera?.Dispose();
-                _cameraConnector = null;
+                _camera = null;
             }
         }
 
@@ -222,14 +167,12 @@ namespace Tools.DepthCamera
                 InitialDirectory = _saveDir,
                 IsFolderPicker = true,
             };
-            if (cofd.ShowDialog() == CommonFileDialogResult.Ok) _saveDir = cofd.FileName;
+            if (cofd.ShowDialog() is CommonFileDialogResult.Ok) _saveDir = cofd.FileName;
             SaveDir.Content = _saveDir;
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            _videoConnector?.Dispose();
-            _videoConnector = null;
             _player?.Dispose();
             _player = null;
             using var cofd = new CommonOpenFileDialog()
@@ -249,17 +192,17 @@ namespace Tools.DepthCamera
                 PlaySlider.Visibility = Visibility.Visible;
                 _player = new BgrXyzPlayer(cofd.FileName);
                 PlaySlider.Maximum = _player.FrameCount;
-                _videoConnector = _player.Start(0)
-                    .Subscribe(ww =>
+                _player.ReactiveFrame
+                    .Where(frame => frame is not null && !frame.Empty())
+                    .Subscribe(async frame =>
                     {
-                        lock (_lockobj)
-                            _framesPool = ww.Frame;
-                        using var d8 = ww.Frame.Depth8(300, 5000);
+                        await _channel.WriteAsync(frame);
+                        using var d8 = frame.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
-                            ColorFrame.Source = ww.Frame.BGR.ToBitmapSource();
+                            ColorFrame.Source = frame.BGR.ToBitmapSource();
                             DepthFrame.Source = d8.ToBitmapSource();
-                            PlaySlider.Value = ww.Position;
+                            PlaySlider.Value = _player.CurrentPosition;
                         });
                     });
             }
@@ -269,8 +212,7 @@ namespace Tools.DepthCamera
         {
             if (_isConnected)
             {
-                _videoConnector.Dispose();
-                _videoConnector = null;
+                _player.Pause();
                 _isConnected = false;
                 PlayPauseButton.Content = "▶";
                 PlaySlider.IsEnabled = true;
@@ -282,17 +224,19 @@ namespace Tools.DepthCamera
                 PlaySlider.IsEnabled = false;
                 PlayPauseButton.Content = "| |";
                 ShutterButton.IsEnabled = false;
-                _videoConnector = _player.Start((int)PlaySlider.Value)
-                    .Subscribe(ww =>
+                _player.Seek((int)PlaySlider.Value);
+                _player.Restart();
+                _player.ReactiveFrame
+                    .Where(frame => frame is not null && !frame.Empty())
+                    .Subscribe(async frame =>
                     {
-                        lock (_lockobj)
-                            _framesPool = ww.Frame;
-                        using var d8 = ww.Frame.Depth8(300, 5000);
+                        await _channel.WriteAsync(frame);
+                        using var d8 = frame.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
-                            ColorFrame.Source = ww.Frame.BGR.ToBitmapSource();
+                            ColorFrame.Source = frame.BGR.ToBitmapSource();
                             DepthFrame.Source = d8.ToBitmapSource();
-                            PlaySlider.Value = ww.Position;
+                            PlaySlider.Value = _player.CurrentPosition;
                         });
                     });
             }
@@ -300,9 +244,10 @@ namespace Tools.DepthCamera
 
         private void PlaySlider_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var imgs = _player.GetOneFrameSet((int)PlaySlider.Value);
-            ColorFrame.Source = imgs.BGR.ToBitmapSource();
-            DepthFrame.Source = imgs.Depth8(300, 5000).ToBitmapSource();
+            _player.Seek((int)PlaySlider.Value);
+            var frame = _player.Read();
+            ColorFrame.Source = frame.BGR.ToBitmapSource();
+            DepthFrame.Source = frame.Depth8(300, 5000).ToBitmapSource();
         }
 
         private void ColorFrame_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -317,46 +262,12 @@ namespace Tools.DepthCamera
             ImageClicked((int)p.X, (int)p.Y);
         }
 
-        private void ImageClicked(int x, int y)
+        private async void ImageClicked(int x, int y)
         {
-            BGRXYZ info;
-            if (_framesPool is not null)
-            {
-                lock (_lockobj)
-                {
-                    info = _framesPool.GetPointInfo(new(x, y));
-                }
-                UV.Content = $"UV ({x}, {y})";
-                XYZ1.Content = $"XYZ ({info.X}, {info.Y}, {info.Z})";
-
-                var xx = info.Z;
-                var yy = (short)-info.X;
-                var zz = (short)-info.Y;
-                if (xx == 0)
-                {
-                    XYZ2.Content = $"Transform (--, --, --)";
-                    return;
-                };
-
-                if (_isKinect)
-                {
-                    // Kinect
-                    var xxx = (short)(0.80567 * xx + 0.020847 * yy + 0.462340 * zz + 313.58);
-                    var yyy = (short)(-0.04243 * xx + 1.008600 * yy + 0.041622 * zz + 1.3942);
-                    var zzz = (short)(-0.36180 * xx - 0.050545 * yy + 0.882870 * zz - 110.03);
-                    XYZ2.Content = $"Transform ({xxx}, {yyy}, {zzz})";
-                    //_log.WriteLine($"kinect,{x},{y},{info.X},{info.Y},{info.Z},{xxx},{yyy},{zzz}");
-                }
-                else
-                {
-                    // Realsense
-                    var xxx = (short)(0.7355 * xx - 0.0130 * yy + 0.7006 * zz + 196.1);
-                    var yyy = (short)(0.0099 * xx + 1.0359 * yy + 0.0012 * zz - 12.30) + 55;
-                    var zzz = (short)(-0.700 * xx - 0.0052 * yy + 0.7701 * zz - 51.10);
-                    XYZ2.Content = $"Transform ({xxx}, {yyy}, {zzz})";
-                    //_log.WriteLine($"realsense,{x},{y},{info.X},{info.Y},{info.Z},{xxx},{yyy},{zzz}");
-                }
-            }
+            using var frame = (await _channel.ReadAsync()).Value;
+            var info = frame.GetPointInfo(new(x, y));
+            UV.Content = $"UV ({x}, {y})";
+            XYZ1.Content = $"XYZ ({info.X}, {info.Y}, {info.Z})";
         }
 
         private bool AttemptConnection()
@@ -371,8 +282,7 @@ namespace Tools.DepthCamera
                         DepthMode = DepthMode.WFOV_2x2Binned,
                         SynchronizedImagesOnly = true,
                         CameraFPS = FPS.FPS15
-                    }, AlignBase.Depth);
-                _isKinect = true;
+                    }, AlignBase.Color);
             }
             catch
             {
@@ -380,7 +290,6 @@ namespace Tools.DepthCamera
                 {
                     _camera = new Realsense(new(640, 360)); // D
                     //_camera = new Realsense(new(640, 480)); // L
-                    _isKinect = false;
                 }
                 catch
                 {

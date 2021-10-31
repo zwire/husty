@@ -4,6 +4,8 @@ using OpenCvSharp;
 namespace Husty.OpenCvSharp.DepthCamera
 {
 
+    public enum AlignBase { Color, Depth }
+
     /// <summary>
     /// Point Cloud with Color
     /// </summary>

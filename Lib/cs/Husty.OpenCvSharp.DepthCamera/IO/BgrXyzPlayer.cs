@@ -13,7 +13,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// <summary>
     /// Playback BGRXYZ movie from binary file.
     /// </summary>
-    public class BgrXyzPlayer : IDisposable
+    public class BgrXyzPlayer : IVideoStream<BgrXyzMat>
     {
 
         //
@@ -33,11 +33,11 @@ namespace Husty.OpenCvSharp.DepthCamera
         //    .
         //    .
         //    .
-        //    
+        //
         //    8      Frame 1 Position
         //    8      Frame 2 Position
         //    8      Frame 3 Position
-        //   
+        // 
         //    .
         //    .
         //    .
@@ -45,28 +45,33 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         // ------- Fields ------- //
 
-        private readonly BinaryReader _binReader;
         private readonly long[] _indexes;
+        private readonly BinaryReader _binReader;
         private int _positionIndex;
+        private IDisposable _selfConnector;
 
 
         // ------- Properties ------- //
 
         public int Fps { get; }
 
+        public int Channels => 6;
+
+        public Size FrameSize { get; }
+
+        public bool HasFrame { private set; get; }
+
         public int FrameCount => _indexes.Length;
 
-        public Size ColorFrameSize { get; }
+        public int CurrentPosition => _positionIndex;
 
-        public Size DepthFrameSize { get; }
-
-        public ReactivePropertySlim<BgrXyzMat> ReactiveFrame { private set; get; }
+        public ReadOnlyReactivePropertySlim<BgrXyzMat> ReactiveFrame { private set; get; }
 
 
         // ------- Constructor ------- //
 
         /// <summary>
-        /// Player for Movies captured by Depth Camera
+        /// Player for video captured by depth camera
         /// </summary>
         /// <param name="filePath"></param>
         public BgrXyzPlayer(string filePath, int fps = 5)
@@ -76,7 +81,7 @@ namespace Husty.OpenCvSharp.DepthCamera
             var fileFormatCode = Encoding.ASCII.GetString(_binReader.ReadBytes(8));
             if (fileFormatCode is not "HUSTY000") throw new Exception();
             var indexesPos = _binReader.ReadInt64();
-            if (indexesPos <= 0) throw new Exception();
+            if (indexesPos <= 0) throw new Exception("Index positions are invalid.");
             _binReader.BaseStream.Position = indexesPos;
             var indexes = new List<long>();
             while (_binReader.BaseStream.Position < _binReader.BaseStream.Length) indexes.Add(_binReader.ReadInt64());
@@ -90,53 +95,42 @@ namespace Husty.OpenCvSharp.DepthCamera
             var xyzDataSize = _binReader.ReadInt32();
             var xyzBytes = _binReader.ReadBytes(xyzDataSize);
             var bgrxyz = new BgrXyzMat(bgrBytes, xyzBytes);
-            ColorFrameSize = new(bgrxyz.BGR.Width, bgrxyz.BGR.Height);
-            DepthFrameSize = new(bgrxyz.Depth16.Width, bgrxyz.Depth16.Height);
-            ReactiveFrame = new();
+            FrameSize = new(bgrxyz.BGR.Width, bgrxyz.BGR.Height);
+            ReactiveFrame = BeginStream(0).ToReadOnlyReactivePropertySlim();
         }
 
 
         // ------- Methods ------- //
 
-        /// <summary>
-        /// Please 'Subscribe', which is a Rx function.
-        /// </summary>
-        /// <param name="position">Starting frame index</param>
-        /// <returns>Observable instance contains BgrXyzMat</returns>
-        public IObservable<(BgrXyzMat Frame, int Position)> Start(int position)
+        public void Pause()
         {
-            if (position > -1 && position < FrameCount) _positionIndex = position;
-            return Observable.Interval(TimeSpan.FromMilliseconds(1000 / Fps), ThreadPoolScheduler.Instance)
-                .Where(_ => position < FrameCount)
-                .Select(_ => (Read().Frame, ++position))
-                .Publish().RefCount();
+            _selfConnector?.Dispose();
+            _selfConnector = null;
         }
 
-        /// <summary>
-        /// Get Color and Point Cloud frame
-        /// </summary>
-        /// <param name="position">Frame index</param>
-        /// <returns></returns>
-        public BgrXyzMat GetOneFrameSet(int position)
+        public void Restart()
         {
-            if (position > -1 && position < FrameCount) _positionIndex = position;
-            return Read().Frame;
+            ReactiveFrame = BeginStream(_positionIndex).ToReadOnlyReactivePropertySlim();
         }
 
-        /// <summary>
-        /// Close player.
-        /// Must not forget 'Dispose' subscribing instance.
-        /// </summary>
+        public void Seek(int position)
+        {
+            if (position > -1 && position < FrameCount) _positionIndex = position;
+        }
+
         public void Dispose()
         {
+            HasFrame = false;
+            ReactiveFrame?.Dispose();
+            _selfConnector?.Dispose();
             _binReader?.Close();
             _binReader?.Dispose();
         }
 
-        private (BgrXyzMat Frame, long Time) Read()
+        public BgrXyzMat Read()
         {
             GC.Collect();
-            if (_positionIndex == _indexes.Length - 1) _positionIndex--;
+            if (_positionIndex == FrameCount - 1) _positionIndex--;
             _binReader.BaseStream.Seek(_indexes[_positionIndex++], SeekOrigin.Begin);
             var time = _binReader.ReadInt64();
             var bgrDataSize = _binReader.ReadInt32();
@@ -144,8 +138,19 @@ namespace Husty.OpenCvSharp.DepthCamera
             var xyzDataSize = _binReader.ReadInt32();
             var xyzBytes = _binReader.ReadBytes(xyzDataSize);
             var frame = new BgrXyzMat(bgrBytes, xyzBytes);
-            ReactiveFrame.Value = frame;
-            return (frame.Clone(), time);
+            HasFrame = true;
+            return frame.Clone();
+        }
+
+        private IObservable<BgrXyzMat> BeginStream(int position)
+        {
+            if (position > -1 && position < FrameCount) _positionIndex = position;
+            var obs = Observable.Interval(TimeSpan.FromMilliseconds(1000 / Fps), ThreadPoolScheduler.Instance)
+                .Where(_ => _positionIndex < FrameCount)
+                .Select(_ => Read())
+                .Publish();
+            _selfConnector = obs.Connect();
+            return obs;
         }
 
     }

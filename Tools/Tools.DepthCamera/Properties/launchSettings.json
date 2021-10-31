@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Tools.DepthCamera": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}

@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using OpenCvSharp;
 using Microsoft.Azure.Kinect.Sensor;
 using Reactive.Bindings;
+using OpenCvSharp;
 
 namespace Husty.OpenCvSharp.DepthCamera
 {
     /// <summary>
     /// Microsoft Azure Kinect C# wrapper
     /// </summary>
-    public class Kinect : IDepthCamera
+    public class Kinect : IImageStream<BgrXyzMat>
     {
 
         // ------- Fields ------- //
@@ -25,16 +25,20 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         // ------- Properties ------- //
 
-        public int Fps { get; }
-
         /// <summary>
         /// For device setup (resolution, fps, matching mode etc.)
         /// </summary>
         public DeviceConfiguration Config { get; }
 
+        public int Fps { get; }
+
+        public int Channels => 6;
+
         public Size FrameSize { get; }
 
-        public ReactivePropertySlim<BgrXyzMat> ReactiveFrame { private set; get; }
+        public bool HasFrame { private set; get; }
+
+        public ReadOnlyReactivePropertySlim<BgrXyzMat> ReactiveFrame { private set; get; }
 
 
         // ------- Constructor ------- //
@@ -68,7 +72,10 @@ namespace Husty.OpenCvSharp.DepthCamera
                 FPS.FPS30   => 30,
                 _           => -1
             };
-            ReactiveFrame = new();
+            ReactiveFrame = Observable
+                .Repeat(0, ThreadPoolScheduler.Instance)
+                .Select(_ => Read())
+                .ToReadOnlyReactivePropertySlim();
         }
 
         /// <summary>
@@ -89,23 +96,6 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         // ------- Methods ------- //
 
-        /// <summary>
-        /// Please 'Subscribe', which is a Rx function.
-        /// </summary>
-        /// <returns>Observable instance contains BgrXyzMat</returns>
-        public IObservable<BgrXyzMat> Connect()
-            => Observable.Repeat(0, ThreadPoolScheduler.Instance).Select(_ => Read()).Publish().RefCount();
-
-        /// <summary>
-        /// Close device.
-        /// Must not forget 'Dispose' subscribing instance.
-        /// </summary>
-        public void Dispose() => _device?.Dispose();
-
-        /// <summary>
-        /// Get current frame synchronously
-        /// </summary>
-        /// <returns></returns>
         public BgrXyzMat Read()
         {
             GC.Collect();
@@ -118,7 +108,7 @@ namespace Husty.OpenCvSharp.DepthCamera
                 using var colorMat = colorFrame.ToColorMat();
                 using var pointCloudMat = pointCloudFrame.ToPointCloudMat();
                 var frame = BgrXyzMat.Create(colorMat, pointCloudMat).Rotate(_pitchRad, _yawRad, _rollRad);
-                ReactiveFrame.Value = frame;
+                HasFrame = true;
                 return frame.Clone();
             }
             else
@@ -128,9 +118,16 @@ namespace Husty.OpenCvSharp.DepthCamera
                 using var colorMat = colorFrame.ToColorMat();
                 using var pointCloudMat = pointCloudFrame.ToPointCloudMat();
                 var frame = BgrXyzMat.Create(colorMat, pointCloudMat).Rotate(_pitchRad, _yawRad, _rollRad);
-                ReactiveFrame.Value = frame;
+                HasFrame = true;
                 return frame.Clone();
             }
+        }
+
+        public void Dispose()
+        {
+            HasFrame = false;
+            ReactiveFrame.Dispose();
+            _device?.Dispose();
         }
 
     }
