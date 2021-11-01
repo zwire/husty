@@ -30,7 +30,7 @@ namespace Husty.OpenCvSharp
 
         public int FrameCount { get; }
 
-        public int CurrentPosition { get; }
+        public int CurrentPosition => _positionIndex;
 
         public ReadOnlyReactivePropertySlim<Mat> ReactiveFrame { get; }
 
