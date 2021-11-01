@@ -3,17 +3,26 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Authors>yamashita</Authors>
-    <Version>1.1.3</Version>
+    <Version>1.1.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MathNet.Numerics" Version="4.15.0" />
-    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.9.0" />
-    <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.9.0" />
     <PackageReference Include="ProcessX" Version="1.5.3" />
     <PackageReference Include="ReactiveProperty" Version="7.12.0" />
     <PackageReference Include="System.IO.Ports" Version="5.0.1" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
+
+    <Content Include="Lawicel\Internal\canusbdrv.dll" Pack="true" PackagePath="lib\" />
+    <Content Include="Lawicel\Internal\canusbdrv.dll" Pack="true">
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Lawicel\Internal\canusbdrv64.dll" Pack="true" PackagePath="lib\" />
+    <Content Include="Lawicel\Internal\canusbdrv64.dll" Pack="true">
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 	
 </Project>

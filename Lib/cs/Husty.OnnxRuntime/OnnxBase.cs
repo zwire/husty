@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 
-namespace Husty
+namespace Husty.OnnxRuntime
 {
 
     public enum Provider { CPU, OpenVINO, CUDA, DML, Dnnl, Nnapi, MIGraphX, Nuphar, ROCM, TensorRT }
