@@ -1,8 +1,11 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Reactive.Linq;
+using System.Reactive.Concurrency;
 using static Husty.Lawicel.CANUSB;
-using static Husty.Lawicel.CanMessage;
+using static Husty.Lawicel.CanUsbOption;
 
 namespace Husty.Lawicel
 {
@@ -10,10 +13,13 @@ namespace Husty.Lawicel
     public enum CanUsbStatus { Offline, Online }
 
 
-    public abstract class CanUsbAdapter : IDisposable
+    public class CanUsbAdapter : IDisposable
     {
 
         private bool _disposed;
+        private object _locker = new();
+        private IDisposable _readingConnector;
+        private IDisposable _writingConnector;
 
         public uint Handle { get; private set; }
 
@@ -24,7 +30,7 @@ namespace Husty.Lawicel
         public CanUsbStatus Status { private set; get; } = CanUsbStatus.Offline;
 
 
-        protected CanUsbAdapter(string adapterName, string baudrate)
+        public CanUsbAdapter(string adapterName, string baudrate)
         {
             AdapterName = adapterName;
             Baudrate = baudrate;
@@ -45,9 +51,7 @@ namespace Husty.Lawicel
 
         }
 
-        public abstract void Close();
-
-        protected void OpenAdapter()
+        public void Open()
         {
             ThrowIfDisposed();
             ThrowIfNotOffline();
@@ -61,13 +65,64 @@ namespace Husty.Lawicel
             Status = CanUsbStatus.Online;
         }
 
-        protected void CloseAdapter()
+        public void Close()
         {
             if (_disposed) return;
             if (Status is CanUsbStatus.Offline) return;
+            _readingConnector?.Dispose();
+            _writingConnector?.Dispose();
             var ret = canusb_Close(Handle);
             if (ret is not ERROR_OK) throw new Exception("Failed to close the CANUSB adapter");
             Status = CanUsbStatus.Offline;
+        }
+
+
+        public void Write(CanMessage message)
+        {
+            ThrowIfDisposed();
+            ThrowIfNotOnline();
+            var msg = message.ToCANMsg();
+            lock(_locker)
+            {
+                canusb_Flush(Handle, Convert.ToByte(FLUSH_WAIT));
+                var ret = canusb_Write(Handle, ref msg);
+                if (ret is not ERROR_OK) throw new Exception("Failed to send the message.");
+            }
+        }
+
+        public CanMessage Read()
+        {
+            lock(_locker)
+            {
+                var ret = canusb_Read(Handle, out var message);
+                if (ret is not ERROR_OK) throw new Exception("Failed to receive the message.");
+                return CanMessage.FromCANMsg(message);
+            }
+        }
+
+        public void StartWritingStream(List<CanMessage> msgs)
+        {
+            var observable = Observable.Repeat(0, ThreadPoolScheduler.Instance)
+                .Do(_ => msgs.ForEach(msg => Write(msg))).Publish();
+            _writingConnector = observable.Connect();
+        }
+
+        public IObservable<CanMessage> GetReadingStream()
+        {
+            var observable = Observable.Repeat(0, ThreadPoolScheduler.Instance)
+                .Select(_ => Read()).Publish();
+            _readingConnector = observable.Connect();
+            return observable;
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                Close();
+                GC.SuppressFinalize(this);
+                _disposed = true;
+            }
         }
 
         protected void ThrowIfNotOffline()
@@ -85,17 +140,6 @@ namespace Husty.Lawicel
         protected void ThrowIfDisposed()
         {
             if (_disposed) throw new ObjectDisposedException(GetType().FullName);
-        }
-
-
-        public void Dispose()
-        {
-            if (!_disposed)
-            {
-                CloseAdapter();
-                GC.SuppressFinalize(this);
-                _disposed = true;
-            }
         }
 
     }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Threading;
+using System.Reactive.Linq;
 using Husty.Lawicel;
 
 namespace Test.CanConnection
@@ -9,27 +9,29 @@ namespace Test.CanConnection
         static void Main(string[] args)
         {
             var names = CanUsbAdapter.FindAdapterNames();
-            var receiver = new CanUsbReader(names[0]);
-            var sender = new CanUsbWriter(names[0]);
-            receiver.Open();
-            sender.Open();
+            var adapter = new CanUsbAdapter(names[0], CanUsbOption.BAUD_250K);
+            adapter.Open();
             Console.WriteLine("Open");
 
-            receiver.ReadAtInterval(TimeSpan.FromSeconds(1))
-                .Subscribe(msg => Console.WriteLine(msg is null ? "null" : msg.Id));
+            adapter.GetReadingStream()
+                .Sample(TimeSpan.FromMilliseconds(10))
+                .Subscribe(msg =>
+                {
+                    Console.WriteLine(msg is null ? "null" : msg.Id);
+                });
 
+            Console.ReadKey();
 
-            while (true)
-            {
-                sender.Write(new(0, 0, 0, 0, 0));
-                Thread.Sleep(1000);
-                if (Console.KeyAvailable)
-                    if (Console.ReadKey().Key is ConsoleKey.Q)
-                        break;
-            }
+            //while (true)
+            //{
+            //    adapter.Write(new(0, 0, 0, 0, 0));
+            //    Thread.Sleep(1000);
+            //    if (Console.KeyAvailable)
+            //        if (Console.ReadKey().Key is ConsoleKey.Q)
+            //            break;
+            //}
 
-            receiver.Close();
-            sender.Close();
+            adapter.Dispose();
             Console.WriteLine("Close");
             Console.ReadKey();
         }
