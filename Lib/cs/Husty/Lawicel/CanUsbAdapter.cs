@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
-using Reactive.Bindings;
 using static Husty.Lawicel.CANUSB;
 using static Husty.Lawicel.CanMessage;
 
@@ -22,10 +21,10 @@ namespace Husty.Lawicel
 
         public string Baudrate { get; }
 
-        public ReactivePropertySlim<CanUsbStatus> Status { private set; get; } = new(CanUsbStatus.Offline);
+        public CanUsbStatus Status { private set; get; } = CanUsbStatus.Offline;
 
 
-        protected CanUsbAdapter(string adapterName, string baudrate = CanMessage.BAUD_500K)
+        protected CanUsbAdapter(string adapterName, string baudrate)
         {
             AdapterName = adapterName;
             Baudrate = baudrate;
@@ -59,27 +58,27 @@ namespace Husty.Lawicel
                 FLAG_TIMESTAMP | FLAG_BLOCK
             );
             if (Handle <= 0) throw new Exception("Failed to open the CANUSB Adapter.");
-            Status.Value = CanUsbStatus.Online;
+            Status = CanUsbStatus.Online;
         }
 
         protected void CloseAdapter()
         {
             if (_disposed) return;
-            if (Status.Value is CanUsbStatus.Offline) return;
+            if (Status is CanUsbStatus.Offline) return;
             var ret = canusb_Close(Handle);
             if (ret is not ERROR_OK) throw new Exception("Failed to close the CANUSB adapter");
-            Status.Value = CanUsbStatus.Offline;
+            Status = CanUsbStatus.Offline;
         }
 
         protected void ThrowIfNotOffline()
         {
-            if (Status.Value is not CanUsbStatus.Offline)
+            if (Status is not CanUsbStatus.Offline)
                 throw new InvalidOperationException("Must be invoked on Offline status.");
         }
 
         protected void ThrowIfNotOnline()
         {
-            if (Status.Value is not CanUsbStatus.Online)
+            if (Status is not CanUsbStatus.Online)
                 throw new InvalidOperationException("Must be invoked on Online status.");
         }
 

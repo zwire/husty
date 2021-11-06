@@ -60,7 +60,7 @@ namespace Husty.Lawicel
         public ulong Data { get; }
 
 
-        public CanMessage(uint id, uint timestamp, byte flags, byte len, ulong data)
+        public CanMessage(uint id, ulong data, byte flags = EXTENDED, byte len = 8, uint timestamp = 0)
         {
             Id = id;
             Timestamp = timestamp;
@@ -69,7 +69,7 @@ namespace Husty.Lawicel
             Data = data;
         }
 
-        public CanMessage(uint id, uint timestamp, byte flags, byte len, byte[] data)
+        public CanMessage(uint id, byte[] data, byte flags = EXTENDED, byte len = 8, uint timestamp = 0)
         {
             if (data.Length is not 8) throw new ArgumentException("data length must be 8.");
             Id = id;
@@ -83,7 +83,7 @@ namespace Husty.Lawicel
             => new(Id, Timestamp, Flags, Length, Data);
 
         internal static CanMessage FromCANMsg(CANMsg msg) 
-            => new(msg.id, msg.timestamp, msg.flags, msg.len, msg.data);
+            => new(msg.id, msg.data, msg.flags, msg.len, msg.timestamp);
 
     }
 }

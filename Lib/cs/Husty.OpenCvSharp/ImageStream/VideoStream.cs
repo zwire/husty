@@ -4,16 +4,14 @@ using System.Collections.Generic;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using OpenCvSharp;
-using Reactive.Bindings;
 
 namespace Husty.OpenCvSharp
 {
-    public class VideoStream
+    public class VideoStream : IVideoStream<Mat>
     {
 
         // ------- Fields ------- //
 
-        private IDisposable _selfConnector;
         private int _positionIndex;
         private readonly VideoCapture _cap;
 
@@ -32,8 +30,6 @@ namespace Husty.OpenCvSharp
 
         public int CurrentPosition => _positionIndex;
 
-        public ReadOnlyReactivePropertySlim<Mat> ReactiveFrame { get; }
-
 
         // ------- Constructors ------- //
 
@@ -47,7 +43,6 @@ namespace Husty.OpenCvSharp
             Channels = (int)_cap.Get(VideoCaptureProperties.Channel);
             FrameSize = new(_cap.FrameWidth, _cap.FrameHeight);
             FrameCount = _cap.FrameCount;
-            ReactiveFrame = BeginStream(0).ToReadOnlyReactivePropertySlim();
         }
 
 
@@ -66,23 +61,23 @@ namespace Husty.OpenCvSharp
                 return null;
         }
 
+        public IObservable<Mat> GetStream()
+        {
+            return Observable.Interval(TimeSpan.FromMilliseconds(1000 / Fps), ThreadPoolScheduler.Instance)
+                .Where(_ => _positionIndex < FrameCount)
+                .Select(_ => Read())
+                .Publish().RefCount();
+        }
+
+        public void Seek(int position)
+        {
+            if (position > -1 && position < FrameCount) _positionIndex = position;
+        }
+
         public void Dispose()
         {
             HasFrame = false;
-            _selfConnector?.Dispose();
-            ReactiveFrame?.Dispose();
             _cap?.Dispose();
-        }
-
-        private IObservable<Mat> BeginStream(int position)
-        {
-            if (position > -1 && position < FrameCount) _positionIndex = position;
-            var obs = Observable.Interval(TimeSpan.FromMilliseconds(1000 / Fps), ThreadPoolScheduler.Instance)
-                .Where(_ => _positionIndex < FrameCount)
-                .Select(_ => Read())
-                .Publish();
-            _selfConnector = obs.Connect();
-            return obs;
         }
 
     }

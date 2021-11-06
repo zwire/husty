@@ -6,7 +6,6 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Linq;
 using OpenCvSharp;
-using Reactive.Bindings;
 
 namespace Husty.OpenCvSharp.DepthCamera
 {
@@ -48,7 +47,6 @@ namespace Husty.OpenCvSharp.DepthCamera
         private readonly long[] _indexes;
         private readonly BinaryReader _binReader;
         private int _positionIndex;
-        private IDisposable _selfConnector;
 
 
         // ------- Properties ------- //
@@ -64,8 +62,6 @@ namespace Husty.OpenCvSharp.DepthCamera
         public int FrameCount => _indexes.Length;
 
         public int CurrentPosition => _positionIndex;
-
-        public ReadOnlyReactivePropertySlim<BgrXyzMat> ReactiveFrame { private set; get; }
 
 
         // ------- Constructor ------- //
@@ -96,36 +92,10 @@ namespace Husty.OpenCvSharp.DepthCamera
             var xyzBytes = _binReader.ReadBytes(xyzDataSize);
             var bgrxyz = new BgrXyzMat(bgrBytes, xyzBytes);
             FrameSize = new(bgrxyz.BGR.Width, bgrxyz.BGR.Height);
-            ReactiveFrame = BeginStream(0).ToReadOnlyReactivePropertySlim();
         }
 
 
         // ------- Methods ------- //
-
-        public void Pause()
-        {
-            _selfConnector?.Dispose();
-            _selfConnector = null;
-        }
-
-        public void Restart()
-        {
-            ReactiveFrame = BeginStream(_positionIndex).ToReadOnlyReactivePropertySlim();
-        }
-
-        public void Seek(int position)
-        {
-            if (position > -1 && position < FrameCount) _positionIndex = position;
-        }
-
-        public void Dispose()
-        {
-            HasFrame = false;
-            ReactiveFrame?.Dispose();
-            _selfConnector?.Dispose();
-            _binReader?.Close();
-            _binReader?.Dispose();
-        }
 
         public BgrXyzMat Read()
         {
@@ -142,15 +112,24 @@ namespace Husty.OpenCvSharp.DepthCamera
             return frame.Clone();
         }
 
-        private IObservable<BgrXyzMat> BeginStream(int position)
+        public IObservable<BgrXyzMat> GetStream()
         {
-            if (position > -1 && position < FrameCount) _positionIndex = position;
-            var obs = Observable.Interval(TimeSpan.FromMilliseconds(1000 / Fps), ThreadPoolScheduler.Instance)
+            return Observable.Interval(TimeSpan.FromMilliseconds(1000 / Fps), ThreadPoolScheduler.Instance)
                 .Where(_ => _positionIndex < FrameCount)
                 .Select(_ => Read())
-                .Publish();
-            _selfConnector = obs.Connect();
-            return obs;
+                .Publish().RefCount();
+        }
+
+        public void Seek(int position)
+        {
+            if (position > -1 && position < FrameCount) _positionIndex = position;
+        }
+
+        public void Dispose()
+        {
+            HasFrame = false;
+            _binReader?.Close();
+            _binReader?.Dispose();
         }
 
     }

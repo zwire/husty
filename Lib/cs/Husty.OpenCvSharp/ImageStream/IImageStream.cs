@@ -1,6 +1,5 @@
 ﻿using System;
 using OpenCvSharp;
-using Reactive.Bindings;
 
 namespace Husty.OpenCvSharp
 {
@@ -18,9 +17,9 @@ namespace Husty.OpenCvSharp
 
         public bool HasFrame { get; }
 
-        public ReadOnlyReactivePropertySlim<TImage> ReactiveFrame { get; }
-
         public TImage Read();
+
+        public IObservable<TImage> GetStream();
 
     }
 }

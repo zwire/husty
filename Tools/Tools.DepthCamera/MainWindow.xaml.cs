@@ -10,6 +10,7 @@ using OpenCvSharp.WpfExtensions;
 using Husty;
 using Husty.OpenCvSharp;
 using Husty.OpenCvSharp.DepthCamera;
+using Reactive.Bindings;
 
 namespace Tools.DepthCamera
 {
@@ -25,7 +26,10 @@ namespace Tools.DepthCamera
         private string _saveDir = "";
         private string _videoDir = "";
         private readonly Channel<BgrXyzMat> _channel;
+
         private record Preset(string SaveDir, string VideoDir);
+
+        private ReadOnlyReactivePropertySlim<BgrXyzMat> ReactiveFrame { set; get; }
 
         public MainWindow()
         {
@@ -70,8 +74,9 @@ namespace Tools.DepthCamera
                 if (!_isConnected) new Exception("Couldn't connect device!");
 
                 ShutterButton.IsEnabled = true;
-                _camera.ReactiveFrame
-                    .Where(_ => _camera.HasFrame)
+                ReactiveFrame = _camera.GetStream().ToReadOnlyReactivePropertySlim();
+                ReactiveFrame
+                    .Where(frame => frame is not null && !frame.Empty())
                     .Subscribe(async frame =>
                     {
                         await _channel.WriteAsync(frame);
@@ -91,6 +96,7 @@ namespace Tools.DepthCamera
                 PlayButton.IsEnabled = true;
                 ShutterButton.IsEnabled = false;
                 _isConnected = false;
+                ReactiveFrame?.Dispose();
                 _camera?.Dispose();
                 _camera = null;
             }
@@ -98,9 +104,9 @@ namespace Tools.DepthCamera
 
         private void ShutterButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_camera is not null)
+            if (_camera is not null && ReactiveFrame.Value is not null)
             {
-                var frame = _camera.ReactiveFrame.Value;
+                var frame = ReactiveFrame.Value;
                 if (frame.Empty()) return;
                 BgrXyzImageIO.SaveAsZip(_saveDir, "", frame);
             }
@@ -132,8 +138,9 @@ namespace Tools.DepthCamera
                 var time = DateTimeOffset.Now;
                 var filePath = $"{_saveDir}\\Movie_{time.Year}{time.Month:d2}{time.Day:d2}{time.Hour:d2}{time.Minute:d2}{time.Second:d2}{time.Millisecond:d2}.yms";
                 var writer = new BgrXyzRecorder(filePath);
-                _camera.ReactiveFrame
-                    .Where(_ => _camera.HasFrame)
+                ReactiveFrame = _camera.GetStream().ToReadOnlyReactivePropertySlim();
+                ReactiveFrame
+                    .Where(frame => frame is not null && !frame.Empty())
                     .Finally(() => writer?.Dispose())
                     .Subscribe(async frame =>
                     {
@@ -153,6 +160,7 @@ namespace Tools.DepthCamera
                 RecButton.Background = Brushes.DarkGray;
                 StartPauseButton.IsEnabled = true;
                 PlayButton.IsEnabled = true;
+                ReactiveFrame?.Dispose();
                 _isConnected = false;
                 _camera?.Dispose();
                 _camera = null;
@@ -192,7 +200,8 @@ namespace Tools.DepthCamera
                 PlaySlider.Visibility = Visibility.Visible;
                 _player = new BgrXyzPlayer(cofd.FileName);
                 PlaySlider.Maximum = _player.FrameCount;
-                _player.ReactiveFrame
+                ReactiveFrame = _player.GetStream().ToReadOnlyReactivePropertySlim();
+                ReactiveFrame
                     .Where(frame => frame is not null && !frame.Empty())
                     .Subscribe(async frame =>
                     {
@@ -210,23 +219,15 @@ namespace Tools.DepthCamera
 
         private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_isConnected)
-            {
-                _player.Pause();
-                _isConnected = false;
-                PlayPauseButton.Content = "▶";
-                PlaySlider.IsEnabled = true;
-                ShutterButton.IsEnabled = true;
-            }
-            else
+            if (!_isConnected)
             {
                 _isConnected = true;
                 PlaySlider.IsEnabled = false;
                 PlayPauseButton.Content = "| |";
                 ShutterButton.IsEnabled = false;
                 _player.Seek((int)PlaySlider.Value);
-                _player.Restart();
-                _player.ReactiveFrame
+                ReactiveFrame = _player.GetStream().ToReadOnlyReactivePropertySlim();
+                ReactiveFrame
                     .Where(frame => frame is not null && !frame.Empty())
                     .Subscribe(async frame =>
                     {
@@ -240,14 +241,22 @@ namespace Tools.DepthCamera
                         });
                     });
             }
+            else
+            {
+                ReactiveFrame?.Dispose();
+                _isConnected = false;
+                PlayPauseButton.Content = "▶";
+                PlaySlider.IsEnabled = true;
+                ShutterButton.IsEnabled = true;
+            }
         }
 
         private void PlaySlider_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            _player.Seek((int)PlaySlider.Value);
-            var frame = _player.Read();
-            ColorFrame.Source = frame.BGR.ToBitmapSource();
-            DepthFrame.Source = frame.Depth8(300, 5000).ToBitmapSource();
+            _player?.Seek((int)PlaySlider.Value);
+            var frame = _player?.Read();
+            ColorFrame.Source = frame?.BGR.ToBitmapSource();
+            DepthFrame.Source = frame?.Depth8(300, 5000).ToBitmapSource();
         }
 
         private void ColorFrame_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -264,10 +273,13 @@ namespace Tools.DepthCamera
 
         private async void ImageClicked(int x, int y)
         {
-            var frame = (await _channel.ReadAsync()).Value;
-            var info = frame.GetPointInfo(new(x, y));
-            UV.Content = $"UV = ({x}, {y})";
-            XYZ1.Content = $"XYZ = ({info.X}, {info.Y}, {info.Z})";
+            if (_isConnected)
+            {
+                var frame = (await _channel.ReadAsync()).Value;
+                var info = frame.GetPointInfo(new(x, y));
+                UV.Content = $"UV = ({x}, {y})";
+                XYZ1.Content = $"XYZ = ({info.X}, {info.Y}, {info.Z})";
+            }
         }
 
         private bool AttemptConnection()

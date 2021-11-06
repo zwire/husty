@@ -3,7 +3,6 @@ using System.Reactive.Linq;
 using System.Reactive.Concurrency;
 using OpenCvSharp;
 using Intel.RealSense;
-using Reactive.Bindings;
 using System.Threading;
 
 namespace Husty.OpenCvSharp.DepthCamera
@@ -35,8 +34,6 @@ namespace Husty.OpenCvSharp.DepthCamera
         public Size FrameSize { get; }
 
         public bool HasFrame { private set; get; }
-
-        public ReadOnlyReactivePropertySlim<BgrXyzMat> ReactiveFrame { private set; get; }
 
 
         // ------- Constructor ------- //
@@ -83,10 +80,6 @@ namespace Husty.OpenCvSharp.DepthCamera
             if (fps < 1) fps = 1;
             if (fps > 50) fps = 50;
             Fps = fps;
-            ReactiveFrame = Observable
-                .Repeat(0, ThreadPoolScheduler.Instance)
-                .Select(_ => Read())
-                .ToReadOnlyReactivePropertySlim();
         }
 
 
@@ -112,10 +105,17 @@ namespace Husty.OpenCvSharp.DepthCamera
             return frame.Clone();
         }
 
+        public IObservable<BgrXyzMat> GetStream()
+        {
+            return Observable
+                .Repeat(0, ThreadPoolScheduler.Instance)
+                .Select(_ => Read())
+                .Publish().RefCount();
+        }
+
         public void Dispose()
         {
             HasFrame = false;
-            ReactiveFrame.Dispose();
             _pipeline?.Dispose();
         }
 

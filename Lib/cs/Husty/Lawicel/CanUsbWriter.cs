@@ -7,7 +7,7 @@ namespace Husty.Lawicel
     public class CanUsbWriter : CanUsbAdapter
     {
 
-        public CanUsbWriter(string adapterName) : base(adapterName)
+        public CanUsbWriter(string adapterName, string baudrate = BAUD_500K) : base(adapterName, baudrate)
         {
 
         }

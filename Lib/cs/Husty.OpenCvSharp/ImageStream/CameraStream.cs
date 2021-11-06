@@ -1,9 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using OpenCvSharp;
-using Reactive.Bindings;
 
 namespace Husty.OpenCvSharp
 {
@@ -25,8 +25,6 @@ namespace Husty.OpenCvSharp
 
         public bool HasFrame { private set; get; }
 
-        public ReadOnlyReactivePropertySlim<Mat> ReactiveFrame { get; }
-
 
         // ------- Constructors ------- //
 
@@ -39,10 +37,6 @@ namespace Husty.OpenCvSharp
             Fps = (int)_cap.Fps;
             Channels = (int)_cap.Get(VideoCaptureProperties.Channel);
             FrameSize = new(_cap.FrameWidth, _cap.FrameHeight);
-            ReactiveFrame = Observable
-                .Repeat(0, ThreadPoolScheduler.Instance)
-                .Select(_ => Read())
-                .ToReadOnlyReactivePropertySlim();
         }
 
 
@@ -58,10 +52,17 @@ namespace Husty.OpenCvSharp
                 return null;
         }
 
+        public IObservable<Mat> GetStream()
+        {
+            return Observable
+                .Repeat(0, ThreadPoolScheduler.Instance)
+                .Select(_ => Read())
+                .Publish().RefCount();
+        }
+
         public void Dispose()
         {
             HasFrame = false;
-            ReactiveFrame?.Dispose();
             _cap?.Dispose();
         }
 
