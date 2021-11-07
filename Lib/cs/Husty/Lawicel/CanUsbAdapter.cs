@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Reactive.Linq;
-using System.Reactive.Concurrency;
 using static Husty.Lawicel.CANUSB;
 using static Husty.Lawicel.CanUsbOption;
 
@@ -18,8 +15,6 @@ namespace Husty.Lawicel
 
         private bool _disposed;
         private object _locker = new();
-        private IDisposable _readingConnector;
-        private IDisposable _writingConnector;
 
         public uint Handle { get; private set; }
 
@@ -69,8 +64,6 @@ namespace Husty.Lawicel
         {
             if (_disposed) return;
             if (Status is CanUsbStatus.Offline) return;
-            _readingConnector?.Dispose();
-            _writingConnector?.Dispose();
             var ret = canusb_Close(Handle);
             if (ret is not ERROR_OK) throw new Exception("Failed to close the CANUSB adapter");
             Status = CanUsbStatus.Offline;
