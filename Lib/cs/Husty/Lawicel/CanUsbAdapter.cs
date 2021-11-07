@@ -100,21 +100,6 @@ namespace Husty.Lawicel
             }
         }
 
-        public void StartWritingStream(List<CanMessage> msgs)
-        {
-            var observable = Observable.Repeat(0, ThreadPoolScheduler.Instance)
-                .Do(_ => msgs.ForEach(msg => Write(msg))).Publish();
-            _writingConnector = observable.Connect();
-        }
-
-        public IObservable<CanMessage> GetReadingStream()
-        {
-            var observable = Observable.Repeat(0, ThreadPoolScheduler.Instance)
-                .Select(_ => Read()).Publish();
-            _readingConnector = observable.Connect();
-            return observable;
-        }
-
         public void Dispose()
         {
             if (!_disposed)

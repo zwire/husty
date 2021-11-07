@@ -11,17 +11,6 @@
     <PackageReference Include="ProcessX" Version="1.5.3" />
     <PackageReference Include="System.IO.Ports" Version="5.0.1" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
-
-    <Content Include="Lawicel\Internal\canusbdrv.dll" Pack="true" PackagePath="lib\" />
-    <Content Include="Lawicel\Internal\canusbdrv.dll" Pack="true">
-      <PackageCopyToOutput>true</PackageCopyToOutput>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Lawicel\Internal\canusbdrv64.dll" Pack="true" PackagePath="lib\" />
-    <Content Include="Lawicel\Internal\canusbdrv64.dll" Pack="true">
-      <PackageCopyToOutput>true</PackageCopyToOutput>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 	
 </Project>
