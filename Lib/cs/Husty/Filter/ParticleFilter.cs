@@ -51,129 +51,7 @@ namespace Husty.Filter
 
         // ------- Constructor ------- //
 
-
         /// <summary>
-        /// The most simple.
-        /// Use same status and observe parameter.
-        /// You can't input control.
-        /// Noise covariance is default value.
-        /// </summary>
-        /// <param name="initialStateVec">X (k * 1)</param>
-        /// <param name="filterStrength"></param>
-        /// <param name="N">Particles Count (default)</param>
-        public ParticleFilter(double[] initialStateVec, double filterStrength = 1.0, int N = 100)
-        {
-            k = initialStateVec.Length;
-            m = initialStateVec.Length;
-            this.N = N;
-            C = DenseMatrix.OfArray(new double[m, k]);
-            A = DenseMatrix.OfArray(new double[k, k]);
-            R = DenseMatrix.OfArray(new double[m, m]);
-            Q = DenseMatrix.OfArray(new double[k, k]);
-            Particles = new List<Vector<double>>();
-            for (int i = 0; i < k; i++)
-            {
-                C[i, i] = 1;
-                A[i, i] = 1;
-                R[i, i] = filterStrength;
-                Q[i, i] = 1.0 / filterStrength;
-            }
-            for (int i = 0; i < N; i++)
-                Particles.Add(MakeVectorRandom(new DenseVector(initialStateVec)));
-            _denominator = Math.Sqrt(Math.Pow(2 * Math.PI, k) * R.Determinant());
-            RInv = R.Inverse();
-        }
-
-        /// <summary>
-        /// Use same status and observe parameter.
-        /// You can't input control.
-        /// Noise covariance is default value.
-        /// </summary>
-        /// <param name="initialStateVec">X (k * 1)</param>
-        /// <param name="measurementNoise">R (default)</param>
-        /// <param name="processNoise">Q (default)</param>
-        /// <param name="N">Particles Count (default)</param>
-        public ParticleFilter(double[] initialStateVec, double measurementNoise = 3, double processNoise = 3, int N = 100)
-        {
-            k = initialStateVec.Length;
-            m = initialStateVec.Length;
-            this.N = N;
-            C = DenseMatrix.OfArray(new double[m, k]);
-            A = DenseMatrix.OfArray(new double[k, k]);
-            R = DenseMatrix.OfArray(new double[m, m]);
-            Q = DenseMatrix.OfArray(new double[k, k]);
-            Particles = new List<Vector<double>>();
-            for (int i = 0; i < k; i++)
-            {
-                C[i, i] = 1;
-                A[i, i] = 1;
-                R[i, i] = measurementNoise;
-                Q[i, i] = processNoise;
-            }
-            for (int i = 0; i < N; i++)
-                Particles.Add(MakeVectorRandom(new DenseVector(initialStateVec)));
-            _denominator = Math.Sqrt(Math.Pow(2 * Math.PI, k) * R.Determinant());
-            RInv = R.Inverse();
-        }
-
-        /// <summary>
-        /// In the case of that observe differ from status.
-        /// You can't input control.
-        /// </summary>
-        /// <param name="initialStateVec">X (k * 1)</param>
-        /// <param name="transitionMatrix">A (k * k)</param>
-        /// <param name="measurementMatrix">C (m * k)</param>
-        /// <param name="measurementNoise">R (default)</param>
-        /// <param name="processNoise">Q (default)</param>
-        /// <param name="N">Particles Count (default)</param>
-        public ParticleFilter(double[] initialStateVec, double[] transitionMatrix, double[] measurementMatrix, double measurementNoise = 3, double processNoise = 3, int N = 100)
-        {
-            k = initialStateVec.Length;
-            m = measurementMatrix.Length / k;
-            this.N = N;
-            C = new DenseMatrix(k, m, measurementMatrix).Transpose();
-            A = new DenseMatrix(k, k, transitionMatrix).Transpose();
-            R = DenseMatrix.OfArray(new double[m, m]);
-            Q = DenseMatrix.OfArray(new double[k, k]);
-            Particles = new List<Vector<double>>();
-            for (int i = 0; i < k; i++)
-                Q[i, i] = processNoise;
-            for (int i = 0; i < m; i++)
-                R[i, i] = measurementNoise;
-            for (int i = 0; i < N; i++)
-                Particles.Add(MakeVectorRandom(new DenseVector(initialStateVec)));
-            _denominator = Math.Sqrt(Math.Pow(2 * Math.PI, k) * R.Determinant());
-            RInv = R.Inverse();
-        }
-
-        /// <summary>
-        /// You can design noise covariance matrix.
-        /// But can't input control.
-        /// </summary>
-        /// <param name="initialStateVec">X (k * 1)</param>
-        /// <param name="transitionMatrix">A (k * k)</param>
-        /// <param name="measurementMatrix">C (m * k)</param>
-        /// <param name="measurementNoiseMatrix">R (m * m)</param>
-        /// <param name="processNoiseMatrix">Q (k * k)</param>
-        /// <param name="N">Particles Count (default)</param>
-        public ParticleFilter(double[] initialStateVec, double[] transitionMatrix, double[] measurementMatrix, double[] measurementNoiseMatrix, double[] processNoiseMatrix, int N = 100)
-        {
-            k = initialStateVec.Length;
-            m = measurementMatrix.Length / k;
-            this.N = N;
-            C = new DenseMatrix(k, m, measurementMatrix).Transpose();
-            A = new DenseMatrix(k, k, transitionMatrix).Transpose();
-            R = new DenseMatrix(m, m, measurementNoiseMatrix).Transpose();
-            Q = new DenseMatrix(k, k, processNoiseMatrix).Transpose();
-            Particles = new List<Vector<double>>();
-            for (int i = 0; i < N; i++)
-                Particles.Add(MakeVectorRandom(new DenseVector(initialStateVec)));
-            _denominator = Math.Sqrt(Math.Pow(2 * Math.PI, k) * R.Determinant());
-            RInv = R.Inverse();
-        }
-
-        /// <summary>
-        /// The most simple.
         /// Use same status and observe parameter.
         /// You can input control.
         /// Noise covariance is default value.
@@ -182,14 +60,14 @@ namespace Husty.Filter
         /// <param name="controlMatrix">B (k * n)</param>
         /// <param name="filterStrength"></param>
         /// <param name="N">Particles Count (default)</param>
-        public ParticleFilter(double[] initialStateVec, double[] controlMatrix, double filterStrength = 1.0, int N = 100)
+        public ParticleFilter(double[] initialStateVec, double[]? controlMatrix, double filterStrength = 1.0, int N = 100)
         {
 
             k = initialStateVec.Length;
             m = initialStateVec.Length;
-            n = controlMatrix.Length / k;
+            n = controlMatrix is not null ? controlMatrix.Length / k : 0;
             this.N = N;
-            B = new DenseMatrix(n, k, controlMatrix).Transpose();
+            B = controlMatrix is not null ? new DenseMatrix(n, k, controlMatrix).Transpose() : null;
             C = DenseMatrix.OfArray(new double[m, k]);
             A = DenseMatrix.OfArray(new double[k, k]);
             R = DenseMatrix.OfArray(new double[m, m]);
@@ -218,14 +96,14 @@ namespace Husty.Filter
         /// <param name="measurementNoise">R (default)</param>
         /// <param name="processNoise">Q (default)</param>
         /// <param name="N">Particles Count (default)</param>
-        public ParticleFilter(double[] initialStateVec, double[] controlMatrix, double measurementNoise = 0.01, double processNoise = 0.01, int N = 100)
+        public ParticleFilter(double[] initialStateVec, double[]? controlMatrix, double measurementNoise = 0.01, double processNoise = 0.01, int N = 100)
         {
 
             k = initialStateVec.Length;
             m = initialStateVec.Length;
-            n = controlMatrix.Length / k;
+            n = controlMatrix is not null ? controlMatrix.Length / k : 0;
             this.N = N;
-            B = new DenseMatrix(n, k, controlMatrix).Transpose();
+            B = controlMatrix is not null ? new DenseMatrix(n, k, controlMatrix).Transpose() : null;
             C = DenseMatrix.OfArray(new double[m, k]);
             A = DenseMatrix.OfArray(new double[k, k]);
             R = DenseMatrix.OfArray(new double[m, m]);
@@ -255,13 +133,13 @@ namespace Husty.Filter
         /// <param name="measurementNoise">R (default)</param>
         /// <param name="processNoise">Q (default)</param>
         /// <param name="N">Particles Count(default)</param>
-        public ParticleFilter(double[] initialStateVec, double[] controlMatrix, double[] transitionMatrix, double[] measurementMatrix, double measurementNoise = 0.01, double processNoise = 0.01, int N = 100)
+        public ParticleFilter(double[] initialStateVec, double[]? controlMatrix, double[] transitionMatrix, double[] measurementMatrix, double measurementNoise = 0.01, double processNoise = 0.01, int N = 100)
         {
             k = initialStateVec.Length;
             m = measurementMatrix.Length / k;
-            n = controlMatrix.Length / k;
+            n = controlMatrix is not null ? controlMatrix.Length / k : 0;
             this.N = N;
-            B = new DenseMatrix(n, k, controlMatrix).Transpose();
+            B = controlMatrix is not null ? new DenseMatrix(n, k, controlMatrix).Transpose() : null;
             C = new DenseMatrix(k, m, measurementMatrix).Transpose();
             A = new DenseMatrix(k, k, transitionMatrix).Transpose();
             R = DenseMatrix.OfArray(new double[m, m]);
@@ -289,13 +167,13 @@ namespace Husty.Filter
         /// <param name="measurementNoiseMatrix">R (m * m)</param>
         /// <param name="processNoiseMatrix">Q (k * k)</param>
         /// <param name="N">Particles Count (default)</param>
-        public ParticleFilter(double[] initialStateVec, double[] controlMatrix, double[] transitionMatrix, double[] measurementMatrix, double[] measurementNoiseMatrix, double[] processNoiseMatrix, int N = 100)
+        public ParticleFilter(double[] initialStateVec, double[]? controlMatrix, double[] transitionMatrix, double[] measurementMatrix, double[] measurementNoiseMatrix, double[] processNoiseMatrix, int N = 100)
         {
             k = initialStateVec.Length;
             m = measurementMatrix.Length / k;
-            n = controlMatrix.Length / k;
+            n = controlMatrix is not null ? controlMatrix.Length / k : 0;
             this.N = N;
-            B = new DenseMatrix(n, k, controlMatrix).Transpose();
+            B = controlMatrix is not null ? new DenseMatrix(n, k, controlMatrix).Transpose() : null;
             C = new DenseMatrix(k, m, measurementMatrix).Transpose();
             A = new DenseMatrix(k, k, transitionMatrix).Transpose();
             R = new DenseMatrix(m, m, measurementNoiseMatrix).Transpose();
@@ -311,7 +189,7 @@ namespace Husty.Filter
 
         // ------- Methods ------- //
 
-        public (double[] Correct, double[] Predict) Update(double[] measurementVec, double[] controlVec = null)
+        public (double[] Correct, double[] Predict) Update(double[] measurementVec, double[]? controlVec = null)
         {
             var y = new DenseVector(measurementVec);
             var wList = new List<double>();
@@ -367,7 +245,7 @@ namespace Husty.Filter
             }
         }
 
-        private IEnumerable<Vector<double>> PredictNextState(double[] controlVec)
+        private IEnumerable<Vector<double>> PredictNextState(double[]? controlVec)
         {
             if (B is null || controlVec is null)
                 foreach (var p in Particles)
