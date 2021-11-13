@@ -1,28 +1,23 @@
 ﻿using System;
+using System.IO;
 using System.IO.Ports;
-using System.Threading.Tasks;
 
 namespace Husty.IO
 {
-    public class SerialPort : ICommunicator
+    public class SerialPort
     {
 
         // ------- Fields ------- //
 
         private readonly System.IO.Ports.SerialPort _port;
-        private readonly Task _connectionTask;
-
-
-        // ------- Properties ------- //
-
-        public int ReadTimeout { set; get; } = -1;
-
-        public int WriteTimeout { set; get; } = -1;
+        private readonly StreamReader _reader;
+        private readonly StreamWriter _writer;
+        private object _locker = new();
 
 
         // ------- Constructor ------- //
 
-        public SerialPort(string portName, int baudRate)
+        public SerialPort(string portName, int baudRate, int readTimeout = -1, int writeTimeout = -1)
         {
             _port = new();
             _port.PortName = portName;
@@ -30,38 +25,55 @@ namespace Husty.IO
             _port.StopBits = StopBits.One;
             _port.Handshake = Handshake.None;
             _port.Parity = Parity.None;
-            _connectionTask = Task.Run(() =>
+            _port.ReadTimeout = readTimeout;
+            _port.WriteTimeout = writeTimeout;
+            try
             {
-                try
+                lock (_locker)
                 {
                     _port.Open();
+                    _reader = new(_port.BaseStream);
+                    _writer = new(_port.BaseStream);
                 }
-                catch
-                {
-                    throw new Exception("failed to open!");
-                }
-            });
+            }
+            catch
+            {
+                throw new Exception("failed to open!");
+            }
         }
 
 
         // ------- Methods ------- //
 
-        public BidirectionalDataStream GetStream()
+        public string ReadLine()
         {
-            _connectionTask.Wait();
-            var stream = _port.BaseStream;
-            return new BidirectionalDataStream(stream, stream, WriteTimeout, ReadTimeout);
+            lock (_locker)
+            {
+                if (_port is not null && _port.IsOpen)
+                    return _reader?.ReadLine();
+                else
+                    return null;
+            }
         }
 
-        public async Task<BidirectionalDataStream> GetStreamAsync()
+        public void WriteLine()
         {
-            return await Task.Run(() => GetStream());
+            lock (_locker)
+            {
+                if (_port is not null && _port.IsOpen)
+                    _writer?.WriteLine();
+            }
         }
-        
+
         public void Dispose()
         {
-            _port?.Close();
-            _port?.Dispose();
+            lock (_locker)
+            {
+                _writer?.Dispose();
+                _reader?.Dispose();
+                _port?.Close();
+                _port?.Dispose();
+            }
         }
 
         public static string[] GetPortNames()
