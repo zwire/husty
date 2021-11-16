@@ -3,7 +3,6 @@ using System.Reactive.Linq;
 using System.Reactive.Concurrency;
 using OpenCvSharp;
 using Intel.RealSense;
-using System.Threading;
 
 namespace Husty.OpenCvSharp.DepthCamera
 {
@@ -88,7 +87,6 @@ namespace Husty.OpenCvSharp.DepthCamera
         public BgrXyzMat Read()
         {
             GC.Collect();
-            Thread.Sleep(1000 / Fps);
             using var frames1 = _pipeline.WaitForFrames();
             using var frames2 = _align.Process(frames1).AsFrameSet();
             using var color = frames2.ColorFrame.DisposeWith(frames2);
