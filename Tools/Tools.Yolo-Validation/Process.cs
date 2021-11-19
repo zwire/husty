@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using OpenCvSharp;
 using Husty.OpenCvSharp;
-
+using System.Linq;
 
 namespace Tools.Yolo_Validation
 {
@@ -16,12 +16,14 @@ namespace Tools.Yolo_Validation
         private static string _className;
         private static int _width;
         private static int _height;
+        private static double _probThresh;
         private static double _iouThresh;
 
-        public static string Init(string modelFolder, int width, int height, int classNum, double iouThresh, string imgDir, string labDir)
+        public static string Init(string modelFolder, int width, int height, int classNum, double probThresh, double iouThresh, string imgDir, string labDir)
         {
             _width = width;
             _height = height;
+            _probThresh = probThresh;
             _iouThresh = iouThresh;
             var response = Load(modelFolder, classNum, imgDir, labDir);
             if (response != "Success") return response;
@@ -44,7 +46,7 @@ namespace Tools.Yolo_Validation
 
                 var watch = new Stopwatch();
                 watch.Start();
-                var results = _detector.Run(img);
+                var results = _detector.Run(img).Where(r => r.Probability >= _probThresh).ToArray();
                 watch.Stop();
                 var time = watch.ElapsedMilliseconds;
 
@@ -64,7 +66,7 @@ namespace Tools.Yolo_Validation
                             break;
                         }
                     }
-                    allList.Add(((float)(r.Confidence * iou), correct));
+                    allList.Add(((float)(r.Probability * iou), correct));
                 }
                 var fp = results.Length - tp;
                 var fn = ds.Labels.Count - tp;
@@ -106,8 +108,8 @@ namespace Tools.Yolo_Validation
             foreach (var file in Directory.GetFiles(modelFolder))
             {
                 if (Path.GetExtension(file) is ".cfg") cfg = file;
-                else if (Path.GetExtension(file) is ".names") names = file;
                 else if (Path.GetExtension(file) is ".weights") weights = file;
+                else if (Path.GetExtension(file) is ".names") names = file;
             }
             if (cfg is "" || names is "" || weights is "") return "Model Not Found Error";
             var count = 0;
@@ -121,7 +123,7 @@ namespace Tools.Yolo_Validation
             if (_iouThresh < 0.0 || _iouThresh > 1.0) return "Invalid IoU Threshold Range Error";
             try
             {
-                _detector = new YoloDetector(cfg, names, weights, new Size(_width, _height), 0.25f);
+                _detector = new YoloDetector(cfg, weights, names, new Size(_width, _height), 0.10f);
             }
             catch
             {
@@ -133,7 +135,11 @@ namespace Tools.Yolo_Validation
             {
 
                 imgPaths.AddRange(Directory.GetFiles(imgDir, $"*.png"));
+                imgPaths.AddRange(Directory.GetFiles(imgDir, $"*.PNG"));
                 imgPaths.AddRange(Directory.GetFiles(imgDir, $"*.jpg"));
+                imgPaths.AddRange(Directory.GetFiles(imgDir, $"*.JPG"));
+                imgPaths.AddRange(Directory.GetFiles(imgDir, $"*.jpeg"));
+                imgPaths.AddRange(Directory.GetFiles(imgDir, $"*.JPEG"));
             }
             catch
             {

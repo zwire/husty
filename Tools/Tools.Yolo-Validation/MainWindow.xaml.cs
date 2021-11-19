@@ -70,8 +70,9 @@ namespace Tools.Yolo_Validation
             var width = int.Parse(WidthTx.Text);
             var height = int.Parse(HeightTx.Text);
             var classNum = int.Parse(ClassNumTx.Text);
+            var probThresh = double.Parse(ProbTx.Text);
             var iouThresh = double.Parse(IouTx.Text);
-            var response = Process.Init(modelFolder, width, height, classNum, iouThresh, imgDir, labDir);
+            var response = Process.Init(modelFolder, width, height, classNum, probThresh, iouThresh, imgDir, labDir);
             if (response != "Success")
             {
                 ResultLabel.Content = response;

@@ -16,6 +16,7 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -40,9 +41,12 @@
             <Label Content="Blob Height" Foreground="White"/>
         </Viewbox>
         <Viewbox Grid.Row="5" Grid.Column="0" Margin="5">
-            <Label Content="IoU Threshold" Foreground="White"/>
+            <Label Content="Prob Thresh" Foreground="White"/>
         </Viewbox>
         <Viewbox Grid.Row="6" Grid.Column="0" Margin="5">
+            <Label Content="IoU Thresh" Foreground="White"/>
+        </Viewbox>
+        <Viewbox Grid.Row="7" Grid.Column="0" Margin="5">
             <Label Content="Class Number" Foreground="White"/>
         </Viewbox>
 
@@ -62,15 +66,18 @@
             <TextBox x:Name="HeightTx" Text="192" Background="Black" Foreground="White" Width="150"/>
         </Viewbox>
         <Viewbox Grid.Row="5" Grid.Column="1" Margin="5">
-            <TextBox x:Name="IouTx" Text="0.5" Background="Black" Foreground="White" Width="150"/>
+            <TextBox x:Name="ProbTx" Text="0.5" Background="Black" Foreground="White" Width="150"/>
         </Viewbox>
         <Viewbox Grid.Row="6" Grid.Column="1" Margin="5">
-            <TextBox x:Name="ClassNumTx" Text="0" Background="Black" Foreground="White" Width="150"/>
-        </Viewbox>
-        <Viewbox Grid.Row="7" Grid.Column="0" Margin="5">
-            <CheckBox x:Name="SaveCheck" Content="Save ?" Foreground="White" Width="70"/>
+            <TextBox x:Name="IouTx" Text="0.5" Background="Black" Foreground="White" Width="150"/>
         </Viewbox>
         <Viewbox Grid.Row="7" Grid.Column="1" Margin="5">
+            <TextBox x:Name="ClassNumTx" Text="0" Background="Black" Foreground="White" Width="150"/>
+        </Viewbox>
+        <Viewbox Grid.Row="8" Grid.Column="0" Margin="5">
+            <CheckBox x:Name="SaveCheck" Content="Save ?" Foreground="White" Width="70"/>
+        </Viewbox>
+        <Viewbox Grid.Row="8" Grid.Column="1" Margin="5">
             <Button x:Name="GoButton" Content="GO →" Width="150" Click="GoButton_Click"/>
         </Viewbox>
         <Viewbox Grid.Row="0" Grid.Column="2" Grid.RowSpan="8" Grid.ColumnSpan="2" Margin="5">
