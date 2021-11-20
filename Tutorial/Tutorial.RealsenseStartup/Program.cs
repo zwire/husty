@@ -11,7 +11,7 @@ namespace Tutorial.RealsenseStartup
             var camera = new Realsense(new(640, 360));
             while (true)
             {
-                var frame = camera.ReactiveFrame.Value;
+                var frame = camera.Read();
                 if (frame is null) continue;
                 using var d8 = frame.Depth8(300, 3000);
                 Cv2.ImShow("BGR", frame.BGR);

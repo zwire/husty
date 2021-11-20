@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Husty.Filter
+namespace Husty
 {
     /// <summary>
     /// Finite Impulse Response
@@ -9,14 +9,14 @@ namespace Husty.Filter
     public class FirFilter
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private int _count;
         private readonly double[] _buffer;
         private readonly double[] _weightTable;
 
 
-        // ------- Constructor ------- //
+        // ------ constructors ------ //
 
         public FirFilter(int size)
         {
@@ -35,7 +35,7 @@ namespace Husty.Filter
         }
 
 
-        // -------- Methods ------- //
+        // ------ public methods ------ //
 
         public double Update(double measurementValue)
         {

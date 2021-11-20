@@ -10,14 +10,14 @@ namespace Husty.OpenCvSharp
     public class Fourier1D
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private readonly double _samplingRate;
         private readonly int _sampleCount;
         private readonly Mat _complex;
 
 
-        // ------- Constructor ------- //
+        // ------ constructors ------ //
 
         /// <summary>
         /// 1D Fourier transformation for time series data.
@@ -34,13 +34,13 @@ namespace Husty.OpenCvSharp
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         /// <summary>
         /// Discrete Fourier Transformation
         /// </summary>
         /// <returns>Histogram of frequency and value</returns>
-        unsafe public (double Frequency, float Value)[] DftWithHistogram()
+        public unsafe (double Frequency, float Value)[] DftWithHistogram()
         {
             Cv2.Dft(_complex, _complex);
             Cv2.Split(_complex, out var planes);
@@ -69,7 +69,7 @@ namespace Husty.OpenCvSharp
         /// Inverse Discrete Fourier Transformation
         /// </summary>
         /// <returns>Time and value</returns>
-        unsafe public (double Time, float Value)[] IdftWithTime()
+        public unsafe (double Time, float Value)[] IdftWithTime()
         {
             Cv2.Idft(_complex, _complex, DftFlags.Scale);
             Cv2.Split(_complex, out var planes);
@@ -94,7 +94,7 @@ namespace Husty.OpenCvSharp
         /// </summary>
         /// <param name="minFrequency"></param>
         /// <param name="maxFrequency"></param>
-        unsafe public void Filter(double minFrequency, double maxFrequency)
+        public unsafe void Filter(double minFrequency, double maxFrequency)
         {
             for (int i = 0; i < _sampleCount; i++)
             {

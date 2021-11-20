@@ -15,7 +15,7 @@ namespace Tutorial.Yolo
             var names = "..\\..\\..\\model\\_.names";
 
             // initialize detector.
-            // blob width snd height must be multiple of 32.
+            // blob width and height must be multiple of 32.
             var detector = new YoloDetector(cfg, weights, names, new Size(640, 480));
 
             // input image path

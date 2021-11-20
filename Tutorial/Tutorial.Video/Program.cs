@@ -25,7 +25,7 @@ namespace Tutorial.Video
             while (video.CurrentPosition < video.FrameCount - 1)
             {
                 // be careful that this instance may read null object.
-                var frame = video.ReactiveFrame.Value;
+                var frame = video.Read();
                 if (frame is null) continue;
 
                 // or you can read frame like OpenCV Python binding method

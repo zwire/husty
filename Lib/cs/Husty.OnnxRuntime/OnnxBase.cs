@@ -25,19 +25,19 @@ namespace Husty.OnnxRuntime
     public abstract class OnnxBase<TInput, TOutput> : IDisposable
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private readonly InferenceSession _session;
 
 
-        // ------- Properties ------- //
+        // ------ properties ------ //
 
         public LayerInfo[] InputLayers { get; protected set; }
 
         public LayerInfo[] OutputLayers { get; protected set; }
 
 
-        // ------- Constructors ------- //
+        // ------ constructors ------ //
 
         public OnnxBase(string model, Provider provider, OptimizationLevel optimization)
         {
@@ -69,7 +69,7 @@ namespace Husty.OnnxRuntime
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         protected IDictionary<string, float[]> Run_(float[] inputData)
         {

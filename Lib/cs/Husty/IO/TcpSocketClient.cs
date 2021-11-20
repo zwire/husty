@@ -2,7 +2,7 @@
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace Husty.IO
+namespace Husty
 {
     /// <summary>
     /// Tcp socket client class
@@ -10,21 +10,21 @@ namespace Husty.IO
     public class TcpSocketClient : ICommunicator
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private TcpClient _client1;
         private TcpClient _client2;
         private readonly Task _connectionTask;
 
 
-        // ------- Properties ------- //
+        // ------ properties ------ //
 
         public int ReadTimeout { set; get; } = -1;
 
         public int WriteTimeout { set; get; } = -1;
 
 
-        // ------- Constructors ------- //
+        // ------ constructors ------ //
 
         public TcpSocketClient(string ip, int inoutPort)
         {
@@ -61,7 +61,7 @@ namespace Husty.IO
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         public BidirectionalDataStream GetStream()
         {

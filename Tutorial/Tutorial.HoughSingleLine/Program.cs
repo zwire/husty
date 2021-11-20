@@ -36,7 +36,7 @@ namespace Tutorial.HoughSingleLine
             Cv2.Threshold(img, img, 100, 255, ThresholdTypes.Binary);
             Cv2.Resize(img, img, new Size(800, 400));
             var result = hough.Run(img.GetNonZeroLocations());
-            Console.WriteLine($"Theta = {result.ThetaDegree}, Rho = {result.Rho}");
+            Console.WriteLine($"Theta = {result.Theta.Degree}, Rho = {result.Rho}");
 
             var line = result.ToLine2D();
             var p1 = new Point(0, line.GetY(0));

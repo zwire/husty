@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Linq;
 
-namespace Husty.Filter
+namespace Husty
 {
     public class MedianFilter
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private int _count;
         private readonly double[] _buffer;
 
 
-        // ------- Constructor -------- //
+        // ------ constructors ------- //
 
         public MedianFilter(int size)
         {
@@ -21,7 +21,7 @@ namespace Husty.Filter
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         public double Update(double measurementValue)
         {

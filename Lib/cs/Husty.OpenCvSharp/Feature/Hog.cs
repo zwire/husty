@@ -9,13 +9,13 @@ namespace Husty.OpenCvSharp
     public class Hog
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private readonly HOGDescriptor _hog;
         private readonly Size _imageSize;
 
 
-        // ------- Constructor ------- //
+        // ------ constructors ------ //
 
         /// <summary>
         /// Simple HOG descriptor
@@ -35,7 +35,7 @@ namespace Husty.OpenCvSharp
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         /// <summary>
         /// Process one frame.

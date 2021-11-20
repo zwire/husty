@@ -11,7 +11,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     public static class BgrXyzImageIO
     {
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         /// <summary>
         /// Save RGB, Depth, and PointCloud image in zip file.

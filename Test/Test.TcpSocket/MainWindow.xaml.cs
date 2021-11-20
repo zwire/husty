@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Threading.Tasks;
 using OpenCvSharp;
-using Husty.IO;
+using Husty;
 using Husty.OpenCvSharp;
 
 namespace Test.TcpSocket

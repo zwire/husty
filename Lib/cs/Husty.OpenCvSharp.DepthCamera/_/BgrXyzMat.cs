@@ -12,7 +12,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     public class BgrXyzMat : IDisposable
     {
 
-        // ------- Properties ------- //
+        // ------ properties ------ //
 
         /// <summary>
         /// Color image
@@ -38,7 +38,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         public int Cols => BGR.Cols;
 
 
-        // ------- Constructor ------- //
+        // ------ constructors ------ //
 
         /// <summary>
         /// Create empty instance.
@@ -74,7 +74,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
 
         public void Dispose()

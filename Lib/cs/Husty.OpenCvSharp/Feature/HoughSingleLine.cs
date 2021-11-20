@@ -4,15 +4,6 @@ using OpenCvSharp;
 namespace Husty.OpenCvSharp
 {
 
-    public record HoughCoordinateSystem(double ThetaRadian, double Rho)
-    {
-
-        public double ThetaDegree => ThetaRadian * 180 / Math.PI;
-
-        public Line2D ToLine2D() => new(this);
-
-    }
-
     public class HoughSingleLine
     {
 
@@ -132,7 +123,7 @@ namespace Husty.OpenCvSharp
                     }
                 }
             }
-            return new(_thetas[maxloc.Item1], _rhos[maxloc.Item2]);
+            return new(new(_thetas[maxloc.Item1], AngleType.Radian), _rhos[maxloc.Item2]);
 
         }
     }

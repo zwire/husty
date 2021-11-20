@@ -42,14 +42,14 @@ namespace Husty.OpenCvSharp.DepthCamera
         //    .
         //    
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private readonly long[] _indexes;
         private readonly BinaryReader _binReader;
         private int _positionIndex;
 
 
-        // ------- Properties ------- //
+        // ------ properties ------ //
 
         public int Fps { get; }
 
@@ -64,7 +64,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         public int CurrentPosition => _positionIndex;
 
 
-        // ------- Constructor ------- //
+        // ------ constructors ------ //
 
         /// <summary>
         /// Player for video captured by depth camera
@@ -95,7 +95,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         public BgrXyzMat Read()
         {

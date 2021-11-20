@@ -1,5 +1,5 @@
 ﻿using OpenCvSharp;
-using Husty.IO;
+using Husty;
 using Husty.OpenCvSharp;
 using System.Threading.Tasks;
 

@@ -12,7 +12,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     public class Kinect : IImageStream<BgrXyzMat>
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private readonly AlignBase _align;
         private readonly Device _device;
@@ -22,7 +22,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         private readonly float _rollRad;
 
 
-        // ------- Properties ------- //
+        // ------ properties ------ //
 
         /// <summary>
         /// For device setup (resolution, fps, matching mode etc.)
@@ -38,7 +38,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         public bool HasFrame { private set; get; }
 
 
-        // ------- Constructor ------- //
+        // ------ constructors ------ //
 
         /// <summary>
         /// Open device
@@ -87,7 +87,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         { }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         public BgrXyzMat Read()
         {

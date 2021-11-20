@@ -3,22 +3,22 @@ using System.ComponentModel;
 using System.Diagnostics;
 using Cysharp.Diagnostics;
 
-namespace Husty.IO
+namespace Husty
 {
     public class StdOutReader<T>
     {
 
-        // ------ Fields ------ //
+        // ------ fields ------ //
 
         private readonly string _cmd;
 
 
-        // ------ Properties ------ //
+        // ------ properties ------ //
 
         public event EventHandler<T> ConsoleValueChanged;
 
 
-        // ------ Constructors ------ //
+        // ------ constructors ------ //
 
         public StdOutReader(string cmd)
         {
@@ -35,7 +35,7 @@ namespace Husty.IO
         }
 
 
-        // ------ Methods ------ //
+        // ------ public methods ------ //
 
         public async void Start()
         {

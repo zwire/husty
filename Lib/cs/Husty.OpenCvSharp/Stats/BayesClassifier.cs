@@ -13,12 +13,12 @@ namespace Husty.OpenCvSharp
     public class BayesClassifier : Stats
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private NormalBayesClassifier _classifier;
 
 
-        // ------- Constructor ------- //
+        // ------ constructors ------ //
 
         /// <summary>
         /// OpenCvSharp 'BayesClassifier' class wrapper.
@@ -28,7 +28,7 @@ namespace Husty.OpenCvSharp
             : base(mode, modelPath, dataPath) { }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         protected override void LoadModel() => _classifier = NormalBayesClassifier.Load(_modelPath);
 

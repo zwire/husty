@@ -1,35 +1,40 @@
 ﻿using System;
-using OpenCvSharp;
+using System.Collections.Generic;
+using static System.Math;
 
-namespace Husty.OpenCvSharp
+namespace Husty
 {
-    public class LineSegment2D : Line2D, IClosedCurve
+    public class LineSegment2D : Line2D
     {
 
-        // ------ Properties ------ //
+        // ------ properties ------ //
 
-        public Point2d Start { private set; get; }
+        public Point2D Start { private set; get; }
 
-        public Point2d End { private set; get; }
+        public Point2D End { private set; get; }
+
+        public double Length => Sqrt(Pow(End.X - Start.X, 2) + Pow(End.Y - Start.Y, 2));
 
 
-        // ------ Constructors ------ //
+        // ------ constructors ------ //
 
-        public LineSegment2D(Point2d start, Point2d end) : base(start, end)
+        public LineSegment2D(Point2D start, Point2D end) : base(start, end)
         {
             Start = start;
             End = end;
         }
 
 
-        // ------ Methods ------ //
+        // ------ public methods ------ //
+
+        public Vector2D ToVector2D() => new(End.X - Start.X, End.Y - Start.Y);
 
         public override double GetY(double x)
         {
             if (Start.X < End.X)
                 if (x >= Start.X && x <= End.X)
                     return base.GetY(x);
-            else
+                else
                 if (x >= End.X && x <= Start.X)
                     return base.GetY(x);
             throw new ArgumentException("Given X is out of segment range.");
@@ -46,17 +51,7 @@ namespace Husty.OpenCvSharp
             throw new ArgumentException("Given Y is out of segment range.");
         }
 
-        public Point2d[] GetEquallySpacedPoints(double interval)
-        {
-            var count = (int)(Start.DistanceTo(End) / interval);
-            var step = (Vector.CreateVec2d(Start, End).GetUnitVec() * interval).ToPoint2d();
-            var points = new Point2d[count];
-            for (int i = 0; i < count; i++)
-                points[i] = Start + step * i;
-            return points;
-        }
-
-        public Point2d GetNearestPoint(Point2d point)
+        public Point2D GetNearestPoint(Point2D point)
         {
             var perf = GetPerpendicularFoot(point);
             if (perf.X < Start.X && perf.X < End.X)
@@ -74,6 +69,15 @@ namespace Husty.OpenCvSharp
                     return End;
             }
             return perf;
+        }
+
+        public Point2D[] ApproximateAsPoints(double intervalMeter)
+        {
+            var points = new List<Point2D>();
+            var vec = new Vector2D(Start, End).UnitVector;
+            for (double l = 0; l < Length; l += intervalMeter)
+                points.Add(Start + vec * l);
+            return points.ToArray();
         }
 
     }

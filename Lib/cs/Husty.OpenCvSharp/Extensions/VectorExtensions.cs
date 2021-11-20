@@ -71,6 +71,35 @@ namespace Husty.OpenCvSharp
 
     public static class VectorExtensions
     {
+        
+        public static Vector2D ToHustyVector2D(this Vec2b v)
+        {
+            return new(v.Item0, v.Item1);
+        }
+        public static Vector2D ToHustyVector2D(this Vec2w v)
+        {
+            return new(v.Item0, v.Item1);
+        }
+
+        public static Vector2D ToHustyVector2D(this Vec2s v)
+        {
+            return new(v.Item0, v.Item1);
+        }
+
+        public static Vector2D ToHustyVector2D(this Vec2i v)
+        {
+            return new(v.Item0, v.Item1);
+        }
+
+        public static Vector2D ToHustyVector2D(this Vec2f v)
+        {
+            return new(v.Item0, v.Item1);
+        }
+
+        public static Vector2D ToHustyVector2D(this Vec2d v)
+        {
+            return new(v.Item0, v.Item1);
+        }
 
         // ------------------------- //
 

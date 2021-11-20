@@ -38,7 +38,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         //    .
         //    
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private readonly BinaryWriter _binWriter;
         private readonly List<long> _indexes = new();
@@ -47,7 +47,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         private bool _isDisposed;
 
 
-        // ------- Constructor ------- //
+        // ------ constructors ------ //
 
         /// <summary>
         /// Movie recorder for Depth camera
@@ -65,7 +65,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         /// <summary>
         /// Write frames of the time.

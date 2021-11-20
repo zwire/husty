@@ -13,12 +13,12 @@ namespace Husty.OpenCvSharp
     public class Svm : Stats
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private SVM _classifier;
 
 
-        // ------- Constructor ------- //
+        // ------ constructors ------ //
 
         /// <summary>
         /// OpenCvSharp 'SVM' class wrapper.
@@ -28,7 +28,7 @@ namespace Husty.OpenCvSharp
             : base(mode, modelPath, dataPath) { }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         protected override void LoadModel() => _classifier = SVM.Load(_modelPath);
 

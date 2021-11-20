@@ -18,7 +18,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 // 
 // Simple version constructor is available if you need.
 
-namespace Husty.Filter
+namespace Husty
 {
     /// <summary>
     /// Filtering & control methods subject to Gaussian distribution
@@ -26,7 +26,7 @@ namespace Husty.Filter
     public class KalmanFilter
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private readonly int k;                 // State Vector Length
         private readonly int m;                 // Measurement Vector Length
@@ -42,7 +42,7 @@ namespace Husty.Filter
         private Vector<double> X;               // State Vector
 
 
-        // ------- Constructor ------- //
+        // ------ constructors ------ //
 
         /// <summary>
         /// Use same status and observe parameter.
@@ -175,7 +175,7 @@ namespace Husty.Filter
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         /// <summary>
         /// Do 'Correct' and 'Predict'.

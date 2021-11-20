@@ -60,22 +60,19 @@
             <Button x:Name="LabelDirButton" Content="C:\\" Width="220" Click="LabelDirButton_Click"/>
         </Viewbox>
         <Viewbox Grid.Row="3" Grid.Column="1" Margin="5">
-            <TextBox x:Name="WidthTx" Text="256" Background="Black" Foreground="White" Width="150"/>
+            <TextBox x:Name="WidthTx" Text="640" Background="Black" Foreground="White" Width="150"/>
         </Viewbox>
         <Viewbox Grid.Row="4" Grid.Column="1" Margin="5">
-            <TextBox x:Name="HeightTx" Text="192" Background="Black" Foreground="White" Width="150"/>
+            <TextBox x:Name="HeightTx" Text="480" Background="Black" Foreground="White" Width="150"/>
         </Viewbox>
         <Viewbox Grid.Row="5" Grid.Column="1" Margin="5">
-            <TextBox x:Name="ProbTx" Text="0.5" Background="Black" Foreground="White" Width="150"/>
+            <TextBox x:Name="ProbTx" Text="0.25" Background="Black" Foreground="White" Width="150"/>
         </Viewbox>
         <Viewbox Grid.Row="6" Grid.Column="1" Margin="5">
             <TextBox x:Name="IouTx" Text="0.5" Background="Black" Foreground="White" Width="150"/>
         </Viewbox>
         <Viewbox Grid.Row="7" Grid.Column="1" Margin="5">
             <TextBox x:Name="ClassNumTx" Text="0" Background="Black" Foreground="White" Width="150"/>
-        </Viewbox>
-        <Viewbox Grid.Row="8" Grid.Column="0" Margin="5">
-            <CheckBox x:Name="SaveCheck" Content="Save ?" Foreground="White" Width="70"/>
         </Viewbox>
         <Viewbox Grid.Row="8" Grid.Column="1" Margin="5">
             <Button x:Name="GoButton" Content="GO →" Width="150" Click="GoButton_Click"/>

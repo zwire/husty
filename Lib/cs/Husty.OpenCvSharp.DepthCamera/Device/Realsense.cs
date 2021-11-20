@@ -12,7 +12,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     public class Realsense : IImageStream<BgrXyzMat>
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private readonly Align _align;
         private readonly Pipeline _pipeline;
@@ -24,7 +24,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         private readonly HoleFillingFilter _hfill;
 
 
-        // ------- Properties ------- //
+        // ------ properties ------ //
 
         public int Fps { get; }
 
@@ -35,7 +35,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         public bool HasFrame { private set; get; }
 
 
-        // ------- Constructor ------- //
+        // ------ constructors ------ //
 
         /// <summary>
         /// Open device
@@ -82,7 +82,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         public BgrXyzMat Read()
         {

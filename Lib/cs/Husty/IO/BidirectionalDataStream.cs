@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Husty.IO
+namespace Husty
 {
 
     public class BidirectionalDataStream : IDisposable
@@ -14,6 +13,8 @@ namespace Husty.IO
 
         private readonly Stream _writingStream;
         private readonly Stream _readingStream;
+        private readonly StreamWriter _writer;
+        private readonly StreamReader _reader;
 
 
         // ------- Properties ------- //
@@ -26,10 +27,12 @@ namespace Husty.IO
         
         // ------- Constructors ------- //
 
-        public BidirectionalDataStream(Stream writingStream, Stream readingStream, int writeTimeout, int readTimeout)
+        public BidirectionalDataStream(Stream writingStream, Stream readingStream, int writeTimeout = -1, int readTimeout = -1)
         {
             _writingStream = writingStream;
             _readingStream = readingStream;
+            _writer = new(_writingStream);
+            _reader = new(_readingStream);
             if (_writingStream.CanTimeout)
                 _writingStream.WriteTimeout = writeTimeout;
             if (_readingStream.CanTimeout)
@@ -137,7 +140,8 @@ namespace Husty.IO
         {
             try
             {
-                return WriteBinary(Encoding.UTF8.GetBytes(sendmsg));
+                _writer.WriteLine(sendmsg);
+                return true;
             }
             catch
             {
@@ -153,7 +157,8 @@ namespace Husty.IO
         {
             try
             {
-                return await WriteBinaryAsync(Encoding.UTF8.GetBytes(sendmsg));
+                await _writer.WriteLineAsync(sendmsg);
+                return true;
             }
             catch
             {
@@ -169,7 +174,7 @@ namespace Husty.IO
         {
             try
             {
-                return Encoding.UTF8.GetString(ReadBinary());
+                return _reader.ReadLine();
             }
             catch
             {
@@ -185,7 +190,7 @@ namespace Husty.IO
         {
             try
             {
-                return Encoding.UTF8.GetString(await ReadBinaryAsync());
+                return await _reader.ReadLineAsync();
             }
             catch
             {

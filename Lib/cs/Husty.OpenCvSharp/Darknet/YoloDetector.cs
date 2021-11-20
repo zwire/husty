@@ -14,7 +14,7 @@ namespace Husty.OpenCvSharp
     public class YoloDetector : IDisposable
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private readonly Net _net;
         private readonly Size _blobSize;
@@ -22,7 +22,7 @@ namespace Husty.OpenCvSharp
         private readonly string[] _labels;
 
 
-        // ------- Constructor ------- //
+        // ------ constructors ------ //
 
         /// <summary>
         /// Initialize detector
@@ -45,7 +45,7 @@ namespace Husty.OpenCvSharp
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         /// <summary>
         /// Inference one frame

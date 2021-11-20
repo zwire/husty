@@ -1,5 +1,5 @@
 ﻿using System;
-using Husty.IO;
+using Husty;
 
 namespace Tutorial.SerialPortReader
 {
@@ -25,6 +25,7 @@ namespace Tutorial.SerialPortReader
                         break;
             }
             Console.WriteLine("completed.");
+            port.Dispose();
             stream.Dispose();
 
         }

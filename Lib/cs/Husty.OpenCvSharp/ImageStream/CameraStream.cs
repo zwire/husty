@@ -10,12 +10,12 @@ namespace Husty.OpenCvSharp
     public class CameraStream : IImageStream<Mat>
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private readonly VideoCapture _cap;
 
 
-        // ------- Properties ------- //
+        // ------ properties ------ //
 
         public int Fps { get; }
 
@@ -26,7 +26,7 @@ namespace Husty.OpenCvSharp
         public bool HasFrame { private set; get; }
 
 
-        // ------- Constructors ------- //
+        // ------ constructors ------ //
 
         public CameraStream(int src, IEnumerable<Properties> properties = null)
         {
@@ -40,7 +40,7 @@ namespace Husty.OpenCvSharp
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         public Mat Read()
         {

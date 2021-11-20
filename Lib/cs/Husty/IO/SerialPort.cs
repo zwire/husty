@@ -1,21 +1,18 @@
 ﻿using System;
-using System.IO;
 using System.IO.Ports;
+using System.Threading.Tasks;
 
-namespace Husty.IO
+namespace Husty
 {
-    public class SerialPort
+    public class SerialPort : ICommunicator
     {
 
-        // ------- Fields ------- //
+        // ------- fields ------- //
 
         private readonly System.IO.Ports.SerialPort _port;
-        private readonly StreamReader _reader;
-        private readonly StreamWriter _writer;
-        private object _locker = new();
 
 
-        // ------- Constructor ------- //
+        // ------- constructors ------- //
 
         public SerialPort(string portName, int baudRate, int readTimeout = -1, int writeTimeout = -1)
         {
@@ -29,12 +26,7 @@ namespace Husty.IO
             _port.WriteTimeout = writeTimeout;
             try
             {
-                lock (_locker)
-                {
-                    _port.Open();
-                    _reader = new(_port.BaseStream);
-                    _writer = new(_port.BaseStream);
-                }
+                _port.Open();
             }
             catch
             {
@@ -43,50 +35,27 @@ namespace Husty.IO
         }
 
 
-        // ------- Methods ------- //
+        // ------- public methods ------- //
 
-        public string ReadLine()
+        public BidirectionalDataStream GetStream()
         {
-            lock (_locker)
-            {
-                if (_port is not null && _port.IsOpen)
-                    return _reader?.ReadLine();
-                else
-                    return null;
-            }
+            return new(_port.BaseStream, _port.BaseStream);
         }
 
-        public void WriteLine()
+        public async Task<BidirectionalDataStream> GetStreamAsync()
         {
-            lock (_locker)
-            {
-                if (_port is not null && _port.IsOpen)
-                    _writer?.WriteLine();
-            }
+            return await Task.Run(() => GetStream());
         }
 
         public void Dispose()
         {
-            lock (_locker)
-            {
-                _writer?.Dispose();
-                _reader?.Dispose();
-                _port?.Close();
-                _port?.Dispose();
-            }
+            _port?.Close();
+            _port?.Dispose();
         }
 
         public static string[] GetPortNames()
         {
-            try
-            {
-                return System.IO.Ports.SerialPort.GetPortNames();
-            }
-            catch
-            {
-                return new string[] { "null" };
-            }
+            return System.IO.Ports.SerialPort.GetPortNames();
         }
-
     }
 }

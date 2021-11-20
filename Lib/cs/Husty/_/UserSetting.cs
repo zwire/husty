@@ -6,12 +6,20 @@ namespace Husty
     public class UserSetting<T>
     {
 
+        // ------ fields ------ //
+
         private readonly T _defaultValue;
+
+
+        // ------ constructors ------ //
 
         public UserSetting(T defaultValue)
         {
             _defaultValue = defaultValue;
         }
+
+
+        // ------ public methods ------ //
         
         public T Load()
         {

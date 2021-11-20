@@ -7,7 +7,7 @@ namespace Husty.OpenCvSharp
     public abstract class Stats : IStats
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         protected Mode _mode;
         protected string _modelPath;
@@ -16,7 +16,7 @@ namespace Husty.OpenCvSharp
         private readonly string _dataPath;
 
 
-        // ------- Constructor ------- //
+        // ------ constructors ------ //
 
         /// <summary>
         /// 
@@ -42,7 +42,7 @@ namespace Husty.OpenCvSharp
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         /// <summary>
         /// Push back one vector data on dataset
@@ -96,11 +96,17 @@ namespace Husty.OpenCvSharp
             });
         }
 
+
+        // ------ abstract methods ------ //
+
         public abstract void Train(bool append, double? param);
 
         public abstract List<float> Predict(List<float[]> input);
 
         protected abstract void LoadModel();
+
+
+        // ------ protected methods ------ //
 
         protected void LoadDataset()
         {

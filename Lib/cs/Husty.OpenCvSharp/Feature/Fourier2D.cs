@@ -9,17 +9,17 @@ namespace Husty.OpenCvSharp
     public class Fourier2D
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private readonly Mat _complex;
 
 
-        // ------- Properties ------- //
+        // ------ properties ------ //
 
         public Mat ViewImage { private set; get; }
 
 
-        // ------- Constructor ------- //
+        // ------ constructors ------ //
 
         /// <summary>
         /// 2D Fourier transformation for image data.
@@ -40,13 +40,13 @@ namespace Husty.OpenCvSharp
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         /// <summary>
         /// Discrete Fourier Transformation
         /// </summary>
         /// <remarks>Frequency feature of image data</remarks>
-        unsafe public float[] Dft()
+        public unsafe float[] Dft()
         {
             Cv2.Dft(_complex, _complex);
             Cv2.Split(_complex, out var planes);
@@ -82,7 +82,7 @@ namespace Husty.OpenCvSharp
         /// Inverse Discrete Fourier Transformation
         /// </summary>
         /// <returns>Feature of values</returns>
-        unsafe public float[] Idft()
+        public unsafe float[] Idft()
         {
             Cv2.Idft(_complex, _complex, DftFlags.Scale);
             Cv2.Split(_complex, out Mat[] planes);

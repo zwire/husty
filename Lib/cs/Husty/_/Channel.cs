@@ -8,21 +8,21 @@ namespace Husty
     public class Channel<T> : IDisposable
     {
 
-        // ------ Fields ------ //
+        // ------ fields ------ //
 
         private readonly System.Threading.Channels.Channel<T> _channel;
         private readonly CancellationTokenSource _wcts;
         private readonly CancellationTokenSource _rcts;
 
 
-        // ------ Properties ------ //
+        // ------ properties ------ //
 
         public int ReadTimeout { private set; get; }
 
         public int WriteTimeout { private set; get; }
 
 
-        // ------ Constructors ------ //
+        // ------ constructors ------ //
 
         public Channel(int readTimeout = -1, int writeTimeout = -1)
         {
@@ -39,7 +39,7 @@ namespace Husty
         }
 
 
-        // ------ Methods ------ //
+        // ------ public methods ------ //
 
         public async Task<bool> WriteAsync(T item)
         {

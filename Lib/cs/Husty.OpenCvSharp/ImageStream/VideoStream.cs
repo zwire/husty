@@ -10,13 +10,13 @@ namespace Husty.OpenCvSharp
     public class VideoStream : IVideoStream<Mat>
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private int _positionIndex;
         private readonly VideoCapture _cap;
 
 
-        // ------- Properties ------- //
+        // ------ properties ------ //
 
         public int Fps { get; }
 
@@ -31,7 +31,7 @@ namespace Husty.OpenCvSharp
         public int CurrentPosition => _positionIndex;
 
 
-        // ------- Constructors ------- //
+        // ------ constructors ------ //
 
         public VideoStream(string src, IEnumerable<Properties> properties = null)
         {
@@ -46,7 +46,7 @@ namespace Husty.OpenCvSharp
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         public Mat Read()
         {

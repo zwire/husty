@@ -2,26 +2,26 @@
 using System.IO.Pipes;
 using System.Threading.Tasks;
 
-namespace Husty.IO
+namespace Husty
 {
     public class NamedPipeClient : ICommunicator
     {
 
-        // ------- Fields ------- //
+        // ------ fields ------ //
 
         private readonly NamedPipeClientStream _writer;
         private readonly NamedPipeClientStream _reader;
         private readonly Task _connectionTask;
 
 
-        // ------- Properties ------- //
+        // ------ properties ------ //
 
         public int ReadTimeout { set; get; } = -1;
 
         public int WriteTimeout { set; get; } = -1;
 
 
-        // ------- Constructors ------- //
+        // ------ constructors ------ //
 
         public NamedPipeClient(string pipeName, string serverName = ".")
         {
@@ -42,7 +42,7 @@ namespace Husty.IO
         }
 
 
-        // ------- Methods ------- //
+        // ------ public methods ------ //
 
         public BidirectionalDataStream GetStream()
         {
