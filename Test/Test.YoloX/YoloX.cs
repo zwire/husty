@@ -17,10 +17,11 @@ namespace Test.YoloX
 
         public override IEnumerable<(int Label, Rect Box)> Run(Mat frame)
         {
-
             var xRatio = frame.Width / 416.0;
             var yRatio = frame.Height / 416.0;
-            var inputArray = frame.Resize(new Size(416, 416)).To1DByteArray().AsFloatArray();
+            using var frame2 = frame.CvtColor(ColorConversionCodes.BGR2RGB).Resize(new Size(416, 416));
+            using var frame3 = NormalizeYoloX(frame2);
+            var inputArray = frame3.To1DByteArray().AsFloatArray();
             var outputArray = base.Run(inputArray)["output"].To2DJaggedArray(3549, 85);
 
             foreach (var stride in new[] { 8, 16, 32 })
@@ -44,6 +45,27 @@ namespace Test.YoloX
                     }
                 }
             }
+
+        }
+
+        private Mat NormalizeYoloX(Mat mat)
+        {
+            var mean = new[] { 255f * 0.485f, 255f * 0.456f, 255f * 0.406f };
+            var scale = new[] { 1 / (255f * 0.229f), 1 / (255f * 0.224f), 1 / (255f * 0.225f) };
+            var copy = new Mat();
+            if (mat.Type() != MatType.CV_32FC3) mat.ConvertTo(copy, MatType.CV_32FC3);
+            else copy = mat.Clone();
+            unsafe 
+            {
+                for (int i = 0; i < copy.Rows * copy.Cols; i++)
+                {
+                    var d = (float*)copy.Data;
+                    d[i * 3 + 0] = (d[i * 3 + 0] - mean[0]) / scale[0];
+                    d[i * 3 + 1] = (d[i * 3 + 1] - mean[1]) / scale[1];
+                    d[i * 3 + 2] = (d[i * 3 + 2] - mean[2]) / scale[2];
+                }
+            }
+            return copy;
         }
 
     }
