@@ -49,7 +49,7 @@ namespace Husty
         private static double RegulateRange(double radian)
         {
             if (radian > PI) return radian - PI * 2;
-            if (radian < PI) return radian + PI * 2;
+            if (radian < -PI) return radian + PI * 2;
             return radian;
         }
 

@@ -71,7 +71,7 @@ namespace Husty.OnnxRuntime
 
         // ------ public methods ------ //
 
-        protected IDictionary<string, float[]> Run_(float[] inputData)
+        protected virtual IDictionary<string, float[]> Run(float[] inputData)
         {
             var container = InputLayers.Select(i =>
             {
@@ -81,7 +81,7 @@ namespace Husty.OnnxRuntime
             return _session.Run(container).ToDictionary(r => r.Name, r => r.AsTensor<float>().ToArray());
         }
 
-        public void Dispose() => _session.Dispose();
+        public virtual void Dispose() => _session.Dispose();
 
         public abstract TOutput Run(TInput input);
 

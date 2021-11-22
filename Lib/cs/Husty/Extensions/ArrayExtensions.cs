@@ -7,16 +7,14 @@ namespace Husty
     public static class ArrayExtensions
     {
 
-        public static double ArgMax<T>(this IEnumerable<T> src, out int index) where T: struct, IConvertible, IComparable
+        public static int ArgMax<T>(this IEnumerable<T> src, out double max) where T: struct, IConvertible, IComparable
         {
-            if (double.TryParse((string)(object)src.FirstOrDefault(), out var _))
-                throw new ArgumentException();
-            var max = double.MinValue;
-            index = 0;
+            max = double.MinValue;
+            var index = 0;
             int i = 0;
             foreach (var s in src)
             {
-                var num = (double)(object)s;
+                var num = Convert.ToDouble(s);
                 if (num > max)
                 {
                     max = num;
@@ -24,19 +22,17 @@ namespace Husty
                 }
                 i++;
             }
-            return max;
+            return index;
         }
 
-        public static double ArgMin<T>(this IEnumerable<T> src, out int index) where T : struct, IConvertible, IComparable
+        public static int ArgMin<T>(this IEnumerable<T> src, out double min) where T : struct, IConvertible, IComparable
         {
-            if (double.TryParse((string)(object)src.FirstOrDefault(), out var _))
-                throw new ArgumentException();
-            var min = double.MaxValue;
-            index = 0;
+            min = double.MaxValue;
+            var index = 0;
             int i = 0;
             foreach (var s in src)
             {
-                var num = (double)(object)s;
+                var num = Convert.ToDouble(s);
                 if (num < min)
                 {
                     min = num;
@@ -44,7 +40,7 @@ namespace Husty
                 }
                 i++;
             }
-            return min;
+            return index;
         }
 
         public static double Median<T>(this IEnumerable<T> src) where T : struct, IComparable<T>, IEquatable<T>
