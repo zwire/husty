@@ -39,7 +39,7 @@ namespace Husty
 
         public BidirectionalDataStream GetStream()
         {
-            return new(_port.BaseStream, _port.BaseStream);
+            return new(_port.BaseStream, _port.BaseStream, _port.WriteTimeout, _port.ReadTimeout);
         }
 
         public async Task<BidirectionalDataStream> GetStreamAsync()

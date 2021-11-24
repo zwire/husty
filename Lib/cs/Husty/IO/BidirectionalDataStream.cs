@@ -31,12 +31,12 @@ namespace Husty
         {
             _writingStream = writingStream;
             _readingStream = readingStream;
-            _writer = new(_writingStream);
-            _reader = new(_readingStream);
             if (_writingStream.CanTimeout)
                 _writingStream.WriteTimeout = writeTimeout;
             if (_readingStream.CanTimeout)
                 _readingStream.ReadTimeout = readTimeout;
+            _writer = new(_writingStream);
+            _reader = new(_readingStream);
         }
 
 
