@@ -178,7 +178,7 @@ namespace Husty
             }
             catch
             {
-                return "";
+                return null;
             }
         }
 
@@ -194,7 +194,7 @@ namespace Husty
             }
             catch
             {
-                return "";
+                return null;
             }
         }
 

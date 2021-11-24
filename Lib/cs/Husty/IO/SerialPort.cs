@@ -47,6 +47,44 @@ namespace Husty
             return await Task.Run(() => GetStream());
         }
 
+        public bool Write(string value)
+        {
+            try
+            {
+                if (_port?.IsOpen is true) _port?.Write(value);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool WriteLine(string value)
+        {
+            try
+            {
+                if (_port?.IsOpen is true) _port?.WriteLine(value);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public string ReadLine()
+        {
+            try
+            {
+                return _port?.IsOpen is true ? _port?.ReadLine() : null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public void Dispose()
         {
             _port?.Close();
