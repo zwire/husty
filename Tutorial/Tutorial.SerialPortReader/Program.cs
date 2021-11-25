@@ -10,23 +10,20 @@ namespace Tutorial.SerialPortReader
 
             // get ports
             var names = SerialPort.GetPortNames();
-            if (names.Length is 0) return;
+            if (names.Length is 0) throw new Exception("find no port!");
 
             // access first found port
-            var port = new SerialPort(names[0], 115250);
-            var stream = port.GetStream();
+            using var port = new SerialPort(names[0], 115250);
 
             // read messages until key interrupt
             while(true)
             {
-                Console.WriteLine(stream.ReadString());
+                Console.WriteLine(port.ReadLine());
                 if (Console.KeyAvailable)
                     if (Console.ReadKey().Key is ConsoleKey.Q)
                         break;
             }
             Console.WriteLine("completed.");
-            port.Dispose();
-            stream.Dispose();
 
         }
     }
