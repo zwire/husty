@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using OpenCvSharp;
 
@@ -11,19 +10,13 @@ namespace Test.YoloX
         static void Main(string[] args)
         {
             var frame = new Mat("..\\..\\..\\dog3.jpg");
-            var yolox = new YoloX("..\\..\\..\\yolox_tiny.onnx", 0.5);
-            var names = File.ReadAllText("..\\..\\..\\_.names").Split("\n").Select(t => t.TrimEnd()).ToArray();
+            var yolox = new YoloX("..\\..\\..\\yolox_tiny.onnx", "..\\..\\..\\_.names", 0.3f);
             var colors = Enumerable.Range(0, 80).Select(_ => new Scalar(new Random().Next(255), new Random().Next(255), new Random().Next(255))).ToArray();
             var watch = new Stopwatch();
             watch.Start();
-            var results = yolox.Run(frame);
-            foreach (var r in results)
-            {
-                Console.WriteLine($"{r.Probability * 100:f0}% {names[r.Label]}, x: {r.Box.X}, y: {r.Box.Y}");
-                Cv2.Rectangle(frame, r.Box, colors[r.Label], 1);
-            }
+            yolox.Run(frame).ToList().ForEach(r => r.DrawBox(frame, colors[0], 2, true, true, 0.5));
             watch.Stop();
-            Console.WriteLine(watch.ElapsedMilliseconds);
+            Console.WriteLine(watch.ElapsedMilliseconds + " ms");
             Cv2.Resize(frame, frame, new(frame.Width * 2, frame.Height * 2));
             Cv2.ImShow(" ", frame);
             Cv2.WaitKey();
