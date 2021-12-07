@@ -91,6 +91,7 @@ namespace Husty
 
         public void Dispose()
         {
+            _disposed = true;
             _port?.Close();
             _port?.Dispose();
         }

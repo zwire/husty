@@ -13,8 +13,13 @@ namespace Husty.Lawicel
     public class CanUsbAdapter : IDisposable
     {
 
+        // ------ fields ------ //
+
         private bool _disposed;
-        private readonly object _locker = new();
+        private object _locker = new();
+
+
+        // ------ properties ------ //
 
         public uint Handle { get; private set; }
 
@@ -25,11 +30,16 @@ namespace Husty.Lawicel
         public CanUsbStatus Status { private set; get; } = CanUsbStatus.Offline;
 
 
+        // ------ constructors ------ //
+
         public CanUsbAdapter(string adapterName, string baudrate)
         {
             AdapterName = adapterName;
             Baudrate = baudrate;
         }
+
+
+        // ------ public methods ------ //
 
         public static string[] FindAdapterNames()
         {
@@ -75,7 +85,7 @@ namespace Husty.Lawicel
             ThrowIfDisposed();
             ThrowIfNotOnline();
             var msg = message.ToCANMsg();
-            lock(_locker)
+            lock (_locker)
             {
                 canusb_Flush(Handle, Convert.ToByte(FLUSH_WAIT));
                 var ret = canusb_Write(Handle, ref msg);
@@ -85,10 +95,10 @@ namespace Husty.Lawicel
 
         public CanMessage Read()
         {
-            lock(_locker)
+            lock (_locker)
             {
                 var ret = canusb_Read(Handle, out var message);
-                if (ret is not ERROR_OK) throw new Exception("failed to receive the message.");
+                if (ret is not ERROR_OK) throw new Exception("Failed to receive the message.");
                 return CanMessage.FromCANMsg(message);
             }
         }
@@ -103,16 +113,19 @@ namespace Husty.Lawicel
             }
         }
 
+
+        // ------ protected methods ------ //
+
         protected void ThrowIfNotOffline()
         {
             if (Status is not CanUsbStatus.Offline)
-                throw new InvalidOperationException("must be invoked on Offline status.");
+                throw new InvalidOperationException("Must be invoked on Offline status.");
         }
 
         protected void ThrowIfNotOnline()
         {
             if (Status is not CanUsbStatus.Online)
-                throw new InvalidOperationException("must be invoked on Online status.");
+                throw new InvalidOperationException("Must be invoked on Online status.");
         }
 
         protected void ThrowIfDisposed()
