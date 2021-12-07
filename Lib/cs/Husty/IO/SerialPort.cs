@@ -9,6 +9,7 @@ namespace Husty
 
         // ------- fields ------- //
 
+        private bool _disposed;
         private readonly System.IO.Ports.SerialPort _port;
 
 
@@ -49,6 +50,7 @@ namespace Husty
 
         public bool Write(string value)
         {
+            if (_disposed) return false;
             try
             {
                 if (_port?.IsOpen is true) _port?.Write(value);
@@ -62,6 +64,7 @@ namespace Husty
 
         public bool WriteLine(string value)
         {
+            if (_disposed) return false;
             try
             {
                 if (_port?.IsOpen is true) _port?.WriteLine(value);
@@ -75,6 +78,7 @@ namespace Husty
 
         public string ReadLine()
         {
+            if (_disposed) return null;
             try
             {
                 return _port?.IsOpen is true ? _port?.ReadLine() : null;
@@ -95,5 +99,6 @@ namespace Husty
         {
             return System.IO.Ports.SerialPort.GetPortNames();
         }
+
     }
 }
