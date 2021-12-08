@@ -123,8 +123,6 @@ namespace Tools.CameraCalibration
                             suc = (bool)_cap?.Read(frame);
                             if (!frame.Empty())
                             {
-                                // 田植え機用
-                                Cv2.Flip(frame, frame, FlipMode.XY);
                                 try
                                 {
                                     if (_paramIn is not null && (_testInOn || _testExOn))
