@@ -9,7 +9,7 @@ class Kalman:
     def __init__(self, initState, measureNoise, processNoise):
         self.k = len(initState)
         self.m = len(initState)
-        self.filter = cv2.KalmanFilter(self.k, self.m, type = cv2.CV_64F)
+        self.filterz = cv2.KalmanFilter(self.k, self.m, type = cv2.CV_64F)
         self.filter.statePre = np.array(initState).T
         self.filter.statePost = np.array(initState).T
         self.filter.measurementMatrix = np.eye(self.m, self.k, dtype = 'float64')

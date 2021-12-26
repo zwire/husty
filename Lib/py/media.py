@@ -12,9 +12,7 @@ class Capture:
     
     def read(self):
         ret, frame = self.cap.read()
-        if ret == False: return None
-        frame = cv2.resize(frame, (self.width, self.height))
-        return frame
+        return cv2.resize(frame, (self.width, self.height)) if ret else None
     
     def close(self):
         self.cap.release()
