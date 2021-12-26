@@ -47,7 +47,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "py", "py", "{0EE512F2-0740-
 		Lib\py\keras_inference.py = Lib\py\keras_inference.py
 		Lib\py\media.py = Lib\py\media.py
 		Lib\py\nnabla_inference.py = Lib\py\nnabla_inference.py
-		Lib\py\tcpSocket.py = Lib\py\tcpSocket.py
 		Lib\py\yolo.py = Lib\py\yolo.py
 	EndProjectSection
 EndProject
@@ -73,7 +72,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.HoughSingleLine", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.RealsenseStartup", "Tutorial\Tutorial.RealsenseStartup\Tutorial.RealsenseStartup.csproj", "{0563F175-F481-4959-9457-88C18BD4B996}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.YoloX", "Test\Test.YoloX\Test.YoloX.csproj", "{42CC4663-E482-4E27-8053-5FCB04DB6EFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.YoloX", "Test\Test.YoloX\Test.YoloX.csproj", "{42CC4663-E482-4E27-8053-5FCB04DB6EFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

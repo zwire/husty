@@ -24,7 +24,7 @@ namespace Husty
         /// </summary>
         public bool Available => _writingStream is not null && _readingStream is not null;
 
-        
+
         // ------- Constructors ------- //
 
         public BidirectionalDataStream(Stream writingStream, Stream readingStream, int writeTimeout = -1, int readTimeout = -1)
@@ -56,6 +56,7 @@ namespace Husty
         {
             try
             {
+                _writingStream.Flush();
                 _writingStream.Write(bytes, 0, bytes.Length);
                 return true;
             }
@@ -73,6 +74,7 @@ namespace Husty
         {
             try
             {
+                await _writingStream.FlushAsync();
                 await _writingStream.WriteAsync(bytes, 0, bytes.Length);
                 return true;
             }
@@ -140,6 +142,7 @@ namespace Husty
         {
             try
             {
+                _writer.Flush();
                 _writer.WriteLine(sendmsg);
                 return true;
             }
@@ -157,6 +160,7 @@ namespace Husty
         {
             try
             {
+                await _writer.FlushAsync();
                 await _writer.WriteLineAsync(sendmsg);
                 return true;
             }
