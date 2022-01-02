@@ -42,6 +42,8 @@ namespace Husty
         }
 
         public double[] ToArray() => new[] { X, Y };
+
+        public Vector3D ToVector3D() => new(X, Y, 0);
         
 
         // ------ operators ------ //

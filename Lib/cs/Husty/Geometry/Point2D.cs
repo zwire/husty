@@ -3,14 +3,32 @@
 namespace Husty
 {
 
-    public record Point2D(double X, double Y)
+    public class Point2D
     {
+
+        // ------ properties ------ //
+
+        public double X { get; }
+
+        public double Y { get; }
+
+
+        // ------ constructors ------ //
+
+        public Point2D(double x, double y)
+        {
+            X = x;
+            Y = y;
+        }
+
 
         // ------ public methods ------ //
 
         public double DistanceTo(Point2D p) => Sqrt(Pow(p.X - X, 2) + Pow(p.Y - Y, 2));
 
         public double[] ToArray() => new[] { X, Y };
+
+        public Point3D ToPoint3D() => new(X, Y, 0);
 
 
         // ------ operators ------ //
