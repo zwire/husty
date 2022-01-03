@@ -6,11 +6,11 @@ using System.IO;
 using System.Reactive.Linq;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.Azure.Kinect.Sensor;
+using Reactive.Bindings;
 using OpenCvSharp.WpfExtensions;
 using Husty;
 using Husty.OpenCvSharp;
 using Husty.OpenCvSharp.DepthCamera;
-using Reactive.Bindings;
 
 namespace Tools.DepthCamera
 {

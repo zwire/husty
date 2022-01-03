@@ -17,9 +17,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         private readonly AlignBase _align;
         private readonly Device _device;
         private readonly Transformation _transformation;
-        private readonly float _pitchRad;
-        private readonly float _yawRad;
-        private readonly float _rollRad;
+        private readonly Mat _rotationMatrix;
 
 
         // ------ properties ------ //
@@ -31,7 +29,7 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         public int Fps { get; }
 
-        public int Channels => 6;
+        public int Channels { get; } = 6;
 
         public Size FrameSize { get; }
 
@@ -44,12 +42,13 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// Open device
         /// </summary>
         /// <param name="config">User settings</param>
-        public Kinect(DeviceConfiguration config, AlignBase align = AlignBase.Color, float pitchDeg = -5.8f, float yawDeg = -1.3f, float rollDeg = 0f)
+        public Kinect(DeviceConfiguration config, AlignBase align = AlignBase.Color)
         {
             _align = align;
-            _pitchRad = (float)(pitchDeg * Math.PI / 180);
-            _yawRad = (float)(yawDeg * Math.PI / 180);
-            _rollRad = (float)(rollDeg * Math.PI / 180);
+            using var xRot = new Angle(-5.8, AngleType.Degree).ToRotationMatrix(Axis.X);
+            using var yRot = new Angle(-1.3, AngleType.Degree).ToRotationMatrix(Axis.Y);
+            using var zRot = new Angle(0, AngleType.Degree).ToRotationMatrix(Axis.Z);
+            _rotationMatrix = zRot * yRot * xRot;
             _device = Device.Open();
             _device.StartCameras(config);
             _transformation = _device.GetCalibration().CreateTransformation();
@@ -74,7 +73,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <summary>
         /// Open device (default)
         /// </summary>
-        public Kinect(AlignBase align = AlignBase.Color, float pitchDeg = -5.8f, float yawDeg = -1.3f, float rollDeg = 0f)
+        public Kinect(AlignBase align = AlignBase.Color)
             : this(new DeviceConfiguration
             {
                 ColorFormat = ImageFormat.ColorBGRA32,
@@ -82,9 +81,7 @@ namespace Husty.OpenCvSharp.DepthCamera
                 DepthMode = DepthMode.NFOV_2x2Binned,
                 SynchronizedImagesOnly = true,
                 CameraFPS = FPS.FPS15
-            },
-            align, pitchDeg, yawDeg, rollDeg)
-        { }
+            }, align) { }
 
 
         // ------ public methods ------ //
@@ -100,9 +97,9 @@ namespace Husty.OpenCvSharp.DepthCamera
                 using var pointCloudFrame = _transformation.DepthImageToPointCloud(depthFrame, CalibrationDeviceType.Color);
                 using var colorMat = colorFrame.ToColorMat();
                 using var pointCloudMat = pointCloudFrame.ToPointCloudMat();
-                var frame = BgrXyzMat.Create(colorMat, pointCloudMat).Rotate(_pitchRad, _yawRad, _rollRad);
+                var frame = BgrXyzMat.Create(colorMat, pointCloudMat);
                 HasFrame = true;
-                return frame.Clone();
+                return frame;
             }
             else
             {
@@ -110,9 +107,9 @@ namespace Husty.OpenCvSharp.DepthCamera
                 using var pointCloudFrame = _transformation.DepthImageToPointCloud(capture.Depth);
                 using var colorMat = colorFrame.ToColorMat();
                 using var pointCloudMat = pointCloudFrame.ToPointCloudMat();
-                var frame = BgrXyzMat.Create(colorMat, pointCloudMat).Rotate(_pitchRad, _yawRad, _rollRad);
+                var frame = BgrXyzMat.Create(colorMat, pointCloudMat).Rotate(_rotationMatrix);
                 HasFrame = true;
-                return frame.Clone();
+                return frame;
             }
         }
 

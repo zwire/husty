@@ -100,7 +100,7 @@ namespace Husty.OpenCvSharp.DepthCamera
             using var pointCloudMat = depth6.ToPointCloudMat(color.Width, color.Height);
             var frame = BgrXyzMat.Create(colorMat, pointCloudMat);
             HasFrame = true;
-            return frame.Clone();
+            return frame;
         }
 
         public IObservable<BgrXyzMat> GetStream()

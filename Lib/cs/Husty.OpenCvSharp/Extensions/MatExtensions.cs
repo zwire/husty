@@ -1,8 +1,10 @@
 ﻿using System;
 using OpenCvSharp;
+using static System.Math;
 
 namespace Husty.OpenCvSharp
 {
+
     public static class MatExtensions
     {
 
@@ -55,7 +57,6 @@ namespace Husty.OpenCvSharp
             }
 
         }
-
 
     }
 }

@@ -203,17 +203,6 @@ namespace Husty.OpenCvSharp.DepthCamera
         }
 
         /// <summary>
-        /// Rotate 3D of right hand system.
-        /// </summary>
-        /// <param name="pitch">Pitch angle (rad, clockwise of X axis)</param>
-        /// <param name="yaw">Yaw angle (rad, clockwise of Y axis)</param>
-        /// <param name="roll">Roll angle (rad, clockwise of Z axis)</param>
-        public unsafe BgrXyzMat Rotate(float pitch, float yaw, float roll)
-        {
-            return Rotate(ZRot(roll) * YRot(yaw) * XRot(pitch));
-        }
-
-        /// <summary>
         /// Rotate 3D
         /// </summary>
         /// <param name="rotationMat">Rotation Matrix</param>
@@ -234,16 +223,6 @@ namespace Husty.OpenCvSharp.DepthCamera
             return this;
         }
 
-        private static Mat XRot(float rad)
-            => new(3, 3, MatType.CV_32F, new float[] { 1, 0, 0, 0, (float)Math.Cos(rad), -(float)Math.Sin(rad), 0, (float)Math.Sin(rad), (float)Math.Cos(rad) });
-
-        private static Mat YRot(float rad)
-            => new(3, 3, MatType.CV_32F, new float[] { (float)Math.Cos(rad), 0, (float)Math.Sin(rad), 0, 1, 0, -(float)Math.Sin(rad), 0, (float)Math.Cos(rad) });
-
-        private static Mat ZRot(float rad)
-            => new(3, 3, MatType.CV_32F, new float[] { (float)Math.Cos(rad), -(float)Math.Sin(rad), 0, (float)Math.Sin(rad), (float)Math.Cos(rad), 0, 0, 0, 1 });
-
-
     }
 
 
@@ -253,7 +232,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     public record BGRXYZ(byte B, byte G, byte R, short X, short Y, short Z)
     {
 
-        public Vec3s Vector3 => new(X, Y, Z);
+        public Vec3s Vector3 { get; } = new(X, Y, Z);
 
     }
 
