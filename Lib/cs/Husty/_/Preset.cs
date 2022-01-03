@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Husty
 {
-    public class Preset<T>
+    public sealed class Preset<T>
     {
 
         // ------ fields ------ //

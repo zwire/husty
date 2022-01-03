@@ -9,7 +9,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// <summary>
     /// Microsoft Azure Kinect C# wrapper
     /// </summary>
-    public class Kinect : IImageStream<BgrXyzMat>
+    public sealed class Kinect : IImageStream<BgrXyzMat>
     {
 
         // ------ fields ------ //

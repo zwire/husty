@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Husty.Cmac
 {
-    internal class CmacTable
+    internal sealed class CmacTable
     {
 
         // ------ fields ------ //

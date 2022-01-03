@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Husty
 {
-    public class MultidimensionalArray
+    public sealed class MultidimensionalArray
     {
 
         // ------ fields ------ //

@@ -10,7 +10,7 @@ namespace Husty.OpenCvSharp
     /// OpenCvSharp 'SVM' class wrapper.
     /// This class has accumulate & save & load methods for machine learning.
     /// </summary>
-    public class Svm : Stats
+    public sealed class Svm : Stats
     {
 
         // ------ fields ------ //

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Husty
 {
-    public class SerialPort : ICommunicator
+    public sealed class SerialPort : ICommunicator
     {
 
         // ------- fields ------- //

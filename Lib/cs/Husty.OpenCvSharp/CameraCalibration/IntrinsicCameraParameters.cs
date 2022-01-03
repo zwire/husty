@@ -5,7 +5,7 @@ using OpenCvSharp;
 namespace Husty.OpenCvSharp
 {
 
-	public class IntrinsicCameraParameters
+	public sealed class IntrinsicCameraParameters
 	{
 
 		public Size ImageSize { get; }

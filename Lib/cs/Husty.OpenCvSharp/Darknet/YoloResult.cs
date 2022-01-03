@@ -2,7 +2,7 @@
 
 namespace Husty.OpenCvSharp
 {
-    public record YoloResult(Rect2d Box, float Confidence, string Label, float Probability)
+    public sealed record YoloResult(Rect2d Box, float Confidence, string Label, float Probability)
     {
 
         public void DrawCenterPoint(Mat image, Scalar color, int pointSize)

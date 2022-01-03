@@ -6,7 +6,7 @@ namespace Husty
     /// Finite Impulse Response
     /// See http://www.densikairo.com/Development/Public/study_dsp/464952A5D5A5A3A5EBA5BFA4CBB4D8A4B7A4C6.html
     /// </summary>
-    public class FirFilter
+    public sealed class FirFilter
     {
 
         // ------ fields ------ //

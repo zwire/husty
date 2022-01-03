@@ -26,7 +26,7 @@ namespace Husty
     /// <summary>
     /// Filtering & control methods subject to Gaussian distribution
     /// </summary>
-    public class ParticleFilter
+    public sealed class ParticleFilter
     {
 
         // ------ fields ------ //

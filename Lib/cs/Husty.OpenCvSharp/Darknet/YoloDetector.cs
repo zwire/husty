@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OpenCvSharp;
 using OpenCvSharp.Dnn;
+using System.Threading.Tasks;
 
 namespace Husty.OpenCvSharp
 {
@@ -11,7 +12,7 @@ namespace Husty.OpenCvSharp
     /// <summary>
     /// Well-known object detection algorithm
     /// </summary>
-    public class YoloDetector : IDisposable
+    public sealed class YoloDetector : IDisposable
     {
 
         // ------ fields ------ //

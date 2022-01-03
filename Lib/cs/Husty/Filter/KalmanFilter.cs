@@ -23,7 +23,7 @@ namespace Husty
     /// <summary>
     /// Filtering & control methods subject to Gaussian distribution
     /// </summary>
-    public class KalmanFilter
+    public sealed class KalmanFilter
     {
 
         // ------ fields ------ //

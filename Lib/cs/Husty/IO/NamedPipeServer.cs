@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Husty
 {
-    public class NamedPipeServer : ICommunicator
+    public sealed class NamedPipeServer : ICommunicator
     {
 
         // ------ fields ------ //

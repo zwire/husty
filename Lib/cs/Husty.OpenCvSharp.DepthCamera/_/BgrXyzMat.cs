@@ -9,7 +9,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// <summary>
     /// Point Cloud with Color
     /// </summary>
-    public class BgrXyzMat : IDisposable
+    public sealed class BgrXyzMat : IDisposable
     {
 
         // ------ properties ------ //

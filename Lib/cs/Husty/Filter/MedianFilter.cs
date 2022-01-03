@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Husty
 {
-    public class MedianFilter
+    public sealed class MedianFilter
     {
 
         // ------ fields ------ //

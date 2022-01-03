@@ -11,7 +11,7 @@ namespace Husty.Cmac
 
     public record CmacLabelInfo(int GridCount, double Lower, double Upper);
 
-    public class CmacNetwork
+    public sealed class CmacNetwork
     {
 
         // ------ fields ------ //

@@ -8,7 +8,7 @@ namespace Husty
     /// <summary>
     /// Tcp socket server class
     /// </summary>
-    public class TcpSocketServer : ICommunicator
+    public sealed class TcpSocketServer : ICommunicator
     {
 
         // ------ fields ------ //

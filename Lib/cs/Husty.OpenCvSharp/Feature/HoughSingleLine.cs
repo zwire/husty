@@ -4,7 +4,7 @@ using OpenCvSharp;
 namespace Husty.OpenCvSharp
 {
 
-    public class HoughSingleLine
+    public sealed class HoughSingleLine
     {
 
         // ------ Fields ------ //

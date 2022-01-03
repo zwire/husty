@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Husty
 {
 
-    public class BidirectionalDataStream : IDisposable
+    public sealed class BidirectionalDataStream : IDisposable
     {
 
         // ------- Fields ------- //

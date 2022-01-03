@@ -6,7 +6,7 @@ namespace Husty.OpenCvSharp
     /// <summary>
     /// OpenCvSharp 'DFT' method wrapper.
     /// </summary>
-    public class Fourier2D
+    public sealed class Fourier2D
     {
 
         // ------ fields ------ //

@@ -4,7 +4,7 @@ using OpenCvSharp;
 
 namespace Husty.OpenCvSharp
 {
-	public class Chessboard
+	public sealed class Chessboard
 	{
 
 		private readonly Size _patternSize;

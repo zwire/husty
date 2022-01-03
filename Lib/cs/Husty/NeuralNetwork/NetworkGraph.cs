@@ -6,7 +6,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace Husty.NeuralNetwork
 {
-    public class NetworkGraph : INetworkGraph
+    public sealed class NetworkGraph : INetworkGraph
     {
 
         public List<ILayer> LayerStack { get; }

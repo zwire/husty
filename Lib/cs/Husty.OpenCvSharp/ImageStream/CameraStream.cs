@@ -7,7 +7,7 @@ using OpenCvSharp;
 
 namespace Husty.OpenCvSharp
 {
-    public class CameraStream : IImageStream<Mat>
+    public sealed class CameraStream : IImageStream<Mat>
     {
 
         // ------ fields ------ //

@@ -8,7 +8,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// <summary>
     /// Save BGRXYZ movie as binary file.
     /// </summary>
-    public class BgrXyzRecorder : IDisposable
+    public sealed class BgrXyzRecorder : IDisposable
     {
 
         //

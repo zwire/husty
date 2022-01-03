@@ -5,7 +5,7 @@ using OpenCvSharp;
 namespace Husty.OpenCvSharp
 {
 
-	public class ExtrinsicCameraParameters
+	public sealed class ExtrinsicCameraParameters
 	{
 
 		public Mat RotationMatrix { get; }

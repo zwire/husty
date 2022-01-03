@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Husty
 {
-    public class Channel<T> : IDisposable
+    public sealed class Channel<T> : IDisposable
     {
 
         // ------ fields ------ //

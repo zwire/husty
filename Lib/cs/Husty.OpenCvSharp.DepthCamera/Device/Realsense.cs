@@ -9,7 +9,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// <summary>
     /// Intel RealSense D415 - 455, L515 C# wrapper
     /// </summary>
-    public class Realsense : IImageStream<BgrXyzMat>
+    public sealed class Realsense : IImageStream<BgrXyzMat>
     {
 
         // ------ fields ------ //

@@ -12,7 +12,7 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// <summary>
     /// Playback BGRXYZ movie from binary file.
     /// </summary>
-    public class BgrXyzPlayer : IVideoStream<BgrXyzMat>
+    public sealed class BgrXyzPlayer : IVideoStream<BgrXyzMat>
     {
 
         //
