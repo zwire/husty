@@ -19,6 +19,8 @@ namespace Husty
 
         public Vector2D UnitVector => this / Length;
 
+        public static Vector2D Zero => new(0, 0);
+
 
         // ------ constructors ------ //
 

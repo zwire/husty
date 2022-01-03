@@ -22,6 +22,8 @@ namespace Husty
 
         public double Degree => _radian * 180 / PI;
 
+        public static Angle Zero => new(0, AngleType.Radian);
+
 
         // ------ constructors ------ //
 

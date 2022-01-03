@@ -14,6 +14,8 @@ namespace Husty
 
         public double Z { get; }
 
+        public static Point3D Zero => new(0, 0, 0);
+
 
         // ------ constructors ------ //
 

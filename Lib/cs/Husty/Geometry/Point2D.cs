@@ -12,6 +12,8 @@ namespace Husty
 
         public double Y { get; }
 
+        public static Point2D Zero => new(0, 0);
+
 
         // ------ constructors ------ //
 

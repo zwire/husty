@@ -20,6 +20,8 @@ namespace Husty
 
         public Vector3D UnitVector => this / Length;
 
+        public static Vector3D Zero => new(0, 0, 0);
+
 
         // ------ constructors ------ //
 
