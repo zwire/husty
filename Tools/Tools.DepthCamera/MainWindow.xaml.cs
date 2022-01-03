@@ -38,7 +38,7 @@ namespace Tools.DepthCamera
             _isConnected = false;
             StartPauseButton.Content = "Open";
             ShutterButton.IsEnabled = false;
-            var settings = new UserSetting<Preset>(new("C:", "C:"));
+            var settings = new Preset<Preset>(new("C:", "C:"));
             var preset = settings.Load();
             _saveDir = preset.SaveDir;
             _videoDir = preset.VideoDir;

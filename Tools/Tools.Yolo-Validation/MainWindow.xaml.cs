@@ -24,7 +24,7 @@ namespace Tools.Yolo_Validation
         public MainWindow()
         {
             InitializeComponent();
-            var settings = new UserSetting<Preset>(new());
+            var settings = new Preset<Preset>(new());
             var val = settings.Load();
             ModelDirButton.Content = val.ModelDir;
             ImageDirButton.Content = val.ImageDir;

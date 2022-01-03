@@ -42,7 +42,7 @@ namespace Tools.CameraCalibration
         private IntrinsicCameraParameters _paramIn;
         private ExtrinsicCameraParameters _paramEx;
         private PerspectiveTransformer _trs;
-        private readonly UserSetting<Setting> _setting;
+        private readonly Preset<Setting> _setting;
 
         public record Setting(string BoardImageDir, string ImageSourceDir, string VIdeoSourceDir, int Width, int Height);
 

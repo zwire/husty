@@ -2,6 +2,9 @@
 
 namespace Husty
 {
+
+    public enum Axis { X, Y, Z }
+
     public class Vector3D
     {
 
@@ -28,6 +31,45 @@ namespace Husty
         // ------ public methods ------ //
 
         public double[] ToArray() => new[] { X, Y, Z };
+
+        public Angle GetAngle(Axis axis)
+        {
+            if (axis is Axis.Z)
+                return new(Atan2(X, Y), AngleType.Radian);
+            else if (axis is Axis.Y)
+                return new(Atan2(Z, X), AngleType.Radian);
+            else
+                return new(Atan2(Y, Z), AngleType.Radian);
+        }
+
+        public Angle GetAngleFrom(Vector3D v, Axis axis)
+        {
+            return GetAngle(axis) - v.GetAngle(axis);
+        }
+
+        public Vector3D Rotate(Angle angle, Axis axis)
+        {
+            double x, y, z;
+            if (axis is Axis.Z)
+            {
+                x = X * Cos(angle.Radian) - Y * Sin(angle.Radian);
+                y = X * Sin(angle.Radian) + Y * Cos(angle.Radian);
+                z = Z;
+            }
+            else if (axis is Axis.Y)
+            {
+                x = X * Cos(angle.Radian) + Z * Sin(angle.Radian);
+                y = Y;
+                z = -X * Sin(angle.Radian) + Z * Cos(angle.Radian);
+            }
+            else
+            {
+                x = X;
+                y = Y * Cos(angle.Radian) - Z * Sin(angle.Radian);
+                z = Y * Sin(angle.Radian) + Z * Cos(angle.Radian);
+            }
+            return new(x, y, z);
+        }
 
 
         // ------ operators ------ //

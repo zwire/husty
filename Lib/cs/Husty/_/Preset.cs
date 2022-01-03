@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Husty
 {
-    public class UserSetting<T>
+    public class Preset<T>
     {
 
         // ------ fields ------ //
@@ -13,7 +13,7 @@ namespace Husty
 
         // ------ constructors ------ //
 
-        public UserSetting(T defaultValue)
+        public Preset(T defaultValue)
         {
             _defaultValue = defaultValue;
         }
@@ -25,7 +25,7 @@ namespace Husty
         {
             try
             {
-                return JsonSerializer.Deserialize<T>(File.ReadAllText("setting.json"));
+                return JsonSerializer.Deserialize<T>(File.ReadAllText("preset.json"));
             }
             catch 
             {
@@ -35,7 +35,7 @@ namespace Husty
 
         public void Save(T value)
         {
-            using var sw = new StreamWriter("setting.json", false);
+            using var sw = new StreamWriter("preset.json", false);
             sw.WriteLine(JsonSerializer.Serialize(value));
         }
 
