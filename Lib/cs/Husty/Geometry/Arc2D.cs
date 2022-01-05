@@ -37,15 +37,15 @@ namespace Husty
 
         public Arc2D GetReverse() => new(End, Center, -Angle);
 
-        public Point2D[] ApproximateAsPoints(double intervalAngleRadian)
+        public Point2D[] ApproximateAsPoints(Angle interval)
         {
             var points = new List<Point2D>();
             var initVec = new Vector2D(Center, Start);
             if (Angle.Radian > 0)
-                for (double angle = 0; angle < Angle.Radian; angle += intervalAngleRadian)
+                for (double angle = 0; angle < Angle.Radian; angle += interval.Radian)
                     points.Add(Center + initVec.Rotate(new(angle, AngleType.Radian)));
             else
-                for (double angle = 0; angle > Angle.Radian; angle -= intervalAngleRadian)
+                for (double angle = 0; angle > Angle.Radian; angle -= interval.Radian)
                     points.Add(Center + initVec.Rotate(new(angle, AngleType.Radian)));
             points.Add(End);
             return points.ToArray();
@@ -56,7 +56,7 @@ namespace Husty
 
         private double CalcAngleRadian(double arcLength) => arcLength / Radius;
 
-        private double CalcArcLength(double angleRadian) => angleRadian * Radius;
+        private double CalcArcLength(Angle angle) => angle.Radian * Radius;
 
     }
 }
