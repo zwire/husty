@@ -15,18 +15,28 @@ namespace Husty
 
         public Angle CounterClockwiseAngleFromX => new(Atan2(Y, X), AngleType.Radian);
 
-        public double Length => Sqrt(X * X + Y * Y) + 1e-15;
+        public double Length { get; }
 
-        public Vector2D UnitVector => this / Length;
+        public Vector2D UnitVector => Length == 0.0 ? Zero : this / Length;
 
         public static Vector2D Zero => new(0, 0);
 
 
         // ------ constructors ------ //
 
-        public Vector2D(double x, double y) { X = x; Y = y; }
+        public Vector2D(double x, double y)
+        {
+            X = x;
+            Y = y;
+            Length = Sqrt(X * X + Y * Y);
+        }
 
-        public Vector2D(Point2D p1, Point2D p2) { X = p2.X - p1.X; Y = p2.Y - p1.Y; }
+        public Vector2D(Point2D p1, Point2D p2)
+        {
+            X = p2.X - p1.X;
+            Y = p2.Y - p1.Y;
+            Length = Sqrt(X * X + Y * Y);
+        }
 
 
         // ------ public methods ------ //
@@ -45,8 +55,10 @@ namespace Husty
 
         public double[] ToArray() => new[] { X, Y };
 
+        public Vector2D Clone() => new(X, Y);
+
         public Vector3D ToVector3D() => new(X, Y, 0);
-        
+
 
         // ------ operators ------ //
 
@@ -61,6 +73,5 @@ namespace Husty
         public static Vector2D operator *(double scalar, Vector2D v) => v * scalar;
 
         public static Vector2D operator /(Vector2D v, double scalar) => new(v.X / scalar, v.Y / scalar);
-
     }
 }

@@ -30,6 +30,8 @@ namespace Husty
 
         public double[] ToArray() => new[] { X, Y };
 
+        public Point2D Clone() => new(X, Y);
+
         public Point3D ToPoint3D() => new(X, Y, 0);
 
 

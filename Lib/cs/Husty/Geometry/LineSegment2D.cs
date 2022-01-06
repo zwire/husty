@@ -9,11 +9,11 @@ namespace Husty
 
         // ------ properties ------ //
 
-        public Point2D Start { private set; get; }
+        public Point2D Start { get; }
 
-        public Point2D End { private set; get; }
+        public Point2D End { get; }
 
-        public double Length => Sqrt(Pow(End.X - Start.X, 2) + Pow(End.Y - Start.Y, 2));
+        public double Length { get; }
 
 
         // ------ constructors ------ //
@@ -22,12 +22,15 @@ namespace Husty
         {
             Start = start;
             End = end;
+            Length = Sqrt(Pow(End.X - Start.X, 2) + Pow(End.Y - Start.Y, 2));
         }
 
 
         // ------ public methods ------ //
 
         public Vector2D ToVector2D() => new(End.X - Start.X, End.Y - Start.Y);
+
+        public LineSegment2D GetReverse() => new(End, Start);
 
         public override double GetY(double x)
         {

@@ -28,6 +28,10 @@ namespace Husty
 
         public double[] ToArray() => new[] { X, Y, Z };
 
+        public Point3D Clone() => new(X, Y, Z);
+
+        public Vector3D ToVector3D() => new(X, Y, Z);
+
 
         // ------ operators ------ //
 

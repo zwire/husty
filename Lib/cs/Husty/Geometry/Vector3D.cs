@@ -16,23 +16,37 @@ namespace Husty
 
         public double Z { get; }
 
-        public double Length => Sqrt(X * X + Y * Y + Z * Z) + 1e-15;
+        public double Length { get; }
 
-        public Vector3D UnitVector => this / Length;
+        public Vector3D UnitVector => Length == 0.0 ? Zero : this / Length;
 
         public static Vector3D Zero => new(0, 0, 0);
 
 
         // ------ constructors ------ //
 
-        public Vector3D(double x, double y, double z) { X = x; Y = y; Z = z; }
+        public Vector3D(double x, double y, double z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+            Length = Sqrt(X * X + Y * Y + Z * Z);
+        }
 
-        public Vector3D(Point3D p1, Point3D p2) { X = p2.X - p1.X; Y = p2.Y - p1.Y; Z = p2.Z - p1.Z; }
+        public Vector3D(Point3D p1, Point3D p2)
+        {
+            X = p2.X - p1.X;
+            Y = p2.Y - p1.Y;
+            Z = p2.Z - p1.Z;
+            Length = Sqrt(X * X + Y * Y + Z * Z);
+        }
 
 
         // ------ public methods ------ //
 
         public double[] ToArray() => new[] { X, Y, Z };
+
+        public Vector3D Clone() => new(X, Y, Z);
 
         public Angle GetAngle(Axis axis)
         {
