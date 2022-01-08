@@ -34,12 +34,18 @@ namespace Husty
 
         public Point3D ToPoint3D() => new(X, Y, 0);
 
+        public Vector2D ToVector2D() => new(X, Y);
+
 
         // ------ operators ------ //
 
         public static Point2D operator +(Point2D p, Vector2D v) => new(p.X + v.X, p.Y + v.Y);
 
         public static Point2D operator -(Point2D p, Vector2D v) => new(p.X - v.X, p.Y - v.Y);
+
+        public static bool operator ==(Point2D a, Point2D b) => a.X == b.X && a.Y == b.Y;
+
+        public static bool operator !=(Point2D a, Point2D b) => !(a == b);
 
     }
 

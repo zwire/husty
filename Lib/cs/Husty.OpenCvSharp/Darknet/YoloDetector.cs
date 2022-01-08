@@ -1,10 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using OpenCvSharp;
 using OpenCvSharp.Dnn;
-using System.Threading.Tasks;
 
 namespace Husty.OpenCvSharp
 {
@@ -19,7 +18,7 @@ namespace Husty.OpenCvSharp
 
         private readonly Net _net;
         private readonly Size _blobSize;
-        private readonly float _confidenceThreshold;
+        private readonly float _confThresh;
         private readonly string[] _labels;
 
 
@@ -39,7 +38,7 @@ namespace Husty.OpenCvSharp
                 throw new ArgumentException("Blob width and height value must be multiple of 32.");
             if (confidenceThreshold < 0 || confidenceThreshold > 1)
                 throw new ArgumentOutOfRangeException("must be 0.0 - 1.0");
-            _confidenceThreshold = confidenceThreshold;
+            _confThresh = confidenceThreshold;
             _blobSize = blobSize;
             _net = CvDnn.ReadNetFromDarknet(cfg, weights);
             _labels = File.ReadAllLines(names);
@@ -56,15 +55,15 @@ namespace Husty.OpenCvSharp
         public YoloResult[] Run(Mat frame)
         {
 
-            using var blob = CvDnn.BlobFromImage(frame, 1.0 / 255, _blobSize, new Scalar(), true, false);
+            using var blob = CvDnn.BlobFromImage(frame, 1.0 / 255, _blobSize, default, true, false);
             _net.SetInput(blob);
             var outNames = _net.GetUnconnectedOutLayersNames();
             var outs = outNames.Select(_ => new Mat()).ToArray();
             _net.Forward(outs, outNames);
 
-            var classIds = new List<int>();
-            var confidences = new List<float>();
-            var probabilities = new List<float>();
+            var ids = new List<int>();
+            var confs = new List<float>();
+            var probs = new List<float>();
             var boxes = new List<Rect2d>();
             unsafe 
             {
@@ -73,31 +72,23 @@ namespace Husty.OpenCvSharp
                     var p = (float*)pred.Data;
                     for (var i = 0; i < pred.Rows; i++, p += pred.Cols)
                     {
-                        var confidence = p[4];
-                        if (confidence > _confidenceThreshold)
+                        if (p[4] > _confThresh)
                         {
-                            Cv2.MinMaxLoc(pred.Row(i).ColRange(5, pred.Cols), out _, out Point classIdPoint);
-                            var centerX = p[0];
-                            var centerY = p[1];
-                            var width = p[2];
-                            var height = p[3];
-                            classIds.Add(classIdPoint.X);
-                            confidences.Add(confidence);
-                            probabilities.Add(p[classIdPoint.X + 5]);
-                            boxes.Add(new Rect2d(centerX - width / 2, centerY - height / 2, width, height));
+                            Cv2.MinMaxLoc(pred.Row(i).ColRange(5, pred.Cols), out _, out var max, out _, out var maxLoc);
+                            ids.Add(maxLoc.X);
+                            confs.Add(p[4]);
+                            probs.Add((float)max);
+                            boxes.Add(new Rect2d(p[0] - p[2] / 2, p[1] - p[3] / 2, p[2], p[3]));
                         }
                     }
                     pred.Dispose();
                 }
             }
-            CvDnn.NMSBoxes(boxes, confidences, _confidenceThreshold, 0.3f, out int[] indices);
-            return indices.Select(i => new YoloResult(boxes[i], confidences[i], _labels[classIds[i]], probabilities[i])).ToArray();
+            CvDnn.NMSBoxes(boxes, confs, _confThresh, 0.3f, out var indices);
+            return indices.Select(i => new YoloResult(boxes[i], confs[i], _labels[ids[i]], probs[i])).ToArray();
         }
 
-        public void Dispose()
-        {
-            _net.Dispose();
-        }
+        public void Dispose() => _net.Dispose();
 
     }
 

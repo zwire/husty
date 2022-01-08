@@ -48,6 +48,8 @@ namespace Husty
 
         public Vector3D Clone() => new(X, Y, Z);
 
+        public Point3D ToPoint3D() => new(X, Y, Z);
+
         public Angle GetAngle(Axis axis)
         {
             if (axis is Axis.Z)
@@ -101,6 +103,10 @@ namespace Husty
         public static Vector3D operator *(double scalar, Vector3D v) => v * scalar;
 
         public static Vector3D operator /(Vector3D v, double scalar) => new(v.X / scalar, v.Y / scalar, v.Z / scalar);
+
+        public static bool operator ==(Vector3D a, Vector3D b) => a.X == b.X && a.Y == b.Y && a.Z == b.Z;
+
+        public static bool operator !=(Vector3D a, Vector3D b) => !(a == b);
 
     }
 }

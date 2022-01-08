@@ -59,6 +59,8 @@ namespace Husty
 
         public Vector3D ToVector3D() => new(X, Y, 0);
 
+        public Point2D ToPoint2D() => new(X, Y);
+
 
         // ------ operators ------ //
 
@@ -73,5 +75,10 @@ namespace Husty
         public static Vector2D operator *(double scalar, Vector2D v) => v * scalar;
 
         public static Vector2D operator /(Vector2D v, double scalar) => new(v.X / scalar, v.Y / scalar);
+
+        public static bool operator ==(Vector2D a, Vector2D b) => a.X == b.X && a.Y == b.Y;
+
+        public static bool operator !=(Vector2D a, Vector2D b) => !(a == b);
+
     }
 }

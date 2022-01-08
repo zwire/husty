@@ -39,5 +39,9 @@ namespace Husty
 
         public static Point2D operator -(Point3D p, Vector3D v) => new(p.X - v.X, p.Y - v.Y);
 
+        public static bool operator ==(Point3D a, Point3D b) => a.X == b.X && a.Y == b.Y && a.Z == b.Z;
+
+        public static bool operator !=(Point3D a, Point3D b) => !(a == b);
+
     }
 }
