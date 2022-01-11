@@ -12,7 +12,7 @@ namespace Tools.Yolo_Validation
     internal class BackgroundProcess
     {
 
-        private YoloDetector _detector;
+        private Yolov3v4 _detector;
         private List<Data> _dataSet;
         private string _className;
         private readonly int _width;

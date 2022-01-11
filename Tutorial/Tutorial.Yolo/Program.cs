@@ -16,7 +16,7 @@ namespace Tutorial.Yolo
 
             // initialize detector.
             // blob width and height must be multiple of 32.
-            var detector = new YoloDetector(cfg, weights, names, new Size(384, 256));
+            var detector = new Yolov3v4(cfg, weights, names, new Size(384, 256));
 
             // input image path
             var img = Cv2.ImRead("..\\..\\..\\sample.jpg");

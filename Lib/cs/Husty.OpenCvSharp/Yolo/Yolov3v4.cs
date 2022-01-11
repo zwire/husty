@@ -7,11 +7,10 @@ using OpenCvSharp.Dnn;
 
 namespace Husty.OpenCvSharp
 {
-
     /// <summary>
     /// Well-known object detection algorithm
     /// </summary>
-    public sealed class YoloDetector : IDisposable
+    public sealed class Yolov3v4 : IYoloDetector
     {
 
         // ------ fields ------ //
@@ -25,14 +24,14 @@ namespace Husty.OpenCvSharp
         // ------ constructors ------ //
 
         /// <summary>
-        /// Initialize detector
+        /// Initialize detector (Darknet YOLO v3 or v4)
         /// </summary>
         /// <param name="cfg">(.cfg) file</param>
         /// <param name="weights">(.weights) file</param>
         /// <param name="names">(.names) file</param>
         /// <param name="blobSize">Must be multiple of 32</param>
         /// <param name="confidenceThreshold"></param>
-        public YoloDetector(string cfg, string weights, string names, Size blobSize, float confidenceThreshold = 0.5f)
+        public Yolov3v4(string cfg, string weights, string names, Size blobSize, float confidenceThreshold = 0.5f)
         {
             if (blobSize.Width % 32 is not 0 || blobSize.Height % 32 is not 0)
                 throw new ArgumentException("Blob width and height value must be multiple of 32.");
@@ -47,11 +46,6 @@ namespace Husty.OpenCvSharp
 
         // ------ public methods ------ //
 
-        /// <summary>
-        /// Inference one frame
-        /// </summary>
-        /// <param name="frame">input image</param>
-        /// <returns></returns>
         public YoloResult[] Run(Mat frame)
         {
 

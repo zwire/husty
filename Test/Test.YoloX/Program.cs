@@ -9,8 +9,8 @@ namespace Test.YoloX
     {
         static void Main(string[] args)
         {
-            var frame = new Mat("..\\..\\..\\dog3.jpg");
-            var yolox = new YoloX("..\\..\\..\\yolox_tiny.onnx", "..\\..\\..\\_.names", 0.3f);
+            var frame = new Mat("..\\..\\..\\sample2.jpg");
+            var yolox = new Husty.OpenCvSharp.YoloX("..\\..\\..\\yolox_tiny.onnx", "..\\..\\..\\_.names", 0.5f);
             var colors = Enumerable.Range(0, 80).Select(_ => new Scalar(new Random().Next(255), new Random().Next(255), new Random().Next(255))).ToArray();
             var watch = new Stopwatch();
             watch.Start();
