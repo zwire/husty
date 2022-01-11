@@ -72,8 +72,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.HoughSingleLine", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.RealsenseStartup", "Tutorial\Tutorial.RealsenseStartup\Tutorial.RealsenseStartup.csproj", "{0563F175-F481-4959-9457-88C18BD4B996}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.YoloX", "Test\Test.YoloX\Test.YoloX.csproj", "{42CC4663-E482-4E27-8053-5FCB04DB6EFD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -372,18 +370,6 @@ Global
 		{0563F175-F481-4959-9457-88C18BD4B996}.Release|x64.Build.0 = Release|Any CPU
 		{0563F175-F481-4959-9457-88C18BD4B996}.Release|x86.ActiveCfg = Release|Any CPU
 		{0563F175-F481-4959-9457-88C18BD4B996}.Release|x86.Build.0 = Release|Any CPU
-		{42CC4663-E482-4E27-8053-5FCB04DB6EFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{42CC4663-E482-4E27-8053-5FCB04DB6EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{42CC4663-E482-4E27-8053-5FCB04DB6EFD}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{42CC4663-E482-4E27-8053-5FCB04DB6EFD}.Debug|x64.Build.0 = Debug|Any CPU
-		{42CC4663-E482-4E27-8053-5FCB04DB6EFD}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{42CC4663-E482-4E27-8053-5FCB04DB6EFD}.Debug|x86.Build.0 = Debug|Any CPU
-		{42CC4663-E482-4E27-8053-5FCB04DB6EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42CC4663-E482-4E27-8053-5FCB04DB6EFD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{42CC4663-E482-4E27-8053-5FCB04DB6EFD}.Release|x64.ActiveCfg = Release|Any CPU
-		{42CC4663-E482-4E27-8053-5FCB04DB6EFD}.Release|x64.Build.0 = Release|Any CPU
-		{42CC4663-E482-4E27-8053-5FCB04DB6EFD}.Release|x86.ActiveCfg = Release|Any CPU
-		{42CC4663-E482-4E27-8053-5FCB04DB6EFD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -416,7 +402,6 @@ Global
 		{FF4BD671-D534-4FF7-A009-68B033CC9803} = {567343D4-CEEF-42AC-8AC8-02A6391DA059}
 		{C8BE7EB5-1592-496F-A792-9B1EDD4352C8} = {567343D4-CEEF-42AC-8AC8-02A6391DA059}
 		{0563F175-F481-4959-9457-88C18BD4B996} = {567343D4-CEEF-42AC-8AC8-02A6391DA059}
-		{42CC4663-E482-4E27-8053-5FCB04DB6EFD} = {C9D28F01-3BB9-4480-B4BA-5F592E1F668E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C7E8A650-965E-4175-B03C-832FABDB4FFA}
