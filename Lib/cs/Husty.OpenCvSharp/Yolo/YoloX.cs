@@ -4,7 +4,6 @@ using System.Linq;
 using System.IO;
 using OpenCvSharp;
 using OpenCvSharp.Dnn;
-using Husty.OnnxRuntime;
 
 namespace Husty.OpenCvSharp
 {
