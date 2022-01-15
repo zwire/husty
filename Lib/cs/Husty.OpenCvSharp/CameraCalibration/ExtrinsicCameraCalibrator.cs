@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using OpenCvSharp;
 
 namespace Husty.OpenCvSharp
@@ -35,15 +34,6 @@ namespace Husty.OpenCvSharp
             Cv2.Rodrigues(rotationVec, rotationMat);
             return new ExtrinsicCameraParameters(rotationMat, translationVec);
         }
-
-        public static Point ToPoint(this Point2f p)
-            => new(p.X, p.Y);
-
-        public static IEnumerable<Point> ToEnumerablePoint(this IEnumerable<Point2f> points)
-            => points.Select(p => new Point(p.X, p.Y));
-
-        public static IEnumerable<Point2f> ToEnumerablePoint2f(this IEnumerable<Point> points)
-            => points.Select(p => new Point2f(p.X, p.Y));
 
     }
 }
