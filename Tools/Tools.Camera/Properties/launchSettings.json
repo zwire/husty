@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Tools.Camera": {
+      "commandName": "Project",
+      "commandLineArgs": "-w 640 -h 480"
+    }
+  }
+}

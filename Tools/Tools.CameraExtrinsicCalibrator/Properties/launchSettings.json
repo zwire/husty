@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Tools.CameraExtrinsicCalibrator": {
+      "commandName": "Project",
+      "commandLineArgs": "-i 000.png"
+    }
+  }
+}
