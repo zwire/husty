@@ -21,13 +21,13 @@ namespace Husty
             Start(cmd);
         }
 
-        public StdOutReader(string pythonExe, string pythonFile, string[] args = null)
+        public StdOutReader(string exe, string file, string[] args = null)
         {
-            var arguments = pythonFile;
+            var arguments = file;
             if (args is not null)
                 foreach (var a in args)
                     arguments += $" {a}";
-            Start($@"{pythonExe} -u {arguments}");
+            Start($@"{exe} -u {arguments}");
         }
 
 
