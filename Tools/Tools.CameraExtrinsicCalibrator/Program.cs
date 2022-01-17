@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.IO;
 using ConsoleAppFramework;
 using Microsoft.Extensions.Hosting;
-using Husty.OpenCvSharp;
 using OpenCvSharp;
-using System.Collections.Generic;
+using Husty.OpenCvSharp;
 
 namespace Tools.CameraExtrinsicCalibrator
 {
@@ -22,6 +23,7 @@ namespace Tools.CameraExtrinsicCalibrator
         )
         {
             dir ??= Environment.CurrentDirectory;
+            if (!Directory.Exists(dir)) throw new ArgumentException("directory not exist!");
             intrinsicPath ??= dir + "\\intrinsic.json";
             var paramIn = IntrinsicCameraParameters.Load(intrinsicPath);
             using var frame = Cv2.ImRead(imgPath).Undistort(paramIn.CameraMatrix, paramIn.DistortionCoeffs);

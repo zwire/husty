@@ -27,6 +27,7 @@ namespace Tools.Camera
         )
         {
             saveDir ??= Environment.CurrentDirectory;
+            if (!Directory.Exists(saveDir)) throw new ArgumentException("directory not exist!");
             VideoWriter writer = null;
             var count = -1;
             if (recording)

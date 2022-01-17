@@ -15,13 +15,13 @@ class DataStream:
         encimg = cv2.imencode('.png', img)[1]
         self.write('data:image/png;base64,' + base64.b64encode(encimg).decode('utf-8'))
     
-    def read(self):
+    def read(self) -> Any:
         try:
             return self.stream.readline()
         except:
             return ''
     
-    def read_img(self):
+    def read_img(self) -> Any:
         rcv: str = self.read()
         if rcv.split(',')[0] != 'data:image/png;base64': return None
         rcv = rcv.split(',')[1]

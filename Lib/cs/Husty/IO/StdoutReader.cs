@@ -1,28 +1,24 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Reactive.Subjects;
 using Cysharp.Diagnostics;
 
 namespace Husty
 {
-    public class StdOutReader<T>
+    public class StdOutReader : IDisposable
     {
 
         // ------ fields ------ //
 
-        private readonly string _cmd;
-
-
-        // ------ properties ------ //
-
-        public event EventHandler<T> ConsoleValueChanged;
+        private readonly Subject<string> _notifier = new();
 
 
         // ------ constructors ------ //
 
         public StdOutReader(string cmd)
         {
-            _cmd = cmd;
+            Start(cmd);
         }
 
         public StdOutReader(string pythonExe, string pythonFile, string[] args = null)
@@ -31,25 +27,41 @@ namespace Husty
             if (args is not null)
                 foreach (var a in args)
                     arguments += $" {a}";
-            _cmd = $@"{pythonExe} -u {arguments}";
+            Start($@"{pythonExe} -u {arguments}");
         }
 
 
         // ------ public methods ------ //
 
-        public async void Start()
+        public IObservable<string> GetStream()
         {
-            try
+            return _notifier;
+        }
+
+        public void Dispose()
+        {
+            _notifier.Dispose();
+        }
+
+
+        // ------ private methods ------ //
+
+        private void Start(string cmd)
+        {
+            Task.Run(async () =>
             {
-                await foreach (var item in ProcessX.StartAsync(_cmd))
+                try
                 {
-                    ConsoleValueChanged?.Invoke(null, (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromString(item));
+                    await foreach (var item in ProcessX.StartAsync(cmd))
+                    {
+                        _notifier.OnNext(item);
+                    }
                 }
-            }
-            catch (ProcessErrorException e)
-            {
-                Debug.WriteLine(e.ToString());
-            }
+                catch (ProcessErrorException e)
+                {
+                    Debug.WriteLine(e.ToString());
+                }
+            });
         }
 
     }
