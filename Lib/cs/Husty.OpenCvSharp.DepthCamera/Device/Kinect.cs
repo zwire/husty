@@ -95,8 +95,8 @@ namespace Husty.OpenCvSharp.DepthCamera
                 using var colorFrame = capture.Color;
                 using var depthFrame = _transformation.DepthImageToColorCamera(capture.Depth);
                 using var pointCloudFrame = _transformation.DepthImageToPointCloud(depthFrame, CalibrationDeviceType.Color);
-                using var colorMat = colorFrame.ToColorMat();
-                using var pointCloudMat = pointCloudFrame.ToPointCloudMat();
+                var colorMat = colorFrame.ToColorMat();
+                var pointCloudMat = pointCloudFrame.ToPointCloudMat();
                 var frame = BgrXyzMat.Create(colorMat, pointCloudMat);
                 HasFrame = true;
                 return frame;
@@ -105,8 +105,8 @@ namespace Husty.OpenCvSharp.DepthCamera
             {
                 using var colorFrame = _transformation.ColorImageToDepthCamera(capture);
                 using var pointCloudFrame = _transformation.DepthImageToPointCloud(capture.Depth);
-                using var colorMat = colorFrame.ToColorMat();
-                using var pointCloudMat = pointCloudFrame.ToPointCloudMat();
+                var colorMat = colorFrame.ToColorMat();
+                var pointCloudMat = pointCloudFrame.ToPointCloudMat();
                 var frame = BgrXyzMat.Create(colorMat, pointCloudMat).Rotate(_rotationMatrix);
                 HasFrame = true;
                 return frame;

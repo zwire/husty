@@ -96,8 +96,8 @@ namespace Husty.OpenCvSharp.DepthCamera
             using var depth4 = _tfill?.Process(depth3) ?? depth3;
             using var depth5 = _todepth?.Process(depth4) ?? depth4;
             using var depth6 = _hfill?.Process(depth5) ?? depth5;
-            using var colorMat = color.ToColorMat();
-            using var pointCloudMat = depth6.ToPointCloudMat(color.Width, color.Height);
+            var colorMat = color.ToColorMat();
+            var pointCloudMat = depth6.ToPointCloudMat(color.Width, color.Height);
             var frame = BgrXyzMat.Create(colorMat, pointCloudMat);
             HasFrame = true;
             return frame;
