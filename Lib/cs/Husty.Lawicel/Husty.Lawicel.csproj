@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Product>Husty</Product>
+    <Company>Husty</Company>
+    <Authors>yamashita</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <Content Include="Internal\canusbdrv64.dll" Pack="true" PackagePath="lib\" />
+	  <Content Include="Internal\canusbdrv64.dll" Pack="true">
+		  <PackageCopyToOutput>true</PackageCopyToOutput>
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+  </ItemGroup>
+
+	<ItemGroup>
+		<None Update="Internal\canusbdrv64.dll">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>

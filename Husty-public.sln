@@ -45,7 +45,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "py", "py", "{0EE512F2-0740-
 		Lib\py\keras_inference.py = Lib\py\keras_inference.py
 		Lib\py\media.py = Lib\py\media.py
 		Lib\py\nnabla_inference.py = Lib\py\nnabla_inference.py
-		Lib\py\yolo.py = Lib\py\yolo.py
+		Lib\py\yolo_utils.py = Lib\py\yolo_utils.py
+		Lib\py\yolov3v4_darknet.py = Lib\py\yolov3v4_darknet.py
+		Lib\py\yolox_onnx.py = Lib\py\yolox_onnx.py
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Husty", "Lib\cs\Husty\Husty.csproj", "{D0E074D8-4014-410C-9A4E-FA400E12BD38}"
@@ -74,9 +76,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools.CameraIntrinsicCalibr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools.CameraExtrinsicCalibrator", "Tools\Tools.CameraExtrinsicCalibrator\Tools.CameraExtrinsicCalibrator.csproj", "{213D8C16-3EB9-48E4-B5FC-0485D3B2BB82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools.VideoTrimmer", "Tools\Tools.VideoTrimmer\Tools.VideoTrimmer.csproj", "{C3BD71F2-DB4D-47D1-A5A7-9C83CABB6098}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tools.VideoTrimmer", "Tools\Tools.VideoTrimmer\Tools.VideoTrimmer.csproj", "{C3BD71F2-DB4D-47D1-A5A7-9C83CABB6098}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.PythonStdoutReader", "Tutorial\Tutorial.PythonStdoutReader\Tutorial.PythonStdoutReader.csproj", "{59E2FB03-63D2-4A42-98BC-E3FAC85D4D0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.PythonStdoutReader", "Tutorial\Tutorial.PythonStdoutReader\Tutorial.PythonStdoutReader.csproj", "{59E2FB03-63D2-4A42-98BC-E3FAC85D4D0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Husty.Lawicel", "Lib\cs\Husty.Lawicel\Husty.Lawicel.csproj", "{BBAF31C4-5858-46A8-AD49-52C98FE73BBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -412,6 +416,18 @@ Global
 		{59E2FB03-63D2-4A42-98BC-E3FAC85D4D0C}.Release|x64.Build.0 = Release|Any CPU
 		{59E2FB03-63D2-4A42-98BC-E3FAC85D4D0C}.Release|x86.ActiveCfg = Release|Any CPU
 		{59E2FB03-63D2-4A42-98BC-E3FAC85D4D0C}.Release|x86.Build.0 = Release|Any CPU
+		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF}.Debug|x64.Build.0 = Debug|Any CPU
+		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF}.Debug|x86.Build.0 = Debug|Any CPU
+		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF}.Release|x64.ActiveCfg = Release|Any CPU
+		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF}.Release|x64.Build.0 = Release|Any CPU
+		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF}.Release|x86.ActiveCfg = Release|Any CPU
+		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -447,6 +463,7 @@ Global
 		{213D8C16-3EB9-48E4-B5FC-0485D3B2BB82} = {DE862315-F19F-49E3-9DCC-A3EC043FF422}
 		{C3BD71F2-DB4D-47D1-A5A7-9C83CABB6098} = {DE862315-F19F-49E3-9DCC-A3EC043FF422}
 		{59E2FB03-63D2-4A42-98BC-E3FAC85D4D0C} = {567343D4-CEEF-42AC-8AC8-02A6391DA059}
+		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF} = {B522F9B1-917C-4242-A55A-FB27F7465218}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C7E8A650-965E-4175-B03C-832FABDB4FFA}

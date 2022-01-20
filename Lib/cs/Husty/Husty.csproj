@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Authors>yamashita</Authors>
-    <Version>1.2.1</Version>
+    <Version>1.2.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,17 +11,6 @@
     <PackageReference Include="ProcessX" Version="1.5.3" />
     <PackageReference Include="System.IO.Ports" Version="5.0.1" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
-	<Content Include="Lawicel\Internal\canusbdrv64.dll" Pack="true" PackagePath="lib\" />
-	<Content Include="Lawicel\Internal\canusbdrv64.dll" Pack="true">
-        <PackageCopyToOutput>true</PackageCopyToOutput>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Lawicel\Internal\canusbdrv64.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 	
 </Project>
