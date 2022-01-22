@@ -45,7 +45,7 @@ namespace Husty
 
         public async Task<BidirectionalDataStream> GetStreamAsync()
         {
-            return await Task.Run(() => GetStream());
+            return await Task.FromResult(GetStream());
         }
 
         public bool Write(string value)

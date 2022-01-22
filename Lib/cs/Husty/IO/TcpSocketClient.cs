@@ -26,14 +26,14 @@ namespace Husty
 
         // ------ constructors ------ //
 
-        public TcpSocketClient(string ip, int inoutPort)
+        public TcpSocketClient(string ip, int port)
         {
             _client1 = new();
             _connectionTask = Task.Run(() =>
             {
                 try
                 {
-                    _client1 = new(ip, inoutPort);
+                    _client1 = new(ip, port);
                 }
                 catch
                 {
@@ -42,7 +42,7 @@ namespace Husty
             });
         }
 
-        public TcpSocketClient(string ip, int inPort, int outPort)
+        public TcpSocketClient(string recvIp, int recvPort, string sendIp, int sendPort)
         {
             _client1 = new();
             _client2 = new();
@@ -50,8 +50,8 @@ namespace Husty
             {
                 try
                 {
-                    _client1 = new(ip, outPort);
-                    _client2 = new(ip, inPort);
+                    _client1 = new(sendIp, sendPort);
+                    _client2 = new(recvIp, recvPort);
                 }
                 catch
                 {
@@ -85,7 +85,7 @@ namespace Husty
 
         public async Task<BidirectionalDataStream> GetStreamAsync()
         {
-            return await Task.Run(() => GetStream());
+            return await Task.FromResult(GetStream());
         }
 
         public void Dispose()
