@@ -12,6 +12,6 @@
   
 ### Contents
 * Peer ... 接続を司ってくれる。ここからDataChannelおよびMediaChannelを生成できます。
-* DataChannel ... 通常の通信と同じくバイナリ、文字列、JSONをやりとりすることが可能です。  
+* DataChannel, DataStream ... 中身はUDPクライアントが動いているので、通常の通信と同じくバイナリ・文字列・JSONをやりとりすることが可能です。  
 * MediaChannel ... 私の映像ストリーミングに関する知識が乏しいためちゃんとテストできていませんが、ポートは意図通りに開いているのでおそらくできています。  
 * ライブラリの本体は[Husty.SkywayGateway](../../Lib/cs/Husty.SkywayGateway)にあります。間違いがあれば指摘ください。  
