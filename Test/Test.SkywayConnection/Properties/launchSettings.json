@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Test.SkywayConnection": {
-      "commandName": "Project",
-      "commandLineArgs": ""
-    }
-  }
-}

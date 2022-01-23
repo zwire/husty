@@ -6,7 +6,7 @@
     <Authors>yamashita</Authors>
     <Company>Husty</Company>
     <Product>Husty</Product>
-    <Description>Azure Kinect, Intel Realsense</Description>
+    <Description>Microsoft Azure Kinect, Intel Realsense</Description>
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
     <Version>1.2.3</Version>

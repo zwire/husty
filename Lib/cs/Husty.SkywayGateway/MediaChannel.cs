@@ -15,7 +15,6 @@ namespace Husty.SkywayGateway
         // ------ fields ------ //
 
         private readonly RestClient _client;
-        private readonly string _peerId;
         private readonly string _token;
         private readonly string _videoId;
         private readonly string _videoRtcpId;
@@ -25,6 +24,13 @@ namespace Husty.SkywayGateway
         private readonly CancellationTokenSource _cts;
         private readonly Task<string> _called;
         private string _mediaConnectionId;
+
+
+        // ------ properties ------ //
+
+        public string LocalPeerId { get; }
+
+        public string RemotePeerId { private set; get; }
 
 
         // ------ constructors ------ //
@@ -42,8 +48,8 @@ namespace Husty.SkywayGateway
             CancellationTokenSource cts
         )
         {
+            LocalPeerId = peerId;
             _client = client;
-            _peerId = peerId;
             _token = token;
             _videoId = videoId;
             _videoRtcpId = videoRtcpId;
@@ -124,27 +130,30 @@ namespace Husty.SkywayGateway
         {
             _mediaConnectionId = await _called;
             await AnswerAsync();
-            var e = await ListenEventAsync("READY", _mediaConnectionId, _client, _cts.Token);
+            var e = await ListenEventAsync("READY");
             if (e is null)
                 throw new InvalidRequestException("failed to confirm ready.");
+            var response = await _client.RequestAsync(ReqType.Get, $"/media/connections/{_mediaConnectionId}/status");
+            RemotePeerId = JObject.Parse(response.Content)["remote_id"].Value<string>();
             return _info;
         }
 
         public async Task<MediaConnectionInfo> CallConnectionAsync(string remotePeerId)
         {
-            var json = new
+            var json = new Dictionary<string, dynamic>()
             {
-                peer_id = _peerId,
-                token = _token,
-                target_id = remotePeerId,
-                constraints = GetConstraints(),
-                redirect_params = GetRedirectParams()
+                { "peer_id", LocalPeerId },
+                { "token", _token },
+                { "target_id", remotePeerId },
+                { "constraints", GetConstraints() },
+                { "redirect_params", GetRedirectParams() }
             };
             var response = await _client.RequestAsync(ReqType.Post, "/media/connections", json);
             _mediaConnectionId = JObject.Parse(response.Content)["params"]["media_connection_id"].Value<string>();
-            var e = await ListenEventAsync("READY", _mediaConnectionId, _client, _cts.Token);
+            var e = await ListenEventAsync("READY");
             if (e is null)
                 throw new InvalidRequestException("failed to confirm ready.");
+            RemotePeerId = remotePeerId;
             return _info;
         }
 
@@ -229,16 +238,11 @@ namespace Husty.SkywayGateway
             };
         }
 
-        private static async Task<string> ListenEventAsync(
-           string type,
-           string mediaConnectionId,
-           RestClient client,
-           CancellationToken ct
-        )
+        private async Task<string> ListenEventAsync(string type)
         {
-            while (!ct.IsCancellationRequested)
+            while (!_cts.IsCancellationRequested)
             {
-                var response = await client.RequestAsync(ReqType.Get, $"/media/connections/{mediaConnectionId}/events");
+                var response = await _client.RequestAsync(ReqType.Get, $"/media/connections/{_mediaConnectionId}/events");
                 var p = JObject.Parse(response.Content);
                 var e = p["event"].ToString();
                 if (e is "ERROR")

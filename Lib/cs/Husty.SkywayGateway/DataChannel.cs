@@ -29,6 +29,8 @@ namespace Husty.SkywayGateway
 
         public string RemotePeerId { private set; get; }
 
+        public DataConnectionInfo ConnectionInfo => _info;
+
 
         // ------ constructors ------ //
 
@@ -88,7 +90,7 @@ namespace Husty.SkywayGateway
         public async Task<DataStream> ListenAsync()
         {
             _dataConnectionId = await _called;
-            var e = await ListenEventAsync("OPEN", _dataConnectionId, _client, _cts.Token);
+            var e = await ListenEventAsync("OPEN");
             if (e is null)
                 throw new InvalidRequestException("failed to confirm connection open.");
             var json = new Dictionary<string, dynamic>
@@ -137,7 +139,7 @@ namespace Husty.SkywayGateway
             };
             var response = await _client.RequestAsync(ReqType.Post, "/data/connections", json);
             _dataConnectionId = JObject.Parse(response.Content)["params"]["data_connection_id"].Value<string>();
-            var e = await ListenEventAsync("OPEN", _dataConnectionId, _client, _cts.Token);
+            var e = await ListenEventAsync("OPEN");
             if (e is null)
                 throw new InvalidRequestException("failed to confirm connection open.");
             return new(_info, LocalPeerId, RemotePeerId);
@@ -146,26 +148,17 @@ namespace Husty.SkywayGateway
 
         // ------ private methods ------ //
 
-        private static async Task<string> ListenEventAsync(
-           string type,
-           string dataConnectionId,
-           RestClient client,
-           CancellationToken ct
-        )
+        private async Task<string> ListenEventAsync(string type)
         {
-            while (!ct.IsCancellationRequested)
+            while (!_cts.IsCancellationRequested)
             {
-                var response = await client.RequestAsync(ReqType.Get, $"/data/connections/{dataConnectionId}/events");
+                var response = await _client.RequestAsync(ReqType.Get, $"/data/connections/{_dataConnectionId}/events");
                 var p = JObject.Parse(response.Content);
                 var e = p["event"].ToString();
                 if (e is "ERROR")
-                {
                     Debug.WriteLine(p["error_message"]);
-                }
                 if (type != "*" && e != type)
-                {
                     continue;
-                }
                 return e switch
                 {
                     "OPEN" => "",

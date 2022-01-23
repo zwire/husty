@@ -18,11 +18,6 @@ namespace Husty.SkywayGateway
         private readonly byte[] _remoteId;
 
 
-        // ------ properties ------ //
-
-        public DataConnectionInfo ConnectionInfo => _info;
-
-
         // ------ constructors ------ //
 
         internal DataStream(DataConnectionInfo info, string localId, string remoteId)
@@ -52,10 +47,9 @@ namespace Husty.SkywayGateway
 
         public bool WriteBinary(byte[] bytes)
         {
-            var buf = AddFooter(bytes);
             try
             {
-                _client.Send(buf, buf.Length, _info.RemoteEP);
+                _client.Send(bytes, bytes.Length, _info.RemoteEP);
                 return true;
             }
             catch
@@ -66,10 +60,9 @@ namespace Husty.SkywayGateway
 
         public async Task<bool> WriteBinaryAsync(byte[] bytes)
         {
-            var buf = AddFooter(bytes);
             try
             {
-                await _client.SendAsync(buf, buf.Length, _info.RemoteEP);
+                await _client.SendAsync(bytes, bytes.Length, _info.RemoteEP);
                 return true;
             }
             catch
@@ -80,21 +73,13 @@ namespace Husty.SkywayGateway
 
         public byte[] ReadBinary()
         {
-            while (true)
-            {
-                IPEndPoint ep = null;
-                var bytes = _client.Receive(ref ep);
-                return TrimFooter(bytes);
-            }
+            IPEndPoint ep = null;
+            return _client.Receive(ref ep);
         }
 
         public async Task<byte[]> ReadBinaryAsync()
         {
-            while (true)
-            {
-                var rcv = await _client.ReceiveAsync();
-                return TrimFooter(rcv.Buffer);
-            }
+            return (await _client.ReceiveAsync()).Buffer;
         }
 
         public bool WriteString(string sendmsg) 
@@ -120,32 +105,6 @@ namespace Husty.SkywayGateway
 
         public async Task<T> ReadAsJsonAsync<T>()
             => JsonSerializer.Deserialize<T>(await ReadStringAsync());
-
-
-        // ------ private methods ------ //
-        
-        private byte[] AddFooter(byte[] bytes)
-        {
-            var buf = new byte[bytes.Length + _localId.Length];
-            Array.Copy(bytes, buf, bytes.Length);
-            Array.Copy(_localId, 0, buf, bytes.Length, _localId.Length);
-            return buf;
-        }
-
-        private byte[] TrimFooter(byte[] bytes)
-        {
-            var span = bytes.AsSpan();
-            var len = span[^2] << 8 | span[^1];
-            var dataLength = span.Length - len - 2;
-            var id1 = span.Slice(dataLength, len);
-            var id2 = _remoteId.AsSpan()[0..^2];
-            if (id1.Length != id2.Length) 
-                return null;
-            for (int i = 0; i < id1.Length; i++)
-                if (id1[i] != id2[i])
-                    return null;
-            return span[..dataLength].ToArray();
-        }
 
     }
 }

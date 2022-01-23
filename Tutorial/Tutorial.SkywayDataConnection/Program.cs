@@ -13,10 +13,10 @@ namespace Tutorial.SkywayDataConnection
             Task.Run(async () =>
             {
 
-                var apiKey = args[0];   // publish at https://webrtc.ecl.ntt.com/
-                var localId = args[1];
-                var remoteId = args[2];
-                var mode = args[3];     // listen or connect
+                var apiKey = "YOUR_API_KEY";    // publish at https://webrtc.ecl.ntt.com/
+                var localId = "Player1";
+                var remoteId = "Player2";
+                var mode = "listen";            // listen or connect
 
                 // create my peer object
                 await using var peer = await Peer.CreateNewAsync(apiKey, localId);
@@ -31,7 +31,7 @@ namespace Tutorial.SkywayDataConnection
                     : await dataChannel.CallConnectionAsync(remoteId);
 
                 // show and confirm connection information
-                var info = stream.ConnectionInfo;
+                var info = dataChannel.ConnectionInfo;
                 Console.WriteLine($"Local  : {info.LocalEP.Address}:{info.LocalEP.Port}");
                 Console.WriteLine($"Remote : {info.RemoteEP.Address}:{info.RemoteEP.Port}");
                 var alive = await dataChannel.ConfirmAliveAsync();
@@ -44,9 +44,11 @@ namespace Tutorial.SkywayDataConnection
                     var count = 0;
                     while (true)
                     {
-                        var msg = $"Hello {count++}";
+                        // send
+                        var msg = $"Message {count++} from {localId}.";
                         await stream.WriteStringAsync(msg);
                         Console.WriteLine("---> : " + msg);
+                        // receive
                         var rcv = await stream.ReadStringAsync();
                         Console.WriteLine("<--- : " + rcv);
                         await Task.Delay(1000);

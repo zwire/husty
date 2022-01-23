@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Authors>yamashita</Authors>
+    <Version>0.9.0</Version>
+    <Company>$(Authors)</Company>
+    <Product>$(AssemblyName)</Product>
+    <PackageProjectUrl>https://github.com/husty530/Husty-public/tree/master/Lib/cs/Husty.SkywayGateway</PackageProjectUrl>
+    <Description>Skyway Gateway REST API wrapper (preview version)</Description>
   </PropertyGroup>
 
   <ItemGroup>

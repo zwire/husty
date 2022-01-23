@@ -132,10 +132,12 @@ namespace Husty.SkywayGateway
         {
             if (localEP is null) // generate default end point
             {
-                var port = new Random().Next(30000) + 10000;
+                var port = new Random().Next(20000) + 10000;
                 var usedPorts = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections()
-                    .Select(p => p.LocalEndPoint.Port).ToArray();
-                while (usedPorts.Contains(port)) port++;
+                    .Select(p => p.LocalEndPoint.Port).ToList();
+                usedPorts.AddRange(IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners().Select(p => p.Port));
+                usedPorts.AddRange(IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Select(p => p.Port));
+                while (usedPorts.Contains(port++)) ;
                 localEP = new(_host, port);
             }
             var dataChannel = await DataChannel.CreateNewAsync(
@@ -155,38 +157,34 @@ namespace Husty.SkywayGateway
             IPEndPoint localAudioRtcpEP = default
         )
         {
-            var port = new Random().Next(30000) + 10000;
+            var port = new Random().Next(20000) + 30000;
+            var usedPorts = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections()
+                .Select(p => p.LocalEndPoint.Port).ToList();
+            usedPorts.AddRange(IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners().Select(p => p.Port));
+            usedPorts.AddRange(IPGlobalProperties.GetIPGlobalProperties().GetActiveUdpListeners().Select(p => p.Port));
             if (localVideoEP is null) // generate default end point
             {
-                var usedPorts = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections()
-                    .Select(p => p.LocalEndPoint.Port).ToArray();
-                while (usedPorts.Contains(port)) port++;
+                while (usedPorts.Contains(port++)) ;
                 localVideoEP = new(_host, port);
             }
             if (localVideoRtcpEP is null) // generate default end point
             {
-                var usedPorts = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections()
-                    .Select(p => p.LocalEndPoint.Port).ToArray();
-                while (usedPorts.Contains(port)) port++;
+                while (usedPorts.Contains(port++)) ;
                 localVideoRtcpEP = new(_host, port);
             }
             if (localAudioEP is null) // generate default end point
             {
-                var usedPorts = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections()
-                    .Select(p => p.LocalEndPoint.Port).ToArray();
-                while (usedPorts.Contains(port)) port++;
+                while (usedPorts.Contains(port++)) ;
                 localAudioEP = new(_host, port);
             }
             if (localAudioRtcpEP is null) // generate default end point
             {
-                var usedPorts = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections()
-                    .Select(p => p.LocalEndPoint.Port).ToArray();
-                while (usedPorts.Contains(port)) port++;
+                while (usedPorts.Contains(port++)) ;
                 localAudioRtcpEP = new(_host, port);
             }
             var mediaChannel = await MediaChannel.CreateNewAsync(
                 _client, _peerId, _token,
-                videoParameters ?? new(1500, "H264", 100, 90000), audioParameters ?? new(1500, "opus", 111, 48000),
+                videoParameters ?? new(0, "H264", 100, 90000), audioParameters ?? new(0, "opus", 111, 48000),
                 localVideoEP, localVideoRtcpEP,
                 localAudioEP, localAudioRtcpEP,
                 _mediaCalled.ToTask(), _cts
