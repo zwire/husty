@@ -6,8 +6,9 @@
   
 ### Usage
 1. 当ソリューションをクローン。自分の環境で書くならNuGetからHusty.SkywayGatewayをインストール。
-2. [公式のダウンロードページ](https://github.com/skyway/skyway-webrtc-gateway/releases)からexeを持ってくる。
-3. そのexeを起動してから、当プログラムを実行する。もちろん相手がいないと通信できているかわからないので、IDを変えてプロセスを2つ立ててください。
+2. [SkyWay公式](https://webrtc.ecl.ntt.com/)でログインし、APIキーを取得。これをPeerのコンストラクタに入れる。盗まれると悪用されるかもなので間違ってもpublicリポジトリなどに上げないこと。
+3. [公式のダウンロードページ](https://github.com/skyway/skyway-webrtc-gateway/releases)からexeを持ってくる。
+4. そのexeを起動してから、当プログラムを実行する。もちろん相手がいないと通信できているかわからないので、IDを変えてプロセスを2つ立ててください。
 * 正常終了しなかった場合はポートが塞がれっぱなしになるので、そのときはexeを一旦閉じる。
   
 ### Contents
