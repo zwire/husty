@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.5.5.20211231" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Lib\cs\Husty.OpenCvSharp\Husty.OpenCvSharp.csproj" />
   </ItemGroup>
 

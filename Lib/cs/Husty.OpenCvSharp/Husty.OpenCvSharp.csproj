@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.10.0" />
-    <PackageReference Include="OpenCvSharp4" Version="4.5.3.20210725" />
+    <PackageReference Include="OpenCvSharp4" Version="4.5.5.20211231" />
   </ItemGroup>
 
   <ItemGroup>
