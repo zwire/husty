@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Net;
+using System.Reactive.Subjects;
+using System.Reactive.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
@@ -20,6 +22,8 @@ namespace Husty.SkywayGateway
         private readonly DataConnectionInfo _info;
         private readonly CancellationTokenSource _cts;
         private readonly Task<string> _called;
+        private readonly AsyncSubject<bool> _opened = new();
+        private readonly AsyncSubject<bool> _closed = new();
         private string _dataConnectionId;
 
 
@@ -30,6 +34,10 @@ namespace Husty.SkywayGateway
         public string RemotePeerId { private set; get; }
 
         public DataConnectionInfo ConnectionInfo => _info;
+
+        public IObservable<bool> Opened => _opened;
+
+        public IObservable<bool> Closed => _closed;
 
 
         // ------ constructors ------ //
@@ -51,6 +59,11 @@ namespace Husty.SkywayGateway
             _info = info;
             _cts = cts;
             _called = called;
+            Task.Run(async () =>
+            {
+                while (!_cts.IsCancellationRequested)
+                    await ListenEventAsync(TimeSpan.FromSeconds(500));
+            });
         }
 
         internal static async Task<DataChannel> CreateNewAsync(
@@ -62,7 +75,7 @@ namespace Husty.SkywayGateway
             CancellationTokenSource cts
         )
         {
-            var response = await client.RequestAsync(ReqType.Post, "/data", new { });
+            var response = await client.RequestAsync(ReqType.Post, "/data", new() { });
             var p = JObject.Parse(response.Content);
             var dataId = p["data_id"].Value<string>();
             var remoteEP = new IPEndPoint(IPAddress.Parse(p["ip_v4"].Value<string>()), p["port"].Value<int>());
@@ -74,6 +87,8 @@ namespace Husty.SkywayGateway
 
         public async ValueTask DisposeAsync()
         {
+            _opened.Dispose();
+            _closed.Dispose();
             if (_dataConnectionId is not null)
                 await _client.RequestAsync(ReqType.Delete, $"/data/connections/{_dataConnectionId}");
             await _client.RequestAsync(ReqType.Delete, $"/data/{_dataId}");
@@ -90,9 +105,7 @@ namespace Husty.SkywayGateway
         public async Task<DataStream> ListenAsync()
         {
             _dataConnectionId = await _called;
-            var e = await ListenEventAsync("OPEN");
-            if (e is null)
-                throw new InvalidRequestException("failed to confirm connection open.");
+            await _opened.ToTask();
             var json = new Dictionary<string, dynamic>
             {
                 {
@@ -112,7 +125,7 @@ namespace Husty.SkywayGateway
             await _client.RequestAsync(ReqType.Put, $"/data/connections/{_dataConnectionId}", json);
             var response = await _client.RequestAsync(ReqType.Get, $"/data/connections/{_dataConnectionId}/status");
             RemotePeerId = JObject.Parse(response.Content)["remote_id"].Value<string>();
-            return new(_info, LocalPeerId, RemotePeerId);
+            return new(_info);
         }
 
         public async Task<DataStream> CallConnectionAsync(string remoteId)
@@ -139,34 +152,37 @@ namespace Husty.SkywayGateway
             };
             var response = await _client.RequestAsync(ReqType.Post, "/data/connections", json);
             _dataConnectionId = JObject.Parse(response.Content)["params"]["data_connection_id"].Value<string>();
-            var e = await ListenEventAsync("OPEN");
-            if (e is null)
-                throw new InvalidRequestException("failed to confirm connection open.");
-            return new(_info, LocalPeerId, RemotePeerId);
+            await _opened.ToTask();
+            return new(_info);
         }
 
 
         // ------ private methods ------ //
 
-        private async Task<string> ListenEventAsync(string type)
+        private async Task ListenEventAsync(TimeSpan timeOut)
         {
             while (!_cts.IsCancellationRequested)
             {
-                var response = await _client.RequestAsync(ReqType.Get, $"/data/connections/{_dataConnectionId}/events");
+                var response = await _client.RequestAsync(ReqType.Get, $"/data/connections/{_dataConnectionId}/events", null, timeOut);
+                if (response is null) return; // timeout
                 var p = JObject.Parse(response.Content);
                 var e = p["event"].ToString();
                 if (e is "ERROR")
                     Debug.WriteLine(p["error_message"]);
-                if (type != "*" && e != type)
-                    continue;
-                return e switch
+                switch (e)
                 {
-                    "OPEN" => "",
-                    "CLOSE" => "",
-                    _ => null
-                };
+                    case "OPEN":
+                        _opened.OnNext(true);
+                        _opened.OnCompleted();
+                        break;
+                    case "CLOSE":
+                        _closed.OnNext(true);
+                        _closed.OnCompleted();
+                        break;
+                    default:
+                        break;
+                }
             }
-            return null;
         }
 
     }

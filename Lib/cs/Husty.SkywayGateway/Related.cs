@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Net;
 using RestSharp;
+using System.Collections.Generic;
 
 namespace Husty.SkywayGateway
 {
@@ -39,7 +40,7 @@ namespace Husty.SkywayGateway
             this RestClient client,
             ReqType type,
             string resource,
-            object jsonContent = null, // dictionary or anonymous type object
+            Dictionary<string, dynamic> jsonContent = null,
             TimeSpan? timeOut = null   // default value is infinite
         )
         {

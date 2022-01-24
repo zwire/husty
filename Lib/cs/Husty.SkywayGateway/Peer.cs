@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
@@ -36,9 +36,9 @@ namespace Husty.SkywayGateway
 
         public string PeerId => _peerId;
 
-        public Task<bool> Opened => _opened.ToTask();
+        public IObservable<bool> Opened => _opened;
 
-        public Task<bool> Closed => _closed.ToTask();
+        public IObservable<bool> Closed => _closed;
 
         public IObservable<int> ExpiresRemainingSecondNotified => _expiresRemainingSecondNotified;
 
@@ -108,7 +108,7 @@ namespace Husty.SkywayGateway
             _dataCalled.Dispose();
             _mediaCalled.Dispose();
             _expiresRemainingSecondNotified.Dispose();
-            var response = await _client.RequestAsync(ReqType.Delete, $"/peers/{_peerId}?token={_token}");
+            await _client.RequestAsync(ReqType.Delete, $"/peers/{_peerId}?token={_token}");
         }
 
         public async Task<bool> ConfirmAliveAsync()

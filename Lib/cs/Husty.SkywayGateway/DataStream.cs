@@ -14,26 +14,14 @@ namespace Husty.SkywayGateway
 
         private readonly UdpClient _client;
         private readonly DataConnectionInfo _info;
-        private readonly byte[] _localId;
-        private readonly byte[] _remoteId;
 
 
         // ------ constructors ------ //
 
-        internal DataStream(DataConnectionInfo info, string localId, string remoteId)
+        internal DataStream(DataConnectionInfo info)
         {
             _client = new(info.LocalEP.Port);
             _info = info;
-            var localIdBytes = Encoding.UTF8.GetBytes(localId);
-            var remoteIdBytes = Encoding.UTF8.GetBytes(remoteId);
-            _localId = new byte[localIdBytes.Length + 2];
-            Array.Copy(localIdBytes, _localId, localIdBytes.Length);
-            _localId[^2] = (byte)(localIdBytes.Length >> 8);
-            _localId[^1] = (byte)localIdBytes.Length;
-            _remoteId = new byte[remoteIdBytes.Length + 2];
-            Array.Copy(remoteIdBytes, _remoteId, remoteIdBytes.Length);
-            _remoteId[^2] = (byte)(remoteIdBytes.Length >> 8);
-            _remoteId[^1] = (byte)remoteIdBytes.Length;
         }
 
 

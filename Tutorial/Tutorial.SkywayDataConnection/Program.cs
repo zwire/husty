@@ -23,18 +23,19 @@ namespace Tutorial.SkywayDataConnection
                 Console.WriteLine("My ID = " + peer.PeerId);
 
                 // create data channel
-                await using var dataChannel = await peer.CreateDataChannelAsync();
+                await using var channel = await peer.CreateDataChannelAsync();
+                channel.Closed.Subscribe(_ => Console.WriteLine("channel was disconnected!"));
 
                 // listen or connect
                 using var stream = mode is "listen"
-                    ? await dataChannel.ListenAsync()
-                    : await dataChannel.CallConnectionAsync(remoteId);
+                    ? await channel.ListenAsync()
+                    : await channel.CallConnectionAsync(remoteId);
 
                 // show and confirm connection information
-                var info = dataChannel.ConnectionInfo;
+                var info = channel.ConnectionInfo;
                 Console.WriteLine($"Local  : {info.LocalEP.Address}:{info.LocalEP.Port}");
                 Console.WriteLine($"Remote : {info.RemoteEP.Address}:{info.RemoteEP.Port}");
-                var alive = await dataChannel.ConfirmAliveAsync();
+                var alive = await channel.ConfirmAliveAsync();
                 Console.WriteLine(alive is true ? "connected!" : "failed to connect!");
                 Console.WriteLine();
 
