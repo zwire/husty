@@ -20,7 +20,7 @@ TcpSocket::TcpSocket(Mode mode, const char* ip, int port)
         dstSock = socket(AF_INET, SOCK_STREAM, 0);
         dstAddr.sin_family = AF_INET;
         dstAddr.sin_port = htons(port);
-        dstAddr.sin_addr.s_addr = inet_addr(ip);
+        dstAddr.sin_addr.s_addr = inet_pton(AF_INET, ip, &dstAddr.sin_addr.S_un.S_addr);
         connect(dstSock, (struct sockaddr*)&dstAddr, sizeof(dstAddr));
         std::cout << "Connected." << std::endl;
     }
