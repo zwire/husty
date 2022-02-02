@@ -40,15 +40,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cpp", "cpp", "{BC14639B-48A7-480E-B34C-F53AB1383602}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "py", "py", "{0EE512F2-0740-4BAB-8CA3-56CBF8F022A9}"
-	ProjectSection(SolutionItems) = preProject
-		Lib\py\kalman.py = Lib\py\kalman.py
-		Lib\py\keras_inference.py = Lib\py\keras_inference.py
-		Lib\py\media.py = Lib\py\media.py
-		Lib\py\nnabla_inference.py = Lib\py\nnabla_inference.py
-		Lib\py\yolo_utils.py = Lib\py\yolo_utils.py
-		Lib\py\yolov3v4_darknet.py = Lib\py\yolov3v4_darknet.py
-		Lib\py\yolox_onnx.py = Lib\py\yolox_onnx.py
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Husty", "Lib\cs\Husty\Husty.csproj", "{D0E074D8-4014-410C-9A4E-FA400E12BD38}"
 EndProject
@@ -85,6 +76,23 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Husty.SkywayGateway", "Lib\cs\Husty.SkywayGateway\Husty.SkywayGateway.csproj", "{A673C38F-2971-46FC-ABB9-C9495E44629C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.SkywayDataConnection", "Tutorial\Tutorial.SkywayDataConnection\Tutorial.SkywayDataConnection.csproj", "{69E146D9-8AC0-490C-A216-647AA9308BDE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "network", "network", "{78F94936-F5CB-49A7-9465-E8C63A3013D5}"
+	ProjectSection(SolutionItems) = preProject
+		Lib\py\network\data_stream.py = Lib\py\network\data_stream.py
+		Lib\py\network\skyway.py = Lib\py\network\skyway.py
+		Lib\py\network\tcp_socket.py = Lib\py\network\tcp_socket.py
+		Lib\py\network\udp_socket.py = Lib\py\network\udp_socket.py
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dnn", "dnn", "{0F41782B-684B-4F15-BF94-14A0592E7F6C}"
+	ProjectSection(SolutionItems) = preProject
+		Lib\py\dnn\keras_inference.py = Lib\py\dnn\keras_inference.py
+		Lib\py\dnn\nnabla_inference.py = Lib\py\dnn\nnabla_inference.py
+		Lib\py\yolo\yolo_utils.py = Lib\py\yolo\yolo_utils.py
+		Lib\py\yolo\yolov3v4_darknet.py = Lib\py\yolo\yolov3v4_darknet.py
+		Lib\py\yolo\yolox_onnx.py = Lib\py\yolo\yolox_onnx.py
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -494,6 +502,8 @@ Global
 		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF} = {B522F9B1-917C-4242-A55A-FB27F7465218}
 		{A673C38F-2971-46FC-ABB9-C9495E44629C} = {B522F9B1-917C-4242-A55A-FB27F7465218}
 		{69E146D9-8AC0-490C-A216-647AA9308BDE} = {567343D4-CEEF-42AC-8AC8-02A6391DA059}
+		{78F94936-F5CB-49A7-9465-E8C63A3013D5} = {0EE512F2-0740-4BAB-8CA3-56CBF8F022A9}
+		{0F41782B-684B-4F15-BF94-14A0592E7F6C} = {0EE512F2-0740-4BAB-8CA3-56CBF8F022A9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C7E8A650-965E-4175-B03C-832FABDB4FFA}

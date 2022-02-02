@@ -26,7 +26,7 @@ class Yolov3v4Darknet:
         np.random.seed(1)
         self.colors = np.random.randint(0, 255, size=(len(self.classes), 3), dtype='uint8')
 
-    def run(self, frame) -> list[YoloResult]:
+    def run(self, frame: np.ndarray) -> list[YoloResult]:
         blob = cv2.dnn.blobFromImage(frame, 1.0 / 255, self.blobsize, 0, True, False)
         self.net.setInput(blob)
         ln = self.net.getLayerNames()

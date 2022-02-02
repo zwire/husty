@@ -13,7 +13,7 @@ class YoloxOnnx:
         drawmode: Drawmode = Drawmode.rectangle, 
         conf_thresh: float = 0.5, 
         nms_thresh: float = 0.3,
-        with_p6=False,
+        with_p6: bool = False,
     ):
         self.input_shape = input_shape
         self.drawmode = drawmode
@@ -27,7 +27,7 @@ class YoloxOnnx:
         self.input_name = self.onnx_session.get_inputs()[0].name
         self.output_name = self.onnx_session.get_outputs()[0].name
 
-    def run(self, frame) -> list[YoloResult]:
+    def run(self, frame: np.ndarray) -> list[YoloResult]:
         h, w = frame.shape[:2]
         padded_frame = np.ones((self.input_shape[0], self.input_shape[1], 3), dtype=np.uint8) * 114
         ratio = min(self.input_shape[0] / h, self.input_shape[1] / w)

@@ -35,7 +35,7 @@ def get_filtered_result(outputs, conf_thresh: float) -> tuple[list[int], float, 
         ids.append(id)
     return boxes, confs, probs, ids
 
-def draw(frame, box: list[int], label: str, color: tuple[int, int, int], conf: float, mode: Drawmode):
+def draw(frame, box: list[int], label: str, color: tuple[int, int, int], conf: float, mode: Drawmode) -> None:
     x, y = box[0], box[1]
     w, h = box[2], box[3]
     color = [int(c) for c in color]
