@@ -14,10 +14,10 @@ namespace Husty.NeuralNetwork
         private readonly double _1_beta;
         private double _rate_t;
         private int _itr;
-        private DenseMatrix _mw;
-        private DenseMatrix _vw;
-        private DenseVector _mb;
-        private DenseVector _vb;
+        private Matrix<double> _mw;
+        private Matrix<double> _vw;
+        private Vector<double> _mb;
+        private Vector<double> _vb;
 
         public Adam(double rate = 0.01, double alpha = 0.9, double beta = 0.999)
         {
@@ -54,8 +54,8 @@ namespace Husty.NeuralNetwork
         {
             if (_mb is null)
             {
-                _mb = new double[b.Count];
-                _vb = new double[b.Count];
+                _mb = DenseVector.OfArray(new double[b.Count]);
+                _vb = DenseVector.OfArray(new double[b.Count]);
             }
             var bClone = b.Clone();
             for (int m = 0; m < b.Count; m++)

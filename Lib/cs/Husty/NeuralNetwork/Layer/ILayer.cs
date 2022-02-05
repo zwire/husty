@@ -1,13 +1,13 @@
-﻿using MathNet.Numerics.LinearAlgebra.Double;
+﻿using MathNet.Numerics.LinearAlgebra;
 
 namespace Husty.NeuralNetwork
 {
     public interface ILayer
     {
 
-        public DenseVector Forward(DenseVector x);
+        public Vector<double> Forward(Vector<double> x);
 
-        public DenseVector Backward(DenseVector dout);
+        public Vector<double> Backward(Vector<double> dout, bool freeze);
 
     }
 }

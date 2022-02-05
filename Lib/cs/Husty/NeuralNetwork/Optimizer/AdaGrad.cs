@@ -8,8 +8,8 @@ namespace Husty.NeuralNetwork
     {
 
         private readonly double _rate;
-        private DenseMatrix _hw;
-        private DenseVector _hb;
+        private Matrix<double> _hw;
+        private Vector<double> _hb;
 
         public AdaGrad(double rate = 0.01)
         {
@@ -18,7 +18,7 @@ namespace Husty.NeuralNetwork
 
         protected override Matrix<double> Optimize(Matrix<double> w, Matrix<double> gw)
         {
-            if (_hw is null) _hw = new(w.RowCount, w.ColumnCount);
+            if (_hw is null) _hw = new DenseMatrix(w.RowCount, w.ColumnCount);
             for (int k = 0; k < w.RowCount; k++)
             {
                 for (int l = 0; l < w.ColumnCount; l++)
@@ -32,7 +32,7 @@ namespace Husty.NeuralNetwork
 
         protected override Vector<double> Optimize(Vector<double> b, Vector<double> gb)
         {
-            if (_hb is null) _hb = new(b.Count);
+            if (_hb is null) _hb = new DenseVector(b.Count);
             for (int m = 0; m < b.Count; m++)
             {
                 _hb[m] += Math.Pow(gb[m], 2);

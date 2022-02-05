@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace Husty.NeuralNetwork
@@ -18,35 +19,26 @@ namespace Husty.NeuralNetwork
 
         public double[] Forward(double[] status)
         {
-            var vec = DenseVector.OfArray(status);
+            Vector<double> vec = DenseVector.OfArray(status);
             LayerStack.ForEach(n => vec = n.Forward(vec));
             return vec.ToArray();
         }
 
-        public void Backward(double[] error)
+        public void Backward(double[] error, bool freeze = false)
         {
-            var vec = DenseVector.OfArray(error);
+            Vector<double> vec = DenseVector.OfArray(error);
             for (int i = LayerStack.Count - 1; i > -1; i--)
-            {
-                vec = LayerStack[i].Backward(vec);
-                if (LayerStack[i] is ITunableLayer l)
-                {
-                    var (w, b) = l.GetParams();
-                    var (gw, gb) = l.GetGradients();
-                    (w, b) = l.Optimizer.Update(w, b, gw, gb);
-                    l.SetParams(w, b);
-                }
-            }
+                vec = LayerStack[i].Backward(vec, freeze);
         }
 
-        public void Backward(double error)
+        public void Backward(double error, bool freeze = false)
         {
             for (int i = LayerStack.Count - 1; i > 0; i--)
             {
                 if (LayerStack[i] is ITunableLayer l)
                 {
-                    var outputShape = l.GetParams().B.Count;
-                    Backward(Enumerable.Repeat(error, outputShape).ToArray());
+                    var outputShape = l.B.Count;
+                    Backward(Enumerable.Repeat(error, outputShape).ToArray(), freeze);
                     break;
                 }
             }
@@ -57,9 +49,8 @@ namespace Husty.NeuralNetwork
             using var sw = new StreamWriter(name, false);
             LayerStack.OfType<ITunableLayer>().ToList().ForEach(ts =>
             {
-                var p = ts.GetParams();
-                sw.WriteLine(JsonSerializer.Serialize(p.W.ToArray()));
-                sw.WriteLine(JsonSerializer.Serialize(p.B.ToArray()));
+                sw.WriteLine(JsonSerializer.Serialize(ts.W.ToArray()));
+                sw.WriteLine(JsonSerializer.Serialize(ts.B.ToArray()));
             });
         }
 

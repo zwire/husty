@@ -16,6 +16,13 @@ namespace Husty.NeuralNetwork
         private DenseVector _xc;
         private DenseVector _y;
 
+        public Matrix<double> W => DenseMatrix.OfArray(new[,] { { _w } });
+
+        public Vector<double> B => DenseVector.OfArray(new[] { _b });
+
+        public Matrix<double> GradW => DenseMatrix.OfArray(new[,] { { _gradW } });
+
+        public Vector<double> GradB => DenseVector.OfArray(new[] { _gradB });
 
         public IOptimizer Optimizer { get; }
 
@@ -27,7 +34,7 @@ namespace Husty.NeuralNetwork
             _b = beta;
         }
 
-        public DenseVector Forward(DenseVector x)
+        public Vector<double> Forward(Vector<double> x)
         {
             _xc = new(x.Count);
             _y = new(x.Count);
@@ -45,7 +52,7 @@ namespace Husty.NeuralNetwork
             return _y;
         }
 
-        public DenseVector Backward(DenseVector dout)
+        public Vector<double> Backward(Vector<double> dout, bool freeze)
         {
             var dx = dout / _sigma;
             _gradB = dout[0];
@@ -53,23 +60,23 @@ namespace Husty.NeuralNetwork
             double dsigma = -_w * dout * _xc / _sigma / _sigma;
             dx += _xc * dsigma / _sigma;
             dx = _y - dx;
+            if (!freeze)
+            {
+                var wb = Optimizer.Update(
+                    DenseMatrix.OfArray(new[,] { { _w } }),
+                    DenseVector.OfArray(new[] { _b }),
+                    DenseMatrix.OfArray(new[,] { { _gradW } }),
+                    DenseVector.OfArray(new[] { _gradB }));
+                _w = wb.W[0, 0];
+                _b = wb.B[0];
+            }
             return dx;
         }
 
-        public void SetParams(Matrix<double> W, Vector<double> B)
+        public void SetParams(Matrix<double> w, Vector<double> b)
         {
-            _w = W.ToRowMajorArray()[0];
-            _b = B.ToArray()[0];
-        }
-
-        public (Matrix<double> W, Vector<double> B) GetParams()
-        {
-            return (DenseMatrix.OfArray(new[,] { { _w } }), DenseVector.OfArray(new[] { _b }));
-        }
-
-        public (Matrix<double> GradW, Vector<double> GradB) GetGradients()
-        {
-            return (DenseMatrix.OfArray(new[,] { { _gradW } }), DenseVector.OfArray(new[] { _gradB }));
+            _w = w[0, 0];
+            _b = b[0];
         }
 
     }

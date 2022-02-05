@@ -14,11 +14,19 @@ namespace Husty.NeuralNetwork
     public class Affine : ITunableLayer
     {
 
-        private DenseVector _x;
-        private DenseMatrix _gradW;
-        private DenseVector _gradB;
-        private DenseMatrix _w;
-        private DenseVector _b;
+        private Vector<double> _x;
+        private Matrix<double> _gradW;
+        private Vector<double> _gradB;
+        private Matrix<double> _w;
+        private Vector<double> _b;
+
+        public Matrix<double> W => _w;
+
+        public Vector<double> B => _b;
+
+        public Matrix<double> GradW => _gradW;
+
+        public Vector<double> GradB => _gradB;
 
         public IOptimizer Optimizer { get; }
 
@@ -26,7 +34,7 @@ namespace Husty.NeuralNetwork
         public Affine(IOptimizer opt, int inshape, int outshape)
         {
             Optimizer = opt;
-            _w = new(inshape, outshape);
+            _w = new DenseMatrix(inshape, outshape);
             for (int i = 0; i < _w.RowCount; i++)
             {
                 for (int j = 0; j < _w.ColumnCount; j++)
@@ -35,7 +43,7 @@ namespace Husty.NeuralNetwork
                     _w[i, j] = (rnd.NextDouble() - 0.5) / 100;
                 }
             }
-            _b = new(outshape);
+            _b = new DenseVector(outshape);
             for (int i = 0; i < _b.Count; i++)
             {
                 var rnd = new Random();
@@ -50,33 +58,25 @@ namespace Husty.NeuralNetwork
             _b = bias;
         }
 
-        public void SetParams(Matrix<double> W, Vector<double> B)
-        {
-            _w = (DenseMatrix)W;
-            _b = (DenseVector)B;
-        }
-
-        public (Matrix<double> W, Vector<double> B) GetParams()
-        {
-            return (_w, _b);
-        }
-
-        public (Matrix<double> GradW, Vector<double> GradB) GetGradients()
-        {
-            return (_gradW, _gradB);
-        }
-
-        public DenseVector Forward(DenseVector x)
+        public Vector<double> Forward(Vector<double> x)
         {
             _x = x;
             return _x * _w + _b;
         }
 
-        public DenseVector Backward(DenseVector dout)
+        public Vector<double> Backward(Vector<double> dout, bool freeze)
         {
             _gradW = (DenseMatrix)(_x.ToColumnMatrix() * dout.ToRowMatrix());
             _gradB = dout;
-            return (dout.ToRowMatrix() * _w.Transpose()).ToRowMajorArray();
+            if (!freeze)
+                (_w, _b) = Optimizer.Update(_w, _b, _gradW, _gradB);
+            return dout * _w.Transpose();
+        }
+
+        public void SetParams(Matrix<double> w, Vector<double> b)
+        {
+            _w = w;
+            _b = b;
         }
 
     }

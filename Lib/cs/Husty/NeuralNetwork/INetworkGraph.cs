@@ -9,9 +9,9 @@ namespace Husty.NeuralNetwork
 
         public double[] Forward(double[] status);
 
-        public void Backward(double[] error);
+        public void Backward(double[] error, bool freeze);
 
-        public void Backward(double error);
+        public void Backward(double error, bool freeze);
 
         public void Save(string name);
 
