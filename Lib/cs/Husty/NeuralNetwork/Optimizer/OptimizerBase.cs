@@ -5,21 +5,14 @@ namespace Husty.NeuralNetwork
     public abstract class OptimizerBase : IOptimizer
     {
 
-        public Matrix<double> Weight { private set; get; }
-
-        public Vector<double> Bias { private set; get; }
-
-
-        public (Matrix<double> W, Vector<double> B) Update(Matrix<double> w, Vector<double> b, Matrix<double> gw, Vector<double> gb)
+        public (Matrix<float> W, Vector<float> B) Update(Matrix<float> w, Vector<float> b, Matrix<float> gw, Vector<float> gb)
         {
-            Weight = Optimize(w, gw);
-            Bias = Optimize(b, gb);
-            return (Weight, Bias);
+            return (Optimize(w, gw), Optimize(b, gb));
         }
 
-        protected abstract Matrix<double> Optimize(Matrix<double> w, Matrix<double> gw);
+        protected abstract Matrix<float> Optimize(Matrix<float> w, Matrix<float> gw);
 
-        protected abstract Vector<double> Optimize(Vector<double> b, Vector<double> gb);
+        protected abstract Vector<float> Optimize(Vector<float> b, Vector<float> gb);
 
     }
 }

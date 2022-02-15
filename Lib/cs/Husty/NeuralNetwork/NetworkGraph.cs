@@ -1,68 +1,68 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace Husty.NeuralNetwork
 {
-    public sealed class NetworkGraph : INetworkGraph
+    public sealed class NetworkGraph
     {
 
+
+        // ------ properties ------ //
+
         public List<ILayer> LayerStack { get; }
+
+
+        // ------ constructors ------ //
 
         public NetworkGraph(IEnumerable<ILayer> stack)
         {
             LayerStack = stack.ToList();
         }
 
-        public double[] Forward(double[] status)
+
+        // ------ public methods ------ //
+
+        public float[] Forward(float[] status)
         {
-            Vector<double> vec = DenseVector.OfArray(status);
-            LayerStack.ForEach(n => vec = n.Forward(vec));
-            return vec.ToArray();
+            return Forward(new[] { status })[0];
         }
 
-        public void Backward(double[] error, bool freeze = false)
+        public float[][] Forward(float[][] statuses)
         {
-            Vector<double> vec = DenseVector.OfArray(error);
+            var mat = Matrix<float>.Build.DenseOfRowArrays(statuses);
+            LayerStack.ForEach(n => mat = n.Forward(mat));
+            return mat.ToRowArrays();
+        }
+
+        public float[] Backward(float[] error)
+        {
+            return Backward(new[] { error })[0];
+        }
+
+        public float[][] Backward(float[][] errors)
+        {
+            var mat = Matrix<float>.Build.DenseOfRowArrays(errors);
             for (int i = LayerStack.Count - 1; i > -1; i--)
-                vec = LayerStack[i].Backward(vec, freeze);
+                mat = LayerStack[i].Backward(mat);
+            return mat.ToRowArrays();
         }
 
-        public void Backward(double error, bool freeze = false)
+        public void Optimize()
         {
-            for (int i = LayerStack.Count - 1; i > 0; i--)
-            {
-                if (LayerStack[i] is ITunableLayer l)
-                {
-                    var outputShape = l.B.Count;
-                    Backward(Enumerable.Repeat(error, outputShape).ToArray(), freeze);
-                    break;
-                }
-            }
+            LayerStack.OfType<ITunableLayer>().ToList().ForEach(l => l.Optimize());
         }
 
         public void Save(string name)
         {
             using var sw = new StreamWriter(name, false);
-            LayerStack.OfType<ITunableLayer>().ToList().ForEach(ts =>
-            {
-                sw.WriteLine(JsonSerializer.Serialize(ts.W.ToArray()));
-                sw.WriteLine(JsonSerializer.Serialize(ts.B.ToArray()));
-            });
+            LayerStack.ForEach(l => sw.WriteLine(l.Serialize()));
         }
 
-        public void Load(string name)
+        public static NetworkGraph Load(string name)
         {
-            using var sr = new StreamReader(name);
-            LayerStack.OfType<ITunableLayer>().ToList().ForEach(ts =>
-            {
-                var w = DenseMatrix.OfArray(JsonSerializer.Deserialize<double[,]>(sr.ReadLine()));
-                var b = DenseVector.OfArray(JsonSerializer.Deserialize<double[]>(sr.ReadLine()));
-                ts.SetParams(w, b);
-            });
+            return new(File.ReadAllLines(name).Select(l => LayerFactory.Deserialize(l)));
         }
 
     }

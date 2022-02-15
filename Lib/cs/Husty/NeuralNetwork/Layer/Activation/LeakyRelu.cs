@@ -1,33 +1,42 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
+using MathNet.Numerics.LinearAlgebra.Single;
 
 namespace Husty.NeuralNetwork
 {
     public class LeakyRelu : IActivationLayer
     {
 
-        private Vector<double> _y;
-        private readonly double _alpha;
+        private Matrix<float> _y;
+        private readonly float _alpha;
 
-        public LeakyRelu(double alpha = 0.01) 
-        { 
+        public LeakyRelu(float alpha = 0.01f) 
+        {
             _alpha = alpha;
         }
 
-        public Vector<double> Forward(Vector<double> x)
+        public Matrix<float> Forward(Matrix<float> x)
         {
-            _y = new DenseVector(x.Count);
-            for (int i = 0; i < x.Count; i++)
-                _y[i] = x[i] > 0 ? x[i] : _alpha * x[i];
+            _y = x.Map(p => p > 0 ? p : _alpha * p);
             return _y;
         }
 
-        public Vector<double> Backward(Vector<double> dout, bool freeze = false)
+        public Matrix<float> Backward(Matrix<float> dout)
         {
-            var dx = new DenseVector(dout.Count);
-            for (int i = 0; i < dout.Count; i++)
-                dx[i] = _y[i] > 0 ? dout[i] : _alpha * dout[i];
+            var dx = new DenseMatrix(dout.RowCount, dout.ColumnCount);
+            for (int i = 0; i < dout.RowCount; i++)
+                for (int j = 0; j < dout.ColumnCount; j++)
+                    dx[i, j] = _y[i, j] > 0 ? dout[i, j] : _alpha * dout[i, j];
             return dx;
+        }
+
+        public string Serialize()
+        {
+            return $"LeakyRelu::{_alpha}";
+        }
+
+        internal static ILayer Deserialize(string[] line)
+        {
+            return new LeakyRelu(float.Parse(line[0]));
         }
 
     }

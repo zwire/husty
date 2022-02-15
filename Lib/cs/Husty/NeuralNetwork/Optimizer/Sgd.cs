@@ -5,19 +5,32 @@ namespace Husty.NeuralNetwork
     public class Sgd : OptimizerBase
     {
 
-        private readonly double _rate;
+        // ------ fields ------ //
 
-        public Sgd(double rate = 0.01)
+        private readonly float _rate;
+
+
+        // ------ properties ------ //
+
+        public float Rate => _rate;
+
+
+        // ------ constructors ------ //
+
+        public Sgd(float rate = 0.01f)
         {
             _rate = rate;
         }
 
-        protected override Matrix<double> Optimize(Matrix<double> w, Matrix<double> gw)
+
+        // ------ override methods ------ //
+
+        protected override Matrix<float> Optimize(Matrix<float> w, Matrix<float> gw)
         {
             return w - _rate * gw;
         }
 
-        protected override Vector<double> Optimize(Vector<double> b, Vector<double> gb)
+        protected override Vector<float> Optimize(Vector<float> b, Vector<float> gb)
         {
             return b - _rate * gb;
         }

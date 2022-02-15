@@ -1,82 +1,115 @@
 ﻿using System;
 using System.Linq;
+using System.Text.Json;
 using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
+using MathNet.Numerics.LinearAlgebra.Single;
 
 namespace Husty.NeuralNetwork
 {
+    // TODO: test
+    // see https://www.anarchive-beta.com/entry/2020/08/17/180000
     public class Normalizer : ITunableLayer
     {
 
-        private double _sigma;
-        private double _b;
-        private double _w;
-        private double _gradW;
-        private double _gradB;
-        private DenseVector _xc;
-        private DenseVector _y;
+        // ------ fields ------ //
 
-        public Matrix<double> W => DenseMatrix.OfArray(new[,] { { _w } });
+        private Vector<float> _sigmas;
+        private Matrix<float> _xc;
+        private Matrix<float> _y;
 
-        public Vector<double> B => DenseVector.OfArray(new[] { _b });
 
-        public Matrix<double> GradW => DenseMatrix.OfArray(new[,] { { _gradW } });
+        // ------ properties ------ //
 
-        public Vector<double> GradB => DenseVector.OfArray(new[] { _gradB });
+        public Matrix<float> W { private set; get; }
+
+        public Vector<float> B { private set; get; }
+
+        public Matrix<float> GradW { private set; get; }
+
+        public Vector<float> GradB { private set; get; }
 
         public IOptimizer Optimizer { get; }
 
 
-        public Normalizer(IOptimizer opt, double gamma = 1, double beta = 0)
+        // ------ constructors ------ //
+
+        public Normalizer(IOptimizer optimizer, float gamma = 1, float beta = 0)
         {
-            Optimizer = opt;
-            _w = gamma;
-            _b = beta;
+            Optimizer = optimizer;
+            W = DenseMatrix.OfArray(new[,] { { gamma } });
+            B = DenseVector.OfArray(new[] { beta });
         }
 
-        public Vector<double> Forward(Vector<double> x)
+        public Normalizer(IOptimizer optimizer, DenseMatrix weights, DenseVector bias)
         {
-            _xc = new(x.Count);
-            _y = new(x.Count);
-            var mean = x.Average();
-            _sigma = 0.0;
-            for (int i = 0; i < x.Count; i++)
-                _sigma += Math.Pow(x[i] - mean, 2);
-            _sigma /= x.Count;
-            _sigma = Math.Sqrt(_sigma + 1e-7);
-            for (int i = 0; i < x.Count; i++)
-            {
-                _xc[i] = x[i] - mean;
-                _y[i] = _w * _xc[i] / _sigma - _b;
-            }
+            Optimizer = optimizer;
+            W = weights;
+            B = bias;
+        }
+
+
+        // ------ public methods ------ //
+
+        public Matrix<float> Forward(Matrix<float> x)
+        {
+            _y = new DenseMatrix(x.RowCount, x.ColumnCount);
+            var means = x.ColumnSums() / x.ColumnCount;
+            _sigmas = new DenseVector(x.RowCount);
+            for (int i = 0; i < x.RowCount; i++)
+                for (int j = 0; j < x.ColumnCount; j++)
+                    _sigmas[j] += (float)Math.Pow(x[i, j] - means[j], 2);
+            _sigmas /= x.ColumnCount;
+            _sigmas = (_sigmas + 1e-7f).PointwiseSqrt();
+            _xc = x - means.ToColumnMatrix();
+            for (int i = 0; i < x.RowCount; i++)
+                for (int j = 0; j < x.ColumnCount; j++)
+                    _xc[i, j] /= _sigmas[j];
+            var bMat = Matrix<float>.Build.DenseOfRows(Enumerable.Repeat(B, x.RowCount));
+            _y = W * _xc + bMat;
             return _y;
         }
 
-        public Vector<double> Backward(Vector<double> dout, bool freeze)
+        public Matrix<float> Backward(Matrix<float> dout)
         {
-            var dx = dout / _sigma;
-            _gradB = dout[0];
-            _gradW = _xc[0] * dout[0];
-            double dsigma = -_w * dout * _xc / _sigma / _sigma;
-            dx += _xc * dsigma / _sigma;
-            dx = _y - dx;
-            if (!freeze)
-            {
-                var wb = Optimizer.Update(
-                    DenseMatrix.OfArray(new[,] { { _w } }),
-                    DenseVector.OfArray(new[] { _b }),
-                    DenseMatrix.OfArray(new[,] { { _gradW } }),
-                    DenseVector.OfArray(new[] { _gradB }));
-                _w = wb.W[0, 0];
-                _b = wb.B[0];
-            }
-            return dx;
+            var dx = new DenseMatrix(dout.RowCount, dout.ColumnCount);
+            for (int i = 0; i < dout.RowCount; i++)
+                for (int j = 0; j < dout.ColumnCount; j++)
+                    dx[i, j] = dout[i, j] / _sigmas[j];
+            GradW = dout.PointwiseMultiply(_xc).ColumnSums().ToColumnMatrix();
+            GradB = dout.ColumnSums();
+            Matrix<float> dl = new DenseMatrix(dout.RowCount, dout.ColumnCount);
+            for (int j = 0; j < dout.ColumnCount; j++)
+                for (int i = 0; i < dout.RowCount; i++)
+                    dl[i, j] = dx[i, j] * (1 - (float)Math.Pow(_xc[i, j], 2) / dout.RowCount) / _sigmas[j];
+            dl -= dl / dout.RowCount;
+            return dl;
         }
 
-        public void SetParams(Matrix<double> w, Vector<double> b)
+        public void SetParams(Matrix<float> w, Vector<float> b)
         {
-            _w = w[0, 0];
-            _b = b[0];
+            W = w;
+            B = b;
+        }
+
+        public void Optimize()
+        {
+            (W, B) = Optimizer.Update(W, B, GradW, GradB);
+        }
+
+        public string Serialize()
+        {
+            var opt = JsonSerializer.Serialize<object>(Optimizer);
+            var w = JsonSerializer.Serialize(W.ToRowArrays());
+            var b = JsonSerializer.Serialize(B.ToArray());
+            return $"Nomalizer::{opt}::{w}::{b}";
+        }
+
+        public static ILayer Deserialize(string[] line)
+        {
+            var opt = JsonSerializer.Deserialize<object>(line[0]) as IOptimizer;
+            var w = JsonSerializer.Deserialize<float[][]>(line[1]);
+            var b = JsonSerializer.Deserialize<float[]>(line[2]);
+            return new Normalizer(opt, DenseMatrix.OfRowArrays(w), DenseVector.OfArray(b));
         }
 
     }

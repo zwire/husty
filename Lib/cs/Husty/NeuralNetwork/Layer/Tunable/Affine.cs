@@ -1,82 +1,103 @@
 ﻿using System;
+using System.Linq;
+using System.Text.Json;
 using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
+using MathNet.Numerics.LinearAlgebra.Single;
 
 namespace Husty.NeuralNetwork
 {
-    // Y = W * X + B
-    //
-    // 入力 ... m
-    // 出力 ... n
-    // の場合、
-    // W ... m * n
-    // B ... 1 * n (Vector)
     public class Affine : ITunableLayer
     {
 
-        private Vector<double> _x;
-        private Matrix<double> _gradW;
-        private Vector<double> _gradB;
-        private Matrix<double> _w;
-        private Vector<double> _b;
+        // ------ fields ------ //
 
-        public Matrix<double> W => _w;
+        private Matrix<float> _x;
 
-        public Vector<double> B => _b;
 
-        public Matrix<double> GradW => _gradW;
+        // ------ properties ------ //
 
-        public Vector<double> GradB => _gradB;
+        public Matrix<float> W { private set; get; }
+
+        public Vector<float> B { private set; get; }
+
+        public Matrix<float> GradW { private set; get; }
+
+        public Vector<float> GradB { private set; get; }
 
         public IOptimizer Optimizer { get; }
 
 
-        public Affine(IOptimizer opt, int inshape, int outshape)
+        // ------ constructors ------ //
+
+        public Affine(IOptimizer optimizer, int inshape, int outshape)
         {
-            Optimizer = opt;
-            _w = new DenseMatrix(inshape, outshape);
-            for (int i = 0; i < _w.RowCount; i++)
+            Optimizer = optimizer;
+            W = new DenseMatrix(inshape, outshape);
+            for (int i = 0; i < W.RowCount; i++)
             {
-                for (int j = 0; j < _w.ColumnCount; j++)
+                for (int j = 0; j < W.ColumnCount; j++)
                 {
                     var rnd = new Random();
-                    _w[i, j] = (rnd.NextDouble() - 0.5) / 100;
+                    W[i, j] = (float)(rnd.NextDouble() - 0.5f);
                 }
             }
-            _b = new DenseVector(outshape);
-            for (int i = 0; i < _b.Count; i++)
+            B = new DenseVector(outshape);
+            for (int i = 0; i < B.Count; i++)
             {
                 var rnd = new Random();
-                _b[i] = rnd.NextDouble() - 0.5;
+                B[i] = (float)(rnd.NextDouble() - 0.5f);
             }
         }
 
-        public Affine(IOptimizer opt, DenseMatrix weights, DenseVector bias)
+        public Affine(IOptimizer optimizer, DenseMatrix weights, DenseVector bias)
         {
-            Optimizer = opt;
-            _w = weights;
-            _b = bias;
+            Optimizer = optimizer;
+            W = weights;
+            B = bias;
         }
 
-        public Vector<double> Forward(Vector<double> x)
+
+        // ------ public methods ------ //
+
+        public Matrix<float> Forward(Matrix<float> x)
         {
             _x = x;
-            return _x * _w + _b;
+            var bMat = Matrix<float>.Build.DenseOfRows(Enumerable.Repeat(B, x.RowCount));
+            return _x * W + bMat;
         }
 
-        public Vector<double> Backward(Vector<double> dout, bool freeze)
+        public Matrix<float> Backward(Matrix<float> dout)
         {
-            _gradW = (DenseMatrix)(_x.ToColumnMatrix() * dout.ToRowMatrix());
-            _gradB = dout;
-            if (!freeze)
-                (_w, _b) = Optimizer.Update(_w, _b, _gradW, _gradB);
-            return dout * _w.Transpose();
+            GradW = _x.Transpose() * dout;
+            GradB = dout.ColumnSums();
+            return dout * W.Transpose();
         }
 
-        public void SetParams(Matrix<double> w, Vector<double> b)
+        public void SetParams(Matrix<float> w, Vector<float> b)
         {
-            _w = w;
-            _b = b;
+            W = w;
+            B = b;
+        }
+
+        public void Optimize()
+        {
+            (W, B) = Optimizer.Update(W, B, GradW, GradB);
+        }
+
+        public string Serialize()
+        {
+            var opt = JsonSerializer.Serialize(Optimizer, Optimizer.GetType());
+            var w = JsonSerializer.Serialize(W.ToRowArrays());
+            var b = JsonSerializer.Serialize(B.ToArray());
+            return $"Affine::{opt}::{w}::{b}";
+        }
+
+        internal static ILayer Deserialize(string[] line)
+        {
+            var opt = JsonSerializer.Deserialize<object>(line[0]) as IOptimizer;
+            var w = JsonSerializer.Deserialize<float[][]>(line[1]);
+            var b = JsonSerializer.Deserialize<float[]>(line[2]);
+            return new Affine(opt, DenseMatrix.OfRowArrays(w), DenseVector.OfArray(b));
         }
 
     }

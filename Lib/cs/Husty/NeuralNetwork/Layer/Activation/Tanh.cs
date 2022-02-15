@@ -1,32 +1,31 @@
-﻿using System;
-using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
+﻿using MathNet.Numerics.LinearAlgebra;
 
 namespace Husty.NeuralNetwork
 {
     public class Tanh : IActivationLayer
     {
 
-        private Vector<double> y;
+        private Matrix<float> _y;
 
-        public Vector<double> Forward(Vector<double> x)
+        public Matrix<float> Forward(Matrix<float> x)
         {
-            y = new DenseVector(x.Count);
-            for (int i = 0; i < x.Count; i++)
-            {
-                y[i] = Math.Tanh(x[i]);
-            }
-            return y;
+            _y = x.PointwiseTanh();
+            return _y;
         }
 
-        public Vector<double> Backward(Vector<double> dout, bool freeze = false)
+        public Matrix<float> Backward(Matrix<float> dout)
         {
-            var dx = new DenseVector(dout.Count);
-            for (int i = 0; i < dout.Count; i++)
-            {
-                dx[i] = 1 - y[i] * y[i];
-            }
-            return dx;
+            return (1.0f - _y * _y.Transpose()) * dout;
+        }
+
+        public string Serialize()
+        {
+            return "Tanh";
+        }
+
+        internal static ILayer Deserialize(string[] line)
+        {
+            return new Tanh();
         }
 
     }

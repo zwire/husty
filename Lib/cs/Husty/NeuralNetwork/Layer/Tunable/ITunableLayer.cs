@@ -5,17 +5,19 @@ namespace Husty.NeuralNetwork
     public interface ITunableLayer : ILayer
     {
 
-        public Matrix<double> W { get; }
+        public Matrix<float> W { get; }
 
-        public Vector<double> B { get; }
+        public Vector<float> B { get; }
 
-        public Matrix<double> GradW { get; }
+        public Matrix<float> GradW { get; }
 
-        public Vector<double> GradB { get; }
+        public Vector<float> GradB { get; }
 
         public IOptimizer Optimizer { get; }
 
-        public void SetParams(Matrix<double> w, Vector<double> b);
+        public void SetParams(Matrix<float> w, Vector<float> b);
+
+        public void Optimize();
 
     }
 }

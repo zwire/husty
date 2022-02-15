@@ -1,27 +1,36 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
+using MathNet.Numerics.LinearAlgebra.Single;
 
 namespace Husty.NeuralNetwork
 {
     public class Relu : IActivationLayer
     {
 
-        private Vector<double> _y;
+        private Matrix<float> _y;
 
-        public Vector<double> Forward(Vector<double> x)
+        public Matrix<float> Forward(Matrix<float> x)
         {
-            _y = new DenseVector(x.Count);
-            for (int i = 0; i < x.Count; i++)
-                _y[i] = x[i] > 0 ? x[i] : 0;
+            _y = x.Map(p => p > 0 ? p : 0);
             return _y;
         }
 
-        public Vector<double> Backward(Vector<double> dout, bool freeze = false)
+        public Matrix<float> Backward(Matrix<float> dout)
         {
-            var dx = new DenseVector(dout.Count);
-            for (int i = 0; i < dout.Count; i++)
-                dx[i] = _y[i] > 0 ? dout[i] : 0;
+            var dx = new DenseMatrix(dout.RowCount, dout.ColumnCount);
+            for (int i = 0; i < dout.RowCount; i++)
+                for (int j = 0; j < dout.ColumnCount; j++)
+                    dx[i, j] = _y[i, j] > 0 ? dout[i, j] : 0;
             return dx;
+        }
+
+        public string Serialize()
+        {
+            return "Relu";
+        }
+
+        internal static ILayer Deserialize(string[] line)
+        {
+            return new Relu();
         }
 
     }
