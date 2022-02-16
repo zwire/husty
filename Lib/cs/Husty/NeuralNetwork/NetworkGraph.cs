@@ -8,7 +8,6 @@ namespace Husty.NeuralNetwork
     public sealed class NetworkGraph
     {
 
-
         // ------ properties ------ //
 
         public List<ILayer> LayerStack { get; }
@@ -16,9 +15,9 @@ namespace Husty.NeuralNetwork
 
         // ------ constructors ------ //
 
-        public NetworkGraph(IEnumerable<ILayer> stack)
+        public NetworkGraph(IEnumerable<ILayer> layers)
         {
-            LayerStack = stack.ToList();
+            LayerStack = layers.ToList();
         }
 
 

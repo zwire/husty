@@ -50,8 +50,8 @@ namespace Husty.NeuralNetwork
             }
             _itrW++;
             var rate_t = _rate * (float)Math.Sqrt(1.0 - Math.Pow(_beta, _itrW)) / (float)(1.0 - Math.Pow(_alpha, _itrW));
-            _mw += (1.0f - _alpha) * (gw - _mw);
-            _vw += (1.0f - _beta) * (gw.PointwisePower(2) - _vw);
+            _mw += (1f - _alpha) * (gw - _mw);
+            _vw += (1f - _beta) * (gw.PointwisePower(2) - _vw);
             return w - rate_t * _mw.PointwiseDivide(_vw.PointwiseSqrt() + 1e-8f);
         }
 
@@ -64,8 +64,8 @@ namespace Husty.NeuralNetwork
             }
             _itrB++;
             var rate_t = _rate * (float)Math.Sqrt(1.0 - Math.Pow(_beta, _itrB)) / (float)(1.0 - Math.Pow(_alpha, _itrB));
-            _mb += (1.0f - _alpha) * (gb - _mb);
-            _vb += (1.0f - _beta) * (gb.PointwisePower(2) - _vb);
+            _mb += (1f - _alpha) * (gb - _mb);
+            _vb += (1f - _beta) * (gb.PointwisePower(2) - _vb);
             return b - rate_t * _mb / (_vb.PointwiseSqrt() + 1e-8f);
         }
 

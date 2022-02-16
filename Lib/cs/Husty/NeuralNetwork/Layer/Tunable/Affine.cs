@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.Json;
+using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Single;
 
@@ -32,21 +33,9 @@ namespace Husty.NeuralNetwork
         public Affine(IOptimizer optimizer, int inshape, int outshape)
         {
             Optimizer = optimizer;
-            W = new DenseMatrix(inshape, outshape);
-            for (int i = 0; i < W.RowCount; i++)
-            {
-                for (int j = 0; j < W.ColumnCount; j++)
-                {
-                    var rnd = new Random();
-                    W[i, j] = (float)(rnd.NextDouble() - 0.5f);
-                }
-            }
+            var normal = new Normal(0, Math.Sqrt(1.0 / inshape));
+            W = new DenseMatrix(inshape, outshape, Enumerable.Range(0, inshape * outshape).Select(_ => (float)normal.Sample()).ToArray());
             B = new DenseVector(outshape);
-            for (int i = 0; i < B.Count; i++)
-            {
-                var rnd = new Random();
-                B[i] = (float)(rnd.NextDouble() - 0.5f);
-            }
         }
 
         public Affine(IOptimizer optimizer, DenseMatrix weights, DenseVector bias)
@@ -71,12 +60,6 @@ namespace Husty.NeuralNetwork
             GradW = _x.Transpose() * dout;
             GradB = dout.ColumnSums();
             return dout * W.Transpose();
-        }
-
-        public void SetParams(Matrix<float> w, Vector<float> b)
-        {
-            W = w;
-            B = b;
         }
 
         public void Optimize()

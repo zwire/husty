@@ -9,13 +9,13 @@ namespace Husty.NeuralNetwork
 
         public Matrix<float> Forward(Matrix<float> x)
         {
-            _y = 1.0f / (1.0f + (-x).PointwiseExp());
+            _y = 1f / (1f + (-x).PointwiseExp());
             return _y;
         }
 
         public Matrix<float> Backward(Matrix<float> dout)
         {
-            return (1.0f - _y) * _y.Transpose() * dout;
+            return dout.PointwiseMultiply(1f - _y.PointwisePower(2));
         }
 
         public string Serialize()

@@ -15,7 +15,7 @@ namespace Husty.NeuralNetwork
 
         public Matrix<float> Backward(Matrix<float> dout)
         {
-            return (1.0f - _y * _y.Transpose()) * dout;
+            return dout.PointwiseMultiply(1f - _y.PointwisePower(2));
         }
 
         public string Serialize()
