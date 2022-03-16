@@ -68,7 +68,6 @@ namespace Tools.Camera
                             break;
                     }
                 }
-                frame.Dispose();
             }
         ESC:
             writer?.Dispose();

@@ -1,4 +1,5 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using System.Text.Json;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace Husty.NeuralNetwork
 {
@@ -33,6 +34,16 @@ namespace Husty.NeuralNetwork
         protected override Vector<float> Optimize(Vector<float> b, Vector<float> gb)
         {
             return b - _rate * gb;
+        }
+
+        public override string Serialize()
+        {
+            return $"Sgd:<{JsonSerializer.Serialize(this)}";
+        }
+
+        internal static IOptimizer Deserialize(string line)
+        {
+            return JsonSerializer.Deserialize<Sgd>(line);
         }
 
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using OpenCvSharp;
-using static System.Math;
 
 namespace Husty.OpenCvSharp
 {

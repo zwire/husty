@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Single;
 
@@ -67,6 +68,16 @@ namespace Husty.NeuralNetwork
             _mb += (1f - _alpha) * (gb - _mb);
             _vb += (1f - _beta) * (gb.PointwisePower(2) - _vb);
             return b - rate_t * _mb / (_vb.PointwiseSqrt() + 1e-8f);
+        }
+
+        public override string Serialize()
+        {
+            return $"Adam:<{JsonSerializer.Serialize(this)}";
+        }
+
+        internal static IOptimizer Deserialize(string line)
+        {
+            return JsonSerializer.Deserialize<Adam>(line);
         }
 
     }

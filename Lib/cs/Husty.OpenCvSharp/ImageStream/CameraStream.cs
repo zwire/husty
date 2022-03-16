@@ -13,6 +13,7 @@ namespace Husty.OpenCvSharp
         // ------ fields ------ //
 
         private readonly VideoCapture _cap;
+        private readonly ObjectPool<Mat> _pool;
 
 
         // ------ properties ------ //
@@ -31,6 +32,7 @@ namespace Husty.OpenCvSharp
         public CameraStream(int src, IEnumerable<Properties> properties = null)
         {
             _cap = new(src);
+            _pool = new(2);
             if (properties is not null)
                 foreach (var p in properties)
                     _cap.Set(p.Key, p.Value);
@@ -44,7 +46,7 @@ namespace Husty.OpenCvSharp
 
         public Mat Read()
         {
-            var frame = new Mat();
+            var frame = _pool.GetObject();
             HasFrame = _cap.Read(frame);
             if (HasFrame)
                 return frame;
@@ -64,6 +66,7 @@ namespace Husty.OpenCvSharp
         {
             HasFrame = false;
             _cap?.Dispose();
+            _pool?.Dispose();
         }
 
     }

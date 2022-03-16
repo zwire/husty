@@ -24,11 +24,6 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// </summary>
         public Mat XYZ { get; }
 
-        /// <summary>
-        /// Depth image (0-65535)(mm)
-        /// </summary>
-        public Mat Depth16 => XYZ.Split()[2];
-
         public int Width => BGR.Width;
 
         public int Height => BGR.Height;
@@ -36,6 +31,8 @@ namespace Husty.OpenCvSharp.DepthCamera
         public int Rows => BGR.Rows;
 
         public int Cols => BGR.Cols;
+
+        public bool IsDisposed => BGR.IsDisposed || XYZ.IsDisposed;
 
 
         // ------ constructors ------ //
@@ -135,16 +132,21 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <returns></returns>
         public unsafe Mat Depth8(int minDistance, int maxDistance)
         {
-            var depth8 = new Mat(XYZ.Height, XYZ.Width, MatType.CV_8U);
-            var d8 = depth8.DataPointer;
-            var d16 = (ushort*)Depth16.Data;
-            for (int j = 0; j < XYZ.Width * XYZ.Height; j++)
-            {
-                if (d16[j] < 300) d8[j] = 0;
-                else if (d16[j] < maxDistance) d8[j] = (byte)((d16[j] - minDistance) * 255 / (maxDistance - minDistance));
-                else d8[j] = 255;
-            }
-            return depth8;
+            var d = Depth16();
+            Cv2.Threshold(d, d, maxDistance, maxDistance, ThresholdTypes.TozeroInv);
+            Cv2.Threshold(d, d, minDistance, minDistance, ThresholdTypes.Tozero);
+            Cv2.Normalize(d, d, 0, 255, NormTypes.MinMax, MatType.CV_8U);
+            return d;
+        }
+
+        /// <summary>
+        /// Depth image (0-65535)(mm)
+        /// </summary>
+        public unsafe Mat Depth16()
+        {
+            var d16 = new Mat();
+            Cv2.ExtractChannel(XYZ, d16, 2);
+            return d16;
         }
 
         /// <summary>

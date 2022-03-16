@@ -8,7 +8,8 @@ namespace Tutorial.RealsenseStartup
     {
         static void Main(string[] args)
         {
-            var camera = new Realsense(new(640, 360));
+            //var camera = new Realsense(new(640, 360));
+            var camera = new Kinect(AlignBase.Color);
             while (true)
             {
                 var frame = camera.Read();

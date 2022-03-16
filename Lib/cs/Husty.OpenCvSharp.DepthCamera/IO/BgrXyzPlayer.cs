@@ -90,7 +90,7 @@ namespace Husty.OpenCvSharp.DepthCamera
             var bgrBytes = _binReader.ReadBytes(bgrDataSize);
             var xyzDataSize = _binReader.ReadInt32();
             var xyzBytes = _binReader.ReadBytes(xyzDataSize);
-            var bgrxyz = new BgrXyzMat(bgrBytes, xyzBytes);
+            using var bgrxyz = new BgrXyzMat(bgrBytes, xyzBytes);
             FrameSize = new(bgrxyz.BGR.Width, bgrxyz.BGR.Height);
         }
 
@@ -109,7 +109,7 @@ namespace Husty.OpenCvSharp.DepthCamera
             var xyzBytes = _binReader.ReadBytes(xyzDataSize);
             var frame = new BgrXyzMat(bgrBytes, xyzBytes);
             HasFrame = true;
-            return frame.Clone();
+            return frame;
         }
 
         public IObservable<BgrXyzMat> GetStream()
@@ -117,6 +117,7 @@ namespace Husty.OpenCvSharp.DepthCamera
             return Observable.Interval(TimeSpan.FromMilliseconds(1000 / Fps), ThreadPoolScheduler.Instance)
                 .Where(_ => _positionIndex < FrameCount)
                 .Select(_ => Read())
+                .Where(x => x is not null && !x.IsDisposed && !x.Empty())
                 .Publish().RefCount();
         }
 

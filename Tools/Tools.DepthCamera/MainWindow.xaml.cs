@@ -76,7 +76,7 @@ namespace Tools.DepthCamera
                 ShutterButton.IsEnabled = true;
                 ReactiveFrame = _camera.GetStream().ToReadOnlyReactivePropertySlim();
                 ReactiveFrame
-                    .Where(frame => frame is not null && !frame.Empty())
+                    .Where(frame => frame is not null)
                     .Subscribe(async frame =>
                     {
                         await _channel.WriteAsync(frame);
@@ -140,7 +140,7 @@ namespace Tools.DepthCamera
                 var writer = new BgrXyzRecorder(filePath);
                 ReactiveFrame = _camera.GetStream().ToReadOnlyReactivePropertySlim();
                 ReactiveFrame
-                    .Where(frame => frame is not null && !frame.Empty())
+                    .Where(frame => frame is not null)
                     .Finally(() => writer?.Dispose())
                     .Subscribe(async frame =>
                     {
@@ -202,7 +202,7 @@ namespace Tools.DepthCamera
                 PlaySlider.Maximum = _player.FrameCount;
                 ReactiveFrame = _player.GetStream().ToReadOnlyReactivePropertySlim();
                 ReactiveFrame
-                    .Where(frame => frame is not null && !frame.Empty())
+                    .Where(frame => frame is not null && !frame.IsDisposed && !frame.Empty())
                     .Subscribe(async frame =>
                     {
                         await _channel.WriteAsync(frame);

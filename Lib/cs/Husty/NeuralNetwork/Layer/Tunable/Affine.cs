@@ -69,7 +69,7 @@ namespace Husty.NeuralNetwork
 
         public string Serialize()
         {
-            var opt = JsonSerializer.Serialize(Optimizer, Optimizer.GetType());
+            var opt = Optimizer.Serialize();
             var w = JsonSerializer.Serialize(W.ToRowArrays());
             var b = JsonSerializer.Serialize(B.ToArray());
             return $"Affine::{opt}::{w}::{b}";
@@ -77,7 +77,7 @@ namespace Husty.NeuralNetwork
 
         internal static ILayer Deserialize(string[] line)
         {
-            var opt = JsonSerializer.Deserialize<object>(line[0]) as IOptimizer;
+            var opt = OptimizerFactory.Deserialize(line[0]);
             var w = JsonSerializer.Deserialize<float[][]>(line[1]);
             var b = JsonSerializer.Deserialize<float[]>(line[2]);
             return new Affine(opt, DenseMatrix.OfRowArrays(w), DenseVector.OfArray(b));

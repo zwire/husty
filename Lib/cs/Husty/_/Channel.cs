@@ -17,20 +17,18 @@ namespace Husty
 
         // ------ properties ------ //
 
-        public int ReadTimeout { private set; get; }
+        public int ReadTimeout { set; get; } = -1;
 
-        public int WriteTimeout { private set; get; }
+        public int WriteTimeout { set; get; } = -1;
 
 
         // ------ constructors ------ //
 
-        public Channel(int readTimeout = -1, int writeTimeout = -1)
+        public Channel(int capacity = 1)
         {
-            ReadTimeout = readTimeout;
-            WriteTimeout = writeTimeout;
             _rcts = new CancellationTokenSource(ReadTimeout);
             _wcts = new CancellationTokenSource(WriteTimeout);
-            _channel = Channel.CreateBounded<T>(new BoundedChannelOptions(1)
+            _channel = Channel.CreateBounded<T>(new BoundedChannelOptions(capacity)
             {
                 FullMode = BoundedChannelFullMode.DropOldest,
                 SingleReader = true,

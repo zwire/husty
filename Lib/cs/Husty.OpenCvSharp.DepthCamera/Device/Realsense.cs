@@ -22,6 +22,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         private readonly SpatialFilter _sfill;
         private readonly TemporalFilter _tfill;
         private readonly HoleFillingFilter _hfill;
+        private readonly ObjectPool<BgrXyzMat> _pool;
 
 
         // ------ properties ------ //
@@ -45,6 +46,10 @@ namespace Husty.OpenCvSharp.DepthCamera
         public Realsense(Size size, AlignBase align = AlignBase.Color, int fps = 15,
             bool disparityTransform = true, bool spatialFilter = true, bool temporalFilter = true, bool holeFillingFilter = true)
         {
+            _pool = new(2, () => new(
+                new Mat(size.Height, size.Width, MatType.CV_8UC3), 
+                new Mat(size.Height, size.Width, MatType.CV_16UC3))
+            );
             var width = size.Width;
             var height = size.Height;
             FrameSize = size;
@@ -86,19 +91,19 @@ namespace Husty.OpenCvSharp.DepthCamera
 
         public BgrXyzMat Read()
         {
-            GC.Collect();
             using var frames1 = _pipeline.WaitForFrames();
-            using var frames2 = _align.Process(frames1).AsFrameSet();
-            using var color = frames2.ColorFrame.DisposeWith(frames2);
-            using var depth1 = frames2.DepthFrame.DisposeWith(frames2);
+            using var frames2 = _align.Process(frames1);
+            using var frames3 = frames2.AsFrameSet();
+            using var color = frames3.ColorFrame.DisposeWith(frames3);
+            using var depth1 = frames3.DepthFrame.DisposeWith(frames3);
             using var depth2 = _depthto?.Process(depth1) ?? depth1;
             using var depth3 = _sfill?.Process(depth2) ?? depth2;
             using var depth4 = _tfill?.Process(depth3) ?? depth3;
             using var depth5 = _todepth?.Process(depth4) ?? depth4;
             using var depth6 = _hfill?.Process(depth5) ?? depth5;
-            var colorMat = color.ToColorMat();
-            var pointCloudMat = depth6.ToPointCloudMat(color.Width, color.Height);
-            var frame = BgrXyzMat.Create(colorMat, pointCloudMat);
+            var frame = _pool.GetObject();
+            color.CopyToColorMat(frame.BGR);
+            depth6.CopyToPointCloudMat(frame.XYZ, color.Width, color.Height);
             HasFrame = true;
             return frame;
         }
@@ -108,6 +113,7 @@ namespace Husty.OpenCvSharp.DepthCamera
             return Observable
                 .Repeat(0, ThreadPoolScheduler.Instance)
                 .Select(_ => Read())
+                .Where(x => !x.IsDisposed && !x.Empty())
                 .Publish().RefCount();
         }
 
@@ -115,6 +121,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         {
             HasFrame = false;
             _pipeline?.Dispose();
+            _pool?.Dispose();
         }
 
     }

@@ -7,5 +7,7 @@ namespace Husty.NeuralNetwork
 
         public (Matrix<float> W, Vector<float> B) Update(Matrix<float> w, Vector<float> b, Matrix<float> gw, Vector<float> gb);
 
+        public string Serialize();
+
     }
 }

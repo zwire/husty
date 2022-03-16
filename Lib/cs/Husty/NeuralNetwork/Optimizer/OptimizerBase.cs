@@ -14,5 +14,7 @@ namespace Husty.NeuralNetwork
 
         protected abstract Vector<float> Optimize(Vector<float> b, Vector<float> gb);
 
+        public abstract string Serialize();
+
     }
 }

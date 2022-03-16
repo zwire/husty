@@ -1,4 +1,5 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using System.Text.Json;
+using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Single;
 
 namespace Husty.NeuralNetwork
@@ -40,6 +41,16 @@ namespace Husty.NeuralNetwork
             if (_hb is null) _hb = new DenseVector(b.Count);
             _hb += gb.PointwisePower(2);
             return b - _rate * gb / (_hb.PointwiseSqrt() + 1e-7f);
+        }
+
+        public override string Serialize()
+        {
+            return $"AdaGrad:<{JsonSerializer.Serialize(this)}";
+        }
+
+        internal static IOptimizer Deserialize(string line)
+        {
+            return JsonSerializer.Deserialize<AdaGrad>(line);
         }
 
     }

@@ -6,15 +6,17 @@ namespace Husty.OpenCvSharp.DepthCamera
     /// <summary>
     /// Native API type -> OpenCvSharp format
     /// </summary>
-    internal static class KinectConverter
+    internal static class KinectEx
     {
 
-        internal unsafe static Mat ToColorMat(this Image colorFrame)
+        internal unsafe static void CopyToColorMat(this Image colorFrame, Mat colorMat)
         {
             var w = colorFrame.WidthPixels;
             var h = colorFrame.HeightPixels;
-            var colorMat = new Mat(h, w, MatType.CV_8UC3);
-            var cAry = colorFrame.GetPixels<BGRA>().ToArray();
+            if (colorMat.IsDisposed || colorMat.Width != w || colorMat.Height != h || colorMat.Type() != MatType.CV_8UC3)
+                return;
+            var m = colorFrame.Memory;
+            var cAry = colorFrame.GetPixels<BGRA>().Span;
             var p = colorMat.DataPointer;
             int index = 0;
             for (int i = 0; i < cAry.Length; i++)
@@ -23,15 +25,15 @@ namespace Husty.OpenCvSharp.DepthCamera
                 p[index++] = cAry[i].G;
                 p[index++] = cAry[i].R;
             }
-            return colorMat;
         }
 
-        internal unsafe static Mat ToPointCloudMat(this Image pointCloudFrame)
+        internal unsafe static void CopyToPointCloudMat(this Image pointCloudFrame, Mat pointCloudMat)
         {
             var w = pointCloudFrame.WidthPixels;
             var h = pointCloudFrame.HeightPixels;
-            var pointCloudMat = new Mat(h, w, MatType.CV_16UC3);
-            var pdAry = pointCloudFrame.GetPixels<Short3>().ToArray();
+            if (pointCloudMat.IsDisposed || pointCloudMat.Width != w || pointCloudMat.Height != h || pointCloudMat.Type() != MatType.CV_16UC3)
+                return;
+            var pdAry = pointCloudFrame.GetPixels<Short3>().Span;
             var p = (ushort*)pointCloudMat.Data;
             int index = 0;
             for (int i = 0; i < pdAry.Length; i++)
@@ -40,7 +42,6 @@ namespace Husty.OpenCvSharp.DepthCamera
                 p[index++] = (ushort)pdAry[i].Y;
                 p[index++] = (ushort)pdAry[i].Z;
             }
-            return pointCloudMat;
         }
 
     }

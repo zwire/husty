@@ -14,6 +14,7 @@ namespace Husty.OpenCvSharp
 
         private int _positionIndex;
         private readonly VideoCapture _cap;
+        private readonly ObjectPool<Mat> _pool;
 
 
         // ------ properties ------ //
@@ -36,6 +37,7 @@ namespace Husty.OpenCvSharp
         public VideoStream(string src, IEnumerable<Properties> properties = null)
         {
             _cap = new(src);
+            _pool = new(2);
             if (properties is not null)
                 foreach (var p in properties)
                     _cap.Set(p.Key, p.Value);
@@ -53,7 +55,7 @@ namespace Husty.OpenCvSharp
             GC.Collect();
             if (_positionIndex == FrameCount - 1) _positionIndex--;
             _cap.Set(VideoCaptureProperties.PosFrames, _positionIndex++);
-            var frame = new Mat();
+            var frame = _pool.GetObject();
             HasFrame = _cap.Read(frame);
             if (HasFrame)
                 return frame;
@@ -78,6 +80,7 @@ namespace Husty.OpenCvSharp
         {
             HasFrame = false;
             _cap?.Dispose();
+            _pool?.Dispose();
         }
 
     }
