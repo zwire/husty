@@ -6,7 +6,7 @@ namespace Husty.NeuralNetwork
     public class LeakyRelu : IActivationLayer
     {
 
-        private Matrix<float> _y;
+        private Vector<float> _y;
         private readonly float _alpha;
 
         public LeakyRelu(float alpha = 0.01f) 
@@ -14,18 +14,17 @@ namespace Husty.NeuralNetwork
             _alpha = alpha;
         }
 
-        public Matrix<float> Forward(Matrix<float> x)
+        public Vector<float> Forward(Vector<float> x)
         {
             _y = x.Map(p => p > 0 ? p : _alpha * p);
             return _y;
         }
 
-        public Matrix<float> Backward(Matrix<float> dout)
+        public Vector<float> Backward(Vector<float> dout)
         {
-            var dx = new DenseMatrix(dout.RowCount, dout.ColumnCount);
-            for (int i = 0; i < dout.RowCount; i++)
-                for (int j = 0; j < dout.ColumnCount; j++)
-                    dx[i, j] = _y[i, j] > 0 ? dout[i, j] : _alpha * dout[i, j];
+            var dx = new DenseVector(dout.Count);
+            for (int i = 0; i < dout.Count; i++)
+                dx[i] = _y[i] > 0 ? dout[i] : _alpha * dout[i];
             return dx;
         }
 

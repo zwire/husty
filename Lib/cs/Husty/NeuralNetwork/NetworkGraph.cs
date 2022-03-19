@@ -25,27 +25,16 @@ namespace Husty.NeuralNetwork
 
         public float[] Forward(float[] status)
         {
-            return Forward(new[] { status })[0];
+            var vec = Vector<float>.Build.DenseOfArray(status);
+            LayerStack.ForEach(n => vec = n.Forward(vec));
+            return vec.ToArray();
         }
 
-        public float[][] Forward(float[][] statuses)
+        public void Backward(float[] error)
         {
-            var mat = Matrix<float>.Build.DenseOfRowArrays(statuses);
-            LayerStack.ForEach(n => mat = n.Forward(mat));
-            return mat.ToRowArrays();
-        }
-
-        public float[] Backward(float[] error)
-        {
-            return Backward(new[] { error })[0];
-        }
-
-        public float[][] Backward(float[][] errors)
-        {
-            var mat = Matrix<float>.Build.DenseOfRowArrays(errors);
+            var vec = Vector<float>.Build.DenseOfArray(error);
             for (int i = LayerStack.Count - 1; i > -1; i--)
-                mat = LayerStack[i].Backward(mat);
-            return mat.ToRowArrays();
+                vec = LayerStack[i].Backward(vec);
         }
 
         public void Optimize()

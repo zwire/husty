@@ -5,9 +5,9 @@ namespace Husty.NeuralNetwork
     public interface ILayer
     {
 
-        public Matrix<float> Forward(Matrix<float> x);
+        public Vector<float> Forward(Vector<float> x);
 
-        public Matrix<float> Backward(Matrix<float> dout);
+        public Vector<float> Backward(Vector<float> dout);
 
         public string Serialize();
 

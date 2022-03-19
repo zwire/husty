@@ -22,13 +22,13 @@ namespace Husty.NeuralNetwork
 
         // ------ public methods ------ //
 
-        public Matrix<float> Forward(Matrix<float> x)
+        public Vector<float> Forward(Vector<float> x)
         {
             _layerStack.ForEach(n => x = n.Forward(x));
             return x;
         }
 
-        public Matrix<float> Backward(Matrix<float> dout)
+        public Vector<float> Backward(Vector<float> dout)
         {
             for (int i = _layerStack.Count - 1; i > -1; i--)
                 dout = _layerStack[i].Backward(dout);

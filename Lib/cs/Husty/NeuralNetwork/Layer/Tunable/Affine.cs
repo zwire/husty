@@ -12,7 +12,7 @@ namespace Husty.NeuralNetwork
 
         // ------ fields ------ //
 
-        private Matrix<float> _x;
+        private Vector<float> _x;
 
 
         // ------ properties ------ //
@@ -21,9 +21,9 @@ namespace Husty.NeuralNetwork
 
         public Vector<float> B { private set; get; }
 
-        public Matrix<float> GradW { private set; get; }
+        public float[,] GradW { private set; get; }
 
-        public Vector<float> GradB { private set; get; }
+        public float[] GradB { private set; get; }
 
         public IOptimizer Optimizer { get; }
 
@@ -36,6 +36,8 @@ namespace Husty.NeuralNetwork
             var normal = new Normal(0, Math.Sqrt(1.0 / inshape));
             W = new DenseMatrix(inshape, outshape, Enumerable.Range(0, inshape * outshape).Select(_ => (float)normal.Sample()).ToArray());
             B = new DenseVector(outshape);
+            GradW = new float[W.RowCount, W.ColumnCount];
+            GradB = new float[B.Count];
         }
 
         public Affine(IOptimizer optimizer, DenseMatrix weights, DenseVector bias)
@@ -43,28 +45,36 @@ namespace Husty.NeuralNetwork
             Optimizer = optimizer;
             W = weights;
             B = bias;
+            GradW = new float[W.RowCount, W.ColumnCount];
+            GradB = new float[B.Count];
         }
 
 
         // ------ public methods ------ //
 
-        public Matrix<float> Forward(Matrix<float> x)
+        public Vector<float> Forward(Vector<float> x)
         {
             _x = x;
-            var bMat = Matrix<float>.Build.DenseOfRows(Enumerable.Repeat(B, x.RowCount));
-            return _x * W + bMat;
+            return _x * W + B;
         }
 
-        public Matrix<float> Backward(Matrix<float> dout)
+        public Vector<float> Backward(Vector<float> dout)
         {
-            GradW = _x.Transpose() * dout;
-            GradB = dout.ColumnSums();
+            for (int i = 0; i < _x.Count; i++)
+                for (int j = 0; j < dout.Count; j++)
+                    GradW[i, j] += _x[i] * dout[j];
+            for (int i = 0; i < dout.Count; i++)
+                GradB[i] += dout[i];
             return dout * W.Transpose();
         }
 
         public void Optimize()
         {
-            (W, B) = Optimizer.Update(W, B, GradW, GradB);
+            var gw = DenseMatrix.OfArray(GradW);
+            var gb = DenseVector.OfArray(GradB);
+            (W, B) = Optimizer.Update(W, B, gw, gb);
+            GradW = new float[W.RowCount, W.ColumnCount];
+            GradB = new float[B.Count];
         }
 
         public string Serialize()

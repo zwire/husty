@@ -5,15 +5,15 @@ namespace Husty.NeuralNetwork
     public class Tanh : IActivationLayer
     {
 
-        private Matrix<float> _y;
+        private Vector<float> _y;
 
-        public Matrix<float> Forward(Matrix<float> x)
+        public Vector<float> Forward(Vector<float> x)
         {
             _y = x.PointwiseTanh();
             return _y;
         }
 
-        public Matrix<float> Backward(Matrix<float> dout)
+        public Vector<float> Backward(Vector<float> dout)
         {
             return dout.PointwiseMultiply(1f - _y.PointwisePower(2));
         }
