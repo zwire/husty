@@ -72,7 +72,7 @@ namespace Husty.SkywayGateway
             Task.Run(async () =>
             {
                 while (!_cts.IsCancellationRequested)
-                    await ListenEventAsync(TimeSpan.FromSeconds(500));
+                    await ListenEventAsync().ConfigureAwait(false);
             });
         }
 
@@ -90,22 +90,22 @@ namespace Husty.SkywayGateway
             CancellationTokenSource cts
         )
         {
-            var response = await client.RequestAsync(ReqType.Post, "/media", new() { { "is_video", true } });
+            var response = await client.RequestAsync(ReqType.Post, "/media", new() { { "is_video", true } }).ConfigureAwait(false);
             var p = JObject.Parse(response.Content);
             var videoId = p["media_id"].Value<string>();
             var remoteVideoEP = new IPEndPoint(IPAddress.Parse(p["ip_v4"].Value<string>()), p["port"].Value<int>());
 
-            response = await client.RequestAsync(ReqType.Post, "/media", new() { { "is_video", false } });
+            response = await client.RequestAsync(ReqType.Post, "/media", new() { { "is_video", false } }).ConfigureAwait(false);
             p = JObject.Parse(response.Content);
             var audioId = p["media_id"].Value<string>();
             var remoteAudioEP = new IPEndPoint(IPAddress.Parse(p["ip_v4"].Value<string>()), p["port"].Value<int>());
 
-            response = await client.RequestAsync(ReqType.Post, "/media/rtcp", new() { });
+            response = await client.RequestAsync(ReqType.Post, "/media/rtcp", new() { }).ConfigureAwait(false);
             p = JObject.Parse(response.Content);
             var videoRtcpId = p["rtcp_id"].Value<string>();
             var remoteVideoRtcpEP = new IPEndPoint(IPAddress.Parse(p["ip_v4"].Value<string>()), p["port"].Value<int>());
 
-            response = await client.RequestAsync(ReqType.Post, "/media/rtcp", new() { });
+            response = await client.RequestAsync(ReqType.Post, "/media/rtcp", new() { }).ConfigureAwait(false);
             p = JObject.Parse(response.Content);
             var audioRtcpId = p["rtcp_id"].Value<string>();
             var remoteAudioRtcpEP = new IPEndPoint(IPAddress.Parse(p["ip_v4"].Value<string>()), p["port"].Value<int>());
@@ -130,27 +130,27 @@ namespace Husty.SkywayGateway
             _opened.Dispose();
             _closed.Dispose();
             if (_mediaConnectionId is not null)
-                await _client.RequestAsync(ReqType.Delete, $"/media/connections/{_mediaConnectionId}");
-            await _client.RequestAsync(ReqType.Delete, $"/media/rtcp/{_videoRtcpId}");
-            await _client.RequestAsync(ReqType.Delete, $"/media/rtcp/{_audioRtcpId}");
-            await _client.RequestAsync(ReqType.Delete, $"/media/{_videoId}");
-            await _client.RequestAsync(ReqType.Delete, $"/media/{_audioId}");
+                await _client.RequestAsync(ReqType.Delete, $"/media/connections/{_mediaConnectionId}").ConfigureAwait(false);
+            await _client.RequestAsync(ReqType.Delete, $"/media/rtcp/{_videoRtcpId}").ConfigureAwait(false);
+            await _client.RequestAsync(ReqType.Delete, $"/media/rtcp/{_audioRtcpId}").ConfigureAwait(false);
+            await _client.RequestAsync(ReqType.Delete, $"/media/{_videoId}").ConfigureAwait(false);
+            await _client.RequestAsync(ReqType.Delete, $"/media/{_audioId}").ConfigureAwait(false);
         }
 
         public async Task<bool> ConfirmAliveAsync()
         {
             if (_mediaConnectionId is null)
                 return false;
-            var response = await _client.RequestAsync(ReqType.Get, $"/media/connections/{_mediaConnectionId}/status");
+            var response = await _client.RequestAsync(ReqType.Get, $"/media/connections/{_mediaConnectionId}/status").ConfigureAwait(false);
             return JObject.Parse(response.Content)["open"].Value<bool>();
         }
 
         public async Task<MediaConnectionInfo> ListenAsync()
         {
             _mediaConnectionId = await _called;
-            await AnswerAsync();
-            await _ready.ToTask();
-            var response = await _client.RequestAsync(ReqType.Get, $"/media/connections/{_mediaConnectionId}/status");
+            await AnswerAsync().ConfigureAwait(false);
+            await _ready.ToTask().ConfigureAwait(false);
+            var response = await _client.RequestAsync(ReqType.Get, $"/media/connections/{_mediaConnectionId}/status").ConfigureAwait(false);
             RemotePeerId = JObject.Parse(response.Content)["remote_id"].Value<string>();
             return _info;
         }
@@ -165,9 +165,9 @@ namespace Husty.SkywayGateway
                 { "constraints", GetConstraints() },
                 { "redirect_params", GetRedirectParams() }
             };
-            var response = await _client.RequestAsync(ReqType.Post, "/media/connections", json);
+            var response = await _client.RequestAsync(ReqType.Post, "/media/connections", json).ConfigureAwait(false);
             _mediaConnectionId = JObject.Parse(response.Content)["params"]["media_connection_id"].Value<string>();
-            await _ready.ToTask();
+            await _ready.ToTask().ConfigureAwait(false);
             RemotePeerId = remotePeerId;
             return _info;
         }
@@ -182,7 +182,7 @@ namespace Husty.SkywayGateway
                 { "constraints", GetConstraints() },
                 { "redirect_params", GetRedirectParams() }
             };
-            await _client.RequestAsync(ReqType.Post, $"/media/connections/{_mediaConnectionId}/answer", json);
+            await _client.RequestAsync(ReqType.Post, $"/media/connections/{_mediaConnectionId}/answer", json).ConfigureAwait(false);
         }
 
         private dynamic GetConstraints()
@@ -253,33 +253,34 @@ namespace Husty.SkywayGateway
             };
         }
 
-        private async Task ListenEventAsync(TimeSpan timeOut)
+        private async Task ListenEventAsync()
         {
-            while (!_cts.IsCancellationRequested)
+            var response = await _client.RequestAsync(ReqType.Get, $"/media/connections/{_mediaConnectionId}/events", null).ConfigureAwait(false);
+            if (response is null)
             {
-                var response = await _client.RequestAsync(ReqType.Get, $"/media/connections/{_mediaConnectionId}/events", null, timeOut);
-                if (response is null) return; // timeout
-                var p = JObject.Parse(response.Content);
-                var e = p["event"].ToString();
-                if (e is "ERROR")
-                    Debug.WriteLine(p["error_message"]);
-                switch (e)
-                {
-                    case "READY":
-                        _ready.OnNext(true);
-                        _ready.OnCompleted();
-                        break;
-                    case "OPEN":
-                        _opened.OnNext(true);
-                        _opened.OnCompleted();
-                        break;
-                    case "CLOSE":
-                        _closed.OnNext(true);
-                        _closed.OnCompleted();
-                        break;
-                    default:
-                        break;
-                }
+                await Task.Delay(1000).ConfigureAwait(false);
+                return;
+            }
+            var p = JObject.Parse(response.Content);
+            var e = p["event"].ToString();
+            if (e is "ERROR")
+                Debug.WriteLine(p["error_message"]);
+            switch (e)
+            {
+                case "READY":
+                    _ready.OnNext(true);
+                    _ready.OnCompleted();
+                    break;
+                case "OPEN":
+                    _opened.OnNext(true);
+                    _opened.OnCompleted();
+                    break;
+                case "CLOSE":
+                    _closed.OnNext(true);
+                    _closed.OnCompleted();
+                    break;
+                default:
+                    break;
             }
         }
 

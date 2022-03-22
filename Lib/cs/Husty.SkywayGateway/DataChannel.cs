@@ -62,7 +62,7 @@ namespace Husty.SkywayGateway
             Task.Run(async () =>
             {
                 while (!_cts.IsCancellationRequested)
-                    await ListenEventAsync(TimeSpan.FromSeconds(500));
+                    await ListenEventAsync().ConfigureAwait(false);
             });
         }
 
@@ -75,7 +75,7 @@ namespace Husty.SkywayGateway
             CancellationTokenSource cts
         )
         {
-            var response = await client.RequestAsync(ReqType.Post, "/data", new() { });
+            var response = await client.RequestAsync(ReqType.Post, "/data", new() { }).ConfigureAwait(false);
             var p = JObject.Parse(response.Content);
             var dataId = p["data_id"].Value<string>();
             var remoteEP = new IPEndPoint(IPAddress.Parse(p["ip_v4"].Value<string>()), p["port"].Value<int>());
@@ -90,22 +90,22 @@ namespace Husty.SkywayGateway
             _opened.Dispose();
             _closed.Dispose();
             if (_dataConnectionId is not null)
-                await _client.RequestAsync(ReqType.Delete, $"/data/connections/{_dataConnectionId}");
-            await _client.RequestAsync(ReqType.Delete, $"/data/{_dataId}");
+                await _client.RequestAsync(ReqType.Delete, $"/data/connections/{_dataConnectionId}").ConfigureAwait(false);
+            await _client.RequestAsync(ReqType.Delete, $"/data/{_dataId}").ConfigureAwait(false);
         }
 
         public async Task<bool> ConfirmAliveAsync()
         {
             if (_dataConnectionId is null)
                 return false;
-            var response = await _client.RequestAsync(ReqType.Get, $"/data/connections/{_dataConnectionId}/status");
+            var response = await _client.RequestAsync(ReqType.Get, $"/data/connections/{_dataConnectionId}/status").ConfigureAwait(false);
             return JObject.Parse(response.Content)["open"].Value<bool>();
         }
 
         public async Task<DataStream> ListenAsync()
         {
-            _dataConnectionId = await _called;
-            await _opened.ToTask();
+            _dataConnectionId = await _called.ConfigureAwait(false);
+            await _opened.ToTask().ConfigureAwait(false);
             var json = new Dictionary<string, dynamic>
             {
                 {
@@ -122,8 +122,8 @@ namespace Husty.SkywayGateway
                     }
                 }
             };
-            await _client.RequestAsync(ReqType.Put, $"/data/connections/{_dataConnectionId}", json);
-            var response = await _client.RequestAsync(ReqType.Get, $"/data/connections/{_dataConnectionId}/status");
+            await _client.RequestAsync(ReqType.Put, $"/data/connections/{_dataConnectionId}", json).ConfigureAwait(false);
+            var response = await _client.RequestAsync(ReqType.Get, $"/data/connections/{_dataConnectionId}/status").ConfigureAwait(false);
             RemotePeerId = JObject.Parse(response.Content)["remote_id"].Value<string>();
             return new(_info);
         }
@@ -150,38 +150,39 @@ namespace Husty.SkywayGateway
                     }
                 }
             };
-            var response = await _client.RequestAsync(ReqType.Post, "/data/connections", json);
+            var response = await _client.RequestAsync(ReqType.Post, "/data/connections", json).ConfigureAwait(false);
             _dataConnectionId = JObject.Parse(response.Content)["params"]["data_connection_id"].Value<string>();
-            await _opened.ToTask();
+            await _opened.ToTask().ConfigureAwait(false);
             return new(_info);
         }
 
 
         // ------ private methods ------ //
 
-        private async Task ListenEventAsync(TimeSpan timeOut)
+        private async Task ListenEventAsync()
         {
-            while (!_cts.IsCancellationRequested)
+            var response = await _client.RequestAsync(ReqType.Get, $"/data/connections/{_dataConnectionId}/events", null).ConfigureAwait(false);
+            if (response is null)
             {
-                var response = await _client.RequestAsync(ReqType.Get, $"/data/connections/{_dataConnectionId}/events", null, timeOut);
-                if (response is null) return; // timeout
-                var p = JObject.Parse(response.Content);
-                var e = p["event"].ToString();
-                if (e is "ERROR")
-                    Debug.WriteLine(p["error_message"]);
-                switch (e)
-                {
-                    case "OPEN":
-                        _opened.OnNext(true);
-                        _opened.OnCompleted();
-                        break;
-                    case "CLOSE":
-                        _closed.OnNext(true);
-                        _closed.OnCompleted();
-                        break;
-                    default:
-                        break;
-                }
+                await Task.Delay(1000);
+                return;
+            }
+            var p = JObject.Parse(response.Content);
+            var e = p["event"].ToString();
+            if (e is "ERROR")
+                Debug.WriteLine(p["error_message"]);
+            switch (e)
+            {
+                case "OPEN":
+                    _opened.OnNext(true);
+                    _opened.OnCompleted();
+                    break;
+                case "CLOSE":
+                    _closed.OnNext(true);
+                    _closed.OnCompleted();
+                    break;
+                default:
+                    break;
             }
         }
 

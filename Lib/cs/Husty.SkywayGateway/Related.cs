@@ -40,25 +40,22 @@ namespace Husty.SkywayGateway
             this RestClient client,
             ReqType type,
             string resource,
-            Dictionary<string, dynamic> jsonContent = null,
-            TimeSpan? timeOut = null   // default value is infinite
+            Dictionary<string, dynamic> jsonContent = null
         )
         {
             var request = new RestRequest();
             if (resource is not null)
                 request.Resource = resource;
-            if (timeOut is TimeSpan ts)
-                request.Timeout = ts.Milliseconds;
             if (jsonContent is not null)
                 request.AddJsonBody(jsonContent);
             try
             {
                 var response = type switch
                 {
-                    ReqType.Post    => await client.PostAsync(request),
-                    ReqType.Delete  => await client.DeleteAsync(request),
-                    ReqType.Get     => await client.GetAsync(request),
-                    ReqType.Put     => await client.PutAsync(request),
+                    ReqType.Post    => await client.PostAsync(request).ConfigureAwait(false),
+                    ReqType.Delete  => await client.DeleteAsync(request).ConfigureAwait(false),
+                    ReqType.Get     => await client.GetAsync(request).ConfigureAwait(false),
+                    ReqType.Put     => await client.PutAsync(request).ConfigureAwait(false),
                     _               => default
                 };
                 if (!response.IsSuccessful)

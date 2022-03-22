@@ -50,7 +50,7 @@ namespace Husty.SkywayGateway
         {
             try
             {
-                await _client.SendAsync(bytes, bytes.Length, _info.RemoteEP);
+                await _client.SendAsync(bytes, bytes.Length, _info.RemoteEP).ConfigureAwait(false);
                 return true;
             }
             catch
@@ -67,32 +67,32 @@ namespace Husty.SkywayGateway
 
         public async Task<byte[]> ReadBinaryAsync()
         {
-            return (await _client.ReceiveAsync()).Buffer;
+            return (await _client.ReceiveAsync().ConfigureAwait(false)).Buffer;
         }
 
         public bool WriteString(string sendmsg) 
             => WriteBinary(Encoding.UTF8.GetBytes(sendmsg));
 
         public async Task<bool> WriteStringAsync(string sendmsg) 
-            => await WriteBinaryAsync(Encoding.UTF8.GetBytes(sendmsg));
+            => await WriteBinaryAsync(Encoding.UTF8.GetBytes(sendmsg)).ConfigureAwait(false);
 
         public string ReadString()
             => Encoding.UTF8.GetString(ReadBinary());
 
         public async Task<string> ReadStringAsync()
-            => Encoding.UTF8.GetString(await ReadBinaryAsync());
+            => Encoding.UTF8.GetString(await ReadBinaryAsync().ConfigureAwait(false));
 
         public bool WriteAsJson<T>(T sendmsg)
             => WriteString(JsonSerializer.Serialize(sendmsg));
 
         public async Task<bool> WriteAsJsonAsync<T>(T sendmsg)
-            => await WriteStringAsync(JsonSerializer.Serialize(sendmsg));
+            => await WriteStringAsync(JsonSerializer.Serialize(sendmsg)).ConfigureAwait(false);
 
         public T ReadAsJson<T>()
             => JsonSerializer.Deserialize<T>(ReadString());
 
         public async Task<T> ReadAsJsonAsync<T>()
-            => JsonSerializer.Deserialize<T>(await ReadStringAsync());
+            => JsonSerializer.Deserialize<T>(await ReadStringAsync().ConfigureAwait(false));
 
     }
 }

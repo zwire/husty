@@ -53,7 +53,7 @@ namespace Husty.SkywayGateway
             Task.Run(async () =>
             {
                 while (!_cts.IsCancellationRequested)
-                    await ListenEventAsync(TimeSpan.FromSeconds(20));
+                    await ListenEventAsync().ConfigureAwait(false);
             });
             _opened.ToTask().Wait();
         }
@@ -89,7 +89,7 @@ namespace Husty.SkywayGateway
                         }
                     }
                 };
-            var response = await client.RequestAsync(ReqType.Post, "/peers", json);
+            var response = await client.RequestAsync(ReqType.Post, "/peers", json).ConfigureAwait(false);
             var p = JObject.Parse(response.Content)["params"];
             var peerId = p["peer_id"].Value<string>();
             var token = p["token"].Value<string>();
@@ -102,18 +102,18 @@ namespace Husty.SkywayGateway
         public async ValueTask DisposeAsync()
         {
             _cts.Cancel();
-            _disposables.ForEach(async x => await x.DisposeAsync());
+            _disposables.ForEach(async x => await x.DisposeAsync().ConfigureAwait(false));
             _opened.Dispose();
             _closed.Dispose();
             _dataCalled.Dispose();
             _mediaCalled.Dispose();
             _expiresRemainingSecondNotified.Dispose();
-            await _client.RequestAsync(ReqType.Delete, $"/peers/{_peerId}?token={_token}");
+            await _client.RequestAsync(ReqType.Delete, $"/peers/{_peerId}?token={_token}").ConfigureAwait(false);
         }
 
         public async Task<bool> ConfirmAliveAsync()
         {
-            var response = await _client.RequestAsync(ReqType.Get, $"/peers/{_peerId}/status?token={_token}");
+            var response = await _client.RequestAsync(ReqType.Get, $"/peers/{_peerId}/status?token={_token}").ConfigureAwait(false);
             return !JObject.Parse(response.Content)["disconnected"].Value<bool>();
         }
 
@@ -125,7 +125,7 @@ namespace Husty.SkywayGateway
                 { "ttl", credential.Ttl },
                 { "authToken", credential.AuthToken }
             };
-            await _client.RequestAsync(ReqType.Put, $"/peers/{_peerId}/credential?token={_token}", json); ;
+            await _client.RequestAsync(ReqType.Put, $"/peers/{_peerId}/credential?token={_token}", json).ConfigureAwait(false);
         }
 
         public async Task<DataChannel> CreateDataChannelAsync(IPEndPoint localEP = default)
@@ -143,7 +143,7 @@ namespace Husty.SkywayGateway
             var dataChannel = await DataChannel.CreateNewAsync(
                 _client, _peerId, _token,
                 localEP, _dataCalled.ToTask(), _cts
-            );
+            ).ConfigureAwait(false);
             _disposables.Add(dataChannel);
             return dataChannel;
         }
@@ -196,11 +196,15 @@ namespace Husty.SkywayGateway
 
         // ------ private methods ------ //
 
-        private async Task ListenEventAsync(TimeSpan timeOut)
+        private async Task ListenEventAsync()
         {
             // execute long polling
-            var response = await _client.RequestAsync(ReqType.Get, $"/peers/{_peerId}/events?token={_token}", null, timeOut);
-            if (response is null) return; // timeout
+            var response = await _client.RequestAsync(ReqType.Get, $"/peers/{_peerId}/events?token={_token}", null);
+            if (response is null)
+            {
+                await Task.Delay(1000).ConfigureAwait(false);
+                return;
+            }
             var p = JObject.Parse(response.Content);
             var e = p["event"].ToString();
             switch (e)

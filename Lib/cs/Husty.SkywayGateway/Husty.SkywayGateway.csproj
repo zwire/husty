@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Authors>yamashita</Authors>
-    <Version>0.9.1</Version>
+    <Version>0.9.2</Version>
     <Company>$(Authors)</Company>
     <Product>$(AssemblyName)</Product>
     <PackageProjectUrl>https://github.com/husty530/Husty-public/tree/master/Lib/cs/Husty.SkywayGateway</PackageProjectUrl>
