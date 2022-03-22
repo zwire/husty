@@ -52,8 +52,7 @@ namespace Husty.OpenCvSharp
 
         public Mat Read()
         {
-            GC.Collect();
-            if (_positionIndex == FrameCount - 1) _positionIndex--;
+            if (_positionIndex == FrameCount - 1) return null;
             _cap.Set(VideoCaptureProperties.PosFrames, _positionIndex++);
             var frame = _pool.GetObject();
             HasFrame = _cap.Read(frame);
@@ -68,6 +67,7 @@ namespace Husty.OpenCvSharp
             return Observable.Interval(TimeSpan.FromMilliseconds(1000 / Fps), ThreadPoolScheduler.Instance)
                 .Where(_ => _positionIndex < FrameCount)
                 .Select(_ => Read())
+                .TakeWhile(x => x is not null)
                 .Publish().RefCount();
         }
 

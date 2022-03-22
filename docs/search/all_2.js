@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['acceptance_5fcode_5fall_0',['ACCEPTANCE_CODE_ALL',['../class_husty_1_1_lawicel_1_1_can_usb_option.html#a24be062250f7d4712bfce8844c6cb7e9',1,'Husty::Lawicel::CanUsbOption']]],
+  ['acceptance_5fmask_5fall_1',['ACCEPTANCE_MASK_ALL',['../class_husty_1_1_lawicel_1_1_can_usb_option.html#a1a3703f1fcc17ee7da598c28bd7a858a',1,'Husty::Lawicel::CanUsbOption']]],
+  ['adagrad_2',['AdaGrad',['../class_husty_1_1_neural_network_1_1_ada_grad.html#a43d8295d37753b1c006ad049b6d3c605',1,'Husty.NeuralNetwork.AdaGrad.AdaGrad()'],['../class_husty_1_1_neural_network_1_1_ada_grad.html',1,'Husty.NeuralNetwork.AdaGrad']]],
+  ['adagrad_2ecs_3',['AdaGrad.cs',['../_ada_grad_8cs.html',1,'']]],
+  ['adam_4',['Adam',['../class_husty_1_1_neural_network_1_1_adam.html#abfe0e03a53a59133ce34167a9edd22d8',1,'Husty.NeuralNetwork.Adam.Adam()'],['../class_husty_1_1_neural_network_1_1_adam.html',1,'Husty.NeuralNetwork.Adam']]],
+  ['adam_2ecs_5',['Adam.cs',['../_adam_8cs.html',1,'']]],
+  ['adaptername_6',['AdapterName',['../class_husty_1_1_lawicel_1_1_can_usb_adapter.html#a9d7e224033c5be353d9f5dac93bcc2a5',1,'Husty::Lawicel::CanUsbAdapter']]],
+  ['adddata_7',['AddData',['../interface_husty_1_1_open_cv_sharp_1_1_i_stats.html#ae9b76ebb64ba620a64697c128c5fb0d7',1,'Husty.OpenCvSharp.IStats.AddData()'],['../class_husty_1_1_open_cv_sharp_1_1_stats.html#aba0c249b167f0ba4f718ffab3c4602b1',1,'Husty.OpenCvSharp.Stats.AddData()']]],
+  ['affine_8',['Affine',['../class_husty_1_1_neural_network_1_1_affine.html#ac7b7f44f338cc9866f1bd09216fb31e2',1,'Husty.NeuralNetwork.Affine.Affine(IOptimizer optimizer, int inshape, int outshape)'],['../class_husty_1_1_neural_network_1_1_affine.html#ade459676c8085f98511d5c1d4fc4395f',1,'Husty.NeuralNetwork.Affine.Affine(IOptimizer optimizer, DenseMatrix weights, DenseVector bias)'],['../class_husty_1_1_neural_network_1_1_affine.html',1,'Husty.NeuralNetwork.Affine']]],
+  ['affine_2ecs_9',['Affine.cs',['../_affine_8cs.html',1,'']]],
+  ['alignbase_10',['AlignBase',['../namespace_husty_1_1_open_cv_sharp_1_1_depth_camera.html#af0fac422f0bfe32028a05ba26cf1ae4e',1,'Husty::OpenCvSharp::DepthCamera']]],
+  ['alpha_11',['Alpha',['../class_husty_1_1_neural_network_1_1_adam.html#a4ce0d21bd07ba72814154ce1210f7f42',1,'Husty::NeuralNetwork::Adam']]],
+  ['angle_12',['Angle',['../class_husty_1_1_arc2_d.html#a1c1487a5172347a5f206351f7db316dd',1,'Husty.Arc2D.Angle()'],['../struct_husty_1_1_angle.html#a2a6a617670d5176665a7d172b3b71432',1,'Husty.Angle.Angle(double value, AngleType type)'],['../struct_husty_1_1_angle.html#a457ea8c86fcc97144545401c1f449fc9',1,'Husty.Angle.Angle(double radian=0, double degree=0)'],['../struct_husty_1_1_angle.html',1,'Husty.Angle']]],
+  ['angle_2ecs_13',['Angle.cs',['../_angle_8cs.html',1,'']]],
+  ['angleextensions_2ecs_14',['AngleExtensions.cs',['../_angle_extensions_8cs.html',1,'']]],
+  ['angletype_15',['AngleType',['../namespace_husty.html#ad0ff45b95ee20da358968931636343c4',1,'Husty']]],
+  ['approximateaspoints_16',['ApproximateAsPoints',['../class_husty_1_1_arc2_d.html#ab43a26aa43fcfdccdf9f23549eed9150',1,'Husty.Arc2D.ApproximateAsPoints()'],['../class_husty_1_1_line_segment2_d.html#a9bb3cf6d9bf3c11bcf1e83c5660ca986',1,'Husty.LineSegment2D.ApproximateAsPoints()']]],
+  ['arc2d_17',['Arc2D',['../class_husty_1_1_arc2_d.html#aae806c35d6bc278e21d980d72f360a8f',1,'Husty.Arc2D.Arc2D()'],['../class_husty_1_1_arc2_d.html',1,'Husty.Arc2D']]],
+  ['arc2d_2ecs_18',['Arc2D.cs',['../_arc2_d_8cs.html',1,'']]],
+  ['arraycastextensions_2ecs_19',['ArrayCastExtensions.cs',['../_array_cast_extensions_8cs.html',1,'']]],
+  ['arrayextensions_2ecs_20',['ArrayExtensions.cs',['../_array_extensions_8cs.html',1,'']]],
+  ['arrayoperatorextensions_2ecs_21',['ArrayOperatorExtensions.cs',['../_array_operator_extensions_8cs.html',1,'']]],
+  ['arrayreshapeextensions_2ecs_22',['ArrayReshapeExtensions.cs',['../_array_reshape_extensions_8cs.html',1,'']]],
+  ['available_23',['Available',['../class_husty_1_1_bidirectional_data_stream.html#a820a28a0d08e90ded5cc5e5f576c1c8f',1,'Husty::BidirectionalDataStream']]],
+  ['axis_24',['Axis',['../namespace_husty.html#a31f4d1ba27d0fa7b0e3298b828bfa024',1,'Husty']]]
+];

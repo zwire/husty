@@ -1,0 +1,6 @@
+var searchData=
+[
+  ['handle_0',['Handle',['../class_husty_1_1_lawicel_1_1_can_usb_adapter.html#ae13409727f7892ada3d850984180025f',1,'Husty::Lawicel::CanUsbAdapter']]],
+  ['hasframe_1',['HasFrame',['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_kinect.html#aa2b6b273ecdf2e5eab65d24ef0f4dcb4',1,'Husty.OpenCvSharp.DepthCamera.Kinect.HasFrame()'],['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_realsense.html#a5017c28517a01f4295e517c7f3b79a81',1,'Husty.OpenCvSharp.DepthCamera.Realsense.HasFrame()'],['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_bgr_xyz_player.html#a3cd5c26580296f0c4d1718b039e532ed',1,'Husty.OpenCvSharp.DepthCamera.BgrXyzPlayer.HasFrame()'],['../class_husty_1_1_open_cv_sharp_1_1_camera_stream.html#a1e3aa629cfd1d801fd3d6208daec9f55',1,'Husty.OpenCvSharp.CameraStream.HasFrame()'],['../interface_husty_1_1_open_cv_sharp_1_1_i_image_stream.html#a42e8c79af6c015e58e5e5fcb475ce71e',1,'Husty.OpenCvSharp.IImageStream.HasFrame()'],['../class_husty_1_1_open_cv_sharp_1_1_video_stream.html#ae94b2839e0b9b27f3279dee3c3ba3e96',1,'Husty.OpenCvSharp.VideoStream.HasFrame()']]],
+  ['height_2',['Height',['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_bgr_xyz_mat.html#a394dcd92f7b5e6600aaae9d35ebb7711',1,'Husty::OpenCvSharp::DepthCamera::BgrXyzMat']]]
+];

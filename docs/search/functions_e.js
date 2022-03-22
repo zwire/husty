@@ -1,0 +1,15 @@
+var searchData=
+[
+  ['particlefilter_0',['ParticleFilter',['../class_husty_1_1_particle_filter.html#a274a1f25d342ca60d02bcd87ace10cda',1,'Husty.ParticleFilter.ParticleFilter(double[] initialStateVec, double[]? controlMatrix, double filterStrength=1.0, int N=100)'],['../class_husty_1_1_particle_filter.html#abe32871b49d8cf8948e858827e47751e',1,'Husty.ParticleFilter.ParticleFilter(double[] initialStateVec, double[]? controlMatrix, double measurementNoise=0.01, double processNoise=0.01, int N=100)'],['../class_husty_1_1_particle_filter.html#ab2c66524bd7ad91260b9f47b83a39e8b',1,'Husty.ParticleFilter.ParticleFilter(double[] initialStateVec, double[]? controlMatrix, double[] transitionMatrix, double[] measurementMatrix, double measurementNoise=0.01, double processNoise=0.01, int N=100)'],['../class_husty_1_1_particle_filter.html#abee32850947337b089b910624b80462c',1,'Husty.ParticleFilter.ParticleFilter(double[] initialStateVec, double[]? controlMatrix, double[] transitionMatrix, double[] measurementMatrix, double[] measurementNoiseMatrix, double[] processNoiseMatrix, int N=100)']]],
+  ['pcaresult_1',['PcaResult',['../namespace_husty_1_1_open_cv_sharp.html#ab6ba9c18e978dc48209177cdd0f3aba1',1,'Husty::OpenCvSharp']]],
+  ['peercredential_2',['PeerCredential',['../namespace_husty_1_1_skyway_gateway.html#a12df4ef63f4943ab863b30444a2ad5a6',1,'Husty::SkywayGateway']]],
+  ['perspectivetransformer_3',['PerspectiveTransformer',['../class_husty_1_1_open_cv_sharp_1_1_perspective_transformer.html#a8089628a2b755e8fe9ce741a840b5027',1,'Husty::OpenCvSharp::PerspectiveTransformer']]],
+  ['plus_4',['Plus',['../struct_husty_1_1_angle.html#a50ba4fa08313f40f13229fcb68d50059',1,'Husty::Angle']]],
+  ['plusat_5',['PlusAt',['../class_husty_1_1_multidimensional_array.html#a833b14c82b02282cafb6490b6454fd9b',1,'Husty::MultidimensionalArray']]],
+  ['point2d_6',['Point2D',['../class_husty_1_1_point2_d.html#a86282a699fb95113488947921ca8a80b',1,'Husty::Point2D']]],
+  ['point3d_7',['Point3D',['../class_husty_1_1_point3_d.html#a99dfff6f5b9661a8e85749eeb84fcb2c',1,'Husty::Point3D']]],
+  ['predict_8',['Predict',['../class_husty_1_1_open_cv_sharp_1_1_bayes_classifier.html#a4224b67e12a76ffa3e178e470f54bf3d',1,'Husty.OpenCvSharp.BayesClassifier.Predict()'],['../interface_husty_1_1_open_cv_sharp_1_1_i_stats.html#a1c53ac39ac9f21f92518ea36b150add5',1,'Husty.OpenCvSharp.IStats.Predict()'],['../class_husty_1_1_open_cv_sharp_1_1_stats.html#aee08892968ca9fdee1eee7ed4a1c9c82',1,'Husty.OpenCvSharp.Stats.Predict()'],['../class_husty_1_1_open_cv_sharp_1_1_svm.html#a97aff0eae8d21ccf90b260ff50a578e3',1,'Husty.OpenCvSharp.Svm.Predict()']]],
+  ['predictprob_9',['PredictProb',['../class_husty_1_1_open_cv_sharp_1_1_bayes_classifier.html#a4ae3a25bbd2a5d9227ee4b067b168dec',1,'Husty::OpenCvSharp::BayesClassifier']]],
+  ['preset_10',['Preset',['../class_husty_1_1_preset.html#a9bafeeb372f0f0a5db2710390aab135a',1,'Husty::Preset']]],
+  ['properties_11',['Properties',['../namespace_husty_1_1_open_cv_sharp.html#afe2750b54839ef7883f8debef8be9ae5',1,'Husty::OpenCvSharp']]]
+];

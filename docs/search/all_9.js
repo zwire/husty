@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['cmac_0',['Cmac',['../namespace_husty_1_1_cmac.html',1,'Husty']]],
+  ['depthcamera_1',['DepthCamera',['../namespace_husty_1_1_open_cv_sharp_1_1_depth_camera.html',1,'Husty::OpenCvSharp']]],
+  ['extensions_2',['Extensions',['../namespace_husty_1_1_open_cv_sharp_1_1_extensions.html',1,'Husty::OpenCvSharp']]],
+  ['handle_3',['Handle',['../class_husty_1_1_lawicel_1_1_can_usb_adapter.html#ae13409727f7892ada3d850984180025f',1,'Husty::Lawicel::CanUsbAdapter']]],
+  ['hasframe_4',['HasFrame',['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_realsense.html#a5017c28517a01f4295e517c7f3b79a81',1,'Husty.OpenCvSharp.DepthCamera.Realsense.HasFrame()'],['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_kinect.html#aa2b6b273ecdf2e5eab65d24ef0f4dcb4',1,'Husty.OpenCvSharp.DepthCamera.Kinect.HasFrame()'],['../class_husty_1_1_open_cv_sharp_1_1_video_stream.html#ae94b2839e0b9b27f3279dee3c3ba3e96',1,'Husty.OpenCvSharp.VideoStream.HasFrame()'],['../interface_husty_1_1_open_cv_sharp_1_1_i_image_stream.html#a42e8c79af6c015e58e5e5fcb475ce71e',1,'Husty.OpenCvSharp.IImageStream.HasFrame()'],['../class_husty_1_1_open_cv_sharp_1_1_camera_stream.html#a1e3aa629cfd1d801fd3d6208daec9f55',1,'Husty.OpenCvSharp.CameraStream.HasFrame()'],['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_bgr_xyz_player.html#a3cd5c26580296f0c4d1718b039e532ed',1,'Husty.OpenCvSharp.DepthCamera.BgrXyzPlayer.HasFrame()']]],
+  ['height_5',['Height',['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_bgr_xyz_mat.html#a394dcd92f7b5e6600aaae9d35ebb7711',1,'Husty::OpenCvSharp::DepthCamera::BgrXyzMat']]],
+  ['hog_6',['Hog',['../class_husty_1_1_open_cv_sharp_1_1_hog.html#a6368cc5e6dfacf9eb5c666167733bf0b',1,'Husty.OpenCvSharp.Hog.Hog()'],['../class_husty_1_1_open_cv_sharp_1_1_hog.html',1,'Husty.OpenCvSharp.Hog']]],
+  ['hog_2ecs_7',['Hog.cs',['../_hog_8cs.html',1,'']]],
+  ['houghcoordinatesystem_8',['HoughCoordinateSystem',['../namespace_husty.html#ac1ce532d2fbced2f6d181b9c28e2b718',1,'Husty']]],
+  ['houghcoordinatesystem_2ecs_9',['HoughCoordinateSystem.cs',['../_hough_coordinate_system_8cs.html',1,'']]],
+  ['houghsingleline_10',['HoughSingleLine',['../class_husty_1_1_open_cv_sharp_1_1_hough_single_line.html#a31a2aed80d35d29ae6175dda1b00f1ac',1,'Husty.OpenCvSharp.HoughSingleLine.HoughSingleLine()'],['../class_husty_1_1_open_cv_sharp_1_1_hough_single_line.html',1,'Husty.OpenCvSharp.HoughSingleLine']]],
+  ['houghsingleline_2ecs_11',['HoughSingleLine.cs',['../_hough_single_line_8cs.html',1,'']]],
+  ['husty_12',['Husty',['../namespace_husty.html',1,'']]],
+  ['husty_2eassemblyinfo_2ecs_13',['Husty.AssemblyInfo.cs',['../_debug_2net5_80_2_husty_8_assembly_info_8cs.html',1,'(Global Namespace)'],['../_release_2net5_80_2_husty_8_assembly_info_8cs.html',1,'(Global Namespace)']]],
+  ['husty_2elawicel_2eassemblyinfo_2ecs_14',['Husty.Lawicel.AssemblyInfo.cs',['../_release_2net5_80_2_husty_8_lawicel_8_assembly_info_8cs.html',1,'(Global Namespace)'],['../_debug_2net5_80_2_husty_8_lawicel_8_assembly_info_8cs.html',1,'(Global Namespace)']]],
+  ['husty_2eopencvsharp_2eassemblyinfo_2ecs_15',['Husty.OpenCvSharp.AssemblyInfo.cs',['../_debug_2net5_80_2_husty_8_open_cv_sharp_8_assembly_info_8cs.html',1,'(Global Namespace)'],['../_release_2net5_80_2_husty_8_open_cv_sharp_8_assembly_info_8cs.html',1,'(Global Namespace)']]],
+  ['husty_2eopencvsharp_2edepthcamera_2eassemblyinfo_2ecs_16',['Husty.OpenCvSharp.DepthCamera.AssemblyInfo.cs',['../_release_2net5_80_2_husty_8_open_cv_sharp_8_depth_camera_8_assembly_info_8cs.html',1,'(Global Namespace)'],['../_debug_2net5_80_2_husty_8_open_cv_sharp_8_depth_camera_8_assembly_info_8cs.html',1,'(Global Namespace)']]],
+  ['husty_2eskyway_2eassemblyinfo_2ecs_17',['Husty.Skyway.AssemblyInfo.cs',['../_husty_8_skyway_8_assembly_info_8cs.html',1,'']]],
+  ['husty_2eskywaygateway_2eassemblyinfo_2ecs_18',['Husty.SkywayGateway.AssemblyInfo.cs',['../_debug_2net5_80_2_husty_8_skyway_gateway_8_assembly_info_8cs.html',1,'(Global Namespace)'],['../_release_2net5_80_2_husty_8_skyway_gateway_8_assembly_info_8cs.html',1,'(Global Namespace)']]],
+  ['hustygeometryextensions_2ecs_19',['HustyGeometryExtensions.cs',['../_husty_geometry_extensions_8cs.html',1,'']]],
+  ['lawicel_20',['Lawicel',['../namespace_husty_1_1_lawicel.html',1,'Husty']]],
+  ['neuralnetwork_21',['NeuralNetwork',['../namespace_husty_1_1_neural_network.html',1,'Husty']]],
+  ['opencvsharp_22',['OpenCvSharp',['../namespace_husty_1_1_open_cv_sharp.html',1,'Husty']]],
+  ['skywaygateway_23',['SkywayGateway',['../namespace_husty_1_1_skyway_gateway.html',1,'Husty']]]
+];

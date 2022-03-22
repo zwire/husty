@@ -1,0 +1,8 @@
+var searchData=
+[
+  ['unit_0',['Unit',['../class_husty_1_1_neural_network_1_1_unit.html',1,'Husty.NeuralNetwork.Unit'],['../class_husty_1_1_neural_network_1_1_unit.html#ab76bab9b6642ed04883656bb61f30f1f',1,'Husty.NeuralNetwork.Unit.Unit()']]],
+  ['unit_2ecs_1',['Unit.cs',['../_unit_8cs.html',1,'']]],
+  ['unitvector_2',['UnitVector',['../class_husty_1_1_vector2_d.html#aa0779d52e3742fdc0d014ee5a0fb789b',1,'Husty.Vector2D.UnitVector()'],['../class_husty_1_1_vector3_d.html#af0cfe9ab160c63bc2d5cfdf72e1e8903',1,'Husty.Vector3D.UnitVector()']]],
+  ['unsafe_3',['unsafe',['../class_husty_1_1_open_cv_sharp_1_1_fourier1_d.html#ab5f256302d16c7571f4aa1166e54d25b',1,'Husty.OpenCvSharp.Fourier1D.unsafe(double Frequency, float Value)[] DftWithHistogram()'],['../class_husty_1_1_open_cv_sharp_1_1_fourier1_d.html#aafb33bf77d56d095f4f6b8b369a66163',1,'Husty.OpenCvSharp.Fourier1D.unsafe(double Time, float Value)[] IdftWithTime()']]],
+  ['update_4',['Update',['../class_husty_1_1_fir_filter.html#aefc39b5a10a59b156c5982a5b95bdcc0',1,'Husty.FirFilter.Update()'],['../class_husty_1_1_kalman_filter.html#a7635c15bd00dfdcc1e6e71b02737ed2e',1,'Husty.KalmanFilter.Update()'],['../class_husty_1_1_median_filter.html#a39ff7213eed20d1f292d4bd6d171ad02',1,'Husty.MedianFilter.Update()'],['../class_husty_1_1_particle_filter.html#adffde51919380c764367eb6ab9503dd9',1,'Husty.ParticleFilter.Update()'],['../interface_husty_1_1_neural_network_1_1_i_optimizer.html#a68ba164a33752e8ae300cff16730ee0d',1,'Husty.NeuralNetwork.IOptimizer.Update()'],['../class_husty_1_1_neural_network_1_1_optimizer_base.html#ad3fe86c304eef1ea8c4a7c53b8e2c7cd',1,'Husty.NeuralNetwork.OptimizerBase.Update()']]]
+];
