@@ -91,7 +91,7 @@ namespace Husty
 
         public async Task<BidirectionalDataStream> GetStreamAsync()
         {
-            return await Task.FromResult(GetStream());
+            return await Task.FromResult(GetStream()).ConfigureAwait(false);
         }
 
         public void Dispose()

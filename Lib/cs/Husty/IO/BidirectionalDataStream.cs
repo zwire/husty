@@ -74,8 +74,8 @@ namespace Husty
         {
             try
             {
-                await _writingStream.FlushAsync();
-                await _writingStream.WriteAsync(bytes, 0, bytes.Length);
+                await _writingStream.FlushAsync().ConfigureAwait(false);
+                await _writingStream.WriteAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
                 return true;
             }
             catch
@@ -122,7 +122,7 @@ namespace Husty
                 var size = 0;
                 do
                 {
-                    size = await _readingStream.ReadAsync(bytes, 0, bytes.Length);
+                    size = await _readingStream.ReadAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
                     if (size is 0) break;
                     ms.Write(bytes, 0, size);
                 } while (size is 2048);
@@ -160,8 +160,8 @@ namespace Husty
         {
             try
             {
-                await _writer.FlushAsync();
-                await _writer.WriteLineAsync(sendmsg);
+                await _writer.FlushAsync().ConfigureAwait(false);
+                await _writer.WriteLineAsync(sendmsg).ConfigureAwait(false);
                 return true;
             }
             catch
@@ -194,7 +194,7 @@ namespace Husty
         {
             try
             {
-                return await _reader.ReadLineAsync();
+                return await _reader.ReadLineAsync().ConfigureAwait(false);
             }
             catch
             {
@@ -230,7 +230,7 @@ namespace Husty
         {
             try
             {
-                return await WriteStringAsync(JsonSerializer.Serialize(sendmsg));
+                return await WriteStringAsync(JsonSerializer.Serialize(sendmsg)).ConfigureAwait(false);
             }
             catch
             {
@@ -264,7 +264,7 @@ namespace Husty
         {
             try
             {
-                return JsonSerializer.Deserialize<T>(await ReadStringAsync());
+                return JsonSerializer.Deserialize<T>(await ReadStringAsync().ConfigureAwait(false));
             }
             catch
             {
