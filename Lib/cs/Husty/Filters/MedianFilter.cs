@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Husty
+namespace Husty.Filters
 {
     public sealed class MedianFilter
     {

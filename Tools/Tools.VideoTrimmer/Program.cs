@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ConsoleAppFramework;
 using Microsoft.Extensions.Hosting;
 using OpenCvSharp;
-using Husty.OpenCvSharp;
+using Husty.OpenCvSharp.ImageStream;
 
 namespace Tools.VideoTrimmer
 {

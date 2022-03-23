@@ -3,7 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using OpenCvSharp;
 
-namespace Husty.OpenCvSharp.DepthCamera
+namespace Husty.OpenCvSharp.DepthCamera.IO
 {
     /// <summary>
     /// Saving & Loading for images captured by depth cameras

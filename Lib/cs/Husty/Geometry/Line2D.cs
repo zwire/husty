@@ -1,7 +1,7 @@
 ﻿using System;
 using static System.Math;
 
-namespace Husty
+namespace Husty.Geometry
 {
     // y = ax + b
     // ax - y + b = 0

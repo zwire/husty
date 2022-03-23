@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using OpenCvSharp;
+using Husty.IO;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.Extensions
 {
     public static class DataStreamExtensions
     {

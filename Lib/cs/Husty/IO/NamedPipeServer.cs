@@ -2,7 +2,7 @@
 using System.IO.Pipes;
 using System.Threading.Tasks;
 
-namespace Husty
+namespace Husty.IO
 {
     public sealed class NamedPipeServer : ICommunicator
     {

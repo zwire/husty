@@ -9,8 +9,10 @@ using Microsoft.Azure.Kinect.Sensor;
 using Reactive.Bindings;
 using OpenCvSharp.WpfExtensions;
 using Husty;
-using Husty.OpenCvSharp;
 using Husty.OpenCvSharp.DepthCamera;
+using Husty.OpenCvSharp.ImageStream;
+using Husty.OpenCvSharp.DepthCamera.IO;
+using Husty.OpenCvSharp.DepthCamera.Device;
 
 namespace Tools.DepthCamera
 {

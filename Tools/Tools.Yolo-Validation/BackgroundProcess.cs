@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using OpenCvSharp;
-using Husty.OpenCvSharp;
+using Husty.OpenCvSharp.Yolo;
 
 namespace Tools.Yolo_Validation
 {

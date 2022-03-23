@@ -1,6 +1,6 @@
 ﻿using static System.Math;
 
-namespace Husty
+namespace Husty.Geometry
 {
 
     public enum Axis { X, Y, Z }

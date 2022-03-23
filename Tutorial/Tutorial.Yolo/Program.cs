@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using OpenCvSharp;
-using Husty.OpenCvSharp;
 using System.Diagnostics;
+using OpenCvSharp;
+using Husty.OpenCvSharp.Yolo;
 
 namespace Tutorial.Yolo
 {

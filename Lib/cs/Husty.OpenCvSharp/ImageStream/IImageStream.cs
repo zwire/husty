@@ -1,7 +1,7 @@
 ﻿using System;
 using OpenCvSharp;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.ImageStream
 {
 
     public record Properties(VideoCaptureProperties Key, double Value);

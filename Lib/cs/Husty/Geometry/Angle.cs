@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using static System.Math;
 
-namespace Husty
+namespace Husty.Geometry
 {
 
 

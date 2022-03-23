@@ -1,7 +1,7 @@
 ﻿using System;
 using OpenCvSharp;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.CameraCalibration
 {
 
     public class PerspectiveTransformer

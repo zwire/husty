@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 
-namespace Husty
+namespace Husty.IO
 {
     public struct Baudrate
     {

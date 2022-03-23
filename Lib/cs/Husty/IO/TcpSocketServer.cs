@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace Husty
+namespace Husty.IO
 {
     /// <summary>
     /// Tcp socket server class

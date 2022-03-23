@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenCvSharp;
 using Husty.OpenCvSharp.DepthCamera;
+using Husty.OpenCvSharp.DepthCamera.Device;
 
 namespace Tutorial.RealsenseStartup
 {

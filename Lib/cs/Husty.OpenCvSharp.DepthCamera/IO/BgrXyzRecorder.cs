@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Husty.OpenCvSharp.DepthCamera
+namespace Husty.OpenCvSharp.DepthCamera.IO
 {
     /// <summary>
     /// Save BGRXYZ movie as binary file.

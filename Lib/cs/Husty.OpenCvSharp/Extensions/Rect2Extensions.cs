@@ -1,6 +1,6 @@
 ﻿using OpenCvSharp;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.Extensions
 {
 
     public static class Rect2Extensions

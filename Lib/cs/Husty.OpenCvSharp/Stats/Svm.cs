@@ -4,13 +4,13 @@ using System.Linq;
 using OpenCvSharp;
 using OpenCvSharp.ML;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.Stats
 {
     /// <summary>
     /// OpenCvSharp 'SVM' class wrapper.
     /// This class has accumulate & save & load methods for machine learning.
     /// </summary>
-    public sealed class Svm : Stats
+    public sealed class Svm : StatsBase
     {
 
         // ------ fields ------ //

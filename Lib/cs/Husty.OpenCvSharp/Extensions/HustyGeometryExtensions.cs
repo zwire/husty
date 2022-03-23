@@ -1,6 +1,7 @@
 ﻿using OpenCvSharp;
+using Husty.Geometry;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.Extensions
 {
     public static class HustyGeometryExtensions
     {

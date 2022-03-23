@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Husty
+namespace Husty.Extensions
 {
     public static class ArrayExtensions
     {

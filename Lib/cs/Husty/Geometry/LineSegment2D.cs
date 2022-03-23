@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using static System.Math;
 
-namespace Husty
+namespace Husty.Geometry
 {
     public class LineSegment2D : Line2D
     {

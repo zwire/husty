@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Husty
+namespace Husty.Filters
 {
     /// <summary>
     /// Finite Impulse Response

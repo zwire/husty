@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.IO;
 using ConsoleAppFramework;
 using Microsoft.Extensions.Hosting;
-using Husty.OpenCvSharp;
+using Husty.OpenCvSharp.CameraCalibration;
 
 namespace Tools.CameraIntrinsicCalibrator
 {

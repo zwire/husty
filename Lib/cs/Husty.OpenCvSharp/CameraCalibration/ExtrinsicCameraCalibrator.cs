@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using OpenCvSharp;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.CameraCalibration
 {
     public static class ExtrinsicCameraCalibrator
     {

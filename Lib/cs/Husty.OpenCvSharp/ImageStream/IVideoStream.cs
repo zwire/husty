@@ -1,4 +1,4 @@
-﻿namespace Husty.OpenCvSharp
+﻿namespace Husty.OpenCvSharp.ImageStream
 {
     public interface IVideoStream<TImage> : IImageStream<TImage>
     {

@@ -1,7 +1,8 @@
 ﻿using System;
 using OpenCvSharp;
+using Husty.Geometry;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.Feature
 {
 
     public sealed class HoughSingleLine

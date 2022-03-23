@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenCvSharp;
-using Husty.OpenCvSharp;
+using Husty.OpenCvSharp.ImageStream;
 
 namespace Tutorial.Video
 {

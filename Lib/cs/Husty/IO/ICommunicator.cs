@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Husty
+namespace Husty.IO
 {
     public interface ICommunicator : IDisposable
     {

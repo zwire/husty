@@ -5,7 +5,7 @@ using System.IO;
 using ConsoleAppFramework;
 using Microsoft.Extensions.Hosting;
 using OpenCvSharp;
-using Husty.OpenCvSharp;
+using Husty.OpenCvSharp.CameraCalibration;
 
 namespace Tools.CameraExtrinsicCalibrator
 {

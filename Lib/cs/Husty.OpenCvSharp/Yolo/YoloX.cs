@@ -4,8 +4,9 @@ using System.Linq;
 using System.IO;
 using OpenCvSharp;
 using OpenCvSharp.Dnn;
+using Husty.Extensions;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.Yolo
 {
     public class YoloX : OnnxBase<Mat, YoloResult[]>, IYoloDetector
     {

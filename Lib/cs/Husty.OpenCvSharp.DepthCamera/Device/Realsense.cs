@@ -3,8 +3,9 @@ using System.Reactive.Linq;
 using System.Reactive.Concurrency;
 using OpenCvSharp;
 using Intel.RealSense;
+using Husty.OpenCvSharp.ImageStream;
 
-namespace Husty.OpenCvSharp.DepthCamera
+namespace Husty.OpenCvSharp.DepthCamera.Device
 {
     /// <summary>
     /// Intel RealSense D415 - 455, L515 C# wrapper

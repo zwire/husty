@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.Stats
 {
-    public abstract class Stats : IStats
+    public abstract class StatsBase : IStats
     {
 
         // ------ fields ------ //
@@ -24,7 +24,7 @@ namespace Husty.OpenCvSharp
         /// <param name="mode">Train or Inference</param>
         /// <param name="modelPath">(.xml)</param>
         /// <param name="dataPath">(.csv)</param>
-        public Stats(Mode mode, string modelPath, string dataPath)
+        public StatsBase(Mode mode, string modelPath, string dataPath)
         {
             _mode = mode;
             _modelPath = modelPath;

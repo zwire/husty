@@ -5,7 +5,7 @@ using System.Linq;
 using OpenCvSharp;
 using OpenCvSharp.Dnn;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.Yolo
 {
     /// <summary>
     /// Well-known object detection algorithm

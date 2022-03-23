@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Husty
+namespace Husty.IO
 {
 
     public sealed class BidirectionalDataStream : IDisposable

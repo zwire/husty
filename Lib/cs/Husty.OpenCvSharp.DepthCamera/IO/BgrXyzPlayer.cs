@@ -6,8 +6,9 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Linq;
 using OpenCvSharp;
+using Husty.OpenCvSharp.ImageStream;
 
-namespace Husty.OpenCvSharp.DepthCamera
+namespace Husty.OpenCvSharp.DepthCamera.IO
 {
     /// <summary>
     /// Playback BGRXYZ movie from binary file.

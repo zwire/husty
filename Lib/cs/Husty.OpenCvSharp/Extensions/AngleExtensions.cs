@@ -1,7 +1,8 @@
 ﻿using OpenCvSharp;
+using Husty.Geometry;
 using static System.Math;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.Extensions
 {
     public static class AngleExtensions
     {

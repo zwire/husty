@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Husty
+namespace Husty.Extensions
 {
     public static class ArrayCastExtensions
     {

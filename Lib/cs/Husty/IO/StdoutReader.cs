@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Reactive.Subjects;
 using Cysharp.Diagnostics;
 
-namespace Husty
+namespace Husty.IO
 {
     public class StdOutReader : IDisposable
     {

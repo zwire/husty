@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Husty
+namespace Husty.Geometry
 {
     public class Arc2D
     {

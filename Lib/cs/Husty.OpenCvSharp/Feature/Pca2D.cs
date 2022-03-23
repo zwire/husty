@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenCvSharp;
+using Husty.OpenCvSharp.Extensions;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.Feature
 {
 
     public record PcaResult(Point2d Center, double Val1, double Val2, double AngleRadian);

@@ -1,7 +1,7 @@
 ﻿using OpenCvSharp;
 using static System.Math;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.Extensions
 {
 
     public static class Point2Extensions

@@ -1,7 +1,7 @@
-﻿using OpenCvSharp;
-using Husty;
-using Husty.OpenCvSharp;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using OpenCvSharp;
+using Husty.IO;
+using Husty.OpenCvSharp.Extensions;
 
 namespace Test.TcpSocket
 {
@@ -17,7 +17,7 @@ namespace Test.TcpSocket
         public SubWindow()
         {
             InitializeComponent();
-            _client = new TcpSocketClient("127.0.0.1", 3001, 3000);
+            _client = new TcpSocketClient("127.0.0.1", 3001, "127.0.0.1", 3000);
             Task.Run(async () => _stream = await _client.GetStreamAsync());
             Closed += (sender, args) =>
             {

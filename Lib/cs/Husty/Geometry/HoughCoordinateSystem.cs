@@ -1,4 +1,4 @@
-﻿namespace Husty
+﻿namespace Husty.Geometry
 {
     public record HoughCoordinateSystem(Angle Theta, double Rho)
     {

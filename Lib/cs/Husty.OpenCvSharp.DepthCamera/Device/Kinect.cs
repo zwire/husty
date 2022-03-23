@@ -3,8 +3,11 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Microsoft.Azure.Kinect.Sensor;
 using OpenCvSharp;
+using Husty.Geometry;
+using Husty.OpenCvSharp.ImageStream;
+using Husty.OpenCvSharp.Extensions;
 
-namespace Husty.OpenCvSharp.DepthCamera
+namespace Husty.OpenCvSharp.DepthCamera.Device
 {
     /// <summary>
     /// Microsoft Azure Kinect C# wrapper
@@ -15,7 +18,7 @@ namespace Husty.OpenCvSharp.DepthCamera
         // ------ fields ------ //
 
         private readonly AlignBase _align;
-        private readonly Device _device;
+        private readonly Microsoft.Azure.Kinect.Sensor.Device _device;
         private readonly Transformation _transformation;
         private readonly Mat _rotationMatrix;
         private readonly ObjectPool<BgrXyzMat> _pool;
@@ -50,7 +53,7 @@ namespace Husty.OpenCvSharp.DepthCamera
             using var yRot = new Angle(-1.3, AngleType.Degree).ToRotationMatrix(Axis.Y);
             using var zRot = new Angle(0, AngleType.Degree).ToRotationMatrix(Axis.Z);
             _rotationMatrix = zRot * yRot * xRot;
-            _device = Device.Open();
+            _device = Microsoft.Azure.Kinect.Sensor.Device.Open();
             _device.StartCameras(config);
             _transformation = _device.GetCalibration().CreateTransformation();
             Config = config;

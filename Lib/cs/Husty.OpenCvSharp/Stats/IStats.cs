@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.Stats
 {
     public enum Mode { Train, Inference }
 

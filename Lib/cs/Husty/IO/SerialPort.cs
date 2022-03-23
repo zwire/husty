@@ -2,7 +2,7 @@
 using System.IO.Ports;
 using System.Threading.Tasks;
 
-namespace Husty
+namespace Husty.IO
 {
     public sealed class SerialPort : ICommunicator
     {

@@ -1,6 +1,7 @@
 ﻿using OpenCvSharp;
+using Husty.OpenCvSharp.Extensions;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.Yolo
 {
     public sealed record YoloResult(Rect2d Box, float Confidence, string Label, float Probability)
     {

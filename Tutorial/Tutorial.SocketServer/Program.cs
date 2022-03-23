@@ -1,5 +1,5 @@
 ﻿using System;
-using Husty;
+using Husty.IO;
 
 namespace Tutorial.SocketServer
 {

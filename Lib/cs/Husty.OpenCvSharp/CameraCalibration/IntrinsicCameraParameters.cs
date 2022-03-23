@@ -2,7 +2,7 @@
 using System.IO;
 using OpenCvSharp;
 
-namespace Husty.OpenCvSharp
+namespace Husty.OpenCvSharp.CameraCalibration
 {
 
 	public sealed class IntrinsicCameraParameters

@@ -1,6 +1,6 @@
 ﻿using System;
 using OpenCvSharp;
-using Husty.OpenCvSharp;
+using Husty.OpenCvSharp.Extensions;
 using static System.Math;
 
 namespace Tutorial.HoughSingleLine
@@ -25,7 +25,7 @@ namespace Tutorial.HoughSingleLine
             var yStep = 2;
 
             // initialize
-            var hough = new Husty.OpenCvSharp.HoughSingleLine(
+            var hough = new Husty.OpenCvSharp.Feature.HoughSingleLine(
                 thetaMin, thetaMax,rhoMin, rhoMax,
                 xMin, xMax, yMin, yMax,
                 thetaStep, rhoStep, xStep, yStep);
