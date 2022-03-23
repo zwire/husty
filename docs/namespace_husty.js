@@ -1,7 +1,7 @@
 var namespace_husty =
 [
     [ "Cmac", "namespace_husty_1_1_cmac.html", "namespace_husty_1_1_cmac" ],
-    [ "Extensions", "namespace_husty_1_1_extensions.html", null ],
+    [ "Extensions", "namespace_husty_1_1_extensions.html", "namespace_husty_1_1_extensions" ],
     [ "Filters", "namespace_husty_1_1_filters.html", "namespace_husty_1_1_filters" ],
     [ "Geometry", "namespace_husty_1_1_geometry.html", "namespace_husty_1_1_geometry" ],
     [ "IO", "namespace_husty_1_1_i_o.html", "namespace_husty_1_1_i_o" ],

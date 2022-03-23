@@ -13,7 +13,8 @@ var dir_4aa38c0589e0f49cc6f849d919c0ed04 =
       [ "Husty.IO.NamedPipeServer", "class_husty_1_1_i_o_1_1_named_pipe_server.html", "class_husty_1_1_i_o_1_1_named_pipe_server" ]
     ] ],
     [ "PortManager.cs", "_port_manager_8cs.html", [
-      [ "Husty.IO.Baudrate", "struct_husty_1_1_i_o_1_1_baudrate.html", null ]
+      [ "Husty.IO.Baudrate", "struct_husty_1_1_i_o_1_1_baudrate.html", "struct_husty_1_1_i_o_1_1_baudrate" ],
+      [ "Husty.IO.PortManager", "class_husty_1_1_i_o_1_1_port_manager.html", "class_husty_1_1_i_o_1_1_port_manager" ]
     ] ],
     [ "SerialPort.cs", "_serial_port_8cs.html", [
       [ "Husty.IO.SerialPort", "class_husty_1_1_i_o_1_1_serial_port.html", "class_husty_1_1_i_o_1_1_serial_port" ]

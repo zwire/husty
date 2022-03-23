@@ -7,6 +7,6 @@ var dir_9b674a1db61a8e10c7c37db5095e5f9d =
     ] ],
     [ "CanUsbAdapter.cs", "_can_usb_adapter_8cs.html", "_can_usb_adapter_8cs" ],
     [ "CanUsbOption.cs", "_can_usb_option_8cs.html", [
-      [ "Husty.Lawicel.CanUsbOption", "class_husty_1_1_lawicel_1_1_can_usb_option.html", null ]
+      [ "Husty.Lawicel.CanUsbOption", "class_husty_1_1_lawicel_1_1_can_usb_option.html", "class_husty_1_1_lawicel_1_1_can_usb_option" ]
     ] ]
 ];

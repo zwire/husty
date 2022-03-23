@@ -53,11 +53,14 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_ada_grad_8cs.html",
-"class_husty_1_1_geometry_1_1_arc2_d.html#a715c3e7450754e69771bbf54739582de",
-"class_husty_1_1_i_o_1_1_tcp_socket_client.html#ac212ab05af6ada4b3febe9f006686c62",
-"class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_parameters.html#a2823ee61c8b50f8638a561e89f66c47c",
-"class_husty_1_1_open_cv_sharp_1_1_onnx_base.html#ae9695adbc91c02034b5bfc649bdc7982",
-"functions_func_r.html"
+"class_husty_1_1_extensions_1_1_array_extensions.html#a2a118a95cbbf728540c2dc763059936a",
+"class_husty_1_1_geometry_1_1_point3_d.html#a257af46092fd301363b5f1f5fe06da14",
+"class_husty_1_1_lawicel_1_1_can_message.html#aa718365e4cbbb2a625abbbfc44edbb35",
+"class_husty_1_1_neural_network_1_1_sgd.html#a7677e028008ae41a07ecf3c1267c7e8f",
+"class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_husty_geometry_extensions.html#a0c6d1574986df0f17d2eb8a223ccc845",
+"class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_vector_extensions.html#a605a9eca9da9392a0e1e362818234761",
+"class_husty_1_1_skyway_gateway_1_1_data_channel.html#a5ee1323a4720e3de9e28e594f9334d37",
+"interface_husty_1_1_open_cv_sharp_1_1_stats_1_1_i_stats.html#a15e3ca317ac2e1454b668ec798c00cad"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -2,13 +2,14 @@ var namespace_husty_1_1_open_cv_sharp =
 [
     [ "CameraCalibration", "namespace_husty_1_1_open_cv_sharp_1_1_camera_calibration.html", "namespace_husty_1_1_open_cv_sharp_1_1_camera_calibration" ],
     [ "DepthCamera", "namespace_husty_1_1_open_cv_sharp_1_1_depth_camera.html", "namespace_husty_1_1_open_cv_sharp_1_1_depth_camera" ],
-    [ "Extensions", "namespace_husty_1_1_open_cv_sharp_1_1_extensions.html", null ],
+    [ "Extensions", "namespace_husty_1_1_open_cv_sharp_1_1_extensions.html", "namespace_husty_1_1_open_cv_sharp_1_1_extensions" ],
     [ "Feature", "namespace_husty_1_1_open_cv_sharp_1_1_feature.html", "namespace_husty_1_1_open_cv_sharp_1_1_feature" ],
     [ "ImageStream", "namespace_husty_1_1_open_cv_sharp_1_1_image_stream.html", "namespace_husty_1_1_open_cv_sharp_1_1_image_stream" ],
     [ "Stats", "namespace_husty_1_1_open_cv_sharp_1_1_stats.html", "namespace_husty_1_1_open_cv_sharp_1_1_stats" ],
     [ "Yolo", "namespace_husty_1_1_open_cv_sharp_1_1_yolo.html", "namespace_husty_1_1_open_cv_sharp_1_1_yolo" ],
     [ "LayerInfo", "class_husty_1_1_open_cv_sharp_1_1_layer_info.html", "class_husty_1_1_open_cv_sharp_1_1_layer_info" ],
     [ "OnnxBase", "class_husty_1_1_open_cv_sharp_1_1_onnx_base.html", "class_husty_1_1_open_cv_sharp_1_1_onnx_base" ],
+    [ "TypeConverter", "class_husty_1_1_open_cv_sharp_1_1_type_converter.html", "class_husty_1_1_open_cv_sharp_1_1_type_converter" ],
     [ "OptimizationLevel", "namespace_husty_1_1_open_cv_sharp.html#a939edbd3618df6c0131e517c095b3da0", [
       [ "Off", "namespace_husty_1_1_open_cv_sharp.html#a939edbd3618df6c0131e517c095b3da0ad15305d7a4e34e02489c74a5ef542f36", null ],
       [ "Basic", "namespace_husty_1_1_open_cv_sharp.html#a939edbd3618df6c0131e517c095b3da0a972e73b7a882d0802a4e3a16946a2f94", null ],

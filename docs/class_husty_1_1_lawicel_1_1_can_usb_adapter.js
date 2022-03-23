@@ -3,6 +3,7 @@ var class_husty_1_1_lawicel_1_1_can_usb_adapter =
     [ "CanUsbAdapter", "class_husty_1_1_lawicel_1_1_can_usb_adapter.html#a12c5f9fe2d7001f267ef89c20221aa62", null ],
     [ "Close", "class_husty_1_1_lawicel_1_1_can_usb_adapter.html#ae8f6eb8b1ce515200928cb978988b86e", null ],
     [ "Dispose", "class_husty_1_1_lawicel_1_1_can_usb_adapter.html#a104e2eb2e0c6afe0b5d7b142b1b82aa5", null ],
+    [ "FindAdapterNames", "class_husty_1_1_lawicel_1_1_can_usb_adapter.html#a104986e2236869f49bd7be7a14fd22da", null ],
     [ "Open", "class_husty_1_1_lawicel_1_1_can_usb_adapter.html#a4d9660d5566e2f4952e6c4197b119520", null ],
     [ "Read", "class_husty_1_1_lawicel_1_1_can_usb_adapter.html#a1f4194c6ca135bb86258c3f862a939b4", null ],
     [ "ThrowIfDisposed", "class_husty_1_1_lawicel_1_1_can_usb_adapter.html#a52f71b6f7c1b14d4ae32953d13c38df6", null ],

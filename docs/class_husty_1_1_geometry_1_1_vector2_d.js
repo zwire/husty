@@ -4,6 +4,14 @@ var class_husty_1_1_geometry_1_1_vector2_d =
     [ "Vector2D", "class_husty_1_1_geometry_1_1_vector2_d.html#a1329a56a2f2809dde31243c4a1b1c7a6", null ],
     [ "Clone", "class_husty_1_1_geometry_1_1_vector2_d.html#a3794c33c0f02dd6beb7078af8912ca8e", null ],
     [ "GetClockwiseAngleFrom", "class_husty_1_1_geometry_1_1_vector2_d.html#a87c42b7fbd2112ad2edfbca19f98fc13", null ],
+    [ "operator!=", "class_husty_1_1_geometry_1_1_vector2_d.html#afd1846c49eb4b025bec8b0c8e381bd22", null ],
+    [ "operator*", "class_husty_1_1_geometry_1_1_vector2_d.html#a89262bd8253381fe4943bc6aa200383a", null ],
+    [ "operator*", "class_husty_1_1_geometry_1_1_vector2_d.html#a661f2393ab7c6c94cc007fcbf0ab5c09", null ],
+    [ "operator+", "class_husty_1_1_geometry_1_1_vector2_d.html#af35a9f64189e955f158d5aafff70b168", null ],
+    [ "operator-", "class_husty_1_1_geometry_1_1_vector2_d.html#a42edbc6c42e6143d0324f49ffd4dc53c", null ],
+    [ "operator-", "class_husty_1_1_geometry_1_1_vector2_d.html#adc8b3f071f38aca2efed22f3fc73dc5d", null ],
+    [ "operator/", "class_husty_1_1_geometry_1_1_vector2_d.html#a9b0c83f89235de866dca4b74be38e023", null ],
+    [ "operator==", "class_husty_1_1_geometry_1_1_vector2_d.html#a73eafd55fa46246c7a3bfe73f502b59c", null ],
     [ "Rotate", "class_husty_1_1_geometry_1_1_vector2_d.html#a4ae1b5bd09fe27bf9b36a76d16630a32", null ],
     [ "ToArray", "class_husty_1_1_geometry_1_1_vector2_d.html#a8a4cd3f1781935a48a98de386c492df9", null ],
     [ "ToPoint2D", "class_husty_1_1_geometry_1_1_vector2_d.html#ad7ddef3b9ebe20a2f2e2f6c739878762", null ],
@@ -13,5 +21,6 @@ var class_husty_1_1_geometry_1_1_vector2_d =
     [ "Length", "class_husty_1_1_geometry_1_1_vector2_d.html#a866552478b1fd1d75c1beeb31fd55f64", null ],
     [ "UnitVector", "class_husty_1_1_geometry_1_1_vector2_d.html#a80e9d0bdcb0290aa38b023ed767d4c13", null ],
     [ "X", "class_husty_1_1_geometry_1_1_vector2_d.html#a7174fc391e557fa44c4ec7be5a120361", null ],
-    [ "Y", "class_husty_1_1_geometry_1_1_vector2_d.html#a57b23d49cff4a48680bd8db3c985f579", null ]
+    [ "Y", "class_husty_1_1_geometry_1_1_vector2_d.html#a57b23d49cff4a48680bd8db3c985f579", null ],
+    [ "Zero", "class_husty_1_1_geometry_1_1_vector2_d.html#a65af7ca6014730c2d451bc73cac6383e", null ]
 ];

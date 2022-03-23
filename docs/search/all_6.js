@@ -17,7 +17,8 @@ var searchData=
   ['expiresremainingsecondnotified_14',['ExpiresRemainingSecondNotified',['../class_husty_1_1_skyway_gateway_1_1_peer.html#a37afb3f930b60d95f7826e7f2d2f7589',1,'Husty::SkywayGateway::Peer']]],
   ['extended_15',['EXTENDED',['../class_husty_1_1_lawicel_1_1_can_usb_option.html#afb88c7511dbf51bd582c9df52f6dca9b',1,'Husty::Lawicel::CanUsbOption']]],
   ['extended_16',['Extended',['../namespace_husty_1_1_open_cv_sharp.html#a939edbd3618df6c0131e517c095b3da0af23578fcd2a868168854ab714e7de537',1,'Husty::OpenCvSharp']]],
-  ['extrinsiccameracalibrator_2ecs_17',['ExtrinsicCameraCalibrator.cs',['../_extrinsic_camera_calibrator_8cs.html',1,'']]],
-  ['extrinsiccameraparameters_18',['ExtrinsicCameraParameters',['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_parameters.html#a131d5c8baf16616bfb78e7e189aab224',1,'Husty.OpenCvSharp.CameraCalibration.ExtrinsicCameraParameters.ExtrinsicCameraParameters()'],['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_parameters.html',1,'Husty.OpenCvSharp.CameraCalibration.ExtrinsicCameraParameters']]],
-  ['extrinsiccameraparameters_2ecs_19',['ExtrinsicCameraParameters.cs',['../_extrinsic_camera_parameters_8cs.html',1,'']]]
+  ['extrinsiccameracalibrator_17',['ExtrinsicCameraCalibrator',['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_calibrator.html',1,'Husty::OpenCvSharp::CameraCalibration']]],
+  ['extrinsiccameracalibrator_2ecs_18',['ExtrinsicCameraCalibrator.cs',['../_extrinsic_camera_calibrator_8cs.html',1,'']]],
+  ['extrinsiccameraparameters_19',['ExtrinsicCameraParameters',['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_parameters.html#a131d5c8baf16616bfb78e7e189aab224',1,'Husty.OpenCvSharp.CameraCalibration.ExtrinsicCameraParameters.ExtrinsicCameraParameters()'],['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_parameters.html',1,'Husty.OpenCvSharp.CameraCalibration.ExtrinsicCameraParameters']]],
+  ['extrinsiccameraparameters_2ecs_20',['ExtrinsicCameraParameters.cs',['../_extrinsic_camera_parameters_8cs.html',1,'']]]
 ];

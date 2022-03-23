@@ -4,11 +4,15 @@ var dir_773bc33dfcdc4fabab9c40ce2cc32449 =
       [ "Husty.OpenCvSharp.CameraCalibration.Chessboard", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_chessboard.html", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_chessboard" ]
     ] ],
     [ "ConverterExtensions.cs", "_converter_extensions_8cs.html", null ],
-    [ "ExtrinsicCameraCalibrator.cs", "_extrinsic_camera_calibrator_8cs.html", null ],
+    [ "ExtrinsicCameraCalibrator.cs", "_extrinsic_camera_calibrator_8cs.html", [
+      [ "Husty.OpenCvSharp.CameraCalibration.ExtrinsicCameraCalibrator", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_calibrator.html", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_calibrator" ]
+    ] ],
     [ "ExtrinsicCameraParameters.cs", "_extrinsic_camera_parameters_8cs.html", [
       [ "Husty.OpenCvSharp.CameraCalibration.ExtrinsicCameraParameters", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_parameters.html", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_parameters" ]
     ] ],
-    [ "IntrinsicCameraCalibrator.cs", "_intrinsic_camera_calibrator_8cs.html", null ],
+    [ "IntrinsicCameraCalibrator.cs", "_intrinsic_camera_calibrator_8cs.html", [
+      [ "Husty.OpenCvSharp.CameraCalibration.IntrinsicCameraCalibrator", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_intrinsic_camera_calibrator.html", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_intrinsic_camera_calibrator" ]
+    ] ],
     [ "IntrinsicCameraParameters.cs", "_intrinsic_camera_parameters_8cs.html", [
       [ "Husty.OpenCvSharp.CameraCalibration.IntrinsicCameraParameters", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_intrinsic_camera_parameters.html", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_intrinsic_camera_parameters" ]
     ] ],
