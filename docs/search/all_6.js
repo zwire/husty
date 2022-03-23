@@ -2,7 +2,7 @@ var searchData=
 [
   ['elementtype_0',['ElementType',['../class_husty_1_1_open_cv_sharp_1_1_layer_info.html#a8666ae43dfe7b4b0220a2f245e417d69',1,'Husty::OpenCvSharp::LayerInfo']]],
   ['empty_1',['Empty',['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_bgr_xyz_mat.html#ae7053078032b7f988400792ebe4c43b5',1,'Husty::OpenCvSharp::DepthCamera::BgrXyzMat']]],
-  ['end_2',['End',['../class_husty_1_1_arc2_d.html#af879acdba580ae8eb6c4bbc2888e4e90',1,'Husty.Arc2D.End()'],['../class_husty_1_1_line_segment2_d.html#abefe7b740ec2a63b1cb5ac28c6bf9eeb',1,'Husty.LineSegment2D.End()']]],
+  ['end_2',['End',['../class_husty_1_1_geometry_1_1_arc2_d.html#a715c3e7450754e69771bbf54739582de',1,'Husty.Geometry.Arc2D.End()'],['../class_husty_1_1_geometry_1_1_line_segment2_d.html#af56e8e2b5d119a586dcfa0c9419ce0b4',1,'Husty.Geometry.LineSegment2D.End()']]],
   ['error_5fcommand_5fsubsystem_3',['ERROR_COMMAND_SUBSYSTEM',['../class_husty_1_1_lawicel_1_1_can_usb_option.html#aee9366d8d45402edd9d0219404899b3b',1,'Husty::Lawicel::CanUsbOption']]],
   ['error_5finvalid_5fhardware_4',['ERROR_INVALID_HARDWARE',['../class_husty_1_1_lawicel_1_1_can_usb_option.html#a6ecca19b97264154201e8bf6fb57ec5c',1,'Husty::Lawicel::CanUsbOption']]],
   ['error_5finvalid_5fparam_5',['ERROR_INVALID_PARAM',['../class_husty_1_1_lawicel_1_1_can_usb_option.html#a53f914cb77e6fe79af1ab1f1022801e6',1,'Husty::Lawicel::CanUsbOption']]],
@@ -18,6 +18,6 @@ var searchData=
   ['extended_15',['EXTENDED',['../class_husty_1_1_lawicel_1_1_can_usb_option.html#afb88c7511dbf51bd582c9df52f6dca9b',1,'Husty::Lawicel::CanUsbOption']]],
   ['extended_16',['Extended',['../namespace_husty_1_1_open_cv_sharp.html#a939edbd3618df6c0131e517c095b3da0af23578fcd2a868168854ab714e7de537',1,'Husty::OpenCvSharp']]],
   ['extrinsiccameracalibrator_2ecs_17',['ExtrinsicCameraCalibrator.cs',['../_extrinsic_camera_calibrator_8cs.html',1,'']]],
-  ['extrinsiccameraparameters_18',['ExtrinsicCameraParameters',['../class_husty_1_1_open_cv_sharp_1_1_extrinsic_camera_parameters.html#aaa11aac51d2df5c1704bf9a7b637cced',1,'Husty.OpenCvSharp.ExtrinsicCameraParameters.ExtrinsicCameraParameters()'],['../class_husty_1_1_open_cv_sharp_1_1_extrinsic_camera_parameters.html',1,'Husty.OpenCvSharp.ExtrinsicCameraParameters']]],
+  ['extrinsiccameraparameters_18',['ExtrinsicCameraParameters',['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_parameters.html#a131d5c8baf16616bfb78e7e189aab224',1,'Husty.OpenCvSharp.CameraCalibration.ExtrinsicCameraParameters.ExtrinsicCameraParameters()'],['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_parameters.html',1,'Husty.OpenCvSharp.CameraCalibration.ExtrinsicCameraParameters']]],
   ['extrinsiccameraparameters_2ecs_19',['ExtrinsicCameraParameters.cs',['../_extrinsic_camera_parameters_8cs.html',1,'']]]
 ];

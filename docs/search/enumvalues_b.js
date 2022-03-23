@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['x_0',['X',['../namespace_husty.html#a31f4d1ba27d0fa7b0e3298b828bfa024a02129bb861061d1a052c592e2dc6b383',1,'Husty']]]
+  ['x_0',['X',['../namespace_husty_1_1_geometry.html#aa460e9008f48102f4fda5a8530d9aaada02129bb861061d1a052c592e2dc6b383',1,'Husty::Geometry']]]
 ];

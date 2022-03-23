@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['y_0',['Y',['../class_husty_1_1_point2_d.html#a8da09d6575a5539aea41988235d21bcc',1,'Husty.Point2D.Y()'],['../class_husty_1_1_point3_d.html#a4b72603e010f18297baca5c950aad82b',1,'Husty.Point3D.Y()'],['../class_husty_1_1_vector2_d.html#a6bfc298e0a6a4a26dde295b61f090389',1,'Husty.Vector2D.Y()'],['../class_husty_1_1_vector3_d.html#af7122c82cacd333dc1318b5fce536583',1,'Husty.Vector3D.Y()'],['../namespace_husty.html#a31f4d1ba27d0fa7b0e3298b828bfa024a57cec4137b614c87cb4e24a3d003a3e0',1,'Husty.Y()']]],
+  ['y_0',['Y',['../class_husty_1_1_geometry_1_1_point2_d.html#af7704dda84db19a2a666a4601e223f8e',1,'Husty.Geometry.Point2D.Y()'],['../class_husty_1_1_geometry_1_1_point3_d.html#a8f76991a06cd23a304b89d1e6ed08ff3',1,'Husty.Geometry.Point3D.Y()'],['../class_husty_1_1_geometry_1_1_vector2_d.html#a57b23d49cff4a48680bd8db3c985f579',1,'Husty.Geometry.Vector2D.Y()'],['../class_husty_1_1_geometry_1_1_vector3_d.html#a60b389c6d36f1a7ece5a48528fb609c6',1,'Husty.Geometry.Vector3D.Y()'],['../namespace_husty_1_1_geometry.html#aa460e9008f48102f4fda5a8530d9aaada57cec4137b614c87cb4e24a3d003a3e0',1,'Husty.Geometry.Y()']]],
   ['ymsdecode_1',['YmsDecode',['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_bgr_xyz_mat.html#a8e62170f5a52b92002abf90f844b91f4',1,'Husty::OpenCvSharp::DepthCamera::BgrXyzMat']]],
   ['ymsencode_2',['YmsEncode',['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_bgr_xyz_mat.html#ae0bc6d335e28f80ead9fbe5a855ca15a',1,'Husty::OpenCvSharp::DepthCamera::BgrXyzMat']]],
-  ['yoloresult_3',['YoloResult',['../namespace_husty_1_1_open_cv_sharp.html#a51ea075487a0f3d6180cba34a58c407a',1,'Husty::OpenCvSharp']]],
+  ['yoloresult_3',['YoloResult',['../namespace_husty_1_1_open_cv_sharp_1_1_yolo.html#ab75c8638fa8cde2f9b5a82bed7f2ec04',1,'Husty::OpenCvSharp::Yolo']]],
   ['yoloresult_2ecs_4',['YoloResult.cs',['../_yolo_result_8cs.html',1,'']]],
-  ['yolov3v4_5',['Yolov3v4',['../class_husty_1_1_open_cv_sharp_1_1_yolov3v4.html',1,'Husty.OpenCvSharp.Yolov3v4'],['../class_husty_1_1_open_cv_sharp_1_1_yolov3v4.html#ac5a26444bd4f2754234b681c11bbf9b9',1,'Husty.OpenCvSharp.Yolov3v4.Yolov3v4()']]],
+  ['yolov3v4_5',['Yolov3v4',['../class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolov3v4.html',1,'Husty.OpenCvSharp.Yolo.Yolov3v4'],['../class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolov3v4.html#a71387923315938904845404d4cb19f12',1,'Husty.OpenCvSharp.Yolo.Yolov3v4.Yolov3v4()']]],
   ['yolov3v4_2ecs_6',['Yolov3v4.cs',['../_yolov3v4_8cs.html',1,'']]],
-  ['yolox_7',['YoloX',['../class_husty_1_1_open_cv_sharp_1_1_yolo_x.html',1,'Husty.OpenCvSharp.YoloX'],['../class_husty_1_1_open_cv_sharp_1_1_yolo_x.html#af8e53e6aa26ac53498ab9ff86e2d72ca',1,'Husty.OpenCvSharp.YoloX.YoloX()']]],
+  ['yolox_7',['YoloX',['../class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolo_x.html',1,'Husty.OpenCvSharp.Yolo.YoloX'],['../class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolo_x.html#abfe10db6ef963fdece1d8d4588d90cb7',1,'Husty.OpenCvSharp.Yolo.YoloX.YoloX()']]],
   ['yolox_2ecs_8',['YoloX.cs',['../_yolo_x_8cs.html',1,'']]]
 ];

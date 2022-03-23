@@ -1,9 +1,9 @@
 var searchData=
 [
   ['name_0',['Name',['../class_husty_1_1_open_cv_sharp_1_1_layer_info.html#a0c6341cdc086663bccd2a11b420960a4',1,'Husty::OpenCvSharp::LayerInfo']]],
-  ['namedpipeclient_1',['NamedPipeClient',['../class_husty_1_1_named_pipe_client.html',1,'Husty.NamedPipeClient'],['../class_husty_1_1_named_pipe_client.html#a747026ffd456744d2644fca6111cf07d',1,'Husty.NamedPipeClient.NamedPipeClient()']]],
+  ['namedpipeclient_1',['NamedPipeClient',['../class_husty_1_1_i_o_1_1_named_pipe_client.html',1,'Husty.IO.NamedPipeClient'],['../class_husty_1_1_i_o_1_1_named_pipe_client.html#a36cd16e764f887dcdd91003eb2da2ae8',1,'Husty.IO.NamedPipeClient.NamedPipeClient()']]],
   ['namedpipeclient_2ecs_2',['NamedPipeClient.cs',['../_named_pipe_client_8cs.html',1,'']]],
-  ['namedpipeserver_3',['NamedPipeServer',['../class_husty_1_1_named_pipe_server.html',1,'Husty.NamedPipeServer'],['../class_husty_1_1_named_pipe_server.html#aaa030325db74db626eac2f1c3b2eefae',1,'Husty.NamedPipeServer.NamedPipeServer()']]],
+  ['namedpipeserver_3',['NamedPipeServer',['../class_husty_1_1_i_o_1_1_named_pipe_server.html',1,'Husty.IO.NamedPipeServer'],['../class_husty_1_1_i_o_1_1_named_pipe_server.html#a7e610afcd9b87fdec32ebfb7f4ac7b0b',1,'Husty.IO.NamedPipeServer.NamedPipeServer()']]],
   ['namedpipeserver_2ecs_4',['NamedPipeServer.cs',['../_named_pipe_server_8cs.html',1,'']]],
   ['networkgraph_5',['NetworkGraph',['../class_husty_1_1_neural_network_1_1_network_graph.html',1,'Husty.NeuralNetwork.NetworkGraph'],['../class_husty_1_1_neural_network_1_1_network_graph.html#a761197bb33afd87a075eb811a9517da7',1,'Husty.NeuralNetwork.NetworkGraph.NetworkGraph()']]],
   ['networkgraph_2ecs_6',['NetworkGraph.cs',['../_network_graph_8cs.html',1,'']]],

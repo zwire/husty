@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y_0',['Y',['../class_husty_1_1_point2_d.html#a8da09d6575a5539aea41988235d21bcc',1,'Husty.Point2D.Y()'],['../class_husty_1_1_point3_d.html#a4b72603e010f18297baca5c950aad82b',1,'Husty.Point3D.Y()'],['../class_husty_1_1_vector2_d.html#a6bfc298e0a6a4a26dde295b61f090389',1,'Husty.Vector2D.Y()'],['../class_husty_1_1_vector3_d.html#af7122c82cacd333dc1318b5fce536583',1,'Husty.Vector3D.Y()']]]
+  ['y_0',['Y',['../class_husty_1_1_geometry_1_1_point2_d.html#af7704dda84db19a2a666a4601e223f8e',1,'Husty.Geometry.Point2D.Y()'],['../class_husty_1_1_geometry_1_1_point3_d.html#a8f76991a06cd23a304b89d1e6ed08ff3',1,'Husty.Geometry.Point3D.Y()'],['../class_husty_1_1_geometry_1_1_vector2_d.html#a57b23d49cff4a48680bd8db3c985f579',1,'Husty.Geometry.Vector2D.Y()'],['../class_husty_1_1_geometry_1_1_vector3_d.html#a60b389c6d36f1a7ece5a48528fb609c6',1,'Husty.Geometry.Vector3D.Y()']]]
 ];

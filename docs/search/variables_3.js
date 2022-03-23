@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['correct_0',['Correct',['../class_husty_1_1_kalman_filter.html#a9c0103128213be567c641fcd3d1683ff',1,'Husty.KalmanFilter.Correct()'],['../class_husty_1_1_particle_filter.html#a6687f105a62a904b2e9a77133b6dbc5b',1,'Husty.ParticleFilter.Correct()']]]
+  ['correct_0',['Correct',['../class_husty_1_1_filters_1_1_kalman_filter.html#afe710a84b0b0e4fa62c140e3503ab66e',1,'Husty.Filters.KalmanFilter.Correct()'],['../class_husty_1_1_filters_1_1_particle_filter.html#abbd5a901d181cce79bf74fa15fe35cf1',1,'Husty.Filters.ParticleFilter.Correct()']]]
 ];
