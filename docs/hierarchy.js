@@ -1,6 +1,5 @@
 var hierarchy =
 [
-    [ "Husty.Geometry.Angle", "struct_husty_1_1_geometry_1_1_angle.html", null ],
     [ "Husty.OpenCvSharp.Extensions.AngleExtensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_angle_extensions.html", null ],
     [ "Husty.Geometry.Arc2D", "class_husty_1_1_geometry_1_1_arc2_d.html", null ],
     [ "Husty.Extensions.ArrayCastExtensions", "class_husty_1_1_extensions_1_1_array_cast_extensions.html", null ],
@@ -51,6 +50,12 @@ var hierarchy =
         [ "Husty.OpenCvSharp.Yolo.Yolov3v4", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolov3v4.html", null ]
       ] ],
       [ "Husty.SkywayGateway.DataStream", "class_husty_1_1_skyway_gateway_1_1_data_stream.html", null ]
+    ] ],
+    [ "IEquatable", null, [
+      [ "Husty.Geometry.Angle", "struct_husty_1_1_geometry_1_1_angle.html", null ],
+      [ "Husty.Geometry.Point2D", "class_husty_1_1_geometry_1_1_point2_d.html", null ],
+      [ "Husty.Geometry.Point3D", "class_husty_1_1_geometry_1_1_point3_d.html", null ],
+      [ "Husty.Geometry.Vector2D", "class_husty_1_1_geometry_1_1_vector2_d.html", null ]
     ] ],
     [ "Husty.OpenCvSharp.ImageStream.IImageStream< BgrXyzMat >", "interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_image_stream.html", [
       [ "Husty.OpenCvSharp.DepthCamera.Device.Kinect", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_kinect.html", null ],
@@ -112,16 +117,13 @@ var hierarchy =
     [ "Husty.OpenCvSharp.Feature.Pca2D", "class_husty_1_1_open_cv_sharp_1_1_feature_1_1_pca2_d.html", null ],
     [ "Husty.OpenCvSharp.CameraCalibration.PerspectiveTransformer", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_perspective_transformer.html", null ],
     [ "Husty.OpenCvSharp.Extensions.Point2ArrayExtensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_point2_array_extensions.html", null ],
-    [ "Husty.Geometry.Point2D", "class_husty_1_1_geometry_1_1_point2_d.html", null ],
     [ "Husty.OpenCvSharp.Extensions.Point2Extensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_point2_extensions.html", null ],
-    [ "Husty.Geometry.Point3D", "class_husty_1_1_geometry_1_1_point3_d.html", null ],
     [ "Husty.IO.PortManager", "class_husty_1_1_i_o_1_1_port_manager.html", null ],
     [ "Husty.Preset< T >", "class_husty_1_1_preset.html", null ],
     [ "Husty.OpenCvSharp.Extensions.Rect2Extensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_rect2_extensions.html", null ],
     [ "Husty.OpenCvSharp.Extensions.Size2Extensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_size2_extensions.html", null ],
     [ "Husty.OpenCvSharp.TypeConverter", "class_husty_1_1_open_cv_sharp_1_1_type_converter.html", null ],
     [ "Husty.OpenCvSharp.Extensions.Vector", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_vector.html", null ],
-    [ "Husty.Geometry.Vector2D", "class_husty_1_1_geometry_1_1_vector2_d.html", null ],
     [ "Husty.Geometry.Vector3D", "class_husty_1_1_geometry_1_1_vector3_d.html", null ],
     [ "Husty.OpenCvSharp.Extensions.VectorExtensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_vector_extensions.html", null ]
 ];

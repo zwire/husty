@@ -1,9 +1,10 @@
-﻿using static System.Math;
+﻿using System;
+using static System.Math;
 
 namespace Husty.Geometry
 {
 
-    public class Point3D
+    public class Point3D : IEquatable<Point3D>
     {
 
         // ------ properties ------ //
@@ -32,6 +33,12 @@ namespace Husty.Geometry
 
         public Vector3D ToVector3D() => new(X, Y, Z);
 
+        public bool Equals(Point3D? obj) => GetHashCode() == obj?.GetHashCode();
+
+        public override bool Equals(object? obj) => GetHashCode() == obj?.GetHashCode();
+
+        public override int GetHashCode() => new { X, Y, Z }.GetHashCode();
+
 
         // ------ operators ------ //
 
@@ -39,9 +46,9 @@ namespace Husty.Geometry
 
         public static Point2D operator -(Point3D p, Vector3D v) => new(p.X - v.X, p.Y - v.Y);
 
-        public static bool operator ==(Point3D a, Point3D b) => a.X == b.X && a.Y == b.Y && a.Z == b.Z;
+        public static bool operator ==(Point3D a, Point3D b) => a.Equals(b);
 
-        public static bool operator !=(Point3D a, Point3D b) => !(a == b);
+        public static bool operator !=(Point3D a, Point3D b) => !a.Equals(b);
 
     }
 }

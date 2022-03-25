@@ -15,7 +15,7 @@ namespace Husty
 
         // ------ constructors ------ //
 
-        public ObjectPool(int capacity = 1, Func<T> factory = null)
+        public ObjectPool(int capacity = 1, Func<T>? factory = null)
         {
             _capacity = capacity;
             _pool = new(Enumerable.Range(0, _capacity).Select(_ => factory is null ? new() : factory.Invoke()));

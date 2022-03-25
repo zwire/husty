@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['objectpool_0',['ObjectPool',['../class_husty_1_1_object_pool.html',1,'Husty.ObjectPool&lt; T &gt;'],['../class_husty_1_1_object_pool.html#a796cf1c6128f87c8839f6034b072aa20',1,'Husty.ObjectPool.ObjectPool()']]],
+  ['objectpool_0',['ObjectPool',['../class_husty_1_1_object_pool.html',1,'Husty.ObjectPool&lt; T &gt;'],['../class_husty_1_1_object_pool.html#a6e30dbcaf810aa18cf7564840c66f5a4',1,'Husty.ObjectPool.ObjectPool()']]],
   ['objectpool_2ecs_1',['ObjectPool.cs',['../_object_pool_8cs.html',1,'']]],
   ['objectpool_3c_20husty_3a_3aopencvsharp_3a_3adepthcamera_3a_3abgrxyzmat_20_3e_2',['ObjectPool&lt; Husty::OpenCvSharp::DepthCamera::BgrXyzMat &gt;',['../class_husty_1_1_object_pool.html',1,'Husty']]],
   ['objectpool_3c_20mat_20_3e_3',['ObjectPool&lt; Mat &gt;',['../class_husty_1_1_object_pool.html',1,'Husty']]],

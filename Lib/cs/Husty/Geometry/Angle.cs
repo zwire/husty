@@ -5,10 +5,9 @@ using static System.Math;
 namespace Husty.Geometry
 {
 
-
     public enum AngleType { Radian, Degree }
 
-    public struct Angle
+    public struct Angle : IEquatable<Angle>
     {
 
         // ------ fields ------ //
@@ -42,22 +41,28 @@ namespace Husty.Geometry
             _radian = radian;
         }
 
-        public Angle Plus(double value, AngleType type) => new(RegulateRange(_radian + value), type);
+        public Angle Add(double value, AngleType type) => new(RegulateRange(_radian + value), type);
 
-        public Angle Minus(double value, AngleType type) => new(RegulateRange(_radian - value), type);
+        public Angle Subtract(double value, AngleType type) => new(RegulateRange(_radian - value), type);
+
+        public bool Equals(Angle obj) => GetHashCode() == obj.GetHashCode();
+
+        public override bool Equals(object? obj) => GetHashCode() == obj?.GetHashCode();
+
+        public override int GetHashCode() => new { Radian }.GetHashCode();
 
 
         // ------ operators ------ //
 
-        public static Angle operator +(Angle a, Angle b) => a.Plus(b.Radian, AngleType.Radian);
+        public static Angle operator +(Angle a, Angle b) => a.Add(b.Radian, AngleType.Radian);
 
-        public static Angle operator -(Angle a, Angle b) => a.Minus(b.Radian, AngleType.Radian);
+        public static Angle operator -(Angle a, Angle b) => a.Subtract(b.Radian, AngleType.Radian);
 
         public static Angle operator -(Angle a) => new(-a.Radian, AngleType.Radian);
 
-        public static bool operator ==(Angle a, Angle b) => a.Radian == b.Radian;
+        public static bool operator ==(Angle a, Angle b) => a.Equals(b);
 
-        public static bool operator !=(Angle a, Angle b) => a.Radian != b.Radian;
+        public static bool operator !=(Angle a, Angle b) => !a.Equals(b);
 
         public static bool operator <(Angle a, Angle b) => a.Radian < b.Radian;
 

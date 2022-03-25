@@ -89,6 +89,12 @@ namespace Husty.Geometry
             return new(x, y, z);
         }
 
+        public bool Equals(Vector3D? obj) => GetHashCode() == obj?.GetHashCode();
+
+        public override bool Equals(object? obj) => GetHashCode() == obj?.GetHashCode();
+
+        public override int GetHashCode() => new { X, Y, Z }.GetHashCode();
+
 
         // ------ operators ------ //
 
@@ -104,9 +110,9 @@ namespace Husty.Geometry
 
         public static Vector3D operator /(Vector3D v, double scalar) => new(v.X / scalar, v.Y / scalar, v.Z / scalar);
 
-        public static bool operator ==(Vector3D a, Vector3D b) => a.X == b.X && a.Y == b.Y && a.Z == b.Z;
+        public static bool operator ==(Vector3D a, Vector3D b) => a.Equals(b);
 
-        public static bool operator !=(Vector3D a, Vector3D b) => !(a == b);
+        public static bool operator !=(Vector3D a, Vector3D b) => !a.Equals(b);
 
     }
 }

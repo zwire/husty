@@ -27,6 +27,7 @@ var searchData=
   ['stddev_3c_20t_20_3e_24',['StdDev&lt; T &gt;',['../class_husty_1_1_extensions_1_1_array_extensions.html#a2a118a95cbbf728540c2dc763059936a',1,'Husty::Extensions::ArrayExtensions']]],
   ['stdoutreader_25',['StdOutReader',['../class_husty_1_1_i_o_1_1_std_out_reader.html',1,'Husty.IO.StdOutReader'],['../class_husty_1_1_i_o_1_1_std_out_reader.html#ab1827424e1441d339bac438e7fc9bd33',1,'Husty.IO.StdOutReader.StdOutReader(string cmd)'],['../class_husty_1_1_i_o_1_1_std_out_reader.html#a9c48882c3b050fed57d82ef60bca0344',1,'Husty.IO.StdOutReader.StdOutReader(string exe, string file, string[] args=null)']]],
   ['stdoutreader_2ecs_26',['StdoutReader.cs',['../_stdout_reader_8cs.html',1,'']]],
-  ['svm_27',['Svm',['../class_husty_1_1_open_cv_sharp_1_1_stats_1_1_svm.html',1,'Husty.OpenCvSharp.Stats.Svm'],['../class_husty_1_1_open_cv_sharp_1_1_stats_1_1_svm.html#aec98c0f4a20dfeac2e4e3dfcfea3ce08',1,'Husty.OpenCvSharp.Stats.Svm.Svm()']]],
-  ['svm_2ecs_28',['Svm.cs',['../_svm_8cs.html',1,'']]]
+  ['subtract_27',['Subtract',['../struct_husty_1_1_geometry_1_1_angle.html#a925ddc06cad957568d41c687550386aa',1,'Husty::Geometry::Angle']]],
+  ['svm_28',['Svm',['../class_husty_1_1_open_cv_sharp_1_1_stats_1_1_svm.html',1,'Husty.OpenCvSharp.Stats.Svm'],['../class_husty_1_1_open_cv_sharp_1_1_stats_1_1_svm.html#aec98c0f4a20dfeac2e4e3dfcfea3ce08',1,'Husty.OpenCvSharp.Stats.Svm.Svm()']]],
+  ['svm_2ecs_29',['Svm.cs',['../_svm_8cs.html',1,'']]]
 ];
