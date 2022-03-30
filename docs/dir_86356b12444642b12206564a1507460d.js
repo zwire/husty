@@ -1,4 +1,0 @@
-var dir_86356b12444642b12206564a1507460d =
-[
-    [ "net5.0", "dir_7e76f5230be5dbb38fc7eb220a10e594.html", "dir_7e76f5230be5dbb38fc7eb220a10e594" ]
-];

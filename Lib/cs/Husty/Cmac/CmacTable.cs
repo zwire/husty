@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace Husty.Cmac
 {
-    internal sealed class CmacTable
+    public sealed class CmacTable
     {
 
         // ------ fields ------ //
 
         private readonly int[] _activeLocation;
-        private readonly double _min, _max;
-        private readonly double[] _offsets, _steps;
+        private readonly float _min, _max;
+        private readonly float[] _offsets, _steps;
         private readonly MultidimensionalArray _array;
 
 
@@ -21,15 +21,16 @@ namespace Husty.Cmac
 
         public int[] ActiveLocationIndex => _activeLocation;
 
-        public double ActiveValue => _array.GetAt(_activeLocation);
+        public float ActiveValue => _array.GetAt(_activeLocation);
 
 
         // ------ constructors ------ //
 
         public CmacTable(
             IEnumerable<CmacLabelInfo> labelInfos,
-            double min, double max,
-            double initialValue
+            float min, 
+            float max,
+            float initialValue
         ) : this(
             labelInfos,
             min, max,
@@ -39,8 +40,9 @@ namespace Husty.Cmac
 
         public CmacTable(
             IEnumerable<CmacLabelInfo> labelInfos,
-            double min, double max,
-            double[] initialValues
+            float min, 
+            float max,
+            float[] initialValues
         )
         {
             _min = min;
@@ -48,8 +50,8 @@ namespace Husty.Cmac
 
             var infos = labelInfos.ToArray();
             var dims = new int[infos.Length];
-            _offsets = new double[infos.Length];
-            _steps = new double[infos.Length];
+            _offsets = new float[infos.Length];
+            _steps = new float[infos.Length];
             for (int i = 0; i < infos.Length; i++)
             {
                 dims[i] = infos[i].GridCount;
@@ -59,7 +61,7 @@ namespace Husty.Cmac
 
             _array = new(dims);
             if (initialValues.Length != _array.GetTotalSize())
-                throw new ArgumentException("input values length is invalid.");
+                throw new ArgumentException("invalid input values length");
             _array.SetAll(initialValues);
             _activeLocation = new int[infos.Length];
         }
@@ -67,7 +69,7 @@ namespace Husty.Cmac
 
         // ------ public methods ------ //
 
-        public void FixLocation(double[] state)
+        public void FixLocation(float[] state)
         {
             for (int i = 0; i < _activeLocation.Length; i++)
             {
@@ -84,7 +86,7 @@ namespace Husty.Cmac
             }
         }
 
-        public void ApplyPenalty(double value)
+        public void ApplyPenalty(float value)
         {
             _array.MinusAt(_activeLocation, value);
             if (_array.GetAt(_activeLocation) < _min)
@@ -93,9 +95,9 @@ namespace Husty.Cmac
                 _array.SetAt(_activeLocation, _max);
         }
 
-        public double[] GetParams() => _array.GetAll();
+        public float[] GetParams() => _array.GetAll();
 
-        public void SetParams(double[] value) => _array.SetAll(value);
+        public void SetParams(float[] value) => _array.SetAll(value);
 
     }
 }

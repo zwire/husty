@@ -1,6 +1,7 @@
 var namespace_husty_1_1_cmac =
 [
+    [ "CmacBundler", "class_husty_1_1_cmac_1_1_cmac_bundler.html", "class_husty_1_1_cmac_1_1_cmac_bundler" ],
     [ "CmacNetwork", "class_husty_1_1_cmac_1_1_cmac_network.html", "class_husty_1_1_cmac_1_1_cmac_network" ],
-    [ "CmacLabelInfo", "namespace_husty_1_1_cmac.html#a056f0c72725c0c16b44c063cdd34bfd2", null ],
-    [ "CmacParam", "namespace_husty_1_1_cmac.html#aef3d9d9842ef6ce467daeded2486eeda", null ]
+    [ "CmacTable", "class_husty_1_1_cmac_1_1_cmac_table.html", "class_husty_1_1_cmac_1_1_cmac_table" ],
+    [ "CmacLabelInfo", "namespace_husty_1_1_cmac.html#aafd4ee099203bbe3fd02fda4b698cc9f", null ]
 ];

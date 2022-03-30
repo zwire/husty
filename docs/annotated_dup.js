@@ -2,7 +2,9 @@ var annotated_dup =
 [
     [ "Husty", "namespace_husty.html", [
       [ "Cmac", "namespace_husty_1_1_cmac.html", [
-        [ "CmacNetwork", "class_husty_1_1_cmac_1_1_cmac_network.html", "class_husty_1_1_cmac_1_1_cmac_network" ]
+        [ "CmacBundler", "class_husty_1_1_cmac_1_1_cmac_bundler.html", "class_husty_1_1_cmac_1_1_cmac_bundler" ],
+        [ "CmacNetwork", "class_husty_1_1_cmac_1_1_cmac_network.html", "class_husty_1_1_cmac_1_1_cmac_network" ],
+        [ "CmacTable", "class_husty_1_1_cmac_1_1_cmac_table.html", "class_husty_1_1_cmac_1_1_cmac_table" ]
       ] ],
       [ "Extensions", "namespace_husty_1_1_extensions.html", [
         [ "ArrayCastExtensions", "class_husty_1_1_extensions_1_1_array_cast_extensions.html", "class_husty_1_1_extensions_1_1_array_cast_extensions" ],

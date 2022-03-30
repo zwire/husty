@@ -84,6 +84,8 @@ $(document).ready(function(){initNavTree('class_husty_1_1_cmac_1_1_cmac_network.
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#properties">Properties</a> &#124;
 <a href="class_husty_1_1_cmac_1_1_cmac_network-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Husty.Cmac.CmacNetwork Class Reference</div></div>
 </div><!--header-->
@@ -91,20 +93,34 @@ $(document).ready(function(){initNavTree('class_husty_1_1_cmac_1_1_cmac_network.
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad03669b35a1a4efdb059aa35d377a3d6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#ad03669b35a1a4efdb059aa35d377a3d6">CmacNetwork</a> (int count, IEnumerable&lt; <a class="el" href="namespace_husty_1_1_cmac.html#a056f0c72725c0c16b44c063cdd34bfd2">CmacLabelInfo</a> &gt; labelInfos, <a class="el" href="namespace_husty_1_1_cmac.html#aef3d9d9842ef6ce467daeded2486eeda">CmacParam</a> param)</td></tr>
-<tr class="separator:ad03669b35a1a4efdb059aa35d377a3d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2dd16c11a4ac3733541be5f528758c6"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#ad2dd16c11a4ac3733541be5f528758c6">Forward</a> (double[] state)</td></tr>
-<tr class="separator:ad2dd16c11a4ac3733541be5f528758c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4765d734392dc2215b80d856b73f0a1b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#a4765d734392dc2215b80d856b73f0a1b">Backward</a> (double[] state, double error, double grad)</td></tr>
-<tr class="separator:a4765d734392dc2215b80d856b73f0a1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a114521dd4179d269d6003fdf17495bd3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#a114521dd4179d269d6003fdf17495bd3">CmacNetwork</a> (IEnumerable&lt; <a class="el" href="namespace_husty_1_1_cmac.html#aafd4ee099203bbe3fd02fda4b698cc9f">CmacLabelInfo</a> &gt; labelInfos, <a class="el" href="class_husty_1_1_cmac_1_1_cmac_table.html">CmacTable</a>[] tables, float constraintMin, float constraintMax, float learningRate)</td></tr>
+<tr class="separator:a114521dd4179d269d6003fdf17495bd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfead749701d2100c44c0edddf99b301"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#acfead749701d2100c44c0edddf99b301">CmacNetwork</a> (IEnumerable&lt; <a class="el" href="namespace_husty_1_1_cmac.html#aafd4ee099203bbe3fd02fda4b698cc9f">CmacLabelInfo</a> &gt; labelInfos, int tableCount, float initialValue, float constraintMin, float constraintMax, float learningRate)</td></tr>
+<tr class="separator:acfead749701d2100c44c0edddf99b301"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a919d935b222fa9f52db482fe7551967a"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#a919d935b222fa9f52db482fe7551967a">Forward</a> (float[] state)</td></tr>
+<tr class="separator:a919d935b222fa9f52db482fe7551967a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fd5ce281b5b89761e34ec1887e6e368"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#a5fd5ce281b5b89761e34ec1887e6e368">Backward</a> (float grad, float[]? state=null)</td></tr>
+<tr class="separator:a5fd5ce281b5b89761e34ec1887e6e368"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d258df6712023207b955c6d5cf788b9"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#a9d258df6712023207b955c6d5cf788b9">Serialize</a> ()</td></tr>
+<tr class="separator:a9d258df6712023207b955c6d5cf788b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14d0b3c8dd3eaa407437e60cf425eca0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#a14d0b3c8dd3eaa407437e60cf425eca0">Save</a> (string name)</td></tr>
 <tr class="separator:a14d0b3c8dd3eaa407437e60cf425eca0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1da0623cfac657cca81edbe8b3e9524"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#aa1da0623cfac657cca81edbe8b3e9524">Load</a> (string name)</td></tr>
-<tr class="separator:aa1da0623cfac657cca81edbe8b3e9524"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ac018430e71e704f4d2d73745139cceb0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html">CmacNetwork</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#ac018430e71e704f4d2d73745139cceb0">Deserialize</a> (string str)</td></tr>
+<tr class="separator:ac018430e71e704f4d2d73745139cceb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a735c72690cba6d3e2bb2eb7b7f9e9185"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html">CmacNetwork</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#a735c72690cba6d3e2bb2eb7b7f9e9185">Load</a> (string name)</td></tr>
+<tr class="separator:a735c72690cba6d3e2bb2eb7b7f9e9185"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
+Properties</h2></td></tr>
+<tr class="memitem:a1633271004d981ce9df461385e395fc1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_table.html">CmacTable</a>[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#a1633271004d981ce9df461385e395fc1">Tables</a><code> [get]</code></td></tr>
+<tr class="separator:a1633271004d981ce9df461385e395fc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ad03669b35a1a4efdb059aa35d377a3d6" name="ad03669b35a1a4efdb059aa35d377a3d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad03669b35a1a4efdb059aa35d377a3d6">&#9670;&nbsp;</a></span>CmacNetwork()</h2>
+<a id="a114521dd4179d269d6003fdf17495bd3" name="a114521dd4179d269d6003fdf17495bd3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a114521dd4179d269d6003fdf17495bd3">&#9670;&nbsp;</a></span>CmacNetwork() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -112,20 +128,84 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">Husty.Cmac.CmacNetwork.CmacNetwork </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>count</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">IEnumerable&lt; <a class="el" href="namespace_husty_1_1_cmac.html#a056f0c72725c0c16b44c063cdd34bfd2">CmacLabelInfo</a> &gt;&#160;</td>
+          <td class="paramtype">IEnumerable&lt; <a class="el" href="namespace_husty_1_1_cmac.html#aafd4ee099203bbe3fd02fda4b698cc9f">CmacLabelInfo</a> &gt;&#160;</td>
           <td class="paramname"><em>labelInfos</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespace_husty_1_1_cmac.html#aef3d9d9842ef6ce467daeded2486eeda">CmacParam</a>&#160;</td>
-          <td class="paramname"><em>param</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_table.html">CmacTable</a>[]&#160;</td>
+          <td class="paramname"><em>tables</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>constraintMin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>constraintMax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>learningRate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acfead749701d2100c44c0edddf99b301" name="acfead749701d2100c44c0edddf99b301"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfead749701d2100c44c0edddf99b301">&#9670;&nbsp;</a></span>CmacNetwork() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Husty.Cmac.CmacNetwork.CmacNetwork </td>
+          <td>(</td>
+          <td class="paramtype">IEnumerable&lt; <a class="el" href="namespace_husty_1_1_cmac.html#aafd4ee099203bbe3fd02fda4b698cc9f">CmacLabelInfo</a> &gt;&#160;</td>
+          <td class="paramname"><em>labelInfos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>tableCount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>initialValue</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>constraintMin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>constraintMax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>learningRate</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -138,8 +218,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4765d734392dc2215b80d856b73f0a1b" name="a4765d734392dc2215b80d856b73f0a1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4765d734392dc2215b80d856b73f0a1b">&#9670;&nbsp;</a></span>Backward()</h2>
+<a id="a5fd5ce281b5b89761e34ec1887e6e368" name="a5fd5ce281b5b89761e34ec1887e6e368"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5fd5ce281b5b89761e34ec1887e6e368">&#9670;&nbsp;</a></span>Backward()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -147,20 +227,14 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Husty.Cmac.CmacNetwork.Backward </td>
           <td>(</td>
-          <td class="paramtype">double[]&#160;</td>
-          <td class="paramname"><em>state</em>, </td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>grad</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>error</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>grad</em>&#160;</td>
+          <td class="paramtype">float?[]&#160;</td>
+          <td class="paramname"><em>state</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -172,16 +246,42 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad2dd16c11a4ac3733541be5f528758c6" name="ad2dd16c11a4ac3733541be5f528758c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2dd16c11a4ac3733541be5f528758c6">&#9670;&nbsp;</a></span>Forward()</h2>
+<a id="ac018430e71e704f4d2d73745139cceb0" name="ac018430e71e704f4d2d73745139cceb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac018430e71e704f4d2d73745139cceb0">&#9670;&nbsp;</a></span>Deserialize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html">CmacNetwork</a> Husty.Cmac.CmacNetwork.Deserialize </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>str</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a919d935b222fa9f52db482fe7551967a" name="a919d935b222fa9f52db482fe7551967a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a919d935b222fa9f52db482fe7551967a">&#9670;&nbsp;</a></span>Forward()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double Husty.Cmac.CmacNetwork.Forward </td>
+          <td class="memname">float Husty.Cmac.CmacNetwork.Forward </td>
           <td>(</td>
-          <td class="paramtype">double[]&#160;</td>
+          <td class="paramtype">float[]&#160;</td>
           <td class="paramname"><em>state</em></td><td>)</td>
           <td></td>
         </tr>
@@ -190,20 +290,28 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa1da0623cfac657cca81edbe8b3e9524" name="aa1da0623cfac657cca81edbe8b3e9524"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa1da0623cfac657cca81edbe8b3e9524">&#9670;&nbsp;</a></span>Load()</h2>
+<a id="a735c72690cba6d3e2bb2eb7b7f9e9185" name="a735c72690cba6d3e2bb2eb7b7f9e9185"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a735c72690cba6d3e2bb2eb7b7f9e9185">&#9670;&nbsp;</a></span>Load()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Husty.Cmac.CmacNetwork.Load </td>
+          <td class="memname">static <a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html">CmacNetwork</a> Husty.Cmac.CmacNetwork.Load </td>
           <td>(</td>
           <td class="paramtype">string&#160;</td>
           <td class="paramname"><em>name</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -222,6 +330,46 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9d258df6712023207b955c6d5cf788b9" name="a9d258df6712023207b955c6d5cf788b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d258df6712023207b955c6d5cf788b9">&#9670;&nbsp;</a></span>Serialize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Husty.Cmac.CmacNetwork.Serialize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Property Documentation</h2>
+<a id="a1633271004d981ce9df461385e395fc1" name="a1633271004d981ce9df461385e395fc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1633271004d981ce9df461385e395fc1">&#9670;&nbsp;</a></span>Tables</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_husty_1_1_cmac_1_1_cmac_table.html">CmacTable</a> [] Husty.Cmac.CmacNetwork.Tables</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

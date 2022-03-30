@@ -1,6 +1,5 @@
 var dir_6af79fd6d1be59d183c3f7bfea74e85b =
 [
-    [ "obj", "dir_66fb82d9e49a4a5f1a1c73748cd76268.html", "dir_66fb82d9e49a4a5f1a1c73748cd76268" ],
     [ "DataChannel.cs", "_data_channel_8cs.html", [
       [ "Husty.SkywayGateway.DataChannel", "class_husty_1_1_skyway_gateway_1_1_data_channel.html", "class_husty_1_1_skyway_gateway_1_1_data_channel" ]
     ] ],

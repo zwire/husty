@@ -6,6 +6,5 @@ var dir_b79abfb4969e862681385dd0b0a3e002 =
     [ "Filters", "dir_f58e072ada7aa29a4552504292ae9dcf.html", "dir_f58e072ada7aa29a4552504292ae9dcf" ],
     [ "Geometry", "dir_63a02017bb0ead93ad3263c0e0ed1ed5.html", "dir_63a02017bb0ead93ad3263c0e0ed1ed5" ],
     [ "IO", "dir_4aa38c0589e0f49cc6f849d919c0ed04.html", "dir_4aa38c0589e0f49cc6f849d919c0ed04" ],
-    [ "NeuralNetwork", "dir_b0aa79bd344231ead3c68228a99374d8.html", "dir_b0aa79bd344231ead3c68228a99374d8" ],
-    [ "obj", "dir_d8543c5df3d948717f47ed0c77979403.html", "dir_d8543c5df3d948717f47ed0c77979403" ]
+    [ "NeuralNetwork", "dir_b0aa79bd344231ead3c68228a99374d8.html", "dir_b0aa79bd344231ead3c68228a99374d8" ]
 ];

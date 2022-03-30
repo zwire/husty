@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Product>$(AssemblyName)</Product>
     <Company>$(Authors)</Company>
     <Authors>yamashita</Authors>
     <Description>Lawicel CANUSB package wrapper. This package includes only canusbdrv64.dll.</Description>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

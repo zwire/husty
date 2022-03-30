@@ -1,8 +1,14 @@
 var searchData=
 [
-  ['unit_0',['Unit',['../class_husty_1_1_neural_network_1_1_unit.html',1,'Husty.NeuralNetwork.Unit'],['../class_husty_1_1_neural_network_1_1_unit.html#ab76bab9b6642ed04883656bb61f30f1f',1,'Husty.NeuralNetwork.Unit.Unit()']]],
-  ['unit_2ecs_1',['Unit.cs',['../_unit_8cs.html',1,'']]],
-  ['unitvector_2',['UnitVector',['../class_husty_1_1_geometry_1_1_vector2_d.html#a80e9d0bdcb0290aa38b023ed767d4c13',1,'Husty.Geometry.Vector2D.UnitVector()'],['../class_husty_1_1_geometry_1_1_vector3_d.html#a81fd8bd31805c1cdd63713ad032ff384',1,'Husty.Geometry.Vector3D.UnitVector()']]],
-  ['unsafe_3',['unsafe',['../class_husty_1_1_open_cv_sharp_1_1_feature_1_1_fourier1_d.html#ad4ad62c07995a4c6a7d4b321155cb9ea',1,'Husty.OpenCvSharp.Feature.Fourier1D.unsafe(double Frequency, float Value)[] DftWithHistogram()'],['../class_husty_1_1_open_cv_sharp_1_1_feature_1_1_fourier1_d.html#a8fef4c8e7fd086288d96671cbcfd6732',1,'Husty.OpenCvSharp.Feature.Fourier1D.unsafe(double Time, float Value)[] IdftWithTime()']]],
-  ['update_4',['Update',['../class_husty_1_1_filters_1_1_fir_filter.html#a94214b2bb8d15a4453b07802b2e87b35',1,'Husty.Filters.FirFilter.Update()'],['../class_husty_1_1_filters_1_1_kalman_filter.html#aacff240fe70d1dc200a9ee94d65b090b',1,'Husty.Filters.KalmanFilter.Update()'],['../class_husty_1_1_filters_1_1_median_filter.html#ab6400545afdec406b80676192ad77045',1,'Husty.Filters.MedianFilter.Update()'],['../class_husty_1_1_filters_1_1_particle_filter.html#a78f018ac54b1d4da02dffab1c581f26a',1,'Husty.Filters.ParticleFilter.Update()'],['../interface_husty_1_1_neural_network_1_1_i_optimizer.html#a68ba164a33752e8ae300cff16730ee0d',1,'Husty.NeuralNetwork.IOptimizer.Update()'],['../class_husty_1_1_neural_network_1_1_optimizer_base.html#ad3fe86c304eef1ea8c4a7c53b8e2c7cd',1,'Husty.NeuralNetwork.OptimizerBase.Update()']]]
+  ['variance_3c_20t_20_3e_0',['Variance&lt; T &gt;',['../class_husty_1_1_extensions_1_1_array_extensions.html#a2deee35b3b0bbff64a4c31eb42ad214a',1,'Husty::Extensions::ArrayExtensions']]],
+  ['vector_1',['Vector',['../class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_vector.html',1,'Husty::OpenCvSharp::Extensions']]],
+  ['vector2d_2',['Vector2D',['../class_husty_1_1_geometry_1_1_vector2_d.html',1,'Husty.Geometry.Vector2D'],['../class_husty_1_1_geometry_1_1_vector2_d.html#a31cd6d809601f79f6b725c4c11cb0c3b',1,'Husty.Geometry.Vector2D.Vector2D(double x, double y)'],['../class_husty_1_1_geometry_1_1_vector2_d.html#a1329a56a2f2809dde31243c4a1b1c7a6',1,'Husty.Geometry.Vector2D.Vector2D(Point2D p1, Point2D p2)']]],
+  ['vector2d_2ecs_3',['Vector2D.cs',['../_vector2_d_8cs.html',1,'']]],
+  ['vector3d_4',['Vector3D',['../class_husty_1_1_geometry_1_1_vector3_d.html',1,'Husty.Geometry.Vector3D'],['../class_husty_1_1_geometry_1_1_vector3_d.html#a1bc1f11e2792e3ac7cf830d3953c6497',1,'Husty.Geometry.Vector3D.Vector3D(double x, double y, double z)'],['../class_husty_1_1_geometry_1_1_vector3_d.html#a98ef860cfa969b1f89447e2db8f39d40',1,'Husty.Geometry.Vector3D.Vector3D(Point3D p1, Point3D p2)']]],
+  ['vector3d_2ecs_5',['Vector3D.cs',['../_vector3_d_8cs.html',1,'']]],
+  ['vectorextensions_6',['VectorExtensions',['../class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_vector_extensions.html',1,'Husty::OpenCvSharp::Extensions']]],
+  ['vectorextensions_2ecs_7',['VectorExtensions.cs',['../_vector_extensions_8cs.html',1,'']]],
+  ['videostream_8',['VideoStream',['../class_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_video_stream.html',1,'Husty.OpenCvSharp.ImageStream.VideoStream'],['../class_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_video_stream.html#ac88c5c4aedccc00f5dc68cfbb4d7215e',1,'Husty.OpenCvSharp.ImageStream.VideoStream.VideoStream()']]],
+  ['videostream_2ecs_9',['VideoStream.cs',['../_video_stream_8cs.html',1,'']]],
+  ['viewimage_10',['ViewImage',['../class_husty_1_1_open_cv_sharp_1_1_feature_1_1_fourier2_d.html#ae869690d6243bf3df38533d13018cebb',1,'Husty::OpenCvSharp::Feature::Fourier2D']]]
 ];
