@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['hog_2ecs_0',['Hog.cs',['../_hog_8cs.html',1,'']]],
-  ['houghcoordinatesystem_2ecs_1',['HoughCoordinateSystem.cs',['../_hough_coordinate_system_8cs.html',1,'']]],
-  ['houghsingleline_2ecs_2',['HoughSingleLine.cs',['../_hough_single_line_8cs.html',1,'']]],
-  ['hustygeometryextensions_2ecs_3',['HustyGeometryExtensions.cs',['../_husty_geometry_extensions_8cs.html',1,'']]]
+  ['firfilter_2ecs_0',['FirFilter.cs',['../_fir_filter_8cs.html',1,'']]],
+  ['fourier1d_2ecs_1',['Fourier1D.cs',['../_fourier1_d_8cs.html',1,'']]],
+  ['fourier2d_2ecs_2',['Fourier2D.cs',['../_fourier2_d_8cs.html',1,'']]]
 ];

@@ -1,13 +1,4 @@
 var searchData=
 [
-  ['adagrad_2ecs_0',['AdaGrad.cs',['../_ada_grad_8cs.html',1,'']]],
-  ['adam_2ecs_1',['Adam.cs',['../_adam_8cs.html',1,'']]],
-  ['affine_2ecs_2',['Affine.cs',['../_affine_8cs.html',1,'']]],
-  ['angle_2ecs_3',['Angle.cs',['../_angle_8cs.html',1,'']]],
-  ['angleextensions_2ecs_4',['AngleExtensions.cs',['../_angle_extensions_8cs.html',1,'']]],
-  ['arc2d_2ecs_5',['Arc2D.cs',['../_arc2_d_8cs.html',1,'']]],
-  ['arraycastextensions_2ecs_6',['ArrayCastExtensions.cs',['../_array_cast_extensions_8cs.html',1,'']]],
-  ['arrayextensions_2ecs_7',['ArrayExtensions.cs',['../_array_extensions_8cs.html',1,'']]],
-  ['arrayoperatorextensions_2ecs_8',['ArrayOperatorExtensions.cs',['../_array_operator_extensions_8cs.html',1,'']]],
-  ['arrayreshapeextensions_2ecs_9',['ArrayReshapeExtensions.cs',['../_array_reshape_extensions_8cs.html',1,'']]]
+  ['_2enetcoreapp_2cversion_3dv6_2e0_2eassemblyattributes_2ecs_0',['.NETCoreApp,Version=v6.0.AssemblyAttributes.cs',['../_husty_8_lawicel_2obj_2_debug_2net6_80_2_8_n_e_t_core_app_00_version_0av6_80_8_assembly_attributes_8cs.html',1,'(Global Namespace)'],['../_husty_8_lawicel_2obj_2_release_2net6_80_2_8_n_e_t_core_app_00_version_0av6_80_8_assembly_attributes_8cs.html',1,'(Global Namespace)'],['../_husty_8_open_cv_sharp_8_depth_camera_2obj_2x64_2_debug_2net6_80_2_8_n_e_t_core_app_00_version_07306e1112746c7706b20ca45d110a2bd.html',1,'(Global Namespace)'],['../_husty_8_open_cv_sharp_8_depth_camera_2obj_2x64_2_release_2net6_80_2_8_n_e_t_core_app_00_version31197dc6729a052d96bab1dc543448ad.html',1,'(Global Namespace)'],['../_husty_8_open_cv_sharp_2obj_2_debug_2net6_80_2_8_n_e_t_core_app_00_version_0av6_80_8_assembly_attributes_8cs.html',1,'(Global Namespace)'],['../_husty_8_open_cv_sharp_2obj_2_release_2net6_80_2_8_n_e_t_core_app_00_version_0av6_80_8_assembly_attributes_8cs.html',1,'(Global Namespace)'],['../_husty_8_skyway_gateway_2obj_2_debug_2net6_80_2_8_n_e_t_core_app_00_version_0av6_80_8_assembly_attributes_8cs.html',1,'(Global Namespace)'],['../_husty_8_skyway_gateway_2obj_2_release_2net6_80_2_8_n_e_t_core_app_00_version_0av6_80_8_assembly_attributes_8cs.html',1,'(Global Namespace)'],['../_husty_2obj_2_debug_2net6_80_2_8_n_e_t_core_app_00_version_0av6_80_8_assembly_attributes_8cs.html',1,'(Global Namespace)'],['../_husty_2obj_2_release_2net6_80_2_8_n_e_t_core_app_00_version_0av6_80_8_assembly_attributes_8cs.html',1,'(Global Namespace)']]]
 ];

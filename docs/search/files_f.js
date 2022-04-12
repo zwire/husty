@@ -1,10 +1,8 @@
 var searchData=
 [
-  ['serialport_2ecs_0',['SerialPort.cs',['../_serial_port_8cs.html',1,'']]],
-  ['sgd_2ecs_1',['Sgd.cs',['../_sgd_8cs.html',1,'']]],
-  ['sigmoid_2ecs_2',['Sigmoid.cs',['../_sigmoid_8cs.html',1,'']]],
-  ['size2extensions_2ecs_3',['Size2Extensions.cs',['../_size2_extensions_8cs.html',1,'']]],
-  ['statsbase_2ecs_4',['StatsBase.cs',['../_stats_base_8cs.html',1,'']]],
-  ['stdoutreader_2ecs_5',['StdoutReader.cs',['../_stdout_reader_8cs.html',1,'']]],
-  ['svm_2ecs_6',['Svm.cs',['../_svm_8cs.html',1,'']]]
+  ['realsense_2ecs_0',['Realsense.cs',['../_realsense_8cs.html',1,'']]],
+  ['realsenseex_2ecs_1',['RealsenseEx.cs',['../_realsense_ex_8cs.html',1,'']]],
+  ['rect2extensions_2ecs_2',['Rect2Extensions.cs',['../_rect2_extensions_8cs.html',1,'']]],
+  ['related_2ecs_3',['Related.cs',['../_related_8cs.html',1,'']]],
+  ['relu_2ecs_4',['Relu.cs',['../_relu_8cs.html',1,'']]]
 ];

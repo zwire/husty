@@ -3,14 +3,13 @@ using System.Reactive.Linq;
 using System.Reactive.Concurrency;
 using OpenCvSharp;
 using Intel.RealSense;
-using Husty.OpenCvSharp.ImageStream;
 
 namespace Husty.OpenCvSharp.DepthCamera.Device
 {
     /// <summary>
     /// Intel RealSense D415 - 455, L515 C# wrapper
     /// </summary>
-    public sealed class Realsense : IImageStream<BgrXyzMat>
+    public sealed class Realsense : IDepthCamera
     {
 
         // ------ fields ------ //
@@ -23,7 +22,9 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
         private readonly SpatialFilter _sfill;
         private readonly TemporalFilter _tfill;
         private readonly HoleFillingFilter _hfill;
-        private readonly ObjectPool<BgrXyzMat> _pool;
+        private readonly ObjectPool<Mat> _bgrPool;
+        private readonly ObjectPool<Mat> _xyzPool;
+        private readonly ObjectPool<BgrXyzMat> _bgrXyzPool;
 
 
         // ------ properties ------ //
@@ -44,10 +45,12 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
         /// </summary>
         /// <param name="size">Regulated by each device configuration</param>
         /// <param name="fps">1 - 50</param>
-        public Realsense(Size size, AlignBase align = AlignBase.Color, int fps = 15,
+        public Realsense(Size size, AlignBase align = AlignBase.Color, int fps = 30,
             bool disparityTransform = true, bool spatialFilter = true, bool temporalFilter = true, bool holeFillingFilter = true)
         {
-            _pool = new(2, () => new(
+            _bgrPool = new(2, () => new Mat(size.Height, size.Width, MatType.CV_8UC3));
+            _xyzPool = new(2, () => new Mat(size.Height, size.Width, MatType.CV_16UC3));
+            _bgrXyzPool = new(2, () => new(
                 new Mat(size.Height, size.Width, MatType.CV_8UC3), 
                 new Mat(size.Height, size.Width, MatType.CV_16UC3))
             );
@@ -102,9 +105,39 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
             using var depth4 = _tfill?.Process(depth3) ?? depth3;
             using var depth5 = _todepth?.Process(depth4) ?? depth4;
             using var depth6 = _hfill?.Process(depth5) ?? depth5;
-            var frame = _pool.GetObject();
+            var frame = _bgrXyzPool.GetObject();
             color.CopyToColorMat(frame.BGR);
             depth6.CopyToPointCloudMat(frame.XYZ, color.Width, color.Height);
+            HasFrame = true;
+            return frame;
+        }
+
+        public Mat ReadBgr()
+        {
+            using var frames1 = _pipeline.WaitForFrames();
+            using var frames2 = _align.Process(frames1);
+            using var frames3 = frames2.AsFrameSet();
+            using var color = frames3.ColorFrame.DisposeWith(frames3);
+            var frame = _bgrPool.GetObject();
+            color.CopyToColorMat(frame);
+            HasFrame = true;
+            return frame;
+        }
+
+        public unsafe Mat ReadXyz()
+        {
+            using var frames1 = _pipeline.WaitForFrames();
+            using var frames2 = _align.Process(frames1);
+            using var frames3 = frames2.AsFrameSet();
+            using var color = frames3.ColorFrame.DisposeWith(frames3);
+            using var depth1 = frames3.DepthFrame.DisposeWith(frames3);
+            using var depth2 = _depthto?.Process(depth1) ?? depth1;
+            using var depth3 = _sfill?.Process(depth2) ?? depth2;
+            using var depth4 = _tfill?.Process(depth3) ?? depth3;
+            using var depth5 = _todepth?.Process(depth4) ?? depth4;
+            using var depth6 = _hfill?.Process(depth5) ?? depth5;
+            var frame = _xyzPool.GetObject();
+            depth6.CopyToPointCloudMat(frame, color.Width, color.Height);
             HasFrame = true;
             return frame;
         }
@@ -118,11 +151,32 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
                 .Publish().RefCount();
         }
 
+        public IObservable<Mat> GetBgrStream()
+        {
+            return Observable
+                .Repeat(0, ThreadPoolScheduler.Instance)
+                .Select(_ => ReadBgr())
+                .Where(x => !x.IsDisposed && !x.Empty())
+                .Publish().RefCount();
+        }
+
+        public IObservable<Mat> GetXyzStream()
+        {
+            return Observable
+                .Repeat(0, ThreadPoolScheduler.Instance)
+                .Select(_ => ReadXyz())
+                .Where(x => !x.IsDisposed && !x.Empty())
+                .Publish().RefCount();
+        }
+
         public void Dispose()
         {
             HasFrame = false;
+            _pipeline?.Stop();
             _pipeline?.Dispose();
-            _pool?.Dispose();
+            _bgrXyzPool?.Dispose();
+            _bgrPool?.Dispose();
+            _xyzPool?.Dispose();
         }
 
     }

@@ -56,8 +56,8 @@ namespace Husty.IO
         {
             try
             {
-                _writingStream.Flush();
                 _writingStream.Write(bytes, 0, bytes.Length);
+                _writingStream.Flush();
                 return true;
             }
             catch
@@ -74,8 +74,8 @@ namespace Husty.IO
         {
             try
             {
-                await _writingStream.FlushAsync().ConfigureAwait(false);
                 await _writingStream.WriteAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
+                await _writingStream.FlushAsync().ConfigureAwait(false);
                 return true;
             }
             catch
@@ -142,8 +142,8 @@ namespace Husty.IO
         {
             try
             {
-                _writer.Flush();
                 _writer.WriteLine(sendmsg);
+                _writer.Flush();
                 return true;
             }
             catch
@@ -160,8 +160,8 @@ namespace Husty.IO
         {
             try
             {
-                await _writer.FlushAsync().ConfigureAwait(false);
                 await _writer.WriteLineAsync(sendmsg).ConfigureAwait(false);
+                await _writer.FlushAsync().ConfigureAwait(false);
                 return true;
             }
             catch

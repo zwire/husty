@@ -58,4 +58,5 @@ namespace Husty.OpenCvSharp.Extensions
         }
 
     }
+
 }

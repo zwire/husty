@@ -4,15 +4,17 @@ using System.Reactive.Linq;
 using Microsoft.Azure.Kinect.Sensor;
 using OpenCvSharp;
 using Husty.Geometry;
-using Husty.OpenCvSharp.ImageStream;
 using Husty.OpenCvSharp.Extensions;
 
 namespace Husty.OpenCvSharp.DepthCamera.Device
 {
+
+    public enum AlignBase { Color, Depth }
+
     /// <summary>
     /// Microsoft Azure Kinect C# wrapper
     /// </summary>
-    public sealed class Kinect : IImageStream<BgrXyzMat>
+    public sealed class Kinect : IDepthCamera
     {
 
         // ------ fields ------ //
@@ -21,7 +23,9 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
         private readonly Microsoft.Azure.Kinect.Sensor.Device _device;
         private readonly Transformation _transformation;
         private readonly Mat _rotationMatrix;
-        private readonly ObjectPool<BgrXyzMat> _pool;
+        private readonly ObjectPool<Mat> _bgrPool;
+        private readonly ObjectPool<Mat> _xyzPool;
+        private readonly ObjectPool<BgrXyzMat> _bgrXyzPool;
 
 
         // ------ properties ------ //
@@ -65,7 +69,9 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
                 AlignBase.Depth => new(dcal.ResolutionWidth, dcal.ResolutionHeight),
                 _               => throw new Exception()
             };
-            _pool = new(2, () => new(
+            _bgrPool = new(2, () => new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_8UC3));
+            _xyzPool = new(2, () => new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC3));
+            _bgrXyzPool = new(2, () => new(
                 new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_8UC3), 
                 new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC3))
             );
@@ -88,7 +94,7 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
                 ColorResolution = ColorResolution.R720p,
                 DepthMode = DepthMode.NFOV_2x2Binned,
                 SynchronizedImagesOnly = true,
-                CameraFPS = FPS.FPS15
+                CameraFPS = FPS.FPS30
             }, align) { }
 
 
@@ -102,7 +108,7 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
                 using var colorFrame = capture.Color;
                 using var depthFrame = _transformation.DepthImageToColorCamera(capture.Depth);
                 using var pointCloudFrame = _transformation.DepthImageToPointCloud(depthFrame, CalibrationDeviceType.Color);
-                var frame = _pool.GetObject();
+                var frame = _bgrXyzPool.GetObject();
                 colorFrame.CopyToColorMat(frame.BGR);
                 pointCloudFrame.CopyToPointCloudMat(frame.XYZ);
                 HasFrame = true;
@@ -112,11 +118,54 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
             {
                 using var colorFrame = _transformation.ColorImageToDepthCamera(capture);
                 using var pointCloudFrame = _transformation.DepthImageToPointCloud(capture.Depth);
-                var frame = _pool.GetObject();
+                var frame = _bgrXyzPool.GetObject();
                 colorFrame.CopyToColorMat(frame.BGR);
                 pointCloudFrame.CopyToPointCloudMat(frame.XYZ);
                 HasFrame = true;
                 return frame.Rotate(_rotationMatrix);
+            }
+        }
+
+        public Mat ReadBgr()
+        {
+            using var capture = _device.GetCapture();
+            using var colorFrame = capture.Color;
+            var frame = _bgrPool.GetObject();
+            colorFrame.CopyToColorMat(frame);
+            HasFrame = true;
+            return frame;
+        }
+
+        public unsafe Mat ReadXyz()
+        {
+            using var capture = _device.GetCapture();
+            if (_align is AlignBase.Color)
+            {
+                using var depthFrame = _transformation.DepthImageToColorCamera(capture.Depth);
+                using var pointCloudFrame = _transformation.DepthImageToPointCloud(depthFrame, CalibrationDeviceType.Color);
+                var frame = _xyzPool.GetObject();
+                pointCloudFrame.CopyToPointCloudMat(frame);
+                HasFrame = true;
+                return frame;
+            }
+            else
+            {
+                using var pointCloudFrame = _transformation.DepthImageToPointCloud(capture.Depth);
+                var frame = _xyzPool.GetObject();
+                pointCloudFrame.CopyToPointCloudMat(frame);
+                HasFrame = true;
+                var d = (float*)_rotationMatrix.Data;
+                var s = (short*)frame.Data;
+                for (int i = 0; i < frame.Rows * frame.Cols * 3; i += 3)
+                {
+                    var x = s[i + 0];
+                    var y = s[i + 1];
+                    var z = s[i + 2];
+                    s[i + 0] = (short)(d[0] * x + d[1] * y + d[2] * z);
+                    s[i + 1] = (short)(d[3] * x + d[4] * y + d[5] * z);
+                    s[i + 2] = (short)(d[6] * x + d[7] * y + d[8] * z);
+                }
+                return frame;
             }
         }
 
@@ -129,11 +178,32 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
                 .Publish().RefCount();
         }
 
+        public IObservable<Mat> GetBgrStream()
+        {
+            return Observable
+                .Repeat(0, ThreadPoolScheduler.Instance)
+                .Select(_ => ReadBgr())
+                .Where(x => !x.IsDisposed && !x.Empty())
+                .Publish().RefCount();
+        }
+
+        public IObservable<Mat> GetXyzStream()
+        {
+            return Observable
+                .Repeat(0, ThreadPoolScheduler.Instance)
+                .Select(_ => ReadXyz())
+                .Where(x => !x.IsDisposed && !x.Empty())
+                .Publish().RefCount();
+        }
+
         public void Dispose()
         {
             HasFrame = false;
+            _device?.StopCameras();
             _device?.Dispose();
-            _pool?.Dispose();
+            _bgrXyzPool?.Dispose();
+            _bgrPool?.Dispose();
+            _xyzPool?.Dispose();
         }
 
     }

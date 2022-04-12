@@ -60,8 +60,10 @@ var hierarchy =
       [ "Husty.Geometry.Vector2D", "class_husty_1_1_geometry_1_1_vector2_d.html", null ]
     ] ],
     [ "Husty.OpenCvSharp.ImageStream.IImageStream< BgrXyzMat >", "interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_image_stream.html", [
-      [ "Husty.OpenCvSharp.DepthCamera.Device.Kinect", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_kinect.html", null ],
-      [ "Husty.OpenCvSharp.DepthCamera.Device.Realsense", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_realsense.html", null ]
+      [ "Husty.OpenCvSharp.DepthCamera.Device.IDepthCamera", "interface_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_i_depth_camera.html", [
+        [ "Husty.OpenCvSharp.DepthCamera.Device.Kinect", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_kinect.html", null ],
+        [ "Husty.OpenCvSharp.DepthCamera.Device.Realsense", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_realsense.html", null ]
+      ] ]
     ] ],
     [ "Husty.OpenCvSharp.ImageStream.IImageStream< Mat >", "interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_image_stream.html", [
       [ "Husty.OpenCvSharp.ImageStream.CameraStream", "class_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_camera_stream.html", null ]

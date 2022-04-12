@@ -74,6 +74,7 @@ var annotated_dup =
         ] ],
         [ "DepthCamera", "namespace_husty_1_1_open_cv_sharp_1_1_depth_camera.html", [
           [ "Device", "namespace_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device.html", [
+            [ "IDepthCamera", "interface_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_i_depth_camera.html", "interface_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_i_depth_camera" ],
             [ "Kinect", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_kinect.html", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_kinect" ],
             [ "Realsense", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_realsense.html", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_realsense" ]
           ] ],
