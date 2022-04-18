@@ -53,9 +53,9 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
         public Kinect(DeviceConfiguration config, AlignBase align = AlignBase.Color)
         {
             _align = align;
-            using var xRot = new Angle(-5.8, AngleType.Degree).ToRotationMatrix(Axis.X);
-            using var yRot = new Angle(-1.3, AngleType.Degree).ToRotationMatrix(Axis.Y);
-            using var zRot = new Angle(0, AngleType.Degree).ToRotationMatrix(Axis.Z);
+            using var xRot = Angle.FromDegree(-5.8).ToRotationMatrix(Axis.X);
+            using var yRot = Angle.FromDegree(-1.3).ToRotationMatrix(Axis.Y);
+            using var zRot = Angle.FromDegree(0).ToRotationMatrix(Axis.Z);
             _rotationMatrix = zRot * yRot * xRot;
             _device = Microsoft.Azure.Kinect.Sensor.Device.Open();
             _device.StartCameras(config);

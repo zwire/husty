@@ -53,11 +53,11 @@ namespace Husty.Geometry
         public Angle GetAngle(Axis axis)
         {
             if (axis is Axis.Z)
-                return new(Atan2(X, Y), AngleType.Radian);
+                return Angle.FromRadian(Atan2(X, Y));
             else if (axis is Axis.Y)
-                return new(Atan2(Z, X), AngleType.Radian);
+                return Angle.FromRadian(Atan2(Z, X));
             else
-                return new(Atan2(Y, Z), AngleType.Radian);
+                return Angle.FromRadian(Atan2(Y, Z));
         }
 
         public Angle GetAngleFrom(Vector3D v, Axis axis)

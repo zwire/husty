@@ -12,9 +12,9 @@ namespace Husty.Geometry
 
         public double Y { get; }
 
-        public Angle ClockwiseAngleFromY => new(Atan2(X, Y), AngleType.Radian);
+        public Angle ClockwiseAngleFromY => Angle.FromRadian(Atan2(X, Y));
 
-        public Angle CounterClockwiseAngleFromX => new(Atan2(Y, X), AngleType.Radian);
+        public Angle CounterClockwiseAngleFromX => Angle.FromRadian(Atan2(Y, X));
 
         public double Length { get; }
 

@@ -124,7 +124,7 @@ namespace Husty.OpenCvSharp.Feature
                     }
                 }
             }
-            return new(new(_thetas[maxloc.Item1], AngleType.Radian), _rhos[maxloc.Item2]);
+            return new(Angle.FromRadian(_thetas[maxloc.Item1]), _rhos[maxloc.Item2]);
 
         }
     }

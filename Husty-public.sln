@@ -94,6 +94,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dnn", "dnn", "{0F41782B-684
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.DepthCameraStartup", "Tutorial\Tutorial.DepthCameraStartup\Tutorial.DepthCameraStartup.csproj", "{8B9726D6-9F68-4D23-9330-EC289F8508AC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Any", "Test\Test.Any\Test.Any.csproj", "{F88850CE-86AE-4528-902F-9254A5DA3941}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -464,6 +466,18 @@ Global
 		{8B9726D6-9F68-4D23-9330-EC289F8508AC}.Release|x64.Build.0 = Release|Any CPU
 		{8B9726D6-9F68-4D23-9330-EC289F8508AC}.Release|x86.ActiveCfg = Release|Any CPU
 		{8B9726D6-9F68-4D23-9330-EC289F8508AC}.Release|x86.Build.0 = Release|Any CPU
+		{F88850CE-86AE-4528-902F-9254A5DA3941}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F88850CE-86AE-4528-902F-9254A5DA3941}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F88850CE-86AE-4528-902F-9254A5DA3941}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F88850CE-86AE-4528-902F-9254A5DA3941}.Debug|x64.Build.0 = Debug|Any CPU
+		{F88850CE-86AE-4528-902F-9254A5DA3941}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F88850CE-86AE-4528-902F-9254A5DA3941}.Debug|x86.Build.0 = Debug|Any CPU
+		{F88850CE-86AE-4528-902F-9254A5DA3941}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F88850CE-86AE-4528-902F-9254A5DA3941}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F88850CE-86AE-4528-902F-9254A5DA3941}.Release|x64.ActiveCfg = Release|Any CPU
+		{F88850CE-86AE-4528-902F-9254A5DA3941}.Release|x64.Build.0 = Release|Any CPU
+		{F88850CE-86AE-4528-902F-9254A5DA3941}.Release|x86.ActiveCfg = Release|Any CPU
+		{F88850CE-86AE-4528-902F-9254A5DA3941}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -504,6 +518,7 @@ Global
 		{78F94936-F5CB-49A7-9465-E8C63A3013D5} = {0EE512F2-0740-4BAB-8CA3-56CBF8F022A9}
 		{0F41782B-684B-4F15-BF94-14A0592E7F6C} = {0EE512F2-0740-4BAB-8CA3-56CBF8F022A9}
 		{8B9726D6-9F68-4D23-9330-EC289F8508AC} = {567343D4-CEEF-42AC-8AC8-02A6391DA059}
+		{F88850CE-86AE-4528-902F-9254A5DA3941} = {C9D28F01-3BB9-4480-B4BA-5F592E1F668E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C7E8A650-965E-4175-B03C-832FABDB4FFA}

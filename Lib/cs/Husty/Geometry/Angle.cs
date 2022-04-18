@@ -5,8 +5,6 @@ using static System.Math;
 namespace Husty.Geometry
 {
 
-    public enum AngleType { Radian, Degree }
-
     public struct Angle : IEquatable<Angle>
     {
 
@@ -21,29 +19,28 @@ namespace Husty.Geometry
 
         public double Degree => _radian * 180 / PI;
 
-        public static Angle Zero => new(0, AngleType.Radian);
+        public static Angle Zero => new(0);
 
 
         // ------ constructors ------ //
 
-        public Angle(double value, AngleType type)
-        {
-            if (type is AngleType.Radian && (value < -PI || value > PI))
-                throw new ArgumentOutOfRangeException("must be -PI <= value <= PI");
-            if (type is AngleType.Degree && (value < -180 || value > 180))
-                throw new ArgumentOutOfRangeException("must be -180 <= value <= 180");
-            _radian = type is AngleType.Degree ? value * PI / 180 : value;
-        }
-
         [JsonConstructor]
-        public Angle(double radian = 0, double degree = 0)
+        public Angle(double radian)
         {
+            if (radian < -PI || radian > PI)
+                throw new ArgumentOutOfRangeException("must be -PI <= value <= PI");
             _radian = radian;
         }
 
-        public Angle Add(double value, AngleType type) => new(RegulateRange(_radian + value), type);
 
-        public Angle Subtract(double value, AngleType type) => new(RegulateRange(_radian - value), type);
+        // ------ factory methods ------ //
+
+        public static Angle FromRadian(double value) => new(value);
+
+        public static Angle FromDegree(double value) => new(value * PI / 180);
+
+
+        // ------ public methods ------ //
 
         public bool Equals(Angle obj) => GetHashCode() == obj.GetHashCode();
 
@@ -54,11 +51,11 @@ namespace Husty.Geometry
 
         // ------ operators ------ //
 
-        public static Angle operator +(Angle a, Angle b) => a.Add(b.Radian, AngleType.Radian);
+        public static Angle operator +(Angle a, Angle b) => new(RegulateRange(a.Radian + b.Radian));
 
-        public static Angle operator -(Angle a, Angle b) => a.Subtract(b.Radian, AngleType.Radian);
+        public static Angle operator -(Angle a, Angle b) => new(RegulateRange(a.Radian - b.Radian));
 
-        public static Angle operator -(Angle a) => new(-a.Radian, AngleType.Radian);
+        public static Angle operator -(Angle a) => new(-a.Radian);
 
         public static bool operator ==(Angle a, Angle b) => a.Equals(b);
 

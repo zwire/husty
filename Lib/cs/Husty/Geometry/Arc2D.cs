@@ -43,10 +43,10 @@ namespace Husty.Geometry
             var initVec = new Vector2D(Center, Start);
             if (Angle.Radian > 0)
                 for (double angle = 0; angle < Angle.Radian; angle += interval.Radian)
-                    points.Add(Center + initVec.Rotate(new(angle, AngleType.Radian)));
+                    points.Add(Center + initVec.Rotate(Angle.FromRadian(angle)));
             else
                 for (double angle = 0; angle > Angle.Radian; angle -= interval.Radian)
-                    points.Add(Center + initVec.Rotate(new(angle, AngleType.Radian)));
+                    points.Add(Center + initVec.Rotate(Angle.FromRadian(angle)));
             points.Add(End);
             return points.ToArray();
         }
