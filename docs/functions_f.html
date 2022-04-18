@@ -9,10 +9,6 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
-<link href="navtree.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="resize.js"></script>
-<script type="text/javascript" src="navtreedata.js"></script>
-<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -51,22 +47,6 @@ $(function() {
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
-<div id="side-nav" class="ui-resizable side-nav-resizable">
-  <div id="nav-tree">
-    <div id="nav-tree-contents">
-      <div id="nav-sync" class="sync"></div>
-    </div>
-  </div>
-  <div id="splitbar" style="-moz-user-select:none;" 
-       class="ui-resizable-handle">
-  </div>
-</div>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('functions_f.html',''); initResizable(); });
-/* @license-end */
-</script>
-<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -105,15 +85,14 @@ $(document).ready(function(){initNavTree('functions_f.html',''); initResizable()
 <li>Fps&#160;:&#160;<a class="el" href="class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_kinect.html#a1932c8772a16b50e8fe7bedef41a5a54">Husty.OpenCvSharp.DepthCamera.Device.Kinect</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_realsense.html#a8f749728cb67fac89f6e9799d5c1f91e">Husty.OpenCvSharp.DepthCamera.Device.Realsense</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_i_o_1_1_bgr_xyz_player.html#af80a130d21bd45f597bb09ec8e311eaf">Husty.OpenCvSharp.DepthCamera.IO.BgrXyzPlayer</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_camera_stream.html#a6c3887e816c367be21edc4f0e1cf6d79">Husty.OpenCvSharp.ImageStream.CameraStream</a>, <a class="el" href="interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_image_stream.html#a5acb4453b5dd7846d6bacecdd63928c6">Husty.OpenCvSharp.ImageStream.IImageStream&lt; TImage &gt;</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_video_stream.html#ac0b798956c672eded9b1263086a3da80">Husty.OpenCvSharp.ImageStream.VideoStream</a></li>
 <li>FrameCount&#160;:&#160;<a class="el" href="class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_i_o_1_1_bgr_xyz_player.html#a4b4ff778d201ef155ea897b2e1758173">Husty.OpenCvSharp.DepthCamera.IO.BgrXyzPlayer</a>, <a class="el" href="interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_video_stream.html#a403f0a6075894cf87b6fe2ab286b7f0f">Husty.OpenCvSharp.ImageStream.IVideoStream&lt; TImage &gt;</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_video_stream.html#af25aee7167a6d1ad4bb2addacfc9900a">Husty.OpenCvSharp.ImageStream.VideoStream</a></li>
 <li>FrameSize&#160;:&#160;<a class="el" href="class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_kinect.html#aa3c6d8abe211ed9c6669d17eaa592ed9">Husty.OpenCvSharp.DepthCamera.Device.Kinect</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_realsense.html#a8e716002874253f6f17024a9192edecb">Husty.OpenCvSharp.DepthCamera.Device.Realsense</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_i_o_1_1_bgr_xyz_player.html#a29f17d4bb1282e8468b47f9bc16a2ff6">Husty.OpenCvSharp.DepthCamera.IO.BgrXyzPlayer</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_camera_stream.html#a76cb775cb85eb46ab5a73a9635594a6d">Husty.OpenCvSharp.ImageStream.CameraStream</a>, <a class="el" href="interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_image_stream.html#ac331326ce9eac8fc9341ccc16e8343d8">Husty.OpenCvSharp.ImageStream.IImageStream&lt; TImage &gt;</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_video_stream.html#a9151bc27846518af9c8d8882789284f9">Husty.OpenCvSharp.ImageStream.VideoStream</a></li>
+<li>FromDegree()&#160;:&#160;<a class="el" href="struct_husty_1_1_geometry_1_1_angle.html#a03060010884e1929981862ba20d32138">Husty.Geometry.Angle</a></li>
+<li>FromRadian()&#160;:&#160;<a class="el" href="struct_husty_1_1_geometry_1_1_angle.html#a740d79d3ec8997da69b1cf64f8e43203">Husty.Geometry.Angle</a></li>
 <li>FromTuple()&#160;:&#160;<a class="el" href="class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_size2_extensions.html#a1755c4d532a1bc7639e03a5ac00d5a73">Husty.OpenCvSharp.Extensions.Size2Extensions</a></li>
 </ul>
 </div><!-- contents -->
-</div><!-- doc-content -->
 <!-- start footer part -->
-<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-  <ul>
-    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
-  </ul>
-</div>
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
+</small></address>
 </body>
 </html>

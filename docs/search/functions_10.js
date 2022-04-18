@@ -15,6 +15,5 @@ var searchData=
   ['statsbase_12',['StatsBase',['../class_husty_1_1_open_cv_sharp_1_1_stats_1_1_stats_base.html#abf7362f8aa41b8434ef760f2c0ebea18',1,'Husty::OpenCvSharp::Stats::StatsBase']]],
   ['stddev_3c_20t_20_3e_13',['StdDev&lt; T &gt;',['../class_husty_1_1_extensions_1_1_array_extensions.html#a2a118a95cbbf728540c2dc763059936a',1,'Husty::Extensions::ArrayExtensions']]],
   ['stdoutreader_14',['StdOutReader',['../class_husty_1_1_i_o_1_1_std_out_reader.html#ab1827424e1441d339bac438e7fc9bd33',1,'Husty.IO.StdOutReader.StdOutReader(string cmd)'],['../class_husty_1_1_i_o_1_1_std_out_reader.html#a9c48882c3b050fed57d82ef60bca0344',1,'Husty.IO.StdOutReader.StdOutReader(string exe, string file, string[] args=null)']]],
-  ['subtract_15',['Subtract',['../struct_husty_1_1_geometry_1_1_angle.html#a925ddc06cad957568d41c687550386aa',1,'Husty::Geometry::Angle']]],
-  ['svm_16',['Svm',['../class_husty_1_1_open_cv_sharp_1_1_stats_1_1_svm.html#aec98c0f4a20dfeac2e4e3dfcfea3ce08',1,'Husty::OpenCvSharp::Stats::Svm']]]
+  ['svm_15',['Svm',['../class_husty_1_1_open_cv_sharp_1_1_stats_1_1_svm.html#aec98c0f4a20dfeac2e4e3dfcfea3ce08',1,'Husty::OpenCvSharp::Stats::Svm']]]
 ];
