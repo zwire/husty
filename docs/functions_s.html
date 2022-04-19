@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -47,6 +51,22 @@ $(function() {
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('functions_s.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -65,9 +85,8 @@ $(function() {
 <div class="textblock">Here is a list of all class members with links to the classes they belong to:</div>
 
 <h3><a id="index_s" name="index_s"></a>- s -</h3><ul>
-<li>Save()&#160;:&#160;<a class="el" href="class_husty_1_1_cmac_1_1_cmac_bundler.html#a5ab438159e4ff6e008f01997fbe17439">Husty.Cmac.CmacBundler</a>, <a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#a14d0b3c8dd3eaa407437e60cf425eca0">Husty.Cmac.CmacNetwork</a>, <a class="el" href="class_husty_1_1_neural_network_1_1_network_graph.html#a4c7768a57f97148000438f63fed8664e">Husty.NeuralNetwork.NetworkGraph</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_parameters.html#a965e4ef41b2cc57bd347198caf458083">Husty.OpenCvSharp.CameraCalibration.ExtrinsicCameraParameters</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_intrinsic_camera_parameters.html#a5ce371d44192e2f462ca89af054e5433">Husty.OpenCvSharp.CameraCalibration.IntrinsicCameraParameters</a>, <a class="el" href="class_husty_1_1_preset.html#a311b5437869744c3534507a9a18c8143">Husty.Preset&lt; T &gt;</a></li>
+<li>Save()&#160;:&#160;<a class="el" href="class_husty_1_1_cmac_1_1_cmac_bundler.html#a5ab438159e4ff6e008f01997fbe17439">Husty.Cmac.CmacBundler</a>, <a class="el" href="class_husty_1_1_cmac_1_1_cmac_network.html#a14d0b3c8dd3eaa407437e60cf425eca0">Husty.Cmac.CmacNetwork</a>, <a class="el" href="class_husty_1_1_neural_network_1_1_network_graph.html#a4c7768a57f97148000438f63fed8664e">Husty.NeuralNetwork.NetworkGraph</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_parameters.html#a965e4ef41b2cc57bd347198caf458083">Husty.OpenCvSharp.CameraCalibration.ExtrinsicCameraParameters</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_intrinsic_camera_parameters.html#a5ce371d44192e2f462ca89af054e5433">Husty.OpenCvSharp.CameraCalibration.IntrinsicCameraParameters</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_stats_1_1_binary_stats_base.html#aa075a9b2dd11699c39bafbd38a0c2ae0">Husty.OpenCvSharp.Stats.BinaryStatsBase</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_stats_1_1_data_container.html#a3e7ff0b737741f4f4263da2b916a66b1">Husty.OpenCvSharp.Stats.DataContainer</a>, <a class="el" href="interface_husty_1_1_open_cv_sharp_1_1_stats_1_1_i_binary_stats.html#a02b0caec782c177d38008affdb043dd7">Husty.OpenCvSharp.Stats.IBinaryStats</a>, <a class="el" href="class_husty_1_1_preset.html#a311b5437869744c3534507a9a18c8143">Husty.Preset&lt; T &gt;</a></li>
 <li>SaveAsZip()&#160;:&#160;<a class="el" href="class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_i_o_1_1_bgr_xyz_image_i_o.html#a228eb61d81ae47bb796b80ed8d5e7665">Husty.OpenCvSharp.DepthCamera.IO.BgrXyzImageIO</a></li>
-<li>SaveDataset()&#160;:&#160;<a class="el" href="interface_husty_1_1_open_cv_sharp_1_1_stats_1_1_i_stats.html#a15e3ca317ac2e1454b668ec798c00cad">Husty.OpenCvSharp.Stats.IStats</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_stats_1_1_stats_base.html#a7a699a9a5f083527e4fd57ba977b9f87">Husty.OpenCvSharp.Stats.StatsBase</a></li>
 <li>Scale()&#160;:&#160;<a class="el" href="class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_bgr_xyz_mat.html#a40bea085621987ee82cce97a3c3e2944">Husty.OpenCvSharp.DepthCamera.BgrXyzMat</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_rect2_extensions.html#ade9a9fad4a8d2b871747e69a769f90f3">Husty.OpenCvSharp.Extensions.Rect2Extensions</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_size2_extensions.html#af04d5ac66cd5b8ddf6861da9c207f8d5">Husty.OpenCvSharp.Extensions.Size2Extensions</a></li>
 <li>SearchPort()&#160;:&#160;<a class="el" href="class_husty_1_1_i_o_1_1_port_manager.html#a8f1161c75cc61b1038da5a1622763f17">Husty.IO.PortManager</a></li>
 <li>Seek()&#160;:&#160;<a class="el" href="class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_i_o_1_1_bgr_xyz_player.html#a7c7fa3d386b073e8d570087f11ddbc4e">Husty.OpenCvSharp.DepthCamera.IO.BgrXyzPlayer</a>, <a class="el" href="interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_video_stream.html#a89ed97e38fb0161a6b4e3c57d4c2d340">Husty.OpenCvSharp.ImageStream.IVideoStream&lt; TImage &gt;</a>, <a class="el" href="class_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_video_stream.html#a17873d56439212708498c8e341f7a92e">Husty.OpenCvSharp.ImageStream.VideoStream</a></li>
@@ -81,16 +100,18 @@ $(function() {
 <li>Slope&#160;:&#160;<a class="el" href="class_husty_1_1_geometry_1_1_line2_d.html#add4983eff3427e43dee43b0398f6cb35">Husty.Geometry.Line2D</a></li>
 <li>STANDARD&#160;:&#160;<a class="el" href="class_husty_1_1_lawicel_1_1_can_usb_option.html#a0b0e6cfc102081d17049b218ed964f55">Husty.Lawicel.CanUsbOption</a></li>
 <li>Start&#160;:&#160;<a class="el" href="class_husty_1_1_geometry_1_1_arc2_d.html#a0cce69a32bfeefc5371cf5f7b12abc7f">Husty.Geometry.Arc2D</a>, <a class="el" href="class_husty_1_1_geometry_1_1_line_segment2_d.html#abfa718dba24e927a5b8aa34253acadcb">Husty.Geometry.LineSegment2D</a></li>
-<li>StatsBase()&#160;:&#160;<a class="el" href="class_husty_1_1_open_cv_sharp_1_1_stats_1_1_stats_base.html#abf7362f8aa41b8434ef760f2c0ebea18">Husty.OpenCvSharp.Stats.StatsBase</a></li>
 <li>Status&#160;:&#160;<a class="el" href="class_husty_1_1_lawicel_1_1_can_usb_adapter.html#acb04a978c47227c283271d2f26aa642f">Husty.Lawicel.CanUsbAdapter</a></li>
 <li>StdDev&lt; T &gt;()&#160;:&#160;<a class="el" href="class_husty_1_1_extensions_1_1_array_extensions.html#a2a118a95cbbf728540c2dc763059936a">Husty.Extensions.ArrayExtensions</a></li>
 <li>StdOutReader()&#160;:&#160;<a class="el" href="class_husty_1_1_i_o_1_1_std_out_reader.html#ab1827424e1441d339bac438e7fc9bd33">Husty.IO.StdOutReader</a></li>
-<li>Svm()&#160;:&#160;<a class="el" href="class_husty_1_1_open_cv_sharp_1_1_stats_1_1_svm.html#aec98c0f4a20dfeac2e4e3dfcfea3ce08">Husty.OpenCvSharp.Stats.Svm</a></li>
+<li>Svm()&#160;:&#160;<a class="el" href="class_husty_1_1_open_cv_sharp_1_1_stats_1_1_svm.html#a38f584fb2c935cec353d0d982f895d75">Husty.OpenCvSharp.Stats.Svm</a></li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.3 </li>
+  </ul>
+</div>
 </body>
 </html>

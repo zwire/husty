@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mode_0',['Mode',['../namespace_husty_1_1_open_cv_sharp_1_1_stats.html#ac0a7029942285a7437d261aab137c902',1,'Husty::OpenCvSharp::Stats']]]
+  ['optimizationlevel_0',['OptimizationLevel',['../namespace_husty_1_1_open_cv_sharp.html#a939edbd3618df6c0131e517c095b3da0',1,'Husty::OpenCvSharp']]]
 ];

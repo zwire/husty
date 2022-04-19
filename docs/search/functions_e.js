@@ -8,8 +8,7 @@ var searchData=
   ['plusat_5',['PlusAt',['../class_husty_1_1_multidimensional_array.html#a190f2390950e38ad4df6e7cbe250d1e3',1,'Husty::MultidimensionalArray']]],
   ['point2d_6',['Point2D',['../class_husty_1_1_geometry_1_1_point2_d.html#acbcd8df73acc438510cbbfdbc3bde356',1,'Husty::Geometry::Point2D']]],
   ['point3d_7',['Point3D',['../class_husty_1_1_geometry_1_1_point3_d.html#aa68625d496b0ec4bc19faebe855b83ad',1,'Husty::Geometry::Point3D']]],
-  ['predict_8',['Predict',['../class_husty_1_1_open_cv_sharp_1_1_stats_1_1_bayes_classifier.html#afc0e6527cc313badec2d13236b4b6bc4',1,'Husty.OpenCvSharp.Stats.BayesClassifier.Predict()'],['../interface_husty_1_1_open_cv_sharp_1_1_stats_1_1_i_stats.html#a4154c8c05396ecc0ae2b1e8ed7609178',1,'Husty.OpenCvSharp.Stats.IStats.Predict()'],['../class_husty_1_1_open_cv_sharp_1_1_stats_1_1_stats_base.html#a0fec34a242161900811867ccfe15886e',1,'Husty.OpenCvSharp.Stats.StatsBase.Predict()'],['../class_husty_1_1_open_cv_sharp_1_1_stats_1_1_svm.html#a981ca3d13f4822e501badacfbf489529',1,'Husty.OpenCvSharp.Stats.Svm.Predict()']]],
-  ['predictprob_9',['PredictProb',['../class_husty_1_1_open_cv_sharp_1_1_stats_1_1_bayes_classifier.html#a23da494670eb712275675e15270c8563',1,'Husty::OpenCvSharp::Stats::BayesClassifier']]],
-  ['preset_10',['Preset',['../class_husty_1_1_preset.html#a9bafeeb372f0f0a5db2710390aab135a',1,'Husty::Preset']]],
-  ['properties_11',['Properties',['../namespace_husty_1_1_open_cv_sharp_1_1_image_stream.html#a5586d40c48ad97b8344de25243ea01cf',1,'Husty::OpenCvSharp::ImageStream']]]
+  ['predict_8',['Predict',['../class_husty_1_1_open_cv_sharp_1_1_stats_1_1_binary_stats_base.html#ad664b00cf8f3cf0a45e452b2cd2d0483',1,'Husty.OpenCvSharp.Stats.BinaryStatsBase.Predict()'],['../interface_husty_1_1_open_cv_sharp_1_1_stats_1_1_i_binary_stats.html#ac7051472db476dffba59db4be2aac7e8',1,'Husty.OpenCvSharp.Stats.IBinaryStats.Predict()']]],
+  ['preset_9',['Preset',['../class_husty_1_1_preset.html#a9bafeeb372f0f0a5db2710390aab135a',1,'Husty::Preset']]],
+  ['properties_10',['Properties',['../namespace_husty_1_1_open_cv_sharp_1_1_image_stream.html#a5586d40c48ad97b8344de25243ea01cf',1,'Husty::OpenCvSharp::ImageStream']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['inference_0',['Inference',['../namespace_husty_1_1_open_cv_sharp_1_1_stats.html#ac0a7029942285a7437d261aab137c902abfc7647fbfe6e589911d2da73377b475',1,'Husty::OpenCvSharp::Stats']]]
+  ['migraphx_0',['MIGraphX',['../namespace_husty_1_1_open_cv_sharp.html#a4ff7f1daf6a470b95a1a6d4f58706bc0a02205c965e166a1ec086f1fe517b3367',1,'Husty::OpenCvSharp']]]
 ];
