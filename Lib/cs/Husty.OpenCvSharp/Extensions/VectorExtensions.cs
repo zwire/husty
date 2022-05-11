@@ -1,9 +1,14 @@
-﻿using OpenCvSharp;
+﻿using System;
+using OpenCvSharp;
 using Husty.Geometry;
 using static System.Math;
 
 namespace Husty.OpenCvSharp.Extensions
 {
+
+    public enum RotationOrder { XYZ, XZY, YXZ, YZX, ZXY, ZYX }
+
+    public enum VectorMatType { Row, Col }
 
     public static class Vector
     {
@@ -290,6 +295,110 @@ namespace Husty.OpenCvSharp.Extensions
 
         // ------------------------- //
 
+        public static short[] ToArray(this Vec2s vec)
+        {
+            return new[] { vec.Item0, vec.Item1 };
+        }
+
+        public static int[] ToArray(this Vec2i vec)
+        {
+            return new[] { vec.Item0, vec.Item1 };
+        }
+
+        public static float[] ToArray(this Vec2f vec)
+        {
+            return new[] { vec.Item0, vec.Item1 };
+        }
+
+        public static double[] ToArray(this Vec2d vec)
+        {
+            return new[] { vec.Item0, vec.Item1 };
+        }
+
+        // ------------------------- //
+
+        public static short[] ToArray(this Vec3s vec)
+        {
+            return new[] { vec.Item0, vec.Item1, vec.Item2 };
+        }
+
+        public static int[] ToArray(this Vec3i vec)
+        {
+            return new[] { vec.Item0, vec.Item1, vec.Item2 };
+        }
+
+        public static float[] ToArray(this Vec3f vec)
+        {
+            return new[] { vec.Item0, vec.Item1, vec.Item2 };
+        }
+
+        public static double[] ToArray(this Vec3d vec)
+        {
+            return new[] { vec.Item0, vec.Item1, vec.Item2 };
+        }
+
+        // ------------------------- //
+
+        public static Mat ToMat(this Vec2s vec, VectorMatType type)
+        {
+            return type is VectorMatType.Col
+                ? new(2, 1, MatType.CV_16S, vec.ToArray())
+                : new(1, 2, MatType.CV_16S, vec.ToArray());
+        }
+
+        public static Mat ToMat(this Vec2i vec, VectorMatType type)
+        {
+            return type is VectorMatType.Col
+                ? new(2, 1, MatType.CV_32S, vec.ToArray())
+                : new(1, 2, MatType.CV_32S, vec.ToArray());
+        }
+
+        public static Mat ToMat(this Vec2f vec, VectorMatType type)
+        {
+            return type is VectorMatType.Col
+                ? new(2, 1, MatType.CV_32F, vec.ToArray())
+                : new(1, 2, MatType.CV_32F, vec.ToArray());
+        }
+
+        public static Mat ToMat(this Vec2d vec, VectorMatType type)
+        {
+            return type is VectorMatType.Col
+                ? new(2, 1, MatType.CV_64F, vec.ToArray())
+                : new(1, 2, MatType.CV_64F, vec.ToArray());
+        }
+
+        // ------------------------- //
+
+        public static Mat ToMat(this Vec3s vec, VectorMatType type)
+        {
+            return type is VectorMatType.Col
+                ? new(3, 1, MatType.CV_16S, vec.ToArray())
+                : new(1, 3, MatType.CV_16S, vec.ToArray());
+        }
+
+        public static Mat ToMat(this Vec3i vec, VectorMatType type)
+        {
+            return type is VectorMatType.Col
+                ? new(3, 1, MatType.CV_32S, vec.ToArray())
+                : new(1, 3, MatType.CV_32S, vec.ToArray());
+        }
+
+        public static Mat ToMat(this Vec3f vec, VectorMatType type)
+        {
+            return type is VectorMatType.Col
+                ? new(3, 1, MatType.CV_32F, vec.ToArray())
+                : new(1, 3, MatType.CV_32F, vec.ToArray());
+        }
+
+        public static Mat ToMat(this Vec3d vec, VectorMatType type)
+        {
+            return type is VectorMatType.Col
+                ? new(3, 1, MatType.CV_64F, vec.ToArray())
+                : new(1, 3, MatType.CV_64F, vec.ToArray());
+        }
+
+        // ------------------------- //
+
         public static Vec2s Rotate(this Vec2s vec, double radian)
         {
             var x0 = vec.Item0;
@@ -324,6 +433,148 @@ namespace Husty.OpenCvSharp.Extensions
             var x = Cos(radian) * x0 - Sin(radian) * y0;
             var y = Sin(radian) * x0 + Cos(radian) * y0;
             return new(x, y);
+        }
+
+        // ------------------------- //
+
+        public static Vec3s Rotate(this Vec3s vec, double radianX, double radianY, double radianZ, RotationOrder order)
+        {
+            using var xRot = new Mat(3, 3, MatType.CV_64F, new double[]
+            {
+                1, 0, 0,
+                0, Cos(radianX), -Sin(radianX),
+                0, Sin(radianX), Cos(radianX)
+            });
+            using var yRot = new Mat(3, 3, MatType.CV_64F, new double[]
+            {
+                Cos(radianY), 0, Sin(radianY),
+                0, 1, 0,
+                -Sin(radianY), 0, Cos(radianY)
+            });
+            using var zRot = new Mat(3, 3, MatType.CV_64F, new double[]
+            {
+                Cos(radianZ), -Sin(radianZ), 0,
+                Sin(radianZ), Cos(radianZ), 0,
+                0, 0, 1
+            });
+            using var rot = order switch
+            {
+                RotationOrder.XYZ => xRot * yRot * zRot,
+                RotationOrder.XZY => xRot * zRot * yRot,
+                RotationOrder.YXZ => yRot * xRot * zRot,
+                RotationOrder.YZX => yRot * zRot * xRot,
+                RotationOrder.ZXY => zRot * xRot * yRot,
+                RotationOrder.ZYX => zRot * yRot * xRot,
+                _                 => throw new NotSupportedException()
+            };
+            using var r0 = rot * vec.ToMat(VectorMatType.Col);
+            using var r1 = r0.ToMat();
+            return r1.ToVec3s();
+        }
+
+        public static Vec3i Rotate(this Vec3i vec, double radianX, double radianY, double radianZ, RotationOrder order)
+        {
+            using var xRot = new Mat(3, 3, MatType.CV_64F, new double[]
+            {
+                1, 0, 0,
+                0, Cos(radianX), -Sin(radianX),
+                0, Sin(radianX), Cos(radianX)
+            });
+            using var yRot = new Mat(3, 3, MatType.CV_64F, new double[]
+            {
+                Cos(radianY), 0, Sin(radianY),
+                0, 1, 0,
+                -Sin(radianY), 0, Cos(radianY)
+            });
+            using var zRot = new Mat(3, 3, MatType.CV_64F, new double[]
+            {
+                Cos(radianZ), -Sin(radianZ), 0,
+                Sin(radianZ), Cos(radianZ), 0,
+                0, 0, 1
+            });
+            using var rot = order switch
+            {
+                RotationOrder.XYZ => xRot * yRot * zRot,
+                RotationOrder.XZY => xRot * zRot * yRot,
+                RotationOrder.YXZ => yRot * xRot * zRot,
+                RotationOrder.YZX => yRot * zRot * xRot,
+                RotationOrder.ZXY => zRot * xRot * yRot,
+                RotationOrder.ZYX => zRot * yRot * xRot,
+                _ => throw new NotSupportedException()
+            };
+            using var r0 = rot * vec.ToMat(VectorMatType.Col);
+            using var r1 = r0.ToMat();
+            return r1.ToVec3i();
+        }
+
+        public static Vec3f Rotate(this Vec3f vec, double radianX, double radianY, double radianZ, RotationOrder order)
+        {
+            using var xRot = new Mat(3, 3, MatType.CV_64F, new double[]
+            {
+                1, 0, 0,
+                0, Cos(radianX), -Sin(radianX),
+                0, Sin(radianX), Cos(radianX)
+            });
+            using var yRot = new Mat(3, 3, MatType.CV_64F, new double[]
+            {
+                Cos(radianY), 0, Sin(radianY),
+                0, 1, 0,
+                -Sin(radianY), 0, Cos(radianY)
+            });
+            using var zRot = new Mat(3, 3, MatType.CV_64F, new double[]
+            {
+                Cos(radianZ), -Sin(radianZ), 0,
+                Sin(radianZ), Cos(radianZ), 0,
+                0, 0, 1
+            });
+            using var rot = order switch
+            {
+                RotationOrder.XYZ => xRot * yRot * zRot,
+                RotationOrder.XZY => xRot * zRot * yRot,
+                RotationOrder.YXZ => yRot * xRot * zRot,
+                RotationOrder.YZX => yRot * zRot * xRot,
+                RotationOrder.ZXY => zRot * xRot * yRot,
+                RotationOrder.ZYX => zRot * yRot * xRot,
+                _ => throw new NotSupportedException()
+            };
+            using var r0 = rot * vec.ToMat(VectorMatType.Col);
+            using var r1 = r0.ToMat();
+            return r1.ToVec3f();
+        }
+
+        public static Vec3d Rotate(this Vec3d vec, double radianX, double radianY, double radianZ, RotationOrder order)
+        {
+            using var xRot = new Mat(3, 3, MatType.CV_64F, new double[]
+            {
+                1, 0, 0,
+                0, Cos(radianX), -Sin(radianX),
+                0, Sin(radianX), Cos(radianX)
+            });
+            using var yRot = new Mat(3, 3, MatType.CV_64F, new double[]
+            {
+                Cos(radianY), 0, Sin(radianY),
+                0, 1, 0,
+                -Sin(radianY), 0, Cos(radianY)
+            });
+            using var zRot = new Mat(3, 3, MatType.CV_64F, new double[]
+            {
+                Cos(radianZ), -Sin(radianZ), 0,
+                Sin(radianZ), Cos(radianZ), 0,
+                0, 0, 1
+            });
+            using var rot = order switch
+            {
+                RotationOrder.XYZ => xRot * yRot * zRot,
+                RotationOrder.XZY => xRot * zRot * yRot,
+                RotationOrder.YXZ => yRot * xRot * zRot,
+                RotationOrder.YZX => yRot * zRot * xRot,
+                RotationOrder.ZXY => zRot * xRot * yRot,
+                RotationOrder.ZYX => zRot * yRot * xRot,
+                _ => throw new NotSupportedException()
+            };
+            using var r0 = rot * vec.ToMat(VectorMatType.Col);
+            using var r1 = r0.ToMat();
+            return r1.ToVec3d();
         }
 
     }

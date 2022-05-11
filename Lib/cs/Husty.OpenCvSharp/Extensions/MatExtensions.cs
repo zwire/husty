@@ -57,6 +57,86 @@ namespace Husty.OpenCvSharp.Extensions
 
         }
 
+        public static Vec2s ToVec2s(this Mat src)
+        {
+            if (src.Rows is 2 && src.Cols is 1)
+                return new(src.At<short>(0, 0), src.At<short>(1, 0));
+            else if (src.Rows is 1 && src.Cols is 2)
+                return new(src.At<short>(0, 0), src.At<short>(0, 1));
+            else
+                throw new ArgumentException("Require: source matrix must be 2x1 or 1x2");
+        }
+
+        public static Vec2i ToVec2i(this Mat src)
+        {
+            if (src.Rows is 2 && src.Cols is 1)
+                return new(src.At<int>(0, 0), src.At<int>(1, 0));
+            else if (src.Rows is 1 && src.Cols is 2)
+                return new(src.At<int>(0, 0), src.At<int>(0, 1));
+            else
+                throw new ArgumentException("Require: source matrix must be 2x1 or 1x2");
+        }
+
+        public static Vec2f ToVec2f(this Mat src)
+        {
+            if (src.Rows is 2 && src.Cols is 1)
+                return new(src.At<float>(0, 0), src.At<float>(1, 0));
+            else if (src.Rows is 1 && src.Cols is 2)
+                return new(src.At<float>(0, 0), src.At<float>(0, 1));
+            else
+                throw new ArgumentException("Require: source matrix must be 2x1 or 1x2");
+        }
+
+        public static Vec2d ToVec2d(this Mat src)
+        {
+            if (src.Rows is 2 && src.Cols is 1)
+                return new(src.At<double>(0, 0), src.At<double>(1, 0));
+            else if (src.Rows is 1 && src.Cols is 2)
+                return new(src.At<double>(0, 0), src.At<double>(0, 1));
+            else
+                throw new ArgumentException("Require: source matrix must be 2x1 or 1x2");
+        }
+
+        public static Vec3s ToVec3s(this Mat src)
+        {
+            if (src.Rows is 3 && src.Cols is 1)
+                return new(src.At<short>(0, 0), src.At<short>(1, 0), src.At<short>(2, 0));
+            else if (src.Rows is 1 && src.Cols is 3)
+                return new(src.At<short>(0, 0), src.At<short>(0, 1), src.At<short>(0, 2));
+            else
+                throw new ArgumentException("Require: source matrix must be 3x1 or 1x3");
+        }
+
+        public static Vec3i ToVec3i(this Mat src)
+        {
+            if (src.Rows is 3 && src.Cols is 1)
+                return new(src.At<int>(0, 0), src.At<int>(1, 0), src.At<int>(2, 0));
+            else if (src.Rows is 1 && src.Cols is 3)
+                return new(src.At<int>(0, 0), src.At<int>(0, 1), src.At<int>(0, 2));
+            else
+                throw new ArgumentException("Require: source matrix must be 3x1 or 1x3");
+        }
+
+        public static Vec3f ToVec3f(this Mat src)
+        {
+            if (src.Rows is 3 && src.Cols is 1)
+                return new(src.At<float>(0, 0), src.At<float>(1, 0), src.At<float>(2, 0));
+            else if (src.Rows is 1 && src.Cols is 3)
+                return new(src.At<float>(0, 0), src.At<float>(0, 1), src.At<float>(0, 2));
+            else
+                throw new ArgumentException("Require: source matrix must be 3x1 or 1x3");
+        }
+
+        public static Vec3d ToVec3d(this Mat src)
+        {
+            if (src.Rows is 3 && src.Cols is 1)
+                return new(src.At<double>(0, 0), src.At<double>(1, 0), src.At<double>(2, 0));
+            else if (src.Rows is 1 && src.Cols is 3)
+                return new(src.At<double>(0, 0), src.At<double>(0, 1), src.At<double>(0, 2));
+            else
+                throw new ArgumentException("Require: source matrix must be 3x1 or 1x3");
+        }
+
     }
 
 }

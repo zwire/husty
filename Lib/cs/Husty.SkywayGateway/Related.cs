@@ -59,7 +59,7 @@ namespace Husty.SkywayGateway
                     _               => default
                 };
                 if (!response.IsSuccessful)
-                    throw new InvalidRequestException($"failed to {type} {resource}.");
+                    throw new InvalidOperationException($"failed to {type} {resource}.");
                 return response;
             }
             catch (System.Net.Http.HttpRequestException)

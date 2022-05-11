@@ -1,8 +1,5 @@
 ﻿using System.Text.Json;
-using Husty.Geometry;
+using Husty.Extensions;
 
-var angle = Angle.FromDegree(10);
-var json = JsonSerializer.Serialize(angle);
-var result = JsonSerializer.Deserialize<Angle>(json);
-Console.WriteLine(json);
-Console.WriteLine(result.Degree);
+var ary = new[,,] { { { 0, 1 }, { 2, 3 }, { 4, 5 } } };
+var ary2 = ary.Transpose(2, 0, 1);

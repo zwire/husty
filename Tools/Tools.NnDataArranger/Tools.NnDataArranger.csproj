@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.5.20211231" />
-    <PackageReference Include="ReactiveProperty" Version="8.0.3" />
+    <PackageReference Include="ReactiveProperty" Version="8.1.0" />
   </ItemGroup>
 
 </Project>

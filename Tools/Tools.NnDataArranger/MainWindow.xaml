@@ -34,6 +34,7 @@
                 <ComboBoxItem Content="Equalize Value"/>
                 <ComboBoxItem Content="Extract Zip"/>
                 <ComboBoxItem Content="Split Img-Mask into Folders"/>
+                <ComboBoxItem Content="Create LSTM Dataset"/>
             </ComboBox>
         </Viewbox>
         <Viewbox Grid.Row="0" Grid.Column="2" Margin="5">

@@ -1,0 +1,87 @@
+﻿<mahApps:MetroWindow x:Class="Tools.CanAnalyzer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mahApps="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Tools.CanAnalyzer"
+        mc:Ignorable="d"
+        Title="CAN Analyzer" Height="450" Width="800" Background="{DynamicResource AccentSelectedColorBrush}"
+        BorderThickness="1" GlowBrush="{DynamicResource AccentColorBrush3}" TitleCharacterCasing="Normal">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="6*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <Viewbox Grid.Row="0" Grid.Column="0" Margin="5">
+            <Button Content="▶" Command="{Binding StartCommand}" Foreground="LightGreen" Width="80"/>
+        </Viewbox>
+        <Viewbox Grid.Row="0" Grid.Column="1" Margin="5">
+            <Button Content="■" Command="{Binding StopCommand}" Foreground="Red" Width="80" Cursor="Hand"/>
+        </Viewbox>
+        <Viewbox Grid.Row="0" Grid.Column="2" Margin="5">
+            <CheckBox Content="Recording" Width="120" IsChecked="{Binding RecordingFlag.Value}"/>
+        </Viewbox>
+        <Viewbox Grid.Row="0" Grid.Column="3" Margin="15">
+            <ComboBox Width="120" SelectedIndex="{Binding SelectedBaudrateIndex.Value}">
+                <ComboBoxItem Content="BAUD_10K"/>
+                <ComboBoxItem Content="BAUD_20K"/>
+                <ComboBoxItem Content="BAUD_50K"/>
+                <ComboBoxItem Content="BAUD_100K"/>
+                <ComboBoxItem Content="BAUD_125K"/>
+                <ComboBoxItem Content="BAUD_250K"/>
+                <ComboBoxItem Content="BAUD_500K"/>
+                <ComboBoxItem Content="BAUD_800K"/>
+                <ComboBoxItem Content="BAUD_1M"/>
+            </ComboBox>
+        </Viewbox>
+        <Viewbox Grid.Row="0" Grid.Column="4" Margin="15">
+            <ComboBox Width="120" SelectedIndex="{Binding SelectedFrequencyIndex.Value}">
+                <ComboBoxItem Content="1Hz"/>
+                <ComboBoxItem Content="2Hz"/>
+                <ComboBoxItem Content="5Hz"/>
+                <ComboBoxItem Content="10Hz"/>
+                <ComboBoxItem Content="20Hz"/>
+                <ComboBoxItem Content="50Hz"/>
+                <ComboBoxItem Content="100Hz"/>
+            </ComboBox>
+        </Viewbox>
+        <Viewbox Grid.Row="0" Grid.Column="5" Margin="5">
+            <CheckBox Content="Extended" Width="120" IsChecked="{Binding ExtendedFlag.Value}"/>
+        </Viewbox>
+
+        <Viewbox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="5">
+            <GroupBox Header="Command   ID : DATA">
+                <StackPanel>
+                    <TextBox Text="{Binding CommandText.Value}" AcceptsReturn="True" Width="340" Height="260" Cursor="Arrow"/>
+                    <Button Content="Set" Command="{Binding SetCommand}"/>
+                </StackPanel>
+            </GroupBox>
+        </Viewbox>
+
+        <Viewbox Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3">
+            <GroupBox Header="Monitor" Margin="5">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Width="200" Height="300" Text="{Binding ViewId.Value}"/>
+                        <TextBlock Width="200" Height="300" Text="{Binding ViewData.Value}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Text="{Binding SearchText.Value}" Width="270" Height="40" Cursor="Arrow"/>
+                        <Button Content="Search" Command="{Binding SearchCommand}" Width="120"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+        </Viewbox>
+
+    </Grid>
+</mahApps:MetroWindow>

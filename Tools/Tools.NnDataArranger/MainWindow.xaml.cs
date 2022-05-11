@@ -1,8 +1,8 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using Reactive.Bindings;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using Reactive.Bindings;
 
 namespace Tools.NnDataArranger
 {
@@ -38,7 +38,11 @@ namespace Tools.NnDataArranger
             {
                 Title = "Select Input File / Directory.",
                 InitialDirectory = _selectedPath,
-                IsFolderPicker = ModeCombo.SelectedIndex is 0 || ModeCombo.SelectedIndex is 1 ? false : true,
+                IsFolderPicker = 
+                    ModeCombo.SelectedIndex is 0 || 
+                    ModeCombo.SelectedIndex is 1 ||
+                    ModeCombo.SelectedIndex is 10
+                    ? false : true,
             };
             if (cofd.ShowDialog() is CommonFileDialogResult.Ok)
             {
@@ -108,6 +112,10 @@ namespace Tools.NnDataArranger
                     var rate4 = double.Parse(CfgTx.Value);
                     TTSplitFolder.Run(InputLabel.Value, OutputLabel.Value, rate4);
                     break;
+                case 10:            // LSTM Data Generator
+                    var size = int.Parse(CfgTx.Value);
+                    LSTMDataGenerator.Run(InputLabel.Value, OutputLabel.Value, size);
+                    break;
             }
         }
 
@@ -174,6 +182,12 @@ namespace Tools.NnDataArranger
                     OutputButtonContent.Value = "Mask Dir";
                     Instruction.Value = "Rate";
                     CfgTx.Value = "0.2";
+                    break;
+                case 10:            // LSTM Data Generator
+                    InputButtonContent.Value = "Input File";
+                    OutputButtonContent.Value = "Output Dir";
+                    Instruction.Value = "Size";
+                    CfgTx.Value = "5";
                     break;
             }
         }
