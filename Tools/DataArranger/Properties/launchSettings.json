@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DataArranger": {
+      "commandName": "Project",
+      "commandLineArgs": "-f functions"
+    }
+  }
+}
