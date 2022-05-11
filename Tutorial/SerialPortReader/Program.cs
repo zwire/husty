@@ -20,7 +20,7 @@ namespace SerialPortReader
             {
                 Console.WriteLine(port.ReadLine());
                 if (Console.KeyAvailable)
-                    if (Console.ReadKey().Key is ConsoleKey.Q)
+                    if (Console.ReadKey().Key is ConsoleKey.Escape)
                         break;
             }
 

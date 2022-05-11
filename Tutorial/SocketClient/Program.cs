@@ -23,7 +23,7 @@ namespace SocketClient
                 var snd = new Message("Hello", count++);
                 stream.WriteAsJson(snd);
                 Console.WriteLine(snd);
-                if (Console.ReadKey().Key is ConsoleKey.Q)
+                if (Console.ReadKey().Key is ConsoleKey.Escape)
                     break;
             }
 

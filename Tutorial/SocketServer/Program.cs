@@ -23,7 +23,7 @@ namespace SocketServer
                 if (rcv is null) break;
                 Console.WriteLine($"{rcv.Greeting} : {rcv.Number}");
                 if (Console.KeyAvailable)
-                    if (Console.ReadKey().Key is ConsoleKey.Q)
+                    if (Console.ReadKey().Key is ConsoleKey.Escape)
                         break;
             }
 

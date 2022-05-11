@@ -30,7 +30,7 @@ namespace Tracker
                         tracker.Init(frame, box);
                         Cv2.DestroyAllWindows();
                     }
-                    else if (key is ConsoleKey.Q)
+                    else if (key is ConsoleKey.Escape)
                     {
                         break;
                     }
@@ -40,7 +40,7 @@ namespace Tracker
                 if (box.Size != Size.Zero)
                     tracker.Update(frame, ref box);
 
-                // show results
+                // visualize
                 Cv2.Rectangle(frame, box, new(0, 0, 255), 2);
                 Cv2.ImShow(" ", frame);
                 Cv2.WaitKey(1);
