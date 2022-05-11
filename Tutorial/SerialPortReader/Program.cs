@@ -13,7 +13,7 @@ namespace SerialPortReader
             if (names.Length is 0) throw new Exception("find no port!");
 
             // access first found port
-            using var port = new SerialPort(names[0], 115250);
+            var port = new SerialPort(names[0], 115250);
 
             // read messages until key interrupt
             while(true)
@@ -23,7 +23,10 @@ namespace SerialPortReader
                     if (Console.ReadKey().Key is ConsoleKey.Q)
                         break;
             }
+
+            // finalize
             Console.WriteLine("completed.");
+            port.Dispose();
 
         }
     }

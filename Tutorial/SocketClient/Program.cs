@@ -26,6 +26,11 @@ namespace SocketClient
                 if (Console.ReadKey().Key is ConsoleKey.Q)
                     break;
             }
+
+            // finalize
+            stream.Dispose();
+            client.Dispose();
+
         }
     }
 }

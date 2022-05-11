@@ -37,7 +37,7 @@ namespace CanAnalyzer
 
         public ReactivePropertySlim<int> SelectedFrequencyIndex { set; get; } = new(3);
 
-        public ReactivePropertySlim<string> CommandText { set; get; } = new("0xCF5BA0F:0x00\n0xCF5BB0F:0x00");
+        public ReactivePropertySlim<string> CommandText { set; get; } = new("0xCF5BA0F:0x13E800\n0xCF5BB0F:0x00");
 
         public ReactivePropertySlim<string> SearchText { set; get; } = new("CF5B");
 

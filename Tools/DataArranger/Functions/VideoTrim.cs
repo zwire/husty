@@ -2,7 +2,7 @@
 
 namespace DataArranger
 {
-    public class Vid2Img : IFunction
+    public class VideoTrim : IFunction
     {
 
         public string GetFunctionExplanation()
