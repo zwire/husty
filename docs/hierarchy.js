@@ -37,6 +37,7 @@ var hierarchy =
     ] ],
     [ "IDisposable", null, [
       [ "Husty.Channel< T >", "class_husty_1_1_channel.html", null ],
+      [ "Husty.DataLogger< T >", "class_husty_1_1_data_logger.html", null ],
       [ "Husty.IO.BidirectionalDataStream", "class_husty_1_1_i_o_1_1_bidirectional_data_stream.html", null ],
       [ "Husty.IO.ICommunicator", "interface_husty_1_1_i_o_1_1_i_communicator.html", [
         [ "Husty.IO.NamedPipeClient", "class_husty_1_1_i_o_1_1_named_pipe_client.html", null ],
@@ -102,6 +103,7 @@ var hierarchy =
     [ "Husty.OpenCvSharp.ImageStream.IVideoStream< Mat >", "interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_video_stream.html", [
       [ "Husty.OpenCvSharp.ImageStream.VideoStream", "class_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_video_stream.html", null ]
     ] ],
+    [ "Husty.Json2CsvConverter", "class_husty_1_1_json2_csv_converter.html", null ],
     [ "Husty.Filters.KalmanFilter", "class_husty_1_1_filters_1_1_kalman_filter.html", null ],
     [ "Husty.OpenCvSharp.LayerInfo", "class_husty_1_1_open_cv_sharp_1_1_layer_info.html", null ],
     [ "Husty.Geometry.Line2D", "class_husty_1_1_geometry_1_1_line2_d.html", [

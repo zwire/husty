@@ -134,6 +134,8 @@ var annotated_dup =
         [ "Peer", "class_husty_1_1_skyway_gateway_1_1_peer.html", "class_husty_1_1_skyway_gateway_1_1_peer" ]
       ] ],
       [ "Channel", "class_husty_1_1_channel.html", "class_husty_1_1_channel" ],
+      [ "DataLogger", "class_husty_1_1_data_logger.html", "class_husty_1_1_data_logger" ],
+      [ "Json2CsvConverter", "class_husty_1_1_json2_csv_converter.html", "class_husty_1_1_json2_csv_converter" ],
       [ "MultidimensionalArray", "class_husty_1_1_multidimensional_array.html", "class_husty_1_1_multidimensional_array" ],
       [ "ObjectPool", "class_husty_1_1_object_pool.html", "class_husty_1_1_object_pool" ],
       [ "Preset", "class_husty_1_1_preset.html", "class_husty_1_1_preset" ]

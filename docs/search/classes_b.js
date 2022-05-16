@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['namedpipeclient_0',['NamedPipeClient',['../class_husty_1_1_i_o_1_1_named_pipe_client.html',1,'Husty::IO']]],
-  ['namedpipeserver_1',['NamedPipeServer',['../class_husty_1_1_i_o_1_1_named_pipe_server.html',1,'Husty::IO']]],
-  ['networkgraph_2',['NetworkGraph',['../class_husty_1_1_neural_network_1_1_network_graph.html',1,'Husty::NeuralNetwork']]]
+  ['matandarrayextensions_0',['MatAndArrayExtensions',['../class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_mat_and_array_extensions.html',1,'Husty::OpenCvSharp::Extensions']]],
+  ['matextensions_1',['MatExtensions',['../class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_mat_extensions.html',1,'Husty::OpenCvSharp::Extensions']]],
+  ['mathextensions_2',['MathExtensions',['../class_husty_1_1_extensions_1_1_math_extensions.html',1,'Husty::Extensions']]],
+  ['mediachannel_3',['MediaChannel',['../class_husty_1_1_skyway_gateway_1_1_media_channel.html',1,'Husty::SkywayGateway']]],
+  ['medianfilter_4',['MedianFilter',['../class_husty_1_1_filters_1_1_median_filter.html',1,'Husty::Filters']]],
+  ['multidimensionalarray_5',['MultidimensionalArray',['../class_husty_1_1_multidimensional_array.html',1,'Husty']]]
 ];

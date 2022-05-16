@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['write_0',['Write',['../class_husty_1_1_lawicel_1_1_can_usb_adapter.html#a7b26adf35b187ba731a3d8d86d01fe81',1,'Husty.Lawicel.CanUsbAdapter.Write()'],['../class_husty_1_1_i_o_1_1_serial_port.html#a3c3e4b4ad19de59c7171f5e80c6bcab2',1,'Husty.IO.SerialPort.Write()']]],
+  ['write_0',['Write',['../class_husty_1_1_lawicel_1_1_can_usb_adapter.html#a7b26adf35b187ba731a3d8d86d01fe81',1,'Husty.Lawicel.CanUsbAdapter.Write()'],['../class_husty_1_1_data_logger.html#a5021c9508301ffdcaf0557f0a6c7e98b',1,'Husty.DataLogger.Write()'],['../class_husty_1_1_i_o_1_1_serial_port.html#a3c3e4b4ad19de59c7171f5e80c6bcab2',1,'Husty.IO.SerialPort.Write()']]],
   ['writeasjson_3c_20t_20_3e_1',['WriteAsJson&lt; T &gt;',['../class_husty_1_1_skyway_gateway_1_1_data_stream.html#a4c4b4caee88715f3f6703fd07e0e4290',1,'Husty.SkywayGateway.DataStream.WriteAsJson&lt; T &gt;()'],['../class_husty_1_1_i_o_1_1_bidirectional_data_stream.html#a3e3cb7f96b4f3016ebe496c59cd7327e',1,'Husty.IO.BidirectionalDataStream.WriteAsJson&lt; T &gt;()']]],
   ['writeasjsonasync_3c_20t_20_3e_2',['WriteAsJsonAsync&lt; T &gt;',['../class_husty_1_1_skyway_gateway_1_1_data_stream.html#a9153941b012e3da743438e68283ca47c',1,'Husty.SkywayGateway.DataStream.WriteAsJsonAsync&lt; T &gt;()'],['../class_husty_1_1_i_o_1_1_bidirectional_data_stream.html#a5c76bb04dbc1ef0d9ce69f6cb3ef61f7',1,'Husty.IO.BidirectionalDataStream.WriteAsJsonAsync&lt; T &gt;()']]],
   ['writeasync_3',['WriteAsync',['../class_husty_1_1_channel.html#aaeb6219fd3713b3cd3665b52854eb70b',1,'Husty::Channel']]],

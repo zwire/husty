@@ -27,8 +27,5 @@ var dir_14e67595713590b15e876919a6251463 =
     [ "Size2Extensions.cs", "_size2_extensions_8cs.html", [
       [ "Husty.OpenCvSharp.Extensions.Size2Extensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_size2_extensions.html", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_size2_extensions" ]
     ] ],
-    [ "VectorExtensions.cs", "_vector_extensions_8cs.html", [
-      [ "Husty.OpenCvSharp.Extensions.Vector", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_vector.html", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_vector" ],
-      [ "Husty.OpenCvSharp.Extensions.VectorExtensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_vector_extensions.html", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_vector_extensions" ]
-    ] ]
+    [ "VectorExtensions.cs", "_vector_extensions_8cs.html", "_vector_extensions_8cs" ]
 ];

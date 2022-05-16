@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['kalmanfilter_0',['KalmanFilter',['../class_husty_1_1_filters_1_1_kalman_filter.html',1,'Husty::Filters']]],
-  ['kinect_1',['Kinect',['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_kinect.html',1,'Husty::OpenCvSharp::DepthCamera::Device']]]
+  ['json2csvconverter_0',['Json2CsvConverter',['../class_husty_1_1_json2_csv_converter.html',1,'Husty']]]
 ];

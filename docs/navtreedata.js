@@ -53,14 +53,15 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_ada_grad_8cs.html",
-"class_husty_1_1_extensions_1_1_array_cast_extensions.html#a514b40aa80b97d1d10239a71bede0a55",
-"class_husty_1_1_geometry_1_1_line_segment2_d.html#af56e8e2b5d119a586dcfa0c9419ce0b4",
-"class_husty_1_1_i_o_1_1_serial_port.html#a53a0da32926e0b2209b4f2c45741b00d",
-"class_husty_1_1_neural_network_1_1_affine.html#acd9e923b85ea41385ffb34a533ce67b0",
-"class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_realsense.html#a2cd4cbe1f7b6da783b2b65ad0375eed9",
-"class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_size2_extensions.html#ac8d74acd5c2d8b4f3bb2c189f3cc38fe",
-"class_husty_1_1_open_cv_sharp_1_1_stats_1_1_binary_stats_base.html#a45d0c92d2d6d3b28388f13159b9adf84",
-"functions_func_v.html"
+"class_husty_1_1_data_logger.html#a5021c9508301ffdcaf0557f0a6c7e98b",
+"class_husty_1_1_geometry_1_1_line2_d.html#af0680479a896868082ab4d8ee8730cf1",
+"class_husty_1_1_i_o_1_1_named_pipe_server.html#a7ba97e20fbe981de7cf55224ee3e1c9b",
+"class_husty_1_1_neural_network_1_1_adam.html#a151ec6aacaed05330a3cad9bb548f9f3",
+"class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_kinect.html#a1932c8772a16b50e8fe7bedef41a5a54",
+"class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_rect2_extensions.html#a68143b7d5558ad384aec06509569435d",
+"class_husty_1_1_open_cv_sharp_1_1_feature_1_1_hough_single_line.html#a62d9dc4ae00a52a52c7f9b1717885a89",
+"dir_194317f878e9b285afb91f1996c4df44.html",
+"namespace_husty_1_1_skyway_gateway.html#ad2d4c0aa82cac967c59a0b1714f29c4c"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

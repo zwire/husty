@@ -19,7 +19,7 @@ var dir_4aa38c0589e0f49cc6f849d919c0ed04 =
     [ "SerialPort.cs", "_serial_port_8cs.html", [
       [ "Husty.IO.SerialPort", "class_husty_1_1_i_o_1_1_serial_port.html", "class_husty_1_1_i_o_1_1_serial_port" ]
     ] ],
-    [ "StdoutReader.cs", "_stdout_reader_8cs.html", [
+    [ "StdOutReader.cs", "_std_out_reader_8cs.html", [
       [ "Husty.IO.StdOutReader", "class_husty_1_1_i_o_1_1_std_out_reader.html", "class_husty_1_1_i_o_1_1_std_out_reader" ]
     ] ],
     [ "TcpSocketClient.cs", "_tcp_socket_client_8cs.html", [
