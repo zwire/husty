@@ -82,6 +82,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yolo", "Tutorial\Yolo\Yolo.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataArranger", "Tools\DataArranger\DataArranger.csproj", "{4085CD5F-8533-41F0-9609-C810F7ADB69B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkywayMediaConnection", "Tutorial\SkywayMediaConnection\SkywayMediaConnection.csproj", "{473E6DB0-6761-4306-9DF5-218809462E14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -392,6 +394,18 @@ Global
 		{4085CD5F-8533-41F0-9609-C810F7ADB69B}.Release|x64.Build.0 = Release|Any CPU
 		{4085CD5F-8533-41F0-9609-C810F7ADB69B}.Release|x86.ActiveCfg = Release|Any CPU
 		{4085CD5F-8533-41F0-9609-C810F7ADB69B}.Release|x86.Build.0 = Release|Any CPU
+		{473E6DB0-6761-4306-9DF5-218809462E14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{473E6DB0-6761-4306-9DF5-218809462E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{473E6DB0-6761-4306-9DF5-218809462E14}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{473E6DB0-6761-4306-9DF5-218809462E14}.Debug|x64.Build.0 = Debug|Any CPU
+		{473E6DB0-6761-4306-9DF5-218809462E14}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{473E6DB0-6761-4306-9DF5-218809462E14}.Debug|x86.Build.0 = Debug|Any CPU
+		{473E6DB0-6761-4306-9DF5-218809462E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{473E6DB0-6761-4306-9DF5-218809462E14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{473E6DB0-6761-4306-9DF5-218809462E14}.Release|x64.ActiveCfg = Release|Any CPU
+		{473E6DB0-6761-4306-9DF5-218809462E14}.Release|x64.Build.0 = Release|Any CPU
+		{473E6DB0-6761-4306-9DF5-218809462E14}.Release|x86.ActiveCfg = Release|Any CPU
+		{473E6DB0-6761-4306-9DF5-218809462E14}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -427,6 +441,7 @@ Global
 		{6BB0877D-928C-4EC9-85EC-08CEA7E46A91} = {567343D4-CEEF-42AC-8AC8-02A6391DA059}
 		{B93F3A6F-2A85-40E2-809E-4A0925F745BE} = {567343D4-CEEF-42AC-8AC8-02A6391DA059}
 		{4085CD5F-8533-41F0-9609-C810F7ADB69B} = {DE862315-F19F-49E3-9DCC-A3EC043FF422}
+		{473E6DB0-6761-4306-9DF5-218809462E14} = {567343D4-CEEF-42AC-8AC8-02A6391DA059}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C7E8A650-965E-4175-B03C-832FABDB4FFA}

@@ -157,7 +157,7 @@ namespace Husty.SkywayGateway
 
         public async Task<MediaConnectionInfo> CallConnectionAsync(string remotePeerId)
         {
-            var json = new Dictionary<string, dynamic>()
+            var json = new Dictionary<string, object>()
             {
                 { "peer_id", LocalPeerId },
                 { "token", _token },
@@ -185,7 +185,7 @@ namespace Husty.SkywayGateway
             await _client.RequestAsync(ReqType.Post, $"/media/connections/{_mediaConnectionId}/answer", json).ConfigureAwait(false);
         }
 
-        private dynamic GetConstraints()
+        private Dictionary<string, dynamic> GetConstraints()
         {
             return new Dictionary<string, dynamic>
             {
@@ -218,7 +218,7 @@ namespace Husty.SkywayGateway
             };
         }
 
-        private dynamic GetRedirectParams()
+        private Dictionary<string, dynamic> GetRedirectParams()
         {
             return new Dictionary<string, dynamic>
             {
@@ -255,6 +255,11 @@ namespace Husty.SkywayGateway
 
         private async Task ListenEventAsync()
         {
+            if (_mediaConnectionId is null)
+            {
+                await Task.Delay(100);
+                return;
+            }
             var response = await _client.RequestAsync(ReqType.Get, $"/media/connections/{_mediaConnectionId}/events", null).ConfigureAwait(false);
             if (response is null)
             {
