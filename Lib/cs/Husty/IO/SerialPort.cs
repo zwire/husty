@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO.Ports;
-using System.Threading.Tasks;
 
 namespace Husty.IO
 {
-    public sealed class SerialPort : ICommunicator
+    public sealed class SerialPort : IDisposable
     {
 
         // ------- fields ------- //
@@ -15,16 +14,19 @@ namespace Husty.IO
 
         // ------- constructors ------- //
 
-        public SerialPort(string portName, int baudRate, int readTimeout = -1, int writeTimeout = -1)
+        public SerialPort(string portName, int baudRate, int readTimeout = -1, int writeTimeout = -1, string newLine = "\n")
         {
-            _port = new();
-            _port.PortName = portName;
-            _port.BaudRate = baudRate;
-            _port.StopBits = StopBits.One;
-            _port.Handshake = Handshake.None;
-            _port.Parity = Parity.None;
-            _port.ReadTimeout = readTimeout;
-            _port.WriteTimeout = writeTimeout;
+            _port = new()
+            {
+                PortName = portName,
+                BaudRate = baudRate,
+                StopBits = StopBits.One,
+                Handshake = Handshake.None,
+                Parity = Parity.None,
+                ReadTimeout = readTimeout,
+                WriteTimeout = writeTimeout,
+                NewLine = newLine
+            };
             try
             {
                 _port.Open();
@@ -38,14 +40,18 @@ namespace Husty.IO
 
         // ------- public methods ------- //
 
-        public BidirectionalDataStream GetStream()
+        public bool Write(byte[] value)
         {
-            return new(_port.BaseStream, _port.BaseStream, _port.WriteTimeout, _port.ReadTimeout);
-        }
-
-        public async Task<BidirectionalDataStream> GetStreamAsync()
-        {
-            return await Task.FromResult(GetStream()).ConfigureAwait(false);
+            if (_disposed) return false;
+            try
+            {
+                if (_port.IsOpen is true) _port.Write(value, 0, value.Length);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public bool Write(string value)
@@ -53,7 +59,7 @@ namespace Husty.IO
             if (_disposed) return false;
             try
             {
-                if (_port?.IsOpen is true) _port?.Write(value);
+                if (_port.IsOpen is true) _port.Write(value);
                 return true;
             }
             catch
@@ -67,7 +73,7 @@ namespace Husty.IO
             if (_disposed) return false;
             try
             {
-                if (_port?.IsOpen is true) _port?.WriteLine(value);
+                if (_port.IsOpen is true) _port.WriteLine(value);
                 return true;
             }
             catch
@@ -76,12 +82,21 @@ namespace Husty.IO
             }
         }
 
+        public byte[] Read(int size)
+        {
+            var buf = new byte[size];
+            var progress = 0;
+            while (progress < size)
+                progress += _port.Read(buf, progress, size - progress);
+            return buf;
+        }
+
         public string ReadLine()
         {
             if (_disposed) return null;
             try
             {
-                return _port?.IsOpen is true ? _port?.ReadLine() : null;
+                return _port.IsOpen is true ? _port.ReadLine() : null;
             }
             catch
             {
@@ -92,8 +107,8 @@ namespace Husty.IO
         public void Dispose()
         {
             _disposed = true;
-            _port?.Close();
-            _port?.Dispose();
+            _port.Close();
+            _port.Dispose();
         }
 
         public static string[] GetPortNames()

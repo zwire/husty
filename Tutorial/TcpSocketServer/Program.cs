@@ -1,7 +1,6 @@
 ﻿using System;
-using Husty.IO;
 
-namespace SocketServer
+namespace TcpSocketServer
 {
 
     // define and share send/receive object
@@ -13,7 +12,7 @@ namespace SocketServer
         {
 
             // initialize
-            var server = new TcpSocketServer(5000);
+            var server = new Husty.IO.TcpSocketServer(5000);
             var stream = server.GetStream();
 
             // loop

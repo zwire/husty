@@ -52,7 +52,7 @@ namespace Husty.IO
         /// Write byte array directly
         /// </summary>
         /// <param name="bytes"></param>
-        public bool WriteBinary(byte[] bytes)
+        public bool WriteBytes(byte[] bytes)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace Husty.IO
         /// Write byte array directly
         /// </summary>
         /// <param name="bytes"></param>
-        public async Task<bool> WriteBinaryAsync(byte[] bytes)
+        public async Task<bool> WriteBytesAsync(byte[] bytes)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace Husty.IO
         /// Read byte array directly
         /// </summary>
         /// <returns>byte array, and if some error occured it returns null</returns>
-        public byte[] ReadBinary()
+        public byte[] ReadBytes()
         {
             try
             {
@@ -113,7 +113,7 @@ namespace Husty.IO
         /// Read byte array directly
         /// </summary>
         /// <returns>byte array, and if some error occured it returns null</returns>
-        public async Task<byte[]> ReadBinaryAsync()
+        public async Task<byte[]> ReadBytesAsync()
         {
             try
             {
