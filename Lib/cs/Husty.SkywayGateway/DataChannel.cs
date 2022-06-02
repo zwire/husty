@@ -161,6 +161,11 @@ namespace Husty.SkywayGateway
 
         private async Task ListenEventAsync()
         {
+            if (_dataConnectionId is null)
+            {
+                await Task.Delay(100);
+                return;
+            }
             var response = await _client.RequestAsync(ReqType.Get, $"/data/connections/{_dataConnectionId}/events", null).ConfigureAwait(false);
             if (response is null)
             {
