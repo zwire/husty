@@ -135,6 +135,11 @@ namespace Husty.SkywayGateway
             {
                 { "peer_id", LocalPeerId },
                 { "token", _token },
+                { "options", new Dictionary<string, string>
+                    {
+                        { "serialization", "NONE" }
+                    }
+                },
                 { "target_id", RemotePeerId },
                 {
                     "params", new Dictionary<string, dynamic>

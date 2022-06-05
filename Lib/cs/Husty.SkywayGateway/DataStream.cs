@@ -11,9 +11,15 @@ namespace Husty.SkywayGateway
     {
 
         // ------ fields ------ //
-
+        
+        private bool _disposed;
         private readonly UdpClient _client;
         private readonly DataConnectionInfo _info;
+
+
+        // ------ properties ------ //
+
+        public bool IsDisposed => _disposed;
 
 
         // ------ constructors ------ //
@@ -29,34 +35,30 @@ namespace Husty.SkywayGateway
 
         public void Dispose()
         {
-            _client.Close();
-            _client.Dispose();
+            if (!_disposed)
+            {
+                _client.Close();
+                _client.Dispose();
+            }
+            _disposed = true;
         }
 
         public bool WriteBinary(byte[] bytes)
         {
-            try
-            {
-                _client.Send(bytes, bytes.Length, _info.RemoteEP);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            var sent = 0;
+            var len = bytes.Length;
+            while (sent < len)
+                sent += _client.Send(bytes[sent..], len - sent, _info.RemoteEP);
+            return true;
         }
 
         public async Task<bool> WriteBinaryAsync(byte[] bytes)
         {
-            try
-            {
-                await _client.SendAsync(bytes, bytes.Length, _info.RemoteEP).ConfigureAwait(false);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            var sent = 0;
+            var len = bytes.Length;
+            while (sent < len)
+                sent += await _client.SendAsync(bytes[sent..], len - sent, _info.RemoteEP).ConfigureAwait(false);
+            return true;
         }
 
         public byte[] ReadBinary()

@@ -12,5 +12,6 @@ var class_husty_1_1_skyway_gateway_1_1_data_stream =
     [ "WriteBinary", "class_husty_1_1_skyway_gateway_1_1_data_stream.html#ae37aedacae32dfb892ed551e333c1b69", null ],
     [ "WriteBinaryAsync", "class_husty_1_1_skyway_gateway_1_1_data_stream.html#a38b527f5fe23b3fa75cd6a27617f6cd3", null ],
     [ "WriteString", "class_husty_1_1_skyway_gateway_1_1_data_stream.html#ad20c13f39750bc0f7fa83dac99668cbb", null ],
-    [ "WriteStringAsync", "class_husty_1_1_skyway_gateway_1_1_data_stream.html#a15d661a925611d3539218046ac1ef40f", null ]
+    [ "WriteStringAsync", "class_husty_1_1_skyway_gateway_1_1_data_stream.html#a15d661a925611d3539218046ac1ef40f", null ],
+    [ "IsDisposed", "class_husty_1_1_skyway_gateway_1_1_data_stream.html#a8a38b04270a100a4a73583a41cedd40a", null ]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tensorrt_0',['TensorRT',['../namespace_husty_1_1_open_cv_sharp.html#a4ff7f1daf6a470b95a1a6d4f58706bc0a61918500e2bc645b2aea3f447086a8a5',1,'Husty::OpenCvSharp']]]
+  ['server_0',['Server',['../namespace_husty_1_1_i_o.html#ac98d1ecc7143d2769a47c5e04c69f913a9aa1b03934893d7134a660af4204f2a9',1,'Husty::IO']]]
 ];

@@ -39,7 +39,8 @@ var annotated_dup =
         [ "SerialPort", "class_husty_1_1_i_o_1_1_serial_port.html", "class_husty_1_1_i_o_1_1_serial_port" ],
         [ "StdOutReader", "class_husty_1_1_i_o_1_1_std_out_reader.html", "class_husty_1_1_i_o_1_1_std_out_reader" ],
         [ "TcpSocketClient", "class_husty_1_1_i_o_1_1_tcp_socket_client.html", "class_husty_1_1_i_o_1_1_tcp_socket_client" ],
-        [ "TcpSocketServer", "class_husty_1_1_i_o_1_1_tcp_socket_server.html", "class_husty_1_1_i_o_1_1_tcp_socket_server" ]
+        [ "TcpSocketServer", "class_husty_1_1_i_o_1_1_tcp_socket_server.html", "class_husty_1_1_i_o_1_1_tcp_socket_server" ],
+        [ "WebSocketStream", "class_husty_1_1_i_o_1_1_web_socket_stream.html", "class_husty_1_1_i_o_1_1_web_socket_stream" ]
       ] ],
       [ "Lawicel", "namespace_husty_1_1_lawicel.html", [
         [ "CanMessage", "class_husty_1_1_lawicel_1_1_can_message.html", "class_husty_1_1_lawicel_1_1_can_message" ],

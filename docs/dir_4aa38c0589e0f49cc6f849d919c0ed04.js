@@ -27,5 +27,6 @@ var dir_4aa38c0589e0f49cc6f849d919c0ed04 =
     ] ],
     [ "TcpSocketServer.cs", "_tcp_socket_server_8cs.html", [
       [ "Husty.IO.TcpSocketServer", "class_husty_1_1_i_o_1_1_tcp_socket_server.html", "class_husty_1_1_i_o_1_1_tcp_socket_server" ]
-    ] ]
+    ] ],
+    [ "WebSocketStream.cs", "_web_socket_stream_8cs.html", "_web_socket_stream_8cs" ]
 ];

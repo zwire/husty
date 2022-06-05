@@ -24,7 +24,6 @@ namespace Husty.SkywayGateway
         private readonly string _token;
         private readonly IPAddress _host = IPAddress.Parse("127.0.0.1");
         private readonly CancellationTokenSource _cts = new();
-        private readonly List<IAsyncDisposable> _disposables = new();
         private readonly AsyncSubject<bool> _opened = new();
         private readonly AsyncSubject<bool> _closed = new();
         private readonly AsyncSubject<string> _dataCalled = new();
@@ -102,7 +101,6 @@ namespace Husty.SkywayGateway
         public async ValueTask DisposeAsync()
         {
             _cts.Cancel();
-            _disposables.ForEach(async x => await x.DisposeAsync().ConfigureAwait(false));
             _opened.Dispose();
             _closed.Dispose();
             _dataCalled.Dispose();
@@ -144,7 +142,6 @@ namespace Husty.SkywayGateway
                 _client, _peerId, _token,
                 localEP, _dataCalled.ToTask(), _cts
             ).ConfigureAwait(false);
-            _disposables.Add(dataChannel);
             return dataChannel;
         }
 
@@ -189,7 +186,6 @@ namespace Husty.SkywayGateway
                 localAudioEP, localAudioRtcpEP,
                 _mediaCalled.ToTask(), _cts
             );
-            _disposables.Add(mediaChannel);
             return mediaChannel;
         }
 
@@ -199,7 +195,7 @@ namespace Husty.SkywayGateway
         private async Task ListenEventAsync()
         {
             // execute long polling
-            var response = await _client.RequestAsync(ReqType.Get, $"/peers/{_peerId}/events?token={_token}", null);
+            var response = await _client.RequestAsync(ReqType.Get, $"/peers/{_peerId}/events?token={_token}", null).ConfigureAwait(false);
             if (response is null)
             {
                 await Task.Delay(1000).ConfigureAwait(false);

@@ -129,8 +129,7 @@ namespace Husty.SkywayGateway
             _ready.Dispose();
             _opened.Dispose();
             _closed.Dispose();
-            if (_mediaConnectionId is not null)
-                await _client.RequestAsync(ReqType.Delete, $"/media/connections/{_mediaConnectionId}").ConfigureAwait(false);
+            await _client.RequestAsync(ReqType.Delete, $"/media/connections/{_mediaConnectionId}").ConfigureAwait(false);
             await _client.RequestAsync(ReqType.Delete, $"/media/rtcp/{_videoRtcpId}").ConfigureAwait(false);
             await _client.RequestAsync(ReqType.Delete, $"/media/rtcp/{_audioRtcpId}").ConfigureAwait(false);
             await _client.RequestAsync(ReqType.Delete, $"/media/{_videoId}").ConfigureAwait(false);

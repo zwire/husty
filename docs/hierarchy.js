@@ -42,11 +42,12 @@ var hierarchy =
       [ "Husty.IO.ICommunicator", "interface_husty_1_1_i_o_1_1_i_communicator.html", [
         [ "Husty.IO.NamedPipeClient", "class_husty_1_1_i_o_1_1_named_pipe_client.html", null ],
         [ "Husty.IO.NamedPipeServer", "class_husty_1_1_i_o_1_1_named_pipe_server.html", null ],
-        [ "Husty.IO.SerialPort", "class_husty_1_1_i_o_1_1_serial_port.html", null ],
         [ "Husty.IO.TcpSocketClient", "class_husty_1_1_i_o_1_1_tcp_socket_client.html", null ],
         [ "Husty.IO.TcpSocketServer", "class_husty_1_1_i_o_1_1_tcp_socket_server.html", null ]
       ] ],
+      [ "Husty.IO.SerialPort", "class_husty_1_1_i_o_1_1_serial_port.html", null ],
       [ "Husty.IO.StdOutReader", "class_husty_1_1_i_o_1_1_std_out_reader.html", null ],
+      [ "Husty.IO.WebSocketStream", "class_husty_1_1_i_o_1_1_web_socket_stream.html", null ],
       [ "Husty.Lawicel.CanUsbAdapter", "class_husty_1_1_lawicel_1_1_can_usb_adapter.html", null ],
       [ "Husty.ObjectPool< T >", "class_husty_1_1_object_pool.html", null ],
       [ "Husty.OpenCvSharp.DepthCamera.BgrXyzMat", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_bgr_xyz_mat.html", null ],
