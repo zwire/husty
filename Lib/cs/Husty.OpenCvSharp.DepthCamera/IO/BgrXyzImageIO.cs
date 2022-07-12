@@ -20,13 +20,8 @@ namespace Husty.OpenCvSharp.DepthCamera.IO
         /// <param name="baseName">To identify</param>
         public static void SaveAsZip(string saveDirectory, string baseName, BgrXyzMat input)
         {
-            //var zipFileNumber = 0;
-            //if (!Directory.Exists(saveDirectory)) throw new System.Exception("Directory doesn't Exist!");
-            //while (File.Exists($"{saveDirectory}\\Image_{baseName}{zipFileNumber:D4}.zip")) zipFileNumber++;
-            //var filePath = $"{saveDirectory}\\Image_{baseName}{zipFileNumber:D4}.zip";
-
-            var time = DateTime.Now;
-            var filePath = $"{saveDirectory}\\Image_{baseName}{time.Year}{time.Month:d2}{time.Day:d2}{time.Hour:d2}{time.Minute:d2}{time.Second:d2}{time.Millisecond:d2}.zip";
+            baseName = baseName is null ? "" : baseName + "_";
+            var filePath = $"{saveDirectory}\\Image_{baseName}{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.zip";
             Cv2.ImWrite($"{filePath}_C.png", input.BGR);
             Cv2.ImWrite($"{filePath}_D.png", input.Depth16());
             Cv2.ImWrite($"{filePath}_P.png", input.XYZ);

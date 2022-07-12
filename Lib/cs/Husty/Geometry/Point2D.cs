@@ -37,6 +37,8 @@ namespace Husty.Geometry
 
         public Vector2D ToVector2D() => new(X, Y);
 
+        public void Deconstruct(out double x, out double y) => (x, y) = (X, Y);
+
         public bool Equals(Point2D? obj) => GetHashCode() == obj?.GetHashCode();
 
         public override bool Equals(object? obj) => GetHashCode() == obj?.GetHashCode();

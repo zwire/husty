@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Husty.Cmac
+namespace Husty.NeuralNetwork.Cmac
 {
     public sealed class CmacTable
     {
@@ -12,6 +12,7 @@ namespace Husty.Cmac
         private readonly int[] _activeLocation;
         private readonly float _min, _max;
         private readonly float[] _offsets, _steps;
+        private readonly CmacLabelInfo[] _infos;
         private readonly MultidimensionalArray _array;
 
 
@@ -28,7 +29,7 @@ namespace Husty.Cmac
 
         public CmacTable(
             IEnumerable<CmacLabelInfo> labelInfos,
-            float min, 
+            float min,
             float max,
             float initialValue
         ) : this(
@@ -40,7 +41,7 @@ namespace Husty.Cmac
 
         public CmacTable(
             IEnumerable<CmacLabelInfo> labelInfos,
-            float min, 
+            float min,
             float max,
             float[] initialValues
         )
@@ -48,22 +49,22 @@ namespace Husty.Cmac
             _min = min;
             _max = max;
 
-            var infos = labelInfos.ToArray();
-            var dims = new int[infos.Length];
-            _offsets = new float[infos.Length];
-            _steps = new float[infos.Length];
-            for (int i = 0; i < infos.Length; i++)
+            _infos = labelInfos.ToArray();
+            var dims = new int[_infos.Length];
+            _offsets = new float[_infos.Length];
+            _steps = new float[_infos.Length];
+            for (int i = 0; i < _infos.Length; i++)
             {
-                dims[i] = infos[i].GridCount;
-                _offsets[i] = infos[i].Lower;
-                _steps[i] = (infos[i].Upper - infos[i].Lower) / infos[i].GridCount;
+                dims[i] = _infos[i].GridCount;
+                _offsets[i] = _infos[i].Lower;
+                _steps[i] = (_infos[i].Upper - _infos[i].Lower) / _infos[i].GridCount;
             }
 
             _array = new(dims);
             if (initialValues.Length != _array.GetTotalSize())
                 throw new ArgumentException("invalid input values length");
             _array.SetAll(initialValues);
-            _activeLocation = new int[infos.Length];
+            _activeLocation = new int[_infos.Length];
         }
 
 
@@ -99,5 +100,8 @@ namespace Husty.Cmac
 
         public void SetParams(float[] value) => _array.SetAll(value);
 
+        public CmacTable Clone() => new(_infos, _min, _max, _array.GetAll().Clone() as float[]);
+
     }
+
 }

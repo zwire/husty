@@ -5,8 +5,14 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace Husty.NeuralNetwork
 {
-    public sealed class NetworkGraph
+    public sealed class NetworkGraph : INeuralNetwork
     {
+
+        // ------ fields ------ //
+
+        private readonly int _batchSize;
+        private int _counter;
+
 
         // ------ properties ------ //
 
@@ -15,17 +21,18 @@ namespace Husty.NeuralNetwork
 
         // ------ constructors ------ //
 
-        public NetworkGraph(IEnumerable<ILayer> layers)
+        public NetworkGraph(IEnumerable<ILayer> layers, int batchSize = 0)
         {
             LayerStack = layers.ToList();
+            _batchSize = batchSize;
         }
 
 
         // ------ public methods ------ //
 
-        public float[] Forward(float[] status)
+        public float[] Forward(float[] state)
         {
-            var vec = Vector<float>.Build.DenseOfArray(status);
+            var vec = Vector<float>.Build.DenseOfArray(state);
             LayerStack.ForEach(n => vec = n.Forward(vec));
             return vec.ToArray();
         }
@@ -35,11 +42,11 @@ namespace Husty.NeuralNetwork
             var vec = Vector<float>.Build.DenseOfArray(error);
             for (int i = LayerStack.Count - 1; i > -1; i--)
                 vec = LayerStack[i].Backward(vec);
-        }
-
-        public void Optimize()
-        {
-            LayerStack.OfType<ITunableLayer>().ToList().ForEach(l => l.Optimize());
+            if (_batchSize > 0 && ++_counter >= _batchSize)
+            {
+                LayerStack.OfType<ITunableLayer>().ToList().ForEach(l => l.Optimize());
+                _counter = 0;
+            }
         }
 
         public void Save(string name)
@@ -48,9 +55,9 @@ namespace Husty.NeuralNetwork
             LayerStack.ForEach(l => sw.WriteLine(l.Serialize()));
         }
 
-        public static NetworkGraph Load(string name)
+        public static NetworkGraph Load(string name, int batchSize = 0)
         {
-            return new(File.ReadAllLines(name).Select(l => LayerFactory.Deserialize(l)));
+            return new(File.ReadAllLines(name).Select(l => LayerFactory.Deserialize(l)), batchSize);
         }
 
     }

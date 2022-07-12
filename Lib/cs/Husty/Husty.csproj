@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Authors>yamashita</Authors>
-    <Version>1.3.4</Version>
+    <Version>1.3.5</Version>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 

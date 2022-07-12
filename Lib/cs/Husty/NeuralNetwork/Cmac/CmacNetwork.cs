@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 
-namespace Husty.Cmac
+namespace Husty.NeuralNetwork.Cmac
 {
     
     public record struct CmacLabelInfo(int GridCount, float Lower, float Upper);
@@ -88,9 +88,9 @@ namespace Husty.Cmac
             return sum;
         }
 
-        public void Backward(float grad, float[]? state = null)
+        public void Backward(float error, float[]? state = null)
         {
-            var penalty = _learningRate * grad / Tables.Length;
+            var penalty = _learningRate * error / Tables.Length;
             foreach (var t in Tables)
             {
                 if (state is not null)
@@ -123,6 +123,11 @@ namespace Husty.Cmac
             for (int i = 0; i < bodies.Length; i++)
                 net.Tables[i].SetParams(JsonSerializer.Deserialize<float[]>(bodies[i]));
             return net;
+        }
+
+        public CmacNetwork Clone()
+        {
+            return new(_infos, Tables.Select(x => x.Clone()).ToArray(), _constraintMin, _constraintMax, _learningRate);
         }
 
         public void Save(string name)

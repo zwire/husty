@@ -33,6 +33,8 @@ namespace Husty.Geometry
 
         public Vector3D ToVector3D() => new(X, Y, Z);
 
+        public void Deconstruct(out double x, out double y, out double z) => (x, y, z) = (X, Y, Z);
+
         public bool Equals(Point3D? obj) => GetHashCode() == obj?.GetHashCode();
 
         public override bool Equals(object? obj) => GetHashCode() == obj?.GetHashCode();

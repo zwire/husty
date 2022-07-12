@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Husty
 {
-    public static class Json2CsvConverter
+    public static class Json2Csv
     {
 
         // ------ public methods ------ //

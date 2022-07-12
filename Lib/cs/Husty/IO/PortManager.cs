@@ -28,7 +28,7 @@ namespace Husty.IO
 
         // ------ public methods ------ //
 
-        public static string SearchPort(int baudrate, string[] keyPetterns)
+        public static string SearchPort(int baudrate, params string[] keyPetterns)
         {
             foreach (var p in SerialPort.GetPortNames())
             {

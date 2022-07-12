@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 
-namespace Husty.Cmac
+namespace Husty.NeuralNetwork.Cmac
 {
-    public sealed class CmacBundler
+    public sealed class CmacBundler : INeuralNetwork
     {
 
         // ------ fields ------ //
@@ -16,7 +16,7 @@ namespace Husty.Cmac
 
         public CmacBundler(IEnumerable<CmacNetwork> nets)
         {
-            _nets = nets.ToArray();
+            _nets = nets.Select(x => x.Clone()).ToArray();
         }
 
 
@@ -30,10 +30,15 @@ namespace Husty.Cmac
             return output;
         }
 
-        public void Backward(float[] grads, float[]? state = null)
+        public void Backward(float[] error)
+        {
+            Backward(error, null);
+        }
+
+        public void Backward(float[] error, float[]? state)
         {
             for (int i = 0; i < _nets.Length; i++)
-                _nets[i].Backward(grads[i], state);
+                _nets[i].Backward(error[i], state);
         }
 
         public void Save(string name)

@@ -49,8 +49,8 @@ namespace Husty
             else
             {
                 if (_counter is 0)
-                    _sw?.Write(Json2CsvConverter.GetHeader(jstr));
-                _sw?.Write(Json2CsvConverter.GetRow(jstr));
+                    _sw?.Write(Json2Csv.GetHeader(jstr));
+                _sw?.Write(Json2Csv.GetRow(jstr));
             }
             if (++_counter is 1000)
             {

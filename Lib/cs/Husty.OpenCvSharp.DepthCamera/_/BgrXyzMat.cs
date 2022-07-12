@@ -78,6 +78,12 @@ namespace Husty.OpenCvSharp.DepthCamera
             XYZ?.Dispose();
         }
 
+        public void Deconstruct(out Mat bgr, out Mat xyz)
+        {
+            bgr = BGR;
+            xyz = XYZ;
+        }
+
         /// <summary>
         /// Same function as constructor.
         /// </summary>

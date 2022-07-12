@@ -89,6 +89,8 @@ namespace Husty.Geometry
             return new(x, y, z);
         }
 
+        public void Deconstruct(out double x, out double y, out double z) => (x, y, z) = (X, Y, Z);
+
         public bool Equals(Vector3D? obj) => GetHashCode() == obj?.GetHashCode();
 
         public override bool Equals(object? obj) => GetHashCode() == obj?.GetHashCode();
