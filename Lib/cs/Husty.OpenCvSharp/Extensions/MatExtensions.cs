@@ -12,6 +12,17 @@ namespace Husty.OpenCvSharp.Extensions
             return input.Type().ToElementType();
         }
 
+        public unsafe static Mat Map<T>(this Mat mat, Func<T, T> func) where T : unmanaged, IComparable
+        {
+            if (mat.GetElementType() != typeof(T))
+                throw new TypeLoadException(nameof(T));
+            var clone = mat.Clone();
+            var d = (T*)clone.Data;
+            for (int i = 0; i < mat.Width * mat.Height; i++)
+                d[i] = func(d[i]);
+            return clone;
+        }
+
         /// <summary>
         /// Get points array from binary image
         /// </summary>
