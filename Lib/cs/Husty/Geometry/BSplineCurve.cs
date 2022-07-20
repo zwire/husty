@@ -7,7 +7,7 @@ namespace Husty.Geometry
     public record TrajectoryPoint(Point2D Position, Angle Heading);
 
     // https://tajimarobotics.com/basis-spline-interpolation-program/
-    public class DiscreteBSplineCurve
+    public class BSplineCurve
     {
 
         // ------ fields ------ //
@@ -22,7 +22,7 @@ namespace Husty.Geometry
 
         // ------ constructor ------ //
 
-        public DiscreteBSplineCurve(Point2D[] points, int degree, int count)
+        public BSplineCurve(Point2D[] points, int degree, int count)
         {
             var knotCount = points.Length + degree + 1;
             var knotVector = GetOpenUniformKnotVector(knotCount, degree);
@@ -45,7 +45,7 @@ namespace Husty.Geometry
 
         public Point2D[] GetPoints() => _curvePoints;
 
-        public TrajectoryPoint[] GetTrajectory()
+        public TrajectoryPoint[] GetTrajectoryPoints()
         {
             var results = new TrajectoryPoint[_curvePoints.Length];
             for (int i = 0; i < results.Length; i++)

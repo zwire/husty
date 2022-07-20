@@ -2,10 +2,10 @@
 
 namespace Husty.Geometry
 {
-    public class DiscreteBezierCurve : DiscreteBSplineCurve
+    public class BezierCurve : BSplineCurve
     {
 
-        public DiscreteBezierCurve(Point2D[] points, int count) : base(points, 1, count) { }
+        public BezierCurve(Point2D[] points, int count) : base(points, points.Length - 1, count) { }
 
 
         // https://watlab-blog.com/2022/01/03/bezier-curve/
