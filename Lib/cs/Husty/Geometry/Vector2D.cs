@@ -39,6 +39,13 @@ namespace Husty.Geometry
             Length = Sqrt(X * X + Y * Y);
         }
 
+        public Vector2D(Angle direction, double length)
+        {
+            X = length * Cos(direction.Radian);
+            Y = length * Sin(direction.Radian);
+            Length = length;
+        }
+
 
         // ------ public methods ------ //
 
