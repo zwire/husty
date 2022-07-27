@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Husty.Geometry
 {
@@ -32,6 +33,19 @@ namespace Husty.Geometry
             End = center + new Vector2D(center, start).Rotate(Angle);
         }
 
+        //public Arc2D(Point2D start, Point2D end, double radius, bool left)
+        //{
+        //    Radius = radius;
+        //    Curvature = 1.0 / Radius;
+        //    Start = start;
+        //    End = end;
+        //    var d = start.DistanceTo(end);
+        //    Angle = Angle.FromRadian(2 * Math.Asin(d / Radius / 2) * (left ? 1 : -1));
+        //    var mid = ((start.ToVector2D() + end.ToVector2D()) / 2).ToPoint2D();
+        //    var dirVec = new Vector2D(start, end).Rotate(Angle.FromDegree(left ? 90 : -90)).UnitVector;
+        //    Center = mid + dirVec * Math.Atan2(Angle.Radian, 2) * d / 2;
+        //}
+
 
         // ------ public methods ------ //
 
@@ -50,13 +64,6 @@ namespace Husty.Geometry
             points.Add(End);
             return points.ToArray();
         }
-
-
-        // ------ private methods ------ //
-
-        private double CalcAngleRadian(double arcLength) => arcLength / Radius;
-
-        private double CalcArcLength(Angle angle) => angle.Radian * Radius;
 
     }
 }
