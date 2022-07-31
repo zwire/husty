@@ -16,7 +16,7 @@ namespace Husty.IO
 
         private readonly UdpClient _sock;
         private readonly IObservable<KeyValuePair<string, string>> _observable;
-        private IPEndPoint _ep;
+        private IPEndPoint _ep = null;
         private bool _closed;
 
 
@@ -53,7 +53,7 @@ namespace Husty.IO
         public IObservable<T?> GetStream<T>(string? key = null)
         {
             return _observable
-                .Where(x => key is null ? true : x.Key == key)
+                .Where(x => key is null || x.Key == key)
                 .Select(x => JsonSerializer.Deserialize<T>(x.Value));
         }
 

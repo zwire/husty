@@ -19,6 +19,7 @@ namespace Husty.OpenCvSharp.Yolo
         private readonly Size _blobSize;
         private readonly float _confThresh;
         private readonly string[] _labels;
+        private readonly SpinLock _locker;
 
 
         // ------ constructors ------ //
@@ -37,6 +38,7 @@ namespace Husty.OpenCvSharp.Yolo
                 throw new ArgumentException("Blob width and height value must be multiple of 32.");
             if (confidenceThreshold < 0 || confidenceThreshold > 1)
                 throw new ArgumentOutOfRangeException("must be 0.0 - 1.0");
+            _locker = new();
             _confThresh = confidenceThreshold;
             _blobSize = blobSize;
             _net = CvDnn.ReadNetFromDarknet(cfg, weights);
@@ -50,16 +52,20 @@ namespace Husty.OpenCvSharp.Yolo
         {
 
             using var blob = CvDnn.BlobFromImage(frame, 1.0 / 255, _blobSize, default, true, false);
-            _net.SetInput(blob);
-            var outNames = _net.GetUnconnectedOutLayersNames();
-            var outs = outNames.Select(_ => new Mat()).ToArray();
-            _net.Forward(outs, outNames);
+            Mat[] outs = null;
+            _locker.Safeguard(() =>
+            {
+                _net.SetInput(blob);
+                var outNames = _net.GetUnconnectedOutLayersNames();
+                outs = outNames.Select(_ => new Mat()).ToArray();
+                _net.Forward(outs, outNames);
+            });
 
             var ids = new List<int>();
             var confs = new List<float>();
             var probs = new List<float>();
             var boxes = new List<Rect2d>();
-            unsafe 
+            unsafe
             {
                 foreach (var pred in outs)
                 {
@@ -82,8 +88,10 @@ namespace Husty.OpenCvSharp.Yolo
             return indices.Select(i => new YoloResult(boxes[i], confs[i], _labels[ids[i]], probs[i])).ToArray();
         }
 
-        public void Dispose() => _net.Dispose();
+        public void Dispose()
+        {
+            _locker.Safeguard(_net.Dispose);
+        }
 
     }
-
 }

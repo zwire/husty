@@ -10,11 +10,11 @@ namespace MultiUdpSender
             var sender = new UdpSender(3000, 3001);
             var key = "A";
             var data = new double[] { 0, 1, 2 };
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 while (true)
                 {
-                    sender.Send(key, data);
+                    await sender.SendAsync(key, data);
                     Console.WriteLine("!");
                     Thread.Sleep(1000);
                 }

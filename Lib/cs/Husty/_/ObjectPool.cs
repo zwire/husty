@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Husty
 {
-    public class ObjectPool<T> : IDisposable where T : new()
+    public class ObjectPool<T> : IDisposable where T : class
     {
 
         // ------ fields ------ //
@@ -15,21 +15,29 @@ namespace Husty
 
         // ------ constructors ------ //
 
-        public ObjectPool(int capacity = 1, Func<T>? factory = null)
+        public ObjectPool(int capacity, Func<T>? factory = null)
         {
             _capacity = capacity;
-            _pool = new(Enumerable.Range(0, _capacity).Select(_ => factory is null ? new() : factory.Invoke()));
+            _pool = factory is null ? new() : new(Enumerable.Range(0, _capacity).Select(_ => factory.Invoke()));
         }
 
 
         // ------ public methods ------ //
 
-        public T GetObject()
+        public T GetObject(Func<T?, T>? replacer = null)
         {
-            if (!_pool.TryDequeue(out T obj))
-                obj = new();
+            T obj;
             if (_pool.Count < _capacity)
-                _pool.Enqueue(obj);
+            {
+                if (replacer is null) throw new ArgumentNullException(nameof(replacer));
+                obj = replacer(null);
+            }
+            else
+            {
+                _pool.TryDequeue(out obj);
+                obj = replacer?.Invoke(obj) ?? obj;
+            }
+            _pool.Enqueue(obj);
             return obj;
         }
 
