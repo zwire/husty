@@ -27,6 +27,7 @@ namespace Husty.OpenCvSharp
 
         // ------ fields ------ //
 
+        private bool _disposed;
         private readonly InferenceSession _session;
 
 
@@ -78,10 +79,17 @@ namespace Husty.OpenCvSharp
                 var tensor = new DenseTensor<float>(inputData, i.Shape);
                 return NamedOnnxValue.CreateFromTensor(i.Name, tensor);
             }).ToArray();
-            return _session.Run(container).ToDictionary(r => r.Name, r => r.AsTensor<float>().ToArray());
+            if (_disposed)
+                return new Dictionary<string, float[]>();
+            else
+                return _session.Run(container).ToDictionary(r => r.Name, r => r.AsTensor<float>().ToArray());
         }
 
-        public virtual void Dispose() => _session.Dispose();
+        public virtual void Dispose()
+        {
+            _disposed = true;
+            _session.Dispose();
+        }
 
         public abstract TOutput Run(TInput input);
 

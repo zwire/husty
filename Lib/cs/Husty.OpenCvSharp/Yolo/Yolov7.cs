@@ -59,8 +59,12 @@ namespace Husty.OpenCvSharp.Yolo
                 inputArray[i + len * 2] = d[i * 3 + 0];
             }
             padded.Dispose();
-            var outs = base.Run(inputArray)["output"];
-            if (outs.Length is 0) return Array.Empty<YoloResult>();
+            var o = base.Run(inputArray);
+            if (!o.ContainsKey("output"))
+                return Array.Empty<YoloResult>();
+            var outs = o["output"];
+            if (outs.Length is 0) 
+                return Array.Empty<YoloResult>();
             return outs
                 .To2DJaggedArray(outs.Length / 7, 7)
                 .Where(r => r[6] >= _confThresh)

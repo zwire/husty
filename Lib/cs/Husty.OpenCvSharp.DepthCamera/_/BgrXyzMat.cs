@@ -15,12 +15,12 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <summary>
         /// Color image
         /// </summary>
-        public Mat BGR { get; }
+        public Mat BGR { private set; get; }
 
         /// <summary>
         /// Point Cloud image
         /// </summary>
-        public Mat XYZ { get; }
+        public Mat XYZ { private set; get; }
 
         public int Width => BGR.Width;
 
@@ -58,12 +58,12 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <summary>
         /// Decode from byte array.
         /// </summary>
-        /// <param name="BGRBytes"></param>
-        /// <param name="XYZBytes"></param>
-        public BgrXyzMat(byte[] BGRBytes, byte[] XYZBytes)
+        /// <param name="bgrBytes"></param>
+        /// <param name="xyzBytes"></param>
+        public BgrXyzMat(byte[] bgrBytes, byte[] xyzBytes)
         {
-            BGR = Cv2.ImDecode(BGRBytes, ImreadModes.Unchanged);
-            XYZ = Cv2.ImDecode(XYZBytes, ImreadModes.Unchanged);
+            BGR = Cv2.ImDecode(bgrBytes, ImreadModes.Unchanged);
+            XYZ = Cv2.ImDecode(xyzBytes, ImreadModes.Unchanged);
             if (BGR.Width != XYZ.Width || BGR.Height != XYZ.Height)
                 throw new InvalidOperationException("Require: BGR size == XYZ size");
         }
@@ -96,11 +96,11 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <summary>
         /// Decode from byte array.
         /// </summary>
-        /// <param name="BGRBytes"></param>
-        /// <param name="XYZBytes"></param>
+        /// <param name="bgrBytes"></param>
+        /// <param name="xyzBytes"></param>
         /// <returns></returns>
-        public static BgrXyzMat YmsDecode(byte[] BGRBytes, byte[] XYZBytes)
-            => new(Cv2.ImDecode(BGRBytes, ImreadModes.Unchanged), Cv2.ImDecode(XYZBytes, ImreadModes.Unchanged));
+        public static BgrXyzMat YmsDecode(byte[] bgrBytes, byte[] xyzBytes)
+            => new(Cv2.ImDecode(bgrBytes, ImreadModes.Unchanged), Cv2.ImDecode(xyzBytes, ImreadModes.Unchanged));
 
         /// <summary>
         /// Output encoded byte array.
@@ -121,10 +121,37 @@ namespace Husty.OpenCvSharp.DepthCamera
         /// <returns></returns>
         public BgrXyzMat Clone() => new(BGR.Clone(), XYZ.Clone());
 
-        public BgrXyzMat Resize(Size size)
+        public void CopyFrom(Mat bgr, Mat xyz)
         {
-            Cv2.Resize(BGR, BGR, size);
-            Cv2.Resize(XYZ, XYZ, size);
+            if (bgr.Width != BGR.Width || bgr.Height != BGR.Height ||
+                xyz.Width != XYZ.Width || xyz.Height != XYZ.Height
+            ) throw new InvalidOperationException("Require: src size == dst size");
+            bgr.CopyTo(BGR);
+            xyz.CopyTo(XYZ);
+        }
+
+        public void CopyFrom(byte[] bgrBytes, byte[] xyzBytes)
+        {
+            using var bgr = Cv2.ImDecode(bgrBytes, ImreadModes.Unchanged);
+            using var xyz = Cv2.ImDecode(xyzBytes, ImreadModes.Unchanged);
+            if (bgr.Width != BGR.Width || bgr.Height != BGR.Height ||
+                xyz.Width != XYZ.Width || xyz.Height != XYZ.Height
+            ) throw new InvalidOperationException("Require: src size == dst size");
+            bgr.CopyTo(BGR);
+            xyz.CopyTo(XYZ);
+        }
+
+        public BgrXyzMat Resize(Size size, InterpolationFlags flags = InterpolationFlags.Linear)
+        {
+            Cv2.Resize(BGR, BGR, size, 0, 0, flags);
+            Cv2.Resize(XYZ, XYZ, size, 0, 0, flags);
+            return this;
+        }
+
+        public BgrXyzMat Resize(double fx, double fy, InterpolationFlags flags = InterpolationFlags.Linear)
+        {
+            Cv2.Resize(BGR, BGR, Size.Zero, fx, fy, flags);
+            Cv2.Resize(XYZ, XYZ, Size.Zero, fx, fy, flags);
             return this;
         }
 

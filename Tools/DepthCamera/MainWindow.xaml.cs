@@ -13,6 +13,7 @@ using Husty.OpenCvSharp.DepthCamera;
 using Husty.OpenCvSharp.ImageStream;
 using Husty.OpenCvSharp.DepthCamera.IO;
 using Husty.OpenCvSharp.DepthCamera.Device;
+using System.Threading.Channels;
 
 namespace DepthCamera
 {
@@ -46,7 +47,13 @@ namespace DepthCamera
             _videoDir = preset.VideoDir;
             var t = DateTimeOffset.Now;
             SaveDir.Content = _saveDir;
-            _channel = new();
+            _channel = Channel.CreateBounded<BgrXyzMat>(
+                new BoundedChannelOptions(1)
+                {
+                    FullMode = BoundedChannelFullMode.DropOldest,
+                    SingleWriter = true,
+                    SingleReader = true,
+                });
             Closed += (sender, args) =>
             {
                 GC.Collect();
@@ -79,9 +86,9 @@ namespace DepthCamera
                 ReactiveFrame = _camera.GetStream().ToReadOnlyReactivePropertySlim();
                 ReactiveFrame
                     .Where(frame => frame is not null)
-                    .Subscribe(async frame =>
+                    .Subscribe(frame =>
                     {
-                        await _channel.WriteAsync(frame);
+                        _channel.Writer.TryWrite(frame);
                         using var d8 = frame.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
@@ -144,10 +151,10 @@ namespace DepthCamera
                 ReactiveFrame
                     .Where(frame => frame is not null)
                     .Finally(() => writer?.Dispose())
-                    .Subscribe(async frame =>
+                    .Subscribe(frame =>
                     {
                         writer?.WriteFrame(frame);
-                        await _channel.WriteAsync(frame);
+                        _channel.Writer.TryWrite(frame);
                         using var d8 = frame.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
@@ -205,9 +212,9 @@ namespace DepthCamera
                 ReactiveFrame = _player.GetStream().ToReadOnlyReactivePropertySlim();
                 ReactiveFrame
                     .Where(frame => frame is not null && !frame.IsDisposed && !frame.Empty())
-                    .Subscribe(async frame =>
+                    .Subscribe(frame =>
                     {
-                        await _channel.WriteAsync(frame);
+                        _channel.Writer.TryWrite(frame);
                         using var d8 = frame.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
@@ -231,9 +238,9 @@ namespace DepthCamera
                 ReactiveFrame = _player.GetStream().ToReadOnlyReactivePropertySlim();
                 ReactiveFrame
                     .Where(frame => frame is not null && !frame.Empty())
-                    .Subscribe(async frame =>
+                    .Subscribe(frame =>
                     {
-                        await _channel.WriteAsync(frame);
+                        _channel.Writer.TryWrite(frame);
                         using var d8 = frame.Depth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
@@ -277,7 +284,7 @@ namespace DepthCamera
         {
             if (_isConnected)
             {
-                var frame = (await _channel.ReadAsync()).Value;
+                var frame = await _channel.Reader.ReadAsync();
                 var info = frame.GetPointInfo(new(x, y));
                 UV.Content = $"UV = ({x}, {y})";
                 XYZ1.Content = $"XYZ = ({info.X}, {info.Y}, {info.Z})";

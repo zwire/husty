@@ -55,12 +55,17 @@ namespace Husty.OpenCvSharp.Yolo
             Mat[] outs = null;
             _locker.Safeguard(() =>
             {
-                _net.SetInput(blob);
-                var outNames = _net.GetUnconnectedOutLayersNames();
-                outs = outNames.Select(_ => new Mat()).ToArray();
-                _net.Forward(outs, outNames);
+                if (!_net.IsDisposed)
+                {
+                    _net.SetInput(blob);
+                    var outNames = _net.GetUnconnectedOutLayersNames();
+                    outs = outNames.Select(_ => new Mat()).ToArray();
+                    _net.Forward(outs, outNames);
+                }
             });
 
+            if (outs is null)
+                return Array.Empty<YoloResult>();
             var ids = new List<int>();
             var confs = new List<float>();
             var probs = new List<float>();

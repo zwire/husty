@@ -65,7 +65,10 @@ namespace Husty.OpenCvSharp.Yolo
                 inputArray[i + len * 1] = d[i * 3 + 1];
                 inputArray[i + len * 2] = d[i * 3 + 0];
             }
-            var outputArray = base.Run(inputArray)["output"].To2DJaggedArray(_detectionCount, _labels.Length + 5);
+            var o = base.Run(inputArray);
+            if (!o.ContainsKey("output"))
+                return Array.Empty<YoloResult>();
+            var outs = o["output"].To2DJaggedArray(_detectionCount, _labels.Length + 5);
 
             // post-process --- get coordinate from output
             var ids = new List<int>();
@@ -81,7 +84,7 @@ namespace Husty.OpenCvSharp.Yolo
                 {
                     for (int j = 0; j < xGrids; j++)
                     {
-                        var p = outputArray[baseIndex + i * xGrids + j];
+                        var p = outs[baseIndex + i * xGrids + j];
                         var index = p.Skip(5).ToArray().ArgMax(out var prob);
                         var conf = p[4];
                         if (conf * prob > _confThresh)
