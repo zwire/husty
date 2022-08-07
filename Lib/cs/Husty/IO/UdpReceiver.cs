@@ -38,7 +38,7 @@ namespace Husty.IO
                     var str = Encoding.GetString(_sock.Receive(ref _ep));
                     if (str.Length < 3) return default;
                     var len = int.Parse(str[..2]);
-                    var key = str.Substring(2, 2 + len);
+                    var key = str.Substring(2, len);
                     var value = str[(2 + len)..];
                     return new KeyValuePair<string, string>(key, value);
                 })

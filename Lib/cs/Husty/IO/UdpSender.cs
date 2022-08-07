@@ -35,8 +35,9 @@ namespace Husty.IO
 
         // ------ public methods ------ //
 
-        public async Task SendAsync<T>(string key, T data, CancellationToken ct = default)
+        public async Task SendAsync<T>(string? key, T data, CancellationToken ct = default)
         {
+            key ??= "";
             var value = Encoding.GetBytes($"{key.Length:d2}" + key + JsonSerializer.Serialize(data));
             foreach (var ep in EndPoints)
                 await _sock.SendAsync(value, ep, ct);
