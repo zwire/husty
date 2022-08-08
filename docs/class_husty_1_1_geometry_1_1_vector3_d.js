@@ -3,6 +3,7 @@ var class_husty_1_1_geometry_1_1_vector3_d =
     [ "Vector3D", "class_husty_1_1_geometry_1_1_vector3_d.html#a1bc1f11e2792e3ac7cf830d3953c6497", null ],
     [ "Vector3D", "class_husty_1_1_geometry_1_1_vector3_d.html#a98ef860cfa969b1f89447e2db8f39d40", null ],
     [ "Clone", "class_husty_1_1_geometry_1_1_vector3_d.html#adf8554f1343f78ee47c5d5b2d1ab2fb9", null ],
+    [ "Deconstruct", "class_husty_1_1_geometry_1_1_vector3_d.html#a197f3015785136627aa838d7f17ba77a", null ],
     [ "Equals", "class_husty_1_1_geometry_1_1_vector3_d.html#a46d293401c331753b023f0ceb4ec2006", null ],
     [ "Equals", "class_husty_1_1_geometry_1_1_vector3_d.html#a536bcd89a3ad4f7bd4dd5eb5e69fee91", null ],
     [ "GetAngle", "class_husty_1_1_geometry_1_1_vector3_d.html#abb79b07de51c364ef57e62cf62430126", null ],

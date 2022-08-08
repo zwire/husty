@@ -2,6 +2,7 @@ var class_husty_1_1_geometry_1_1_point3_d =
 [
     [ "Point3D", "class_husty_1_1_geometry_1_1_point3_d.html#aa68625d496b0ec4bc19faebe855b83ad", null ],
     [ "Clone", "class_husty_1_1_geometry_1_1_point3_d.html#ac95c39944fc0974a58cb5881da0be3e2", null ],
+    [ "Deconstruct", "class_husty_1_1_geometry_1_1_point3_d.html#a098a2838c55d1a73aefef83b71b689b6", null ],
     [ "DistanceTo", "class_husty_1_1_geometry_1_1_point3_d.html#a3ebc8fa4695570b5b7c7f7f042103d46", null ],
     [ "Equals", "class_husty_1_1_geometry_1_1_point3_d.html#aabc6157dc53121a79776deb49010c22c", null ],
     [ "Equals", "class_husty_1_1_geometry_1_1_point3_d.html#a76347a6656ee140391c0e9572505522d", null ],

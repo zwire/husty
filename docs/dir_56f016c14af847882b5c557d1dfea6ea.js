@@ -12,6 +12,9 @@ var dir_56f016c14af847882b5c557d1dfea6ea =
     [ "ArrayReshapeExtensions.cs", "_array_reshape_extensions_8cs.html", [
       [ "Husty.Extensions.ArrayReshapeExtensions", "class_husty_1_1_extensions_1_1_array_reshape_extensions.html", "class_husty_1_1_extensions_1_1_array_reshape_extensions" ]
     ] ],
+    [ "ConsoleEx.cs", "_console_ex_8cs.html", [
+      [ "Husty.Extensions.ConsoleEx", "class_husty_1_1_extensions_1_1_console_ex.html", "class_husty_1_1_extensions_1_1_console_ex" ]
+    ] ],
     [ "MathExtensions.cs", "_math_extensions_8cs.html", [
       [ "Husty.Extensions.MathExtensions", "class_husty_1_1_extensions_1_1_math_extensions.html", "class_husty_1_1_extensions_1_1_math_extensions" ]
     ] ]

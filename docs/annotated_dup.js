@@ -1,16 +1,12 @@
 var annotated_dup =
 [
     [ "Husty", "namespace_husty.html", [
-      [ "Cmac", "namespace_husty_1_1_cmac.html", [
-        [ "CmacBundler", "class_husty_1_1_cmac_1_1_cmac_bundler.html", "class_husty_1_1_cmac_1_1_cmac_bundler" ],
-        [ "CmacNetwork", "class_husty_1_1_cmac_1_1_cmac_network.html", "class_husty_1_1_cmac_1_1_cmac_network" ],
-        [ "CmacTable", "class_husty_1_1_cmac_1_1_cmac_table.html", "class_husty_1_1_cmac_1_1_cmac_table" ]
-      ] ],
       [ "Extensions", "namespace_husty_1_1_extensions.html", [
         [ "ArrayCastExtensions", "class_husty_1_1_extensions_1_1_array_cast_extensions.html", "class_husty_1_1_extensions_1_1_array_cast_extensions" ],
         [ "ArrayExtensions", "class_husty_1_1_extensions_1_1_array_extensions.html", "class_husty_1_1_extensions_1_1_array_extensions" ],
         [ "ArrayOperatorExtensions", "class_husty_1_1_extensions_1_1_array_operator_extensions.html", "class_husty_1_1_extensions_1_1_array_operator_extensions" ],
         [ "ArrayReshapeExtensions", "class_husty_1_1_extensions_1_1_array_reshape_extensions.html", "class_husty_1_1_extensions_1_1_array_reshape_extensions" ],
+        [ "ConsoleEx", "class_husty_1_1_extensions_1_1_console_ex.html", "class_husty_1_1_extensions_1_1_console_ex" ],
         [ "MathExtensions", "class_husty_1_1_extensions_1_1_math_extensions.html", "class_husty_1_1_extensions_1_1_math_extensions" ]
       ] ],
       [ "Filters", "namespace_husty_1_1_filters.html", [
@@ -22,10 +18,15 @@ var annotated_dup =
       [ "Geometry", "namespace_husty_1_1_geometry.html", [
         [ "Angle", "struct_husty_1_1_geometry_1_1_angle.html", "struct_husty_1_1_geometry_1_1_angle" ],
         [ "Arc2D", "class_husty_1_1_geometry_1_1_arc2_d.html", "class_husty_1_1_geometry_1_1_arc2_d" ],
+        [ "BezierCurve", "class_husty_1_1_geometry_1_1_bezier_curve.html", "class_husty_1_1_geometry_1_1_bezier_curve" ],
+        [ "BSplineCurve", "class_husty_1_1_geometry_1_1_b_spline_curve.html", "class_husty_1_1_geometry_1_1_b_spline_curve" ],
+        [ "Circle", "class_husty_1_1_geometry_1_1_circle.html", "class_husty_1_1_geometry_1_1_circle" ],
+        [ "CurvePointsBase", "class_husty_1_1_geometry_1_1_curve_points_base.html", "class_husty_1_1_geometry_1_1_curve_points_base" ],
         [ "Line2D", "class_husty_1_1_geometry_1_1_line2_d.html", "class_husty_1_1_geometry_1_1_line2_d" ],
         [ "LineSegment2D", "class_husty_1_1_geometry_1_1_line_segment2_d.html", "class_husty_1_1_geometry_1_1_line_segment2_d" ],
         [ "Point2D", "class_husty_1_1_geometry_1_1_point2_d.html", "class_husty_1_1_geometry_1_1_point2_d" ],
         [ "Point3D", "class_husty_1_1_geometry_1_1_point3_d.html", "class_husty_1_1_geometry_1_1_point3_d" ],
+        [ "SplineCurve", "class_husty_1_1_geometry_1_1_spline_curve.html", "class_husty_1_1_geometry_1_1_spline_curve" ],
         [ "Vector2D", "class_husty_1_1_geometry_1_1_vector2_d.html", "class_husty_1_1_geometry_1_1_vector2_d" ],
         [ "Vector3D", "class_husty_1_1_geometry_1_1_vector3_d.html", "class_husty_1_1_geometry_1_1_vector3_d" ]
       ] ],
@@ -40,6 +41,8 @@ var annotated_dup =
         [ "StdOutReader", "class_husty_1_1_i_o_1_1_std_out_reader.html", "class_husty_1_1_i_o_1_1_std_out_reader" ],
         [ "TcpSocketClient", "class_husty_1_1_i_o_1_1_tcp_socket_client.html", "class_husty_1_1_i_o_1_1_tcp_socket_client" ],
         [ "TcpSocketServer", "class_husty_1_1_i_o_1_1_tcp_socket_server.html", "class_husty_1_1_i_o_1_1_tcp_socket_server" ],
+        [ "UdpReceiver", "class_husty_1_1_i_o_1_1_udp_receiver.html", "class_husty_1_1_i_o_1_1_udp_receiver" ],
+        [ "UdpSender", "class_husty_1_1_i_o_1_1_udp_sender.html", "class_husty_1_1_i_o_1_1_udp_sender" ],
         [ "WebSocketStream", "class_husty_1_1_i_o_1_1_web_socket_stream.html", "class_husty_1_1_i_o_1_1_web_socket_stream" ]
       ] ],
       [ "Lawicel", "namespace_husty_1_1_lawicel.html", [
@@ -48,11 +51,17 @@ var annotated_dup =
         [ "CanUsbOption", "class_husty_1_1_lawicel_1_1_can_usb_option.html", "class_husty_1_1_lawicel_1_1_can_usb_option" ]
       ] ],
       [ "NeuralNetwork", "namespace_husty_1_1_neural_network.html", [
+        [ "Cmac", "namespace_husty_1_1_neural_network_1_1_cmac.html", [
+          [ "CmacBundler", "class_husty_1_1_neural_network_1_1_cmac_1_1_cmac_bundler.html", "class_husty_1_1_neural_network_1_1_cmac_1_1_cmac_bundler" ],
+          [ "CmacNetwork", "class_husty_1_1_neural_network_1_1_cmac_1_1_cmac_network.html", "class_husty_1_1_neural_network_1_1_cmac_1_1_cmac_network" ],
+          [ "CmacTable", "class_husty_1_1_neural_network_1_1_cmac_1_1_cmac_table.html", "class_husty_1_1_neural_network_1_1_cmac_1_1_cmac_table" ]
+        ] ],
         [ "AdaGrad", "class_husty_1_1_neural_network_1_1_ada_grad.html", "class_husty_1_1_neural_network_1_1_ada_grad" ],
         [ "Adam", "class_husty_1_1_neural_network_1_1_adam.html", "class_husty_1_1_neural_network_1_1_adam" ],
         [ "Affine", "class_husty_1_1_neural_network_1_1_affine.html", "class_husty_1_1_neural_network_1_1_affine" ],
         [ "IActivationLayer", "interface_husty_1_1_neural_network_1_1_i_activation_layer.html", null ],
         [ "ILayer", "interface_husty_1_1_neural_network_1_1_i_layer.html", "interface_husty_1_1_neural_network_1_1_i_layer" ],
+        [ "INeuralNetwork", "interface_husty_1_1_neural_network_1_1_i_neural_network.html", "interface_husty_1_1_neural_network_1_1_i_neural_network" ],
         [ "IOptimizer", "interface_husty_1_1_neural_network_1_1_i_optimizer.html", "interface_husty_1_1_neural_network_1_1_i_optimizer" ],
         [ "ITunableLayer", "interface_husty_1_1_neural_network_1_1_i_tunable_layer.html", "interface_husty_1_1_neural_network_1_1_i_tunable_layer" ],
         [ "LeakyRelu", "class_husty_1_1_neural_network_1_1_leaky_relu.html", "class_husty_1_1_neural_network_1_1_leaky_relu" ],
@@ -122,6 +131,7 @@ var annotated_dup =
         [ "Yolo", "namespace_husty_1_1_open_cv_sharp_1_1_yolo.html", [
           [ "IYoloDetector", "interface_husty_1_1_open_cv_sharp_1_1_yolo_1_1_i_yolo_detector.html", "interface_husty_1_1_open_cv_sharp_1_1_yolo_1_1_i_yolo_detector" ],
           [ "Yolov3v4", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolov3v4.html", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolov3v4" ],
+          [ "Yolov7", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolov7.html", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolov7" ],
           [ "YoloX", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolo_x.html", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolo_x" ]
         ] ],
         [ "LayerInfo", "class_husty_1_1_open_cv_sharp_1_1_layer_info.html", "class_husty_1_1_open_cv_sharp_1_1_layer_info" ],
@@ -134,11 +144,13 @@ var annotated_dup =
         [ "MediaChannel", "class_husty_1_1_skyway_gateway_1_1_media_channel.html", "class_husty_1_1_skyway_gateway_1_1_media_channel" ],
         [ "Peer", "class_husty_1_1_skyway_gateway_1_1_peer.html", "class_husty_1_1_skyway_gateway_1_1_peer" ]
       ] ],
-      [ "Channel", "class_husty_1_1_channel.html", "class_husty_1_1_channel" ],
+      [ "Csv2Json", "class_husty_1_1_csv2_json.html", "class_husty_1_1_csv2_json" ],
       [ "DataLogger", "class_husty_1_1_data_logger.html", "class_husty_1_1_data_logger" ],
-      [ "Json2CsvConverter", "class_husty_1_1_json2_csv_converter.html", "class_husty_1_1_json2_csv_converter" ],
+      [ "Json2Csv", "class_husty_1_1_json2_csv.html", "class_husty_1_1_json2_csv" ],
+      [ "MathEx", "class_husty_1_1_math_ex.html", "class_husty_1_1_math_ex" ],
       [ "MultidimensionalArray", "class_husty_1_1_multidimensional_array.html", "class_husty_1_1_multidimensional_array" ],
       [ "ObjectPool", "class_husty_1_1_object_pool.html", "class_husty_1_1_object_pool" ],
-      [ "Preset", "class_husty_1_1_preset.html", "class_husty_1_1_preset" ]
+      [ "Preset", "class_husty_1_1_preset.html", "class_husty_1_1_preset" ],
+      [ "SpinLock", "class_husty_1_1_spin_lock.html", "class_husty_1_1_spin_lock" ]
     ] ]
 ];

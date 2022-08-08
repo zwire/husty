@@ -1,7 +1,7 @@
 var searchData=
 [
   ['cameracalibration_0',['CameraCalibration',['../namespace_husty_1_1_open_cv_sharp_1_1_camera_calibration.html',1,'Husty::OpenCvSharp']]],
-  ['cmac_1',['Cmac',['../namespace_husty_1_1_cmac.html',1,'Husty']]],
+  ['cmac_1',['Cmac',['../namespace_husty_1_1_neural_network_1_1_cmac.html',1,'Husty::NeuralNetwork']]],
   ['depthcamera_2',['DepthCamera',['../namespace_husty_1_1_open_cv_sharp_1_1_depth_camera.html',1,'Husty::OpenCvSharp']]],
   ['device_3',['Device',['../namespace_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device.html',1,'Husty::OpenCvSharp::DepthCamera']]],
   ['extensions_4',['Extensions',['../namespace_husty_1_1_extensions.html',1,'Husty.Extensions'],['../namespace_husty_1_1_open_cv_sharp_1_1_extensions.html',1,'Husty.OpenCvSharp.Extensions']]],

@@ -2,7 +2,9 @@ var class_husty_1_1_geometry_1_1_vector2_d =
 [
     [ "Vector2D", "class_husty_1_1_geometry_1_1_vector2_d.html#a31cd6d809601f79f6b725c4c11cb0c3b", null ],
     [ "Vector2D", "class_husty_1_1_geometry_1_1_vector2_d.html#a1329a56a2f2809dde31243c4a1b1c7a6", null ],
+    [ "Vector2D", "class_husty_1_1_geometry_1_1_vector2_d.html#a6aad67747418c09ada1946187123ca37", null ],
     [ "Clone", "class_husty_1_1_geometry_1_1_vector2_d.html#a3794c33c0f02dd6beb7078af8912ca8e", null ],
+    [ "Deconstruct", "class_husty_1_1_geometry_1_1_vector2_d.html#affa469024900c7ddea6d8d3001708e34", null ],
     [ "Equals", "class_husty_1_1_geometry_1_1_vector2_d.html#a19d6a948146e0b6e50bc322abd5de286", null ],
     [ "Equals", "class_husty_1_1_geometry_1_1_vector2_d.html#a82acd9bfccecd06ba5bc7baacc139576", null ],
     [ "GetClockwiseAngleFrom", "class_husty_1_1_geometry_1_1_vector2_d.html#a87c42b7fbd2112ad2edfbca19f98fc13", null ],

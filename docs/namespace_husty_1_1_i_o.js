@@ -10,6 +10,8 @@ var namespace_husty_1_1_i_o =
     [ "StdOutReader", "class_husty_1_1_i_o_1_1_std_out_reader.html", "class_husty_1_1_i_o_1_1_std_out_reader" ],
     [ "TcpSocketClient", "class_husty_1_1_i_o_1_1_tcp_socket_client.html", "class_husty_1_1_i_o_1_1_tcp_socket_client" ],
     [ "TcpSocketServer", "class_husty_1_1_i_o_1_1_tcp_socket_server.html", "class_husty_1_1_i_o_1_1_tcp_socket_server" ],
+    [ "UdpReceiver", "class_husty_1_1_i_o_1_1_udp_receiver.html", "class_husty_1_1_i_o_1_1_udp_receiver" ],
+    [ "UdpSender", "class_husty_1_1_i_o_1_1_udp_sender.html", "class_husty_1_1_i_o_1_1_udp_sender" ],
     [ "WebSocketStream", "class_husty_1_1_i_o_1_1_web_socket_stream.html", "class_husty_1_1_i_o_1_1_web_socket_stream" ],
     [ "WebSocketType", "namespace_husty_1_1_i_o.html#ac98d1ecc7143d2769a47c5e04c69f913", [
       [ "Server", "namespace_husty_1_1_i_o.html#ac98d1ecc7143d2769a47c5e04c69f913a9aa1b03934893d7134a660af4204f2a9", null ],

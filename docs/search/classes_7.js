@@ -8,12 +8,13 @@ var searchData=
   ['iimagestream_3c_20bgrxyzmat_20_3e_5',['IImageStream&lt; BgrXyzMat &gt;',['../interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_image_stream.html',1,'Husty::OpenCvSharp::ImageStream']]],
   ['iimagestream_3c_20mat_20_3e_6',['IImageStream&lt; Mat &gt;',['../interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_image_stream.html',1,'Husty::OpenCvSharp::ImageStream']]],
   ['ilayer_7',['ILayer',['../interface_husty_1_1_neural_network_1_1_i_layer.html',1,'Husty::NeuralNetwork']]],
-  ['intrinsiccameracalibrator_8',['IntrinsicCameraCalibrator',['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_intrinsic_camera_calibrator.html',1,'Husty::OpenCvSharp::CameraCalibration']]],
-  ['intrinsiccameraparameters_9',['IntrinsicCameraParameters',['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_intrinsic_camera_parameters.html',1,'Husty::OpenCvSharp::CameraCalibration']]],
-  ['ioptimizer_10',['IOptimizer',['../interface_husty_1_1_neural_network_1_1_i_optimizer.html',1,'Husty::NeuralNetwork']]],
-  ['itunablelayer_11',['ITunableLayer',['../interface_husty_1_1_neural_network_1_1_i_tunable_layer.html',1,'Husty::NeuralNetwork']]],
-  ['ivideostream_12',['IVideoStream',['../interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_video_stream.html',1,'Husty::OpenCvSharp::ImageStream']]],
-  ['ivideostream_3c_20bgrxyzmat_20_3e_13',['IVideoStream&lt; BgrXyzMat &gt;',['../interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_video_stream.html',1,'Husty::OpenCvSharp::ImageStream']]],
-  ['ivideostream_3c_20mat_20_3e_14',['IVideoStream&lt; Mat &gt;',['../interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_video_stream.html',1,'Husty::OpenCvSharp::ImageStream']]],
-  ['iyolodetector_15',['IYoloDetector',['../interface_husty_1_1_open_cv_sharp_1_1_yolo_1_1_i_yolo_detector.html',1,'Husty::OpenCvSharp::Yolo']]]
+  ['ineuralnetwork_8',['INeuralNetwork',['../interface_husty_1_1_neural_network_1_1_i_neural_network.html',1,'Husty::NeuralNetwork']]],
+  ['intrinsiccameracalibrator_9',['IntrinsicCameraCalibrator',['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_intrinsic_camera_calibrator.html',1,'Husty::OpenCvSharp::CameraCalibration']]],
+  ['intrinsiccameraparameters_10',['IntrinsicCameraParameters',['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_intrinsic_camera_parameters.html',1,'Husty::OpenCvSharp::CameraCalibration']]],
+  ['ioptimizer_11',['IOptimizer',['../interface_husty_1_1_neural_network_1_1_i_optimizer.html',1,'Husty::NeuralNetwork']]],
+  ['itunablelayer_12',['ITunableLayer',['../interface_husty_1_1_neural_network_1_1_i_tunable_layer.html',1,'Husty::NeuralNetwork']]],
+  ['ivideostream_13',['IVideoStream',['../interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_video_stream.html',1,'Husty::OpenCvSharp::ImageStream']]],
+  ['ivideostream_3c_20bgrxyzmat_20_3e_14',['IVideoStream&lt; BgrXyzMat &gt;',['../interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_video_stream.html',1,'Husty::OpenCvSharp::ImageStream']]],
+  ['ivideostream_3c_20mat_20_3e_15',['IVideoStream&lt; Mat &gt;',['../interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_video_stream.html',1,'Husty::OpenCvSharp::ImageStream']]],
+  ['iyolodetector_16',['IYoloDetector',['../interface_husty_1_1_open_cv_sharp_1_1_yolo_1_1_i_yolo_detector.html',1,'Husty::OpenCvSharp::Yolo']]]
 ];

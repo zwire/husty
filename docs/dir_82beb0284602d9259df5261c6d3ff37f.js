@@ -7,6 +7,9 @@ var dir_82beb0284602d9259df5261c6d3ff37f =
     [ "Yolov3v4.cs", "_yolov3v4_8cs.html", [
       [ "Husty.OpenCvSharp.Yolo.Yolov3v4", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolov3v4.html", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolov3v4" ]
     ] ],
+    [ "Yolov7.cs", "_yolov7_8cs.html", [
+      [ "Husty.OpenCvSharp.Yolo.Yolov7", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolov7.html", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolov7" ]
+    ] ],
     [ "YoloX.cs", "_yolo_x_8cs.html", [
       [ "Husty.OpenCvSharp.Yolo.YoloX", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolo_x.html", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolo_x" ]
     ] ]
