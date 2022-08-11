@@ -109,8 +109,8 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
                 using var depthFrame = _transformation.DepthImageToColorCamera(capture.Depth);
                 using var pointCloudFrame = _transformation.DepthImageToPointCloud(depthFrame, CalibrationDeviceType.Color);
                 var frame = _bgrXyzPool.GetObject();
-                colorFrame.CopyToColorMat(frame.BGR);
-                pointCloudFrame.CopyToPointCloudMat(frame.XYZ);
+                CopyColorPixels(colorFrame, frame.BGR);
+                CopyPointCloudPixels(pointCloudFrame, frame.XYZ);
                 HasFrame = true;
                 return frame;
             }
@@ -119,8 +119,8 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
                 using var colorFrame = _transformation.ColorImageToDepthCamera(capture);
                 using var pointCloudFrame = _transformation.DepthImageToPointCloud(capture.Depth);
                 var frame = _bgrXyzPool.GetObject();
-                colorFrame.CopyToColorMat(frame.BGR);
-                pointCloudFrame.CopyToPointCloudMat(frame.XYZ);
+                CopyColorPixels(colorFrame, frame.BGR);
+                CopyPointCloudPixels(pointCloudFrame, frame.XYZ);
                 HasFrame = true;
                 return frame.Rotate(_rotationMatrix);
             }
@@ -131,7 +131,7 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
             using var capture = _device.GetCapture();
             using var colorFrame = capture.Color;
             var frame = _bgrPool.GetObject();
-            colorFrame.CopyToColorMat(frame);
+            CopyColorPixels(colorFrame, frame);
             HasFrame = true;
             return frame;
         }
@@ -144,7 +144,7 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
                 using var depthFrame = _transformation.DepthImageToColorCamera(capture.Depth);
                 using var pointCloudFrame = _transformation.DepthImageToPointCloud(depthFrame, CalibrationDeviceType.Color);
                 var frame = _xyzPool.GetObject();
-                pointCloudFrame.CopyToPointCloudMat(frame);
+                CopyPointCloudPixels(pointCloudFrame, frame);
                 HasFrame = true;
                 return frame;
             }
@@ -152,7 +152,7 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
             {
                 using var pointCloudFrame = _transformation.DepthImageToPointCloud(capture.Depth);
                 var frame = _xyzPool.GetObject();
-                pointCloudFrame.CopyToPointCloudMat(frame);
+                CopyPointCloudPixels(pointCloudFrame, frame);
                 HasFrame = true;
                 var d = (float*)_rotationMatrix.Data;
                 var s = (short*)frame.Data;
@@ -204,6 +204,44 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
             _bgrXyzPool?.Dispose();
             _bgrPool?.Dispose();
             _xyzPool?.Dispose();
+        }
+
+
+        // ------ private methods ------ //
+
+        private unsafe static void CopyColorPixels(Image colorFrame, Mat colorMat)
+        {
+            var w = colorFrame.WidthPixels;
+            var h = colorFrame.HeightPixels;
+            if (colorMat.IsDisposed || colorMat.Width != w || colorMat.Height != h || colorMat.Type() != MatType.CV_8UC3)
+                return;
+            var m = colorFrame.Memory;
+            var cAry = colorFrame.GetPixels<BGRA>().Span;
+            var p = colorMat.DataPointer;
+            int index = 0;
+            for (int i = 0; i < cAry.Length; i++)
+            {
+                p[index++] = cAry[i].B;
+                p[index++] = cAry[i].G;
+                p[index++] = cAry[i].R;
+            }
+        }
+
+        private unsafe static void CopyPointCloudPixels(Image pointCloudFrame, Mat pointCloudMat)
+        {
+            var w = pointCloudFrame.WidthPixels;
+            var h = pointCloudFrame.HeightPixels;
+            if (pointCloudMat.IsDisposed || pointCloudMat.Width != w || pointCloudMat.Height != h || pointCloudMat.Type() != MatType.CV_16UC3)
+                return;
+            var pdAry = pointCloudFrame.GetPixels<Short3>().Span;
+            var p = (ushort*)pointCloudMat.Data;
+            int index = 0;
+            for (int i = 0; i < pdAry.Length; i++)
+            {
+                p[index++] = (ushort)pdAry[i].X;
+                p[index++] = (ushort)pdAry[i].Y;
+                p[index++] = (ushort)pdAry[i].Z;
+            }
         }
 
     }

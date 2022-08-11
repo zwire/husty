@@ -9,8 +9,8 @@ namespace MultiUdpReceiver
         {
             var receiver1 = new UdpReceiver(3000);
             var receiver2 = new UdpReceiver(3001);
-            receiver1.GetStream<double[]>().Subscribe(x => Console.WriteLine(x?.Length));
-            receiver2.GetStream<double[]>().Subscribe(x => Console.WriteLine(x?.Length));
+            receiver1.GetStream<string>().Subscribe(x => Console.WriteLine(x));
+            receiver2.GetStream<string>().Subscribe(x => Console.WriteLine(x));
             ConsoleEx.WaitKey(ConsoleKey.Q, ConsoleKey.Escape);
         }
     }

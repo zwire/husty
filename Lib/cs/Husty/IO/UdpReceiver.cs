@@ -36,7 +36,7 @@ namespace Husty.IO
                 .Select(_ =>
                 {
                     var str = Encoding.GetString(_sock.Receive(ref _ep));
-                    if (str.Length < 3) return default;
+                    if (str.Length < 2) return default;
                     var len = int.Parse(str[..2]);
                     var key = str.Substring(2, len);
                     var value = str[(2 + len)..];

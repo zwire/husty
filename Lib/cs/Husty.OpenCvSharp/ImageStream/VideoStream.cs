@@ -37,7 +37,7 @@ namespace Husty.OpenCvSharp.ImageStream
         public VideoStream(string src, IEnumerable<Properties> properties = null)
         {
             _cap = new(src);
-            _pool = new(2);
+            _pool = new(2, () => new Mat());
             if (properties is not null)
                 foreach (var p in properties)
                     _cap.Set(p.Key, p.Value);

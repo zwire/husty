@@ -106,8 +106,8 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
             using var depth5 = _todepth?.Process(depth4) ?? depth4;
             using var depth6 = _hfill?.Process(depth5) ?? depth5;
             var frame = _bgrXyzPool.GetObject();
-            color.CopyToColorMat(frame.BGR);
-            depth6.CopyToPointCloudMat(frame.XYZ, color.Width, color.Height);
+            CopyColorPixels(color, frame.BGR);
+            CopyPointCloudPixels(depth6, frame.XYZ, color.Width, color.Height);
             HasFrame = true;
             return frame;
         }
@@ -119,7 +119,7 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
             using var frames3 = frames2.AsFrameSet();
             using var color = frames3.ColorFrame.DisposeWith(frames3);
             var frame = _bgrPool.GetObject();
-            color.CopyToColorMat(frame);
+            CopyColorPixels(color, frame);
             HasFrame = true;
             return frame;
         }
@@ -137,7 +137,7 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
             using var depth5 = _todepth?.Process(depth4) ?? depth4;
             using var depth6 = _hfill?.Process(depth5) ?? depth5;
             var frame = _xyzPool.GetObject();
-            depth6.CopyToPointCloudMat(frame, color.Width, color.Height);
+            CopyPointCloudPixels(depth6, frame, color.Width, color.Height);
             HasFrame = true;
             return frame;
         }
@@ -177,6 +177,34 @@ namespace Husty.OpenCvSharp.DepthCamera.Device
             _bgrXyzPool?.Dispose();
             _bgrPool?.Dispose();
             _xyzPool?.Dispose();
+        }
+
+
+        // ------ private methods ------ //
+
+        private unsafe static void CopyColorPixels(VideoFrame frame, Mat colorMat)
+        {
+            if (colorMat.IsDisposed || colorMat.Width != frame.Width || colorMat.Height != frame.Height || colorMat.Type() != MatType.CV_8UC3)
+                return;
+            frame.CopyTo(colorMat.Data);
+            Cv2.CvtColor(colorMat, colorMat, ColorConversionCodes.RGB2BGR);
+        }
+
+        private unsafe static void CopyPointCloudPixels(Frame frame, Mat pointCloudMat, int width, int height)
+        {
+            if (pointCloudMat.IsDisposed || pointCloudMat.Width != width || pointCloudMat.Height != height || pointCloudMat.Type() != MatType.CV_16UC3)
+                return;
+            using var pdFrame0 = new PointCloud();
+            using var pdFrame1 = pdFrame0.Process(frame);
+            var pData = (float*)(pdFrame1.Data);
+            var pixels = (ushort*)pointCloudMat.Data;
+            int index = 0;
+            for (int i = 0; i < pointCloudMat.Width * pointCloudMat.Height; i++)
+            {
+                pixels[index] = (ushort)(pData[index++] * 1000);
+                pixels[index] = (ushort)(pData[index++] * 1000);
+                pixels[index] = (ushort)(pData[index++] * 1000);
+            }
         }
 
     }

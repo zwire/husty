@@ -8,7 +8,7 @@ namespace MultiUdpSender
         static void Main(string[] args)
         {
             var sender = new UdpSender(3000, 3001);
-            var data = new double[] { 0, 1, 2 };
+            var data = "DATA";
             Task.Run(async () =>
             {
                 while (true)
