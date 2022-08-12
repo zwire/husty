@@ -1,20 +1,18 @@
-﻿using System;
-using Husty.IO;
+﻿using Husty.IO;
 
-namespace PythonStdoutReader
+namespace PythonStdoutReader;
+
+internal class Program
 {
-    internal class Program
+
+    const string pythonExe = "";
+    const string pythonFile = "";
+
+    static void Main(string[] args)
     {
-
-        const string pythonExe = "";
-        const string pythonFile = "";
-
-        static void Main(string[] args)
-        {
-            var reader = new StdOutReader(pythonExe, pythonFile);
-            reader.GetStream().Subscribe(x => Console.WriteLine(x));
-            while (Console.ReadKey().Key is not ConsoleKey.Escape) ;
-            reader.Dispose();
-        }
+        var reader = new StdOutReader(pythonExe, pythonFile);
+        reader.GetStream().Subscribe(x => Console.WriteLine(x));
+        while (Console.ReadKey().Key is not ConsoleKey.Escape) ;
+        reader.Dispose();
     }
 }

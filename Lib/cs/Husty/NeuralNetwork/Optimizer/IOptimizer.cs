@@ -1,13 +1,12 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 
-namespace Husty.NeuralNetwork
-{
-    public interface IOptimizer
-    { 
+namespace Husty.NeuralNetwork;
 
-        public (Matrix<float> W, Vector<float> B) Update(Matrix<float> w, Vector<float> b, Matrix<float> gw, Vector<float> gb);
+public interface IOptimizer
+{ 
 
-        public string Serialize();
+    public (Matrix<float> W, Vector<float> B) Update(Matrix<float> w, Vector<float> b, Matrix<float> gw, Vector<float> gb);
 
-    }
+    public string Serialize();
+
 }

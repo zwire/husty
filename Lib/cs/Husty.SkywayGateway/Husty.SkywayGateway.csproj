@@ -8,6 +8,7 @@
     <Product>$(AssemblyName)</Product>
     <PackageProjectUrl>https://github.com/husty530/Husty-public/tree/master/Lib/cs/Husty.SkywayGateway</PackageProjectUrl>
     <Description>Skyway Gateway REST API wrapper (preview version)</Description>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,7 +1,6 @@
-﻿namespace Husty.NeuralNetwork
-{
-    public interface IActivationLayer : ILayer
-    {
+﻿namespace Husty.NeuralNetwork;
 
-    }
+public interface IActivationLayer : ILayer
+{
+
 }

@@ -1,9 +1,8 @@
-﻿namespace Husty.Geometry
+﻿namespace Husty.Geometry;
+
+public record HoughCoordinateSystem(Angle Theta, double Rho)
 {
-    public record HoughCoordinateSystem(Angle Theta, double Rho)
-    {
 
-        public Line2D ToLine2D() => new(this);
+    public Line2D ToLine2D() => new(this);
 
-    }
 }

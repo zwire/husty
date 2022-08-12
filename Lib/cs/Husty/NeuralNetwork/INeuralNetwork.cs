@@ -1,13 +1,12 @@
-﻿namespace Husty.NeuralNetwork
+﻿namespace Husty.NeuralNetwork;
+
+public interface INeuralNetwork
 {
-    public interface INeuralNetwork
-    {
 
-        public float[] Forward(float[] state);
+    public float[] Forward(float[] state);
 
-        public void Backward(float[] error);
+    public void Backward(float[] error);
 
-        public void Save(string name);
+    public void Save(string name);
 
-    }
 }

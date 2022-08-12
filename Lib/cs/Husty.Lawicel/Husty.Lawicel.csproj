@@ -7,6 +7,7 @@
     <Authors>yamashita</Authors>
     <Description>Lawicel CANUSB package wrapper. This package includes only canusbdrv64.dll.</Description>
     <Version>1.1.1</Version>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>

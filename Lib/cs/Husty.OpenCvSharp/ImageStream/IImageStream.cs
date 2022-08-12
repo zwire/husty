@@ -1,25 +1,22 @@
-﻿using System;
-using OpenCvSharp;
+﻿using OpenCvSharp;
 
-namespace Husty.OpenCvSharp.ImageStream
+namespace Husty.OpenCvSharp.ImageStream;
+
+public record Properties(VideoCaptureProperties Key, double Value);
+
+public interface IImageStream<TImage> : IDisposable
 {
 
-    public record Properties(VideoCaptureProperties Key, double Value);
+    public int Fps { get; }
 
-    public interface IImageStream<TImage> : IDisposable
-    {
+    public int Channels { get; }
 
-        public int Fps { get; }
+    public Size FrameSize { get; }
 
-        public int Channels { get; }
+    public bool HasFrame { get; }
 
-        public Size FrameSize { get; }
+    public TImage Read();
 
-        public bool HasFrame { get; }
+    public IObservable<TImage> GetStream();
 
-        public TImage Read();
-
-        public IObservable<TImage> GetStream();
-
-    }
 }

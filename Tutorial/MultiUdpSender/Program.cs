@@ -1,24 +1,23 @@
 ﻿using Husty.Extensions;
 using Husty.IO;
 
-namespace MultiUdpSender
+namespace MultiUdpSender;
+
+internal class Program
 {
-    internal class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        var sender = new UdpSender(3000, 3001);
+        var data = "DATA";
+        Task.Run(async () =>
         {
-            var sender = new UdpSender(3000, 3001);
-            var data = "DATA";
-            Task.Run(async () =>
+            while (true)
             {
-                while (true)
-                {
-                    await sender.SendAsync(null, data);
-                    Console.WriteLine("!");
-                    Thread.Sleep(1000);
-                }
-            });
-            ConsoleEx.WaitKey(ConsoleKey.Q, ConsoleKey.Escape);
-        }
+                await sender.SendAsync(null, data);
+                Console.WriteLine("!");
+                Thread.Sleep(1000);
+            }
+        });
+        ConsoleEx.WaitKey(ConsoleKey.Q, ConsoleKey.Escape);
     }
 }

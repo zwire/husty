@@ -1,10 +1,8 @@
-﻿using System;
-using OpenCvSharp;
+﻿using OpenCvSharp;
 
-namespace Husty.OpenCvSharp.Yolo
+namespace Husty.OpenCvSharp.Yolo;
+
+public interface IYoloDetector : IDisposable
 {
-    public interface IYoloDetector : IDisposable
-    {
-        public YoloResult[] Run(Mat frame);
-    }
+    public YoloResult[] Run(Mat frame);
 }

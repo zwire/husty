@@ -1,52 +1,50 @@
-﻿using System;
-using OpenCvSharp;
+﻿using OpenCvSharp;
 using OpenCvSharp.Tracking;
 
-namespace Tracker
+namespace Tracker;
+
+internal class Program
 {
-    internal class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+
+        // open camera
+        var cap = new VideoCapture(0);
+        var frame = new Mat();
+
+        // initialize tracker
+        var tracker = TrackerCSRT.Create();
+
+        // loop
+        var box = new Rect();
+        while (cap.Read(frame))
         {
-
-            // open camera
-            var cap = new VideoCapture(0);
-            var frame = new Mat();
-
-            // initialize tracker
-            var tracker = TrackerCSRT.Create();
-
-            // loop
-            var box = new Rect();
-            while (cap.Read(frame))
+            if (Console.KeyAvailable)
             {
-                if (Console.KeyAvailable)
+                var key = Console.ReadKey().Key;
+                if (key is ConsoleKey.Enter)
                 {
-                    var key = Console.ReadKey().Key;
-                    if (key is ConsoleKey.Enter)
-                    {
-                        // input user-defined box
-                        box = Cv2.SelectROI(frame);
-                        tracker.Init(frame, box);
-                        Cv2.DestroyAllWindows();
-                    }
-                    else if (key is ConsoleKey.Escape)
-                    {
-                        break;
-                    }
+                    // input user-defined box
+                    box = Cv2.SelectROI(frame);
+                    tracker.Init(frame, box);
+                    Cv2.DestroyAllWindows();
                 }
-
-                // check if box exists
-                if (box.Size != Size.Zero)
-                    tracker.Update(frame, ref box);
-
-                // visualize
-                Cv2.Rectangle(frame, box, new(0, 0, 255), 2);
-                Cv2.ImShow(" ", frame);
-                Cv2.WaitKey(1);
-
+                else if (key is ConsoleKey.Escape)
+                {
+                    break;
+                }
             }
-            Console.WriteLine("completed");
+
+            // check if box exists
+            if (box.Size != Size.Zero)
+                tracker.Update(frame, ref box);
+
+            // visualize
+            Cv2.Rectangle(frame, box, new(0, 0, 255), 2);
+            Cv2.ImShow(" ", frame);
+            Cv2.WaitKey(1);
+
         }
+        Console.WriteLine("completed");
     }
 }

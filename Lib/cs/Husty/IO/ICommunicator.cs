@@ -1,14 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿namespace Husty.IO;
 
-namespace Husty.IO
+public interface ICommunicator : IDisposable
 {
-    public interface ICommunicator : IDisposable
-    {
 
-        public BidirectionalDataStream GetStream();
+    public BidirectionalDataStream GetStream();
 
-        public Task<BidirectionalDataStream> GetStreamAsync();
+    public Task<BidirectionalDataStream> GetStreamAsync();
 
-    }
 }

@@ -1,13 +1,12 @@
-﻿namespace Husty.OpenCvSharp.ImageStream
+﻿namespace Husty.OpenCvSharp.ImageStream;
+
+public interface IVideoStream<TImage> : IImageStream<TImage>
 {
-    public interface IVideoStream<TImage> : IImageStream<TImage>
-    {
 
-        public int FrameCount { get; }
+    public int FrameCount { get; }
 
-        public int CurrentPosition { get; }
+    public int CurrentPosition { get; }
 
-        public void Seek(int position);
+    public void Seek(int position);
 
-    }
 }

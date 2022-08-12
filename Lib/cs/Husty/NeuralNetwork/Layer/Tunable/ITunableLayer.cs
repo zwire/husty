@@ -1,9 +1,8 @@
-﻿namespace Husty.NeuralNetwork
+﻿namespace Husty.NeuralNetwork;
+
+public interface ITunableLayer : ILayer
 {
-    public interface ITunableLayer : ILayer
-    {
 
-        public void Optimize();
+    public void Optimize();
 
-    }
 }
