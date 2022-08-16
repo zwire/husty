@@ -2,10 +2,6 @@
 
 namespace Husty.OpenCvSharp.Stats;
 
-/// <summary>
-/// OpenCvSharp 'BayesClassifier' class wrapper.
-/// This class has accumulate & save & load methods for machine learning.
-/// </summary>
 public sealed class BayesClassifier : BinaryStatsBase
 {
 

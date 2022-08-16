@@ -2,8 +2,9 @@
 using System.Reactive.Concurrency;
 using OpenCvSharp;
 using Intel.RealSense;
+using Stream = Intel.RealSense.Stream;
 
-namespace Husty.OpenCvSharp.DepthCamera.Device;
+namespace Husty.OpenCvSharp.DepthCamera;
 
 /// <summary>
 /// Intel RealSense D415 - 455, L515 C# wrapper
@@ -50,7 +51,7 @@ public sealed class Realsense : IDepthCamera
         _bgrPool = new(2, () => new Mat(size.Height, size.Width, MatType.CV_8UC3));
         _xyzPool = new(2, () => new Mat(size.Height, size.Width, MatType.CV_16UC3));
         _bgrXyzPool = new(2, () => new(
-            new Mat(size.Height, size.Width, MatType.CV_8UC3), 
+            new Mat(size.Height, size.Width, MatType.CV_8UC3),
             new Mat(size.Height, size.Width, MatType.CV_16UC3))
         );
         var width = size.Width;
@@ -65,7 +66,7 @@ public sealed class Realsense : IDepthCamera
         {
             AlignBase.Color => new(Stream.Color),
             AlignBase.Depth => new(Stream.Depth),
-            _               => null
+            _ => null
         };
         if (disparityTransform)
         {
@@ -195,7 +196,7 @@ public sealed class Realsense : IDepthCamera
             return;
         using var pdFrame0 = new PointCloud();
         using var pdFrame1 = pdFrame0.Process(frame);
-        var pData = (float*)(pdFrame1.Data);
+        var pData = (float*)pdFrame1.Data;
         var pixels = (ushort*)pointCloudMat.Data;
         int index = 0;
         for (int i = 0; i < pointCloudMat.Width * pointCloudMat.Height; i++)

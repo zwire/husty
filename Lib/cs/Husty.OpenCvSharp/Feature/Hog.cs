@@ -2,9 +2,6 @@
 
 namespace Husty.OpenCvSharp.Feature;
 
-/// <summary>
-/// OpenCvSharp 'HOGDescriptor' class wrapper.
-/// </summary>
 public sealed class Hog
 {
 

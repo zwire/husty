@@ -88,9 +88,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSocketServer", "Tutorial
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSocketClient", "Tutorial\WebSocketClient\WebSocketClient.csproj", "{2CBA9C5A-AE6D-4B6C-A98B-7F0A351EF5BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiUdpSender", "Tutorial\MultiUdpSender\MultiUdpSender.csproj", "{4E4F6365-4D67-4A22-8310-F768ACF8B473}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiUdpSender", "Tutorial\MultiUdpSender\MultiUdpSender.csproj", "{4E4F6365-4D67-4A22-8310-F768ACF8B473}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiUdpReceiver", "Tutorial\MultiUdpReceiver\MultiUdpReceiver.csproj", "{7DA8EB18-D2B3-48D1-91E6-6B5436CF2326}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiUdpReceiver", "Tutorial\MultiUdpReceiver\MultiUdpReceiver.csproj", "{7DA8EB18-D2B3-48D1-91E6-6B5436CF2326}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Husty.OpenCvSharp.OnnxRuntime", "Lib\cs\Husty.OpenCvSharp.OnnxRuntime\Husty.OpenCvSharp.OnnxRuntime.csproj", "{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -462,6 +464,18 @@ Global
 		{7DA8EB18-D2B3-48D1-91E6-6B5436CF2326}.Release|x64.Build.0 = Release|Any CPU
 		{7DA8EB18-D2B3-48D1-91E6-6B5436CF2326}.Release|x86.ActiveCfg = Release|Any CPU
 		{7DA8EB18-D2B3-48D1-91E6-6B5436CF2326}.Release|x86.Build.0 = Release|Any CPU
+		{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}.Debug|x64.Build.0 = Debug|Any CPU
+		{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}.Debug|x86.Build.0 = Debug|Any CPU
+		{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}.Release|x64.ActiveCfg = Release|Any CPU
+		{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}.Release|x64.Build.0 = Release|Any CPU
+		{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}.Release|x86.ActiveCfg = Release|Any CPU
+		{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -502,6 +516,7 @@ Global
 		{2CBA9C5A-AE6D-4B6C-A98B-7F0A351EF5BC} = {567343D4-CEEF-42AC-8AC8-02A6391DA059}
 		{4E4F6365-4D67-4A22-8310-F768ACF8B473} = {567343D4-CEEF-42AC-8AC8-02A6391DA059}
 		{7DA8EB18-D2B3-48D1-91E6-6B5436CF2326} = {567343D4-CEEF-42AC-8AC8-02A6391DA059}
+		{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365} = {B522F9B1-917C-4242-A55A-FB27F7465218}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C7E8A650-965E-4175-B03C-832FABDB4FFA}

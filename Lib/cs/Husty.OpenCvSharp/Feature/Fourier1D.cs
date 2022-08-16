@@ -2,9 +2,6 @@
 
 namespace Husty.OpenCvSharp.Feature;
 
-/// <summary>
-/// OpenCvSharp 'DFT' method wrapper.
-/// </summary>
 public sealed class Fourier1D
 {
 

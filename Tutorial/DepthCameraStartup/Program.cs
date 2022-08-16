@@ -1,6 +1,6 @@
 ﻿using System.Reactive.Linq;
 using OpenCvSharp;
-using Husty.OpenCvSharp.DepthCamera.Device;
+using Husty.OpenCvSharp.DepthCamera;
 
 namespace DepthCameraStartup;
 

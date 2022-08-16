@@ -1,7 +1,7 @@
 ﻿using OpenCvSharp;
 using Husty.OpenCvSharp.ImageStream;
 
-namespace Husty.OpenCvSharp.DepthCamera.Device;
+namespace Husty.OpenCvSharp.DepthCamera;
 
 public interface IDepthCamera : IImageStream<BgrXyzMat>
 {

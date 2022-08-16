@@ -19,8 +19,10 @@ public sealed class Yolov7 : OnnxBase<Mat, YoloResult[]>, IYoloDetector
     public Yolov7(
         string onnxModel,
         string namesFile,
-        float confThresh = 0.3f
-    ) : base(onnxModel, Provider.CPU, OptimizationLevel.Off)
+        float confThresh = 0.3f,
+        Provider provider = Provider.CPU,
+        OptimizationLevel opt = OptimizationLevel.Off
+    ) : base(onnxModel, provider, opt)
     {
         _size = new(InputLayers[0].Shape[2], InputLayers[0].Shape[3]);
         _paddingBase = new(_size.Height, _size.Width, MatType.CV_8UC3, new(114, 114, 114));

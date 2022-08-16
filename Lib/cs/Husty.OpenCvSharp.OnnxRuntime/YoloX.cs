@@ -25,8 +25,13 @@ public sealed class YoloX : OnnxBase<Mat, YoloResult[]>, IYoloDetector
     /// <param name="onnxModel">(.onnx) file</param>
     /// <param name="namesFile">(.names) file</param>
     /// <param name="confidenceThreshold"></param>
-    public YoloX(string onnxModel, string namesFile, float confidenceThreshold = 0.5f)
-        : base(onnxModel, Provider.CPU, OptimizationLevel.Off)
+    public YoloX(
+        string onnxModel, 
+        string namesFile, 
+        float confidenceThreshold = 0.5f,
+        Provider provider = Provider.CPU,
+        OptimizationLevel opt = OptimizationLevel.Off
+    ) : base(onnxModel, provider, opt)
     {
         _size = new(InputLayers[0].Shape[3], InputLayers[0].Shape[2]);
         _confThresh = confidenceThreshold;

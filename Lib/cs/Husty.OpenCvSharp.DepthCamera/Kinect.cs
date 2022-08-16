@@ -5,7 +5,7 @@ using OpenCvSharp;
 using Husty.Geometry;
 using Husty.OpenCvSharp.Extensions;
 
-namespace Husty.OpenCvSharp.DepthCamera.Device;
+namespace Husty.OpenCvSharp.DepthCamera;
 
 public enum AlignBase { Color, Depth }
 
@@ -18,7 +18,7 @@ public sealed class Kinect : IDepthCamera
     // ------ fields ------ //
 
     private readonly AlignBase _align;
-    private readonly Microsoft.Azure.Kinect.Sensor.Device _device;
+    private readonly Device _device;
     private readonly Transformation _transformation;
     private readonly Mat _rotationMatrix;
     private readonly ObjectPool<Mat> _bgrPool;
@@ -55,7 +55,7 @@ public sealed class Kinect : IDepthCamera
         using var yRot = Angle.FromDegree(-1.3).ToRotationMatrix(Axis.Y);
         using var zRot = Angle.FromDegree(0).ToRotationMatrix(Axis.Z);
         _rotationMatrix = zRot * yRot * xRot;
-        _device = Microsoft.Azure.Kinect.Sensor.Device.Open();
+        _device = Device.Open();
         _device.StartCameras(config);
         _transformation = _device.GetCalibration().CreateTransformation();
         Config = config;
@@ -65,20 +65,20 @@ public sealed class Kinect : IDepthCamera
         {
             AlignBase.Color => new(ccal.ResolutionWidth, ccal.ResolutionHeight),
             AlignBase.Depth => new(dcal.ResolutionWidth, dcal.ResolutionHeight),
-            _               => throw new Exception()
+            _ => throw new Exception()
         };
         _bgrPool = new(2, () => new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_8UC3));
         _xyzPool = new(2, () => new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC3));
         _bgrXyzPool = new(2, () => new(
-            new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_8UC3), 
+            new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_8UC3),
             new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC3))
         );
         Fps = config.CameraFPS switch
         {
-            FPS.FPS5    => 5,
-            FPS.FPS15   => 15,
-            FPS.FPS30   => 30,
-            _           => -1
+            FPS.FPS5 => 5,
+            FPS.FPS15 => 15,
+            FPS.FPS30 => 30,
+            _ => -1
         };
     }
 
@@ -93,7 +93,8 @@ public sealed class Kinect : IDepthCamera
             DepthMode = DepthMode.NFOV_2x2Binned,
             SynchronizedImagesOnly = true,
             CameraFPS = FPS.FPS30
-        }, align) { }
+        }, align)
+    { }
 
 
     // ------ public methods ------ //

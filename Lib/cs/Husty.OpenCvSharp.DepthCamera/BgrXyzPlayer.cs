@@ -4,7 +4,7 @@ using System.Reactive.Linq;
 using OpenCvSharp;
 using Husty.OpenCvSharp.ImageStream;
 
-namespace Husty.OpenCvSharp.DepthCamera.IO;
+namespace Husty.OpenCvSharp.DepthCamera;
 
 /// <summary>
 /// Playback BGRXYZ movie from binary file.
@@ -71,17 +71,17 @@ public sealed class BgrXyzPlayer : IVideoStream<BgrXyzMat>
     /// <param name="filePath"></param>
     public BgrXyzPlayer(string filePath)
     {
-        if (!File.Exists(filePath)) 
+        if (!File.Exists(filePath))
             throw new Exception("File doesn't exist!");
         _binReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read), Encoding.ASCII);
         var fileFormatCode = Encoding.ASCII.GetString(_binReader.ReadBytes(8));
         if (fileFormatCode is not "HUSTY000") throw new Exception();
         var indexesPos = _binReader.ReadInt64();
-        if (indexesPos <= 0) 
+        if (indexesPos <= 0)
             throw new Exception("Index positions are invalid.");
         _binReader.BaseStream.Position = indexesPos;
         var indexes = new List<long>();
-        while (_binReader.BaseStream.Position < _binReader.BaseStream.Length) 
+        while (_binReader.BaseStream.Position < _binReader.BaseStream.Length)
             indexes.Add(_binReader.ReadInt64());
         if (indexes.Count < 5)
             throw new Exception("frame count is too small");

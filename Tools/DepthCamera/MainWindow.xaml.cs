@@ -8,10 +8,8 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.Azure.Kinect.Sensor;
 using OpenCvSharp.WpfExtensions;
 using Husty;
-using Husty.OpenCvSharp.DepthCamera;
 using Husty.OpenCvSharp.ImageStream;
-using Husty.OpenCvSharp.DepthCamera.IO;
-using Husty.OpenCvSharp.DepthCamera.Device;
+using Husty.OpenCvSharp.DepthCamera;
 
 namespace DepthCamera;
 
