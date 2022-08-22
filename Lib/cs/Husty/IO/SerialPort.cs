@@ -90,7 +90,7 @@ public sealed class SerialPort : IDisposable
         return buf;
     }
 
-    public string ReadLine()
+    public string? ReadLine()
     {
         if (_disposed) return null;
         try

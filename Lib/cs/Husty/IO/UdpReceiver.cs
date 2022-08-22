@@ -52,7 +52,17 @@ public class UdpReceiver
     {
         return _observable
             .Where(x => key is null || x.Key == key)
-            .Select(x => JsonSerializer.Deserialize<T>(x.Value));
+            .Select(x =>
+            {
+                try
+                {
+                    return JsonSerializer.Deserialize<T>(x.Value);
+                }
+                catch
+                {
+                    return default;
+                }
+            });
     }
 
     public void Close()
