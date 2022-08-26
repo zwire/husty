@@ -1,6 +1,6 @@
 ﻿namespace Husty.Extensions;
 
-public static class ArrayReshapeExtensions
+public static class ArrayReshapeEx
 {
 
     // 1D array -> 2D array

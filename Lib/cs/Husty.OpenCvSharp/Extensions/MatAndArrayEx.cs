@@ -2,7 +2,7 @@
 
 namespace Husty.OpenCvSharp.Extensions;
 
-public static class MatAndArrayExtensions
+public static class MatAndArrayEx
 {
 
     public unsafe static byte[] To1DByteArray(this Mat image)

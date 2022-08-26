@@ -3,7 +3,7 @@ using static System.Math;
 
 namespace Husty.OpenCvSharp.Extensions;
 
-public static class Point2Extensions
+public static class PointEx
 {
 
     public static Point ToPoint(this Point2f point)

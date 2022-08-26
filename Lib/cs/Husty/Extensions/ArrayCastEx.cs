@@ -1,6 +1,6 @@
 ﻿namespace Husty.Extensions;
 
-public static class ArrayCastExtensions
+public static class ArrayCastEx
 {
 
     // 1D array

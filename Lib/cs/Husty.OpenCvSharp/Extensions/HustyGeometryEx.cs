@@ -3,7 +3,7 @@ using Husty.Geometry;
 
 namespace Husty.OpenCvSharp.Extensions;
 
-public static class HustyGeometryExtensions
+public static class HustyGeometryEx
 {
 
     public static Point2D ToHustyPoint2D(this Point p)

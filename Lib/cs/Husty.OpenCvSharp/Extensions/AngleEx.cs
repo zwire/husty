@@ -4,7 +4,7 @@ using static System.Math;
 
 namespace Husty.OpenCvSharp.Extensions;
 
-public static class AngleExtensions
+public static class AngleEx
 {
 
     public static Mat ToRotationMatrix(this Angle angle, Axis axis)

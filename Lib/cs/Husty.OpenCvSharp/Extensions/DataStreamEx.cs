@@ -3,7 +3,7 @@ using Husty.IO;
 
 namespace Husty.OpenCvSharp.Extensions;
 
-public static class DataStreamExtensions
+public static class DataStreamEx
 {
 
     /// <summary>

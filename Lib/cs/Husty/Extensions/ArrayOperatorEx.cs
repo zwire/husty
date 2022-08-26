@@ -1,6 +1,6 @@
 ﻿namespace Husty.Extensions;
 
-public static class ArrayOperatorExtensions
+public static class ArrayOperatorEx
 {
 
     // 1D array

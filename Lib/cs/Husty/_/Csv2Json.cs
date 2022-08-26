@@ -11,26 +11,24 @@ public static class Csv2Json
         var txts = new List<string>();
         foreach (var line in lines)
         {
-            var txt = "{ ";
+            var txt = "";
             var strs = line.Split(',');
             if (strs.Length != header.Count)
                 continue;
             for (int i = 0; i < header[0].Length; i++)
             {
-                txt += $"\"{header[0][i]}\": ";
-                if (stringPropertyNames?.Any(x => header[0].Contains(x)) is true)
-                    txt += $"\"{strs[0]}\"";
-                else if (bool.TryParse(strs[0], out bool bl))
-                    txt += bl.ToString().ToLower();
-                else if (double.TryParse(strs[0], out double num))
-                    txt += num.ToString();
-                else if (strs[0] is "")
-                    txt += "";
-                else
-                    txt += $"\"{strs[0]}\"";
-                if (i != header[0].Length - 1)
-                    txt += "{ ";
+                txt += "{ " + $"\"{header[0][i]}\": ";
             }
+            if (stringPropertyNames?.Any(x => header[0].Contains(x)) is true)
+                txt += $"\"{strs[0]}\"";
+            else if (bool.TryParse(strs[0], out bool bl))
+                txt += bl.ToString().ToLower();
+            else if (double.TryParse(strs[0], out double num))
+                txt += num.ToString();
+            else if (strs[0] is "")
+                txt += "";
+            else
+                txt += $"\"{strs[0]}\"";
             for (int i = 1; i < header.Count; i++)
             {
                 var h1 = header[i - 1];

@@ -1,6 +1,6 @@
 ﻿namespace Husty.Extensions;
 
-public static class ArrayExtensions
+public static class ArrayEx
 {
 
     public static int ArgMax<T>(this IEnumerable<T> src, out double max) where T: struct, IConvertible, IComparable

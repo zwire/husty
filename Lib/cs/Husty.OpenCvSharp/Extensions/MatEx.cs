@@ -2,7 +2,7 @@
 
 namespace Husty.OpenCvSharp.Extensions;
 
-public static class MatExtensions
+public static class MatEx
 {
 
     public static Type GetElementType(this Mat input)

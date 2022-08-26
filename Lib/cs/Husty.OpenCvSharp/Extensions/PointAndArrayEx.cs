@@ -2,7 +2,7 @@
 
 namespace Husty.OpenCvSharp.Extensions;
 
-public static class Point2ArrayExtensions
+public static class PointAndArrayEx
 {
 
     public unsafe static Mat ToBinaryImage(this IEnumerable<Point> points, int rows, int cols, byte maxval = 255)

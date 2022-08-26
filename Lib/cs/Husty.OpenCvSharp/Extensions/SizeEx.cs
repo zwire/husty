@@ -2,7 +2,7 @@
 
 namespace Husty.OpenCvSharp.Extensions;
 
-public static class Size2Extensions
+public static class SizeEx
 {
 
     public static Size ToSize(this Size2f size)

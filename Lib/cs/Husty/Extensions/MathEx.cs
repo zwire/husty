@@ -1,6 +1,6 @@
 ﻿namespace Husty.Extensions;
 
-public static class MathExtensions
+public static class MathEx
 {
 
     public static T OrAbove<T>(this T value, T min)

@@ -74,7 +74,7 @@ public static class Vector
 
 }
 
-public static class VectorExtensions
+public static class VectorEx
 {
     
     public static Vector2D ToHustyVector2D(this Vec2b v)

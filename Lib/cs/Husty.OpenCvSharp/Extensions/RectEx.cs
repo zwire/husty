@@ -2,7 +2,7 @@
 
 namespace Husty.OpenCvSharp.Extensions;
 
-public static class Rect2Extensions
+public static class RectEx
 {
 
     public static Rect ToRect(this Rect2f rect)
@@ -93,6 +93,62 @@ public static class Rect2Extensions
         points[2] = new(rect.Right, rect.Bottom);
         points[3] = new(rect.Right, rect.Top);
         return points;
+    }
+
+    public static int Area(this Rect rect)
+    {
+        return rect.Width * rect.Height;
+    }
+
+    public static float Area(this Rect2f rect)
+    {
+        return rect.Width * rect.Height;
+    }
+
+    public static double Area(this Rect2d rect)
+    {
+        return rect.Width * rect.Height;
+    }
+
+    public static Rect? GetCommonPart(this Rect rect1, Rect rect2)
+    {
+        return rect1.ToRect2d().GetCommonPart(rect2.ToRect2d())?.ToRect();
+    }
+
+    public static Rect2f? GetCommonPart(this Rect2f rect1, Rect2f rect2)
+    {
+        return rect1.ToRect2d().GetCommonPart(rect2.ToRect2d())?.ToRect2f();
+    }
+
+    public static Rect2d? GetCommonPart(this Rect2d rect1, Rect2d rect2)
+    {
+        if (rect1.Right < rect2.Left || rect1.Left > rect2.Right || rect1.Bottom < rect2.Top || rect1.Top > rect2.Bottom) return null;
+        var left = Math.Max(rect1.Left, rect2.Left);
+        var right = Math.Min(rect1.Right, rect2.Right);
+        var top = Math.Max(rect1.Top, rect2.Top);
+        var bottom = Math.Min(rect1.Bottom, rect2.Bottom);
+        return new(left, top, right - left, bottom - top);
+    }
+
+    public static double IoU(this Rect rect1, Rect rect2)
+    {
+        return rect1.ToRect2d().IoU(rect2.ToRect2d());
+    }
+
+    public static double IoU(this Rect2f rect1, Rect2f rect2)
+    {
+        return rect1.ToRect2d().IoU(rect2.ToRect2d());
+    }
+
+    public static double IoU(this Rect2d rect1, Rect2d rect2)
+    {
+        var common = rect1.GetCommonPart(rect2);
+        if (common is Rect2d c)
+        {
+            var union = rect1.Width * rect1.Height + rect2.Width * rect2.Height - c.Area();
+            return c.Area() / union;
+        }
+        return 0;
     }
 
 }
