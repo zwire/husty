@@ -36,10 +36,10 @@ public sealed class Chessboard
 			corners = Cv2.CornerSubPix(img, corners, new Size(11, 11), new Size(-1, -1), new TermCriteria(CriteriaTypes.Count | CriteriaTypes.Eps, 30, 0.1));
 			return corners;
 		}
-            else
-            {
+        else
+        {
 			throw new Exception("Couldn't detect chessboard!");
-            }
+        }
 	}
 
 	public void DrawCorners(Mat img, Point2f[] corners)

@@ -12,13 +12,15 @@ internal class Program : ConsoleAppBase
     }
 
     public void Run(
-        [Option("d", "working directory")] string dir = null
+        [Option("d", "working directory")] string dir = null,
+        [Option("r", "rows of pettern")] int petternRows = 7,
+        [Option("c", "cols of pettern")] int petternCols = 10
     )
     {
         dir ??= Environment.CurrentDirectory;
         if (!Directory.Exists(dir)) throw new ArgumentException("directory not exist!");
         var files = Directory.GetFiles(dir, "*.png");
-        var param = IntrinsicCameraCalibrator.CalibrateWithChessboardImages(new(7, 10, 32.5f), files);
+        var param = IntrinsicCameraCalibrator.CalibrateWithChessboardImages(new(petternRows, petternCols, 32.5f), files);
         param.Save($"{dir}\\intrinsic.json");
         Console.WriteLine("successfully calibrated and saved as intrinsic.json");
     }
