@@ -92,7 +92,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiUdpSender", "Tutorial\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiUdpReceiver", "Tutorial\MultiUdpReceiver\MultiUdpReceiver.csproj", "{7DA8EB18-D2B3-48D1-91E6-6B5436CF2326}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Husty.OpenCvSharp.OnnxRuntime", "Lib\cs\Husty.OpenCvSharp.OnnxRuntime\Husty.OpenCvSharp.OnnxRuntime.csproj", "{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Husty.OpenCvSharp.OnnxRuntime", "Lib\cs\Husty.OpenCvSharp.OnnxRuntime\Husty.OpenCvSharp.OnnxRuntime.csproj", "{0CD0A0AC-0626-4034-A2C8-F9AB9EA12365}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

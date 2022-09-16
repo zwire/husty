@@ -13,7 +13,7 @@ public sealed class BgrXyzRecorder : IDisposable
     // 
     //   byte        content
     //  
-    //    1        Format Code
+    //    8        Format Code
     //    8       Stream Length
     //    
     //    8        Time Stamp

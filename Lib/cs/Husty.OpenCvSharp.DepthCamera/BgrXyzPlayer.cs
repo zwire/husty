@@ -17,7 +17,7 @@ public sealed class BgrXyzPlayer : IVideoStream<BgrXyzMat>
     // 
     //   byte        content
     //  
-    //    1        Format Code
+    //    8        Format Code
     //    8       Stream Length
     //    
     //    8        Time Stamp
@@ -73,18 +73,43 @@ public sealed class BgrXyzPlayer : IVideoStream<BgrXyzMat>
     {
         if (!File.Exists(filePath))
             throw new Exception("File doesn't exist!");
-        _binReader = new BinaryReader(File.Open(filePath, FileMode.Open, FileAccess.Read), Encoding.ASCII);
+        var file = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite);
+        _binReader = new BinaryReader(file, Encoding.ASCII);
         var fileFormatCode = Encoding.ASCII.GetString(_binReader.ReadBytes(8));
         if (fileFormatCode is not "HUSTY000") throw new Exception();
         var indexesPos = _binReader.ReadInt64();
-        if (indexesPos <= 0)
-            throw new Exception("Index positions are invalid.");
-        _binReader.BaseStream.Position = indexesPos;
         var indexes = new List<long>();
-        while (_binReader.BaseStream.Position < _binReader.BaseStream.Length)
-            indexes.Add(_binReader.ReadInt64());
-        if (indexes.Count < 5)
-            throw new Exception("frame count is too small");
+        if (indexesPos is -1)
+        {
+            _binReader.BaseStream.Position = 16;
+            while (true)
+            {
+                indexes.Add(_binReader.BaseStream.Position);
+                if (_binReader.BaseStream.Position + 8 > _binReader.BaseStream.Length - 1) break;
+                _binReader.BaseStream.Position += 8;
+                var len0 = _binReader.ReadInt32();
+                if (_binReader.BaseStream.Position + len0 > _binReader.BaseStream.Length - 1) break;
+                _binReader.BaseStream.Position += len0;
+                var len1 = _binReader.ReadInt32();
+                if (_binReader.BaseStream.Position + len1 > _binReader.BaseStream.Length - 1) break;
+                _binReader.BaseStream.Position += len1;
+            }
+            indexes.RemoveAt(indexes.Count - 1);
+
+            var binWriter = new BinaryWriter(file, Encoding.ASCII);
+            binWriter.Seek(8, SeekOrigin.Begin);
+            binWriter.Write(binWriter.BaseStream.Length);
+            binWriter.Seek(0, SeekOrigin.End);
+            indexes.ForEach(p => binWriter.Write(p));
+        }
+        else
+        {
+            _binReader.BaseStream.Position = indexesPos;
+            while (_binReader.BaseStream.Position < _binReader.BaseStream.Length)
+                indexes.Add(_binReader.ReadInt64());
+            if (indexes.Count < 5)
+                throw new Exception("frame count is too small");
+        }
         _indexes = indexes.ToArray();
 
         _binReader.BaseStream.Position = 0;

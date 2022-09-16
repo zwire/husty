@@ -90,7 +90,7 @@ public sealed class Kinect : IDepthCamera
         {
             ColorFormat = ImageFormat.ColorBGRA32,
             ColorResolution = ColorResolution.R720p,
-            DepthMode = DepthMode.NFOV_2x2Binned,
+            DepthMode = DepthMode.WFOV_2x2Binned,
             SynchronizedImagesOnly = true,
             CameraFPS = FPS.FPS30
         }, align)
