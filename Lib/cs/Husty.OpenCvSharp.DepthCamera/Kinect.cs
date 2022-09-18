@@ -48,14 +48,14 @@ public sealed class Kinect : IDepthCamera
     /// Open device
     /// </summary>
     /// <param name="config">User settings</param>
-    public Kinect(DeviceConfiguration config, AlignBase align = AlignBase.Color)
+    public Kinect(DeviceConfiguration config, int id = 0, AlignBase align = AlignBase.Color)
     {
         _align = align;
         using var xRot = Angle.FromDegree(-5.8).ToRotationMatrix(Axis.X);
         using var yRot = Angle.FromDegree(-1.3).ToRotationMatrix(Axis.Y);
         using var zRot = Angle.FromDegree(0).ToRotationMatrix(Axis.Z);
         _rotationMatrix = zRot * yRot * xRot;
-        _device = Device.Open();
+        _device = Device.Open(id);
         _device.StartCameras(config);
         _transformation = _device.GetCalibration().CreateTransformation();
         Config = config;
@@ -85,7 +85,7 @@ public sealed class Kinect : IDepthCamera
     /// <summary>
     /// Open device (default)
     /// </summary>
-    public Kinect(AlignBase align = AlignBase.Color)
+    public Kinect(int id = 0, AlignBase align = AlignBase.Color)
         : this(new DeviceConfiguration
         {
             ColorFormat = ImageFormat.ColorBGRA32,
@@ -93,7 +93,7 @@ public sealed class Kinect : IDepthCamera
             DepthMode = DepthMode.WFOV_2x2Binned,
             SynchronizedImagesOnly = true,
             CameraFPS = FPS.FPS30
-        }, align)
+        }, id, align)
     { }
 
 
