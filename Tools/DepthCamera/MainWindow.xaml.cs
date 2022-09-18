@@ -299,7 +299,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
                     DepthMode = DepthMode.WFOV_2x2Binned,
                     SynchronizedImagesOnly = true,
                     CameraFPS = FPS.FPS15
-                }, AlignBase.Color);
+                }, 0, AlignBase.Color);
         }
         catch
         {
