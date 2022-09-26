@@ -27,7 +27,7 @@ public class UdpReceiver
 
     public UdpReceiver(int port)
     {
-        _sock = new UdpClient(port);
+        _sock = new UdpClient(port) { EnableBroadcast = true };
         var observable = Observable.Repeat(0, ThreadPoolScheduler.Instance)
             .TakeUntil(_ => _closed)
             .Finally(_sock.Close)

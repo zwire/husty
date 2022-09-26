@@ -25,7 +25,7 @@ public class UdpSender
     public UdpSender(params int[] ports)
     {
         EndPoints = ports.Select(p => new IPEndPoint(IPAddress.Broadcast, p)).ToList();
-        _sock = new UdpClient();
+        _sock = new UdpClient() { EnableBroadcast = true };
     }
 
 
