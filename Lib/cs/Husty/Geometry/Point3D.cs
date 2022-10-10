@@ -27,7 +27,7 @@ public class Point3D : IEquatable<Point3D>
 
     public double[] ToArray() => new[] { X, Y, Z };
 
-    public Point3D Clone() => new(X, Y, Z);
+    public virtual Point3D Clone() => new(X, Y, Z);
 
     public Vector3D ToVector3D() => new(X, Y, Z);
 

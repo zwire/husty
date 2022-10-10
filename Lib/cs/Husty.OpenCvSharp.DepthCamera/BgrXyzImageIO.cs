@@ -15,11 +15,11 @@ public static class BgrXyzImageIO
     /// Save RGB, Depth, and PointCloud image in zip file.
     /// </summary>
     /// <param name="saveDirectory">Target directory</param>
-    /// <param name="baseName">To identify</param>
-    public static void SaveAsZip(string saveDirectory, string baseName, BgrXyzMat input)
+    /// <param name="id">To identify</param>
+    public static void SaveAsZip(string saveDirectory, string id, BgrXyzMat input)
     {
-        baseName = baseName is null ? "" : baseName + "_";
-        var filePath = $"{saveDirectory}\\Image_{baseName}{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.zip";
+        id = id is null ? "" : "_" + id;
+        var filePath = $"{saveDirectory}\\Image{id}.zip";
         Cv2.ImWrite($"{filePath}_C.png", input.BGR);
         Cv2.ImWrite($"{filePath}_D.png", input.Depth16());
         Cv2.ImWrite($"{filePath}_P.png", input.XYZ);

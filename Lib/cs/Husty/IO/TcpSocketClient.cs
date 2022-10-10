@@ -24,14 +24,14 @@ public sealed class TcpSocketClient : ICommunicator
 
     // ------ constructors ------ //
 
-    public TcpSocketClient(string ip, int port)
+    public TcpSocketClient(string ip, int inoutPort)
     {
         _client1 = new();
         _connectionTask = Task.Run(() =>
         {
             try
             {
-                _client1 = new(ip, port);
+                _client1 = new(ip, inoutPort);
             }
             catch
             {
@@ -40,7 +40,7 @@ public sealed class TcpSocketClient : ICommunicator
         });
     }
 
-    public TcpSocketClient(string recvIp, int recvPort, string sendIp, int sendPort)
+    public TcpSocketClient(string ip, int inPort, int outPort)
     {
         _client1 = new();
         _client2 = new();
@@ -48,8 +48,8 @@ public sealed class TcpSocketClient : ICommunicator
         {
             try
             {
-                _client1 = new(sendIp, sendPort);
-                _client2 = new(recvIp, recvPort);
+                _client1 = new(ip, outPort);
+                _client2 = new(ip, inPort);
             }
             catch
             {

@@ -8,25 +8,30 @@ public abstract class BinaryStatsBase : IBinaryStats
 
     // ------ fields ------ //
 
-    protected StatModel _classifier;
+    protected readonly StatModel _classifier;
+
+
+    // ------ properties ------ //
+
+    public StatModel Classifier => _classifier;
 
 
     // ------ constructors ------ //
 
     public BinaryStatsBase(string modelPath)
     {
-        Load(modelPath);
+        if (modelPath is not null)
+            _classifier = DoLoadModel(modelPath);
+        else
+            _classifier = DoCreateDefaultModel();
     }
 
 
     // ------ public methods ------ //
 
-    public void Load(string modelPath = "model.xml")
+    public void Dispose()
     {
-        if (modelPath is not null)
-            _classifier = DoLoadModel(modelPath);
-        else
-            _classifier = DoCreateDefaultModel();
+        _classifier.Dispose();
     }
 
     public void Save(string modelPath)
@@ -36,16 +41,28 @@ public abstract class BinaryStatsBase : IBinaryStats
 
     public void Train(IEnumerable<StatsVectorData> dataset)
     {
+        if (dataset.GroupBy(x => x.Label).Count() is not 2)
+            throw new Exception("label must express binary data (including both true and false)");
         var ary = dataset.SelectMany(d => d.Feature).ToArray();
-        using var featureMat = new Mat(dataset.Count(), ary.Length / dataset.Count(), MatType.CV_32F, ary);
-        using var labelMat = new Mat(dataset.Count(), 1, MatType.CV_32S, dataset.Select(d => d.Label ? 1 : 0).ToArray());
+        using var featureMat = new Mat(
+            dataset.Count(), 
+            ary.Length / dataset.Count(), 
+            MatType.CV_32F, 
+            ary
+        );
+        using var labelMat = new Mat(
+            dataset.Count(), 
+            1, 
+            MatType.CV_32S, 
+            dataset.Select(d => d.Label ? 1 : 0).ToArray()
+        );
         _classifier.Train(featureMat, SampleTypes.RowSample, labelMat);
     }
 
     public bool[] Predict(IEnumerable<IEnumerable<float>> input)
     {
         if (input.Count() is 0)
-            throw new ArgumentException("Input data is empty!");
+            throw new ArgumentException("input data is empty!");
         using var inputMat = new Mat(input.Count(), input.FirstOrDefault().Count(), MatType.CV_32F, input.SelectMany(i => i).ToArray());
         using var outputMat = new Mat();
         _classifier.Predict(inputMat, outputMat);

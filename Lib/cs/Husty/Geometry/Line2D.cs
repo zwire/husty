@@ -44,7 +44,6 @@ public class Line2D
         Intercept = hough.Rho / (Sin(hough.Theta.Radian) + 1e-15);
     }
 
-
     // ------ public methods ------ //
 
     public virtual double GetY(double x) => Slope * x + Intercept;
@@ -69,6 +68,13 @@ public class Line2D
         var d = line.Intercept;
         var x = (d - Intercept) / (Slope - c);
         var y = c * x + d;
+        return new(x, y);
+    }
+
+    public Point2D GetIntersection(Line2D line)
+    {
+        var x = (line.Intercept - Intercept) / (Slope - line.Slope);
+        var y = (Slope * line.Intercept - Intercept * line.Slope) / (Slope - line.Slope);
         return new(x, y);
     }
 

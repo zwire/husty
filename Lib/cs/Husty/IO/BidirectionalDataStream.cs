@@ -20,7 +20,7 @@ public sealed class BidirectionalDataStream : IDisposable
     /// </summary>
     public bool Available => _writingStream is not null && _readingStream is not null;
 
-
+    
     // ------- Constructors ------- //
 
     public BidirectionalDataStream(Stream writingStream, Stream readingStream, int writeTimeout = -1, int readTimeout = -1)

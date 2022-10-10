@@ -1,4 +1,5 @@
-﻿using OpenCvSharp;
+﻿using Husty.Extensions;
+using OpenCvSharp;
 using OpenCvSharp.Dnn;
 
 namespace Husty.OpenCvSharp.Yolo;
@@ -76,7 +77,11 @@ public sealed class Yolov3v4 : IYoloDetector
                         ids.Add(maxLoc.X);
                         confs.Add(p[4]);
                         probs.Add((float)max);
-                        boxes.Add(new Rect2d(p[0] - p[2] / 2, p[1] - p[3] / 2, p[2], p[3]));
+                        var x = (p[0] - p[2] / 2).OrAbove(0);
+                        var y = (p[1] - p[3] / 2).OrAbove(0);
+                        var w = p[2].OrBelow(1 - x);
+                        var h = p[3].OrBelow(1 - y);
+                        boxes.Add(new Rect2d(x, y, w, h));
                     }
                 }
                 pred.Dispose();

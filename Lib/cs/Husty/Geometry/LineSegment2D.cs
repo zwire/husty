@@ -28,8 +28,6 @@ public class LineSegment2D : Line2D
 
     public Vector2D ToVector2D() => new(End.X - Start.X, End.Y - Start.Y);
 
-    public Line2D ToLine2D() => new(Start, End);
-
     public LineSegment2D GetReverse() => new(End, Start);
 
     public override double GetY(double x)

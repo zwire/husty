@@ -2,26 +2,35 @@
 
 namespace Husty.IO;
 
-public sealed class SerialPort : IDisposable
+public class SerialPort : IDisposable
 {
 
     // ------- fields ------- //
 
-    private bool _disposed;
     private readonly System.IO.Ports.SerialPort _port;
+    private readonly CancellationTokenSource _cts;
 
 
     // ------- constructors ------- //
 
-    public SerialPort(string portName, int baudRate, int readTimeout = -1, int writeTimeout = -1, string newLine = "\n")
+    public SerialPort(
+        string portName, 
+        int baudRate, 
+        StopBits stopBits = StopBits.One,
+        Handshake handshake = default,
+        Parity parity = default,
+        int readTimeout = -1, 
+        int writeTimeout = -1, 
+        string newLine = "\n"
+    )
     {
         _port = new()
         {
             PortName = portName,
             BaudRate = baudRate,
-            StopBits = StopBits.One,
-            Handshake = Handshake.None,
-            Parity = Parity.None,
+            StopBits = stopBits,
+            Handshake = handshake,
+            Parity = parity,
             ReadTimeout = readTimeout,
             WriteTimeout = writeTimeout,
             NewLine = newLine
@@ -29,10 +38,13 @@ public sealed class SerialPort : IDisposable
         try
         {
             _port.Open();
+            _port.DiscardInBuffer();
+            _port.DiscardOutBuffer();
+            _cts = new();
         }
         catch
         {
-            throw new Exception("failed to open!");
+            throw new Exception($"failed to open {portName}");
         }
     }
 
@@ -41,7 +53,7 @@ public sealed class SerialPort : IDisposable
 
     public bool Write(byte[] value)
     {
-        if (_disposed) return false;
+        if (_cts.IsCancellationRequested) return false;
         try
         {
             if (_port.IsOpen is true) _port.Write(value, 0, value.Length);
@@ -55,7 +67,7 @@ public sealed class SerialPort : IDisposable
 
     public bool Write(string value)
     {
-        if (_disposed) return false;
+        if (_cts.IsCancellationRequested) return false;
         try
         {
             if (_port.IsOpen is true) _port.Write(value);
@@ -69,7 +81,7 @@ public sealed class SerialPort : IDisposable
 
     public bool WriteLine(string value)
     {
-        if (_disposed) return false;
+        if (_cts.IsCancellationRequested) return false;
         try
         {
             if (_port.IsOpen is true) _port.WriteLine(value);
@@ -83,6 +95,7 @@ public sealed class SerialPort : IDisposable
 
     public byte[] Read(int size)
     {
+        if (_cts.IsCancellationRequested) return Array.Empty<byte>();
         var buf = new byte[size];
         var progress = 0;
         while (progress < size)
@@ -92,10 +105,10 @@ public sealed class SerialPort : IDisposable
 
     public string? ReadLine()
     {
-        if (_disposed) return null;
+        if (_cts.IsCancellationRequested) return null;
         try
         {
-            return _port.IsOpen is true ? _port.ReadLine() : null;
+            return _port.IsOpen ? _port.ReadLine() : null;
         }
         catch
         {
@@ -105,9 +118,8 @@ public sealed class SerialPort : IDisposable
 
     public void Dispose()
     {
-        _disposed = true;
+        _cts.Cancel();
         _port.Close();
-        _port.Dispose();
     }
 
     public static string[] GetPortNames()

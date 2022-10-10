@@ -30,6 +30,19 @@ public sealed class BgrXyzMat : IDisposable
 
     public bool IsDisposed => BGR.IsDisposed || XYZ.IsDisposed;
 
+    public BgrXyzMat this[Rect box]
+    {
+        set 
+        {
+            BGR[box] = value.BGR;
+            XYZ[box] = value.XYZ;
+        }
+        get 
+        {
+            return new(BGR[box], XYZ[box]);
+        }
+    }
+
 
     // ------ constructors ------ //
 

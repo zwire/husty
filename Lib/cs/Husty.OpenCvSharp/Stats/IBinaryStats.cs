@@ -1,9 +1,7 @@
 ﻿namespace Husty.OpenCvSharp.Stats;
 
-public interface IBinaryStats
+public interface IBinaryStats : IDisposable
 {
-
-    public void Load(string modelPath);
 
     public void Save(string modelPath);
 

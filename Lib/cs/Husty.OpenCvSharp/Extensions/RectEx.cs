@@ -95,6 +95,27 @@ public static class RectEx
         return points;
     }
 
+    public static double GetAspectRatio(this Rect rect, bool belowOne = false)
+    {
+        return belowOne
+            ? Math.Min((float)rect.Width / rect.Height, (float)rect.Height / rect.Width)
+            : (float)rect.Width / rect.Height;
+    }
+
+    public static double GetAspectRatio(this Rect2f rect, bool belowOne = false)
+    {
+        return belowOne
+            ? Math.Min(rect.Width / rect.Height, rect.Height / rect.Width)
+            : rect.Width / rect.Height;
+    }
+
+    public static double GetAspectRatio(this Rect2d rect, bool belowOne = false)
+    {
+        return belowOne
+            ? Math.Min(rect.Width / rect.Height, rect.Height / rect.Width)
+            : rect.Width / rect.Height;
+    }
+
     public static int Area(this Rect rect)
     {
         return rect.Width * rect.Height;

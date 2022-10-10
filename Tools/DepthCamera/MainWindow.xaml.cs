@@ -113,13 +113,13 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
         {
             var frame = ReactiveFrame.Value;
             if (frame.Empty()) return;
-            BgrXyzImageIO.SaveAsZip(_saveDir, "", frame);
+            BgrXyzImageIO.SaveAsZip(_saveDir, $"{DateTimeOffset.Now:yyyy-MM-dd-HH-mm-ss}", frame);
         }
         if (_player != null)
         {
             _player.Seek((int)PlaySlider.Value);
             var frame = _player.Read();
-            BgrXyzImageIO.SaveAsZip(_saveDir, "", frame);
+            BgrXyzImageIO.SaveAsZip(_saveDir, $"{DateTimeOffset.Now:yyyy-MM-dd-HH-mm-ss}", frame);
         }
     }
 

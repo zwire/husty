@@ -2,7 +2,7 @@
 
 namespace Husty;
 
-public class ObjectPool<T> : IDisposable where T : class
+public class ObjectPool<T> : IDisposable where T : new()
 {
 
     // ------ fields ------ //
@@ -13,29 +13,21 @@ public class ObjectPool<T> : IDisposable where T : class
 
     // ------ constructors ------ //
 
-    public ObjectPool(int capacity, Func<T>? factory = null)
+    public ObjectPool(int capacity = 1, Func<T>? factory = null)
     {
         _capacity = capacity;
-        _pool = factory is null ? new() : new(Enumerable.Range(0, _capacity).Select(_ => factory.Invoke()));
+        _pool = new(Enumerable.Range(0, _capacity).Select(_ => factory is null ? new() : factory.Invoke()));
     }
 
 
     // ------ public methods ------ //
 
-    public T GetObject(Func<T?, T>? replacer = null)
+    public T GetObject()
     {
-        T obj;
+        if (!_pool.TryDequeue(out T obj))
+            obj = new();
         if (_pool.Count < _capacity)
-        {
-            if (replacer is null) throw new ArgumentNullException(nameof(replacer));
-            obj = replacer(null);
-        }
-        else
-        {
-            _pool.TryDequeue(out obj);
-            obj = replacer?.Invoke(obj) ?? obj;
-        }
-        _pool.Enqueue(obj);
+            _pool.Enqueue(obj);
         return obj;
     }
 

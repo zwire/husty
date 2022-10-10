@@ -8,7 +8,7 @@ public static class ConsoleEx
         if (time == default)
             time = TimeSpan.FromMilliseconds(10);
         var spinner = new SpinWait();
-        while(func())
+        while (func())
             spinner.SpinOnce(time.Milliseconds);
     }
 
@@ -39,6 +39,21 @@ public static class ConsoleEx
             return true;
         });
         return pressed;
+    }
+
+    public static void WriteLine(int? rowIndex = default, object? value = default)
+    {
+        rowIndex ??= Console.CursorTop + 1;
+        Console.SetCursorPosition(0, (int)rowIndex);
+        Console.Write(new string(' ', Console.WindowWidth));
+        Console.SetCursorPosition(0, (int)rowIndex);
+        Console.WriteLine(value);
+    }
+
+    public static void WriteLines(int? rowIndex = default, params object?[] value)
+    {
+        foreach (var val in value)
+            WriteLine(rowIndex++, val);
     }
 
 }

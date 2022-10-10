@@ -14,21 +14,28 @@ public class DataLogger<T> : IDisposable where T : class
     private StreamWriter _sw;
     private readonly string _fileName;
     private readonly LogFileFormat _format;
-    private readonly JsonSerializerOptions _option
+    private readonly JsonSerializerOptions _option 
         = new() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
 
 
     // ------ constructors ------ //
 
-    public DataLogger(LogFileFormat format, string directory = null)
+    public DataLogger(
+        LogFileFormat format, 
+        string? directory = null,
+        string? prefix = null,
+        string? suffix = null
+    )
     {
         _format = format;
-        var ext = format is LogFileFormat.Json ? "json" : "csv";
+        var ext = format is LogFileFormat.Json ? ".json" : ".csv";
         var time = $"{DateTime.Now:yyyy-MM-dd-HH-mm-ss}";
         directory ??= "log";
-        if (!Directory.Exists(directory))
+        prefix = prefix is null ? "" : prefix + "_";
+        suffix = suffix is null ? "" : "_" + suffix;
+        if (!Directory.Exists(directory)) 
             Directory.CreateDirectory(directory);
-        _fileName = $"{directory}\\{time}.{ext}";
+        _fileName = $"{directory}\\{prefix}{time}{suffix}{ext}";
         _sw = new(_fileName, false);
     }
 
@@ -64,4 +71,3 @@ public class DataLogger<T> : IDisposable where T : class
     }
 
 }
-

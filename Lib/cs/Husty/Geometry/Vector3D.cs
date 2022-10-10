@@ -4,7 +4,7 @@ namespace Husty.Geometry;
 
 public enum Axis { X, Y, Z }
 
-public class Vector3D
+public class Vector3D : IEquatable<Vector3D>
 {
 
     // ------ properties ------ //

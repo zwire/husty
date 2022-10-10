@@ -25,15 +25,15 @@ public class Vector2D : IEquatable<Vector2D>
     // ------ constructors ------ //
 
     public Vector2D(double x, double y)
-    {
+    { 
         X = x;
         Y = y;
         Length = Sqrt(X * X + Y * Y);
     }
 
-    public Vector2D(Point2D p1, Point2D p2)
+    public Vector2D(Point2D p1, Point2D p2) 
     {
-        X = p2.X - p1.X;
+        X = p2.X - p1.X; 
         Y = p2.Y - p1.Y;
         Length = Sqrt(X * X + Y * Y);
     }

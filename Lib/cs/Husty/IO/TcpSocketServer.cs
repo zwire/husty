@@ -27,9 +27,9 @@ public sealed class TcpSocketServer : ICommunicator
 
     // ------ constructors ------ //
 
-    public TcpSocketServer(int port)
+    public TcpSocketServer(int inoutPort)
     {
-        _listener1 = new(IPAddress.Any, port);
+        _listener1 = new(IPAddress.Any, inoutPort);
         _listener1.Start();
         _connectionTask = Task.Run(() =>
         {
@@ -44,10 +44,10 @@ public sealed class TcpSocketServer : ICommunicator
         });
     }
 
-    public TcpSocketServer(int recvPort, int sendPort)
+    public TcpSocketServer(int inPort, int outPort)
     {
-        _listener1 = new(IPAddress.Any, recvPort);
-        _listener2 = new(IPAddress.Any, sendPort);
+        _listener1 = new(IPAddress.Any, inPort);
+        _listener2 = new(IPAddress.Any, outPort);
         _listener1.Start();
         _listener2.Start();
         _connectionTask = Task.Run(() =>

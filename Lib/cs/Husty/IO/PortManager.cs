@@ -32,7 +32,7 @@ public static class PortManager
         {
             try
             {
-                using var port = new SerialPort(p, baudrate, 500);
+                using var port = new SerialPort(p, baudrate, System.IO.Ports.StopBits.One, default, default, 500);
                 foreach (var key in keyPetterns)
                 {
                     for (int i = 0; i < 10; i++)
@@ -47,7 +47,7 @@ public static class PortManager
                                 return p;
                             }
                         }
-                        catch (TimeoutException e)
+                        catch (TimeoutException)
                         {
                             break;
                         }
@@ -57,7 +57,7 @@ public static class PortManager
             }
             catch { }
         }
-        return null;
+        throw new HustyInternalException($"failed to open port for {keyPetterns.Aggregate((line, k) => line += $"{k} ")}");
     }
 
 }

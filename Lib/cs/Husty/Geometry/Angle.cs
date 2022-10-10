@@ -19,6 +19,10 @@ public struct Angle : IEquatable<Angle>
 
     public static Angle Zero => new(0);
 
+    public static Angle MinValue => new(-PI + 1e-16);
+
+    public static Angle MaxValue => new(PI - 1e-16);
+
 
     // ------ constructors ------ //
 

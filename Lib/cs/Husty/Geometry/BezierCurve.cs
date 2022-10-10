@@ -1,4 +1,6 @@
-﻿namespace Husty.Geometry;
+﻿using Husty.Extensions;
+
+namespace Husty.Geometry;
 
 public class BezierCurve : BSplineCurve
 {

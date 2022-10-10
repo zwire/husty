@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Version>1.4.5</Version>
+    <Version>1.5.0</Version>
     <Authors>yamashita</Authors>
     <Company>Husty</Company>
     <Product>Husty</Product>
