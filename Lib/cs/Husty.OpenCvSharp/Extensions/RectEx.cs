@@ -172,5 +172,23 @@ public static class RectEx
         return 0;
     }
 
+    public static Point TopRight(this Rect r) => new(r.Right, r.Top);
+
+    public static Point2f TopRight(this Rect2f r) => new(r.Right, r.Top);
+
+    public static Point2d TopRight(this Rect2d r) => new(r.Right, r.Top);
+
+    public static Point BottomLeft(this Rect r) => new(r.Left, r.Bottom);
+
+    public static Point2f BottomLeft(this Rect2f r) => new(r.Left, r.Bottom);
+
+    public static Point2d BottomLeft(this Rect2d r) => new(r.Left, r.Bottom);
+
+    public static (int Left, int Top, int Right, int Bottom) Deconstruct(this Rect r) => (r.X, r.Y, r.Right, r.Bottom);
+    
+    public static (float Left, float Top, float Right, float Bottom) Deconstruct(this Rect2f r) => (r.X, r.Y, r.Right, r.Bottom);
+    
+    public static (double Left, double Top, double Right, double Bottom) Deconstruct(this Rect2d r) => (r.X, r.Y, r.Right, r.Bottom);
+
 }
 
