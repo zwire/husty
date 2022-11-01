@@ -62,6 +62,8 @@ public sealed class BgrXyzPlayer : IVideoStream<BgrXyzMat>
 
     public int CurrentPosition => _positionIndex;
 
+    public bool IsEnd => _positionIndex >= FrameCount - 1;
+
 
     // ------ constructors ------ //
 
@@ -114,30 +116,27 @@ public sealed class BgrXyzPlayer : IVideoStream<BgrXyzMat>
 
         _binReader.BaseStream.Position = 0;
         _binReader.BaseStream.Seek(_indexes[0], SeekOrigin.Begin);
-        var ticks = _binReader.ReadInt64();
+        _binReader.ReadInt64();
         var bgrDataSize = _binReader.ReadInt32();
         var bgrBytes = _binReader.ReadBytes(bgrDataSize);
         var xyzDataSize = _binReader.ReadInt32();
         var xyzBytes = _binReader.ReadBytes(xyzDataSize);
         using var bgrxyz = new BgrXyzMat(bgrBytes, xyzBytes);
-
-        for (int i = 1; i < 5; i++)
-        {
-            ticks = _binReader.ReadInt64();
-            _binReader.ReadInt32();
-            _binReader.ReadBytes(bgrDataSize);
-            _binReader.ReadInt32();
-            _binReader.ReadBytes(xyzDataSize);
-        }
-        ticks /= 5;
-
-        Fps = 1000 / TimeSpan.FromTicks(ticks).Milliseconds;
         FrameSize = new(bgrxyz.BGR.Width, bgrxyz.BGR.Height);
 
         _bgrXyzPool = new(2, () => new(
             new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_8UC3),
             new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC3))
         );
+
+        long ticks = 0;
+        for (int i = 0; i < 5; i++)
+        {
+            Read(out var time);
+            ticks += time.Ticks;
+        }
+        ticks /= 5;
+        Fps = 1000 / TimeSpan.FromTicks(ticks).Milliseconds;
     }
 
 
@@ -145,8 +144,13 @@ public sealed class BgrXyzPlayer : IVideoStream<BgrXyzMat>
 
     public BgrXyzMat Read()
     {
+        return Read(out _);
+    }
+
+    public BgrXyzMat Read(out TimeSpan delay)
+    {
         var frame = _bgrXyzPool.GetObject();
-        if (TryRead(frame))
+        if (TryRead(frame, out delay))
             return frame;
         else
             return null;
@@ -154,12 +158,23 @@ public sealed class BgrXyzPlayer : IVideoStream<BgrXyzMat>
 
     public bool TryRead(BgrXyzMat frame)
     {
+        return TryRead(frame, out _);
+    }
+
+    public bool TryRead(BgrXyzMat frame, out TimeSpan delay)
+    {
+        if (frame.Width != FrameSize.Width || frame.Height != FrameSize.Height)
+        {
+            frame.BGR.Create(FrameSize, MatType.CV_8UC3);
+            frame.XYZ.Create(FrameSize, MatType.CV_16UC3);
+        }
+        delay = default;
         if (_positionIndex == FrameCount - 1)
             return false;
         _binReader.BaseStream.Seek(_indexes[_positionIndex++], SeekOrigin.Begin);
         var time = _binReader.ReadInt64();
         var ticks = time - _prevTime > 0 ? time - _prevTime : 0;
-        Thread.Sleep(TimeSpan.FromTicks(ticks));
+        delay = TimeSpan.FromTicks(ticks);
         _prevTime = time;
         var bgrDataSize = _binReader.ReadInt32();
         var bgrBytes = _binReader.ReadBytes(bgrDataSize);
@@ -174,7 +189,13 @@ public sealed class BgrXyzPlayer : IVideoStream<BgrXyzMat>
     {
         return Observable.Repeat(0, ThreadPoolScheduler.Instance)
             .Where(_ => _positionIndex < FrameCount)
-            .Select(_ => Read())
+            .Select(_ =>
+            {
+                var frame = Read(out var span);
+                if (frame is not null)
+                    Task.Delay(span).Wait();
+                return frame;
+            })
             .TakeUntil(x => x is null)
             .Where(x => x is not null && !x.IsDisposed && !x.Empty())
             .Publish().RefCount();

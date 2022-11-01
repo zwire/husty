@@ -28,6 +28,8 @@ public sealed class VideoStream : IVideoStream<Mat>
 
     public int CurrentPosition => _positionIndex;
 
+    public bool IsEnd => _positionIndex >= FrameCount - 1;
+
 
     // ------ constructors ------ //
 

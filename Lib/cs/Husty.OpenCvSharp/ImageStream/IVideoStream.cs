@@ -7,6 +7,8 @@ public interface IVideoStream<TImage> : IImageStream<TImage>
 
     public int CurrentPosition { get; }
 
+    public bool IsEnd { get; }
+
     public void Seek(int position);
 
 }

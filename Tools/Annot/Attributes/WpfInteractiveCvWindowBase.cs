@@ -7,6 +7,7 @@ using OpenCvSharp.WpfExtensions;
 using Husty;
 using Husty.Extensions;
 using Husty.OpenCvSharp;
+using Husty.OpenCvSharp.DatasetFormat;
 
 namespace Annot.Attributes;
 
@@ -16,6 +17,8 @@ public abstract class WpfInteractiveCvWindowBase : IInteractiveWindow
     // ------ fields ------ //
 
     private readonly string _name;
+    private readonly AnnotationData _ann;
+    private readonly int _imageId;
     private readonly double _wheelSpeed;
     private readonly double _windowScale;
     private readonly Mat _originalFrame;
@@ -35,6 +38,10 @@ public abstract class WpfInteractiveCvWindowBase : IInteractiveWindow
     // ------ properties ------ //
 
     public string Name => _name;
+
+    public AnnotationData Annotation => _ann;
+
+    public int ImageId => _imageId;
 
     public double Ratio => _ratio;
 
@@ -60,6 +67,7 @@ public abstract class WpfInteractiveCvWindowBase : IInteractiveWindow
     public WpfInteractiveCvWindowBase(
         string name,
         Mat frame,
+        AnnotationData ann,
         int labelIndex,
         int labelCount,
         double windowScale,
@@ -67,6 +75,8 @@ public abstract class WpfInteractiveCvWindowBase : IInteractiveWindow
     )
     {
         _name = name;
+        _ann = ann;
+        ann.TryGetImageId(name, out _imageId);
         _labelIndex = labelIndex;
         _windowScale = windowScale;
         _wheelSpeed = wheelSpeed;
@@ -131,8 +141,6 @@ public abstract class WpfInteractiveCvWindowBase : IInteractiveWindow
     public abstract void DeleteSelected();
 
     public abstract void Clear();
-
-    public abstract string GetLabelData();
 
 
     // ------ protected methods ------ //

@@ -22,14 +22,16 @@ public static class EnumerableEx
 
     public static void ForEach<T>(this IEnumerable<T> src, Action<T> action)
     {
-        foreach (var item in src)
+        var span = src.ToArray().AsSpan();
+        foreach (var item in span)
             action(item);
     }
 
     public static void ForEach<T>(this IEnumerable<T> src, Action<T, int> action)
     {
         var count = 0;
-        foreach (var item in src)
+        var span = src.ToArray().AsSpan();
+        foreach (var item in span)
             action(item, count++);
     }
 

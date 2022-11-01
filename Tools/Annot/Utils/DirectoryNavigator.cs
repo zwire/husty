@@ -11,7 +11,6 @@ public class DirectoryNavigator
 
     private int _index;
     private readonly string[] _imagePaths;
-    private readonly string[] _labelPaths;
 
 
     // ------ properties ------ //
@@ -20,24 +19,22 @@ public class DirectoryNavigator
 
     public bool IsLast => _index == _imagePaths.Length - 1;
 
-    public (string ImagePath, string LabelPath) Current => (_imagePaths[_index], _labelPaths[_index]);
+    public string Current => _imagePaths[_index];
 
     public string[] ImagePaths => _imagePaths;
-
-    public string[] LabelPaths => _labelPaths;
 
 
     // ------ constructors ------ //
 
-    public DirectoryNavigator(string inputDir, string outputDir)
+    public DirectoryNavigator(string inputDir)
     {
         _imagePaths = Directory.GetFiles(inputDir)
             .Where(f =>
             {
                 try
                 {
-                    Cv2.ImRead(f).Dispose();
-                    return true;
+                    using var img = Cv2.ImRead(f);
+                    return !img.Empty();
                 }
                 catch
                 {
@@ -45,21 +42,15 @@ public class DirectoryNavigator
                 }
             })
             .ToArray();
-        _labelPaths = _imagePaths
-            .Select(f => Path.Combine(outputDir, Path.GetFileNameWithoutExtension(f) + ".json"))
-            .ToArray();
-        foreach (var f in _labelPaths)
-            if (!File.Exists(f))
-                File.WriteAllText(f, "");
     }
 
 
     // ------ public methods ------ //
 
-    public (string ImagePath, string LabelPath) Move(int index)
+    public string Move(int index)
     {
         _index = index;
-        return (_imagePaths[_index], _labelPaths[_index]);
+        return _imagePaths[_index];
     }
 
 }

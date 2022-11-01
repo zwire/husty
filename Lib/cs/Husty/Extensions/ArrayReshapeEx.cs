@@ -9,11 +9,12 @@ public static class ArrayReshapeEx
     {
         if (array.Length != rows * cols) 
             throw new ArgumentException("invalid size!");
+        var span = array.AsSpan();
         var array2 = new T[rows, cols];
         var index = 0;
         for (int y = 0; y < rows; y++)
             for (int x = 0; x < cols; x++)
-                array2[y, x] = array[index++];
+                array2[y, x] = span[index++];
         return array2;
     }
 
@@ -21,15 +22,17 @@ public static class ArrayReshapeEx
     {
         if (array.Length != rows * cols)
             throw new ArgumentException("invalid size!");
+        var span = array.AsSpan();
         var array2 = new T[rows][];
         var index = 0;
         for (int y = 0; y < rows; y++)
         {
-            array2[y] = new T[cols];
+            var span2 = new T[cols].AsSpan();
             for (int x = 0; x < cols; x++)
             {
-                array2[y][x] = array[index++];
+                span2[x] = span[index++];
             }
+            array2[y] = span2.ToArray();
         }
         return array2;
     }
@@ -41,12 +44,13 @@ public static class ArrayReshapeEx
     {
         if (array.Length != rows * cols * depth)
             throw new ArgumentException("invalid size!");
+        var span = array.AsSpan();
         var array2 = new T[rows, cols, depth];
         var index = 0;
         for (int y = 0; y < rows; y++)
             for (int x = 0; x < cols; x++)
                 for (int c = 0; c < depth; c++)
-                    array2[y, x, c] = array[index++];
+                    array2[y, x, c] = span[index++];
         return array2;
     }
 
@@ -54,6 +58,7 @@ public static class ArrayReshapeEx
     {
         if (array.Length != rows * cols * depth)
             throw new ArgumentException("invalid size!");
+        var span = array.AsSpan();
         var array2 = new T[rows][][];
         var index = 0;
         for (int y = 0; y < rows; y++)
@@ -61,11 +66,12 @@ public static class ArrayReshapeEx
             array2[y] = new T[cols][];
             for (int x = 0; x < cols; x++)
             {
-                array2[y][x] = new T[depth];
+                var span2 = new T[depth].AsSpan();
                 for (int c = 0; c < depth; c++)
                 {
-                    array2[y][x][c] = array[index++];
+                    span2[c] = span[index++];
                 }
+                array2[y][x] = span2.ToArray();
             }
         }
         return array2;
@@ -76,36 +82,36 @@ public static class ArrayReshapeEx
 
     public static T[] To1DArray<T>(this T[,] array, bool transpose = false)
     {
-        var array2 = new T[array.Length];
+        var span = new T[array.Length].AsSpan();
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
         var index = 0;
         if (!transpose)
             for (int y = 0; y < rows; y++)
                 for (int x = 0; x < cols; x++)
-                    array2[index++] = array[y, x];
+                    span[index++] = array[y, x];
         else
             for (int x = 0; x < cols; x++)
                 for (int y = 0; y < rows; y++)
-                    array2[index++] = array[y, x];
-        return array2;
+                    span[index++] = array[y, x];
+        return span.ToArray();
     }
 
     public static T[] To1DArray<T>(this T[][] array, bool transpose = false)
     {
         var rows = array.Length;
         var cols = array[0].Length;
-        var array2 = new T[rows * cols];
+        var span = new T[rows * cols].AsSpan();
         var index = 0;
         if (!transpose)
             for (int y = 0; y < rows; y++)
                 for (int x = 0; x < cols; x++)
-                    array2[index++] = array[y][x];
+                    span[index++] = array[y][x];
         else
             for (int x = 0; x < cols; x++)
                 for (int y = 0; y < rows; y++)
-                    array2[index++] = array[y][x];
-        return array2;
+                    span[index++] = array[y][x];
+        return span.ToArray();
     }
 
 
@@ -113,7 +119,7 @@ public static class ArrayReshapeEx
 
     public static T[] To1DArray<T>(this T[,,] array)
     {
-        var array2 = new T[array.Length];
+        var span = new T[array.Length].AsSpan();
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
         var depth = array.GetLength(2);
@@ -121,8 +127,8 @@ public static class ArrayReshapeEx
         for (int y = 0; y < rows; y++)
             for (int x = 0; x < cols; x++)
                 for (int c = 0; c < depth; c++)
-                    array2[index++] = array[y, x, c];
-        return array2;
+                    span[index++] = array[y, x, c];
+        return span.ToArray();
     }
 
     public static T[] To1DArray<T>(this T[][][] array)
@@ -130,13 +136,13 @@ public static class ArrayReshapeEx
         var rows = array.Length;
         var cols = array[0].Length;
         var depth = array[0][0].Length;
-        var array2 = new T[rows * cols * depth];
+        var span = new T[rows * cols * depth].AsSpan();
         var index = 0;
         for (int y = 0; y < rows; y++)
             for (int x = 0; x < cols; x++)
                 for (int c = 0; c < depth; c++)
-                    array2[index++] = array[y][x][c];
-        return array2;
+                    span[index++] = array[y][x][c];
+        return span.ToArray();
     }
 
 
@@ -162,11 +168,12 @@ public static class ArrayReshapeEx
         {
             if (array[y].Length != cols) 
                 throw new ArgumentException("invalid array shape");
-            array2[y] = new T[cols];
+            var span2 = new T[cols].AsSpan();
             for (int x = 0; x < cols; x++)
             {
-                array2[x][y] = array[y][x];
+                span2[x] = array[y][x];
             }
+            array2[y] = span2.ToArray();
         }
         return array2;
     }

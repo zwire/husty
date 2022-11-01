@@ -55,6 +55,12 @@ public sealed class BgrXyzMat : IDisposable
         XYZ = new();
     }
 
+    public BgrXyzMat(Size size)
+    {
+        BGR = new(size, MatType.CV_8UC3);
+        XYZ = new(size, MatType.CV_16UC3);
+    }
+
     /// <summary>
     /// Hold Point Cloud with Color.
     /// </summary>
@@ -77,6 +83,28 @@ public sealed class BgrXyzMat : IDisposable
         XYZ = Cv2.ImDecode(xyzBytes, ImreadModes.Unchanged);
         if (BGR.Width != XYZ.Width || BGR.Height != XYZ.Height)
             throw new InvalidOperationException("Require: BGR size == XYZ size");
+    }
+
+    public unsafe BgrXyzMat(int width, int height, IEnumerable<BGRXYZ> src)
+    {
+        if (width * height != src.Count())
+            throw new ArgumentException("Require: width * height == src.Count()");
+        BGR = new Mat(height, width, MatType.CV_8UC3);
+        XYZ = new Mat(height, width, MatType.CV_16UC3);
+        var bgr = BGR.DataPointer;
+        var xyz = (short*)XYZ.Data;
+        var index = 0;
+        foreach (var s in src)
+        {
+            var i = index * 3;
+            bgr[i + 0] = s.B;
+            bgr[i + 1] = s.G;
+            bgr[i + 2] = s.R;
+            xyz[i + 0] = s.X;
+            xyz[i + 1] = s.Y;
+            xyz[i + 2] = s.Z;
+            index++;
+        }
     }
 
 
@@ -200,6 +228,8 @@ public sealed class BgrXyzMat : IDisposable
     {
         if (BGR.Width != XYZ.Width || BGR.Height != XYZ.Height)
             throw new InvalidOperationException("Require: BGR size == XYZ size");
+        if (point.X < 0 || point.Y < 0 || point.X >= BGR.Width || point.Y >= BGR.Height)
+            throw new ArgumentOutOfRangeException();
         var index = (point.Y * BGR.Cols + point.X) * 3;
         var bgr = BGR.DataPointer;
         var xyz = (short*)XYZ.Data;
@@ -210,6 +240,46 @@ public sealed class BgrXyzMat : IDisposable
         var y = xyz[index + 1];
         var z = xyz[index + 2];
         return new BGRXYZ(b, g, r, x, y, z);
+    }
+
+    public unsafe BGRXYZ[] ToArray(Func<BGRXYZ, bool> filter = null)
+    {
+        var bgr = BGR.DataPointer;
+        var xyz = (short*)XYZ.Data;
+        var ary = new BGRXYZ[Width * Height];
+        for (int i = 0; i < Width * Height; i++)
+        {
+            var index = i * 3;
+            var b = bgr[index + 0];
+            var g = bgr[index + 1];
+            var r = bgr[index + 2];
+            var x = xyz[index + 0];
+            var y = xyz[index + 1];
+            var z = xyz[index + 2];
+            ary[i] = new(b, g, r, x, y, z);
+        }
+        if (filter is null)
+            return ary;
+        return ary.Where(filter).ToArray();
+    }
+
+    public unsafe BgrXyzMat Map(Func<BGRXYZ, BGRXYZ> func)
+    {
+        var bgr = BGR.DataPointer;
+        var xyz = (short*)XYZ.Data;
+        var ary = new BGRXYZ[Width * Height];
+        for (int i = 0; i < Width * Height; i++)
+        {
+            var index = i * 3;
+            var b = bgr[index + 0];
+            var g = bgr[index + 1];
+            var r = bgr[index + 2];
+            var x = xyz[index + 0];
+            var y = xyz[index + 1];
+            var z = xyz[index + 2];
+            ary[i] = func(new(b, g, r, x, y, z));
+        }
+        return new(Width, Height, ary);
     }
 
     /// <summary>
@@ -273,10 +343,12 @@ public sealed class BgrXyzMat : IDisposable
 /// <summary>
 /// Record of Point and Color
 /// </summary>
-public record BGRXYZ(byte B, byte G, byte R, short X, short Y, short Z)
+public record struct BGRXYZ(byte B, byte G, byte R, short X, short Y, short Z)
 {
 
     public Vec3s Vector3 { get; } = new(X, Y, Z);
+
+    public static BGRXYZ Zero { get; } = new(0, 0, 0, 0, 0, 0);
 
 }
 
