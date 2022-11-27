@@ -1,4 +1,5 @@
-﻿using static System.Math;
+﻿using System.Text.Json;
+using static System.Math;
 
 namespace Husty.Geometry;
 
@@ -95,6 +96,8 @@ public class Vector3D : IEquatable<Vector3D>
     public override bool Equals(object? obj) => GetHashCode() == obj?.GetHashCode();
 
     public override int GetHashCode() => new { X, Y, Z }.GetHashCode();
+
+    public override string ToString() => JsonSerializer.Serialize(this);
 
 
     // ------ operators ------ //

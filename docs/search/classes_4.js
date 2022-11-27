@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['extrinsiccameracalibrator_0',['ExtrinsicCameraCalibrator',['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_calibrator.html',1,'Husty::OpenCvSharp::CameraCalibration']]],
-  ['extrinsiccameraparameters_1',['ExtrinsicCameraParameters',['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_parameters.html',1,'Husty::OpenCvSharp::CameraCalibration']]]
+  ['enumerableex_0',['EnumerableEx',['../class_enumerable_ex.html',1,'']]],
+  ['extrinsiccameracalibrator_1',['ExtrinsicCameraCalibrator',['../class_extrinsic_camera_calibrator.html',1,'']]],
+  ['extrinsiccameraparameters_2',['ExtrinsicCameraParameters',['../class_extrinsic_camera_parameters.html',1,'']]]
 ];

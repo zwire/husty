@@ -1,4 +1,6 @@
-﻿namespace TcpSocketClient;
+﻿using Husty.Extensions;
+
+namespace TcpSocketClient;
 
 // define and share send/receive object
 internal record Message(string Greeting, int Number);
@@ -19,8 +21,7 @@ internal class Program
             var snd = new Message("Hello", count++);
             stream.WriteAsJson(snd);
             Console.WriteLine(snd);
-            if (Console.ReadKey().Key is ConsoleKey.Escape)
-                break;
+            if (ConsoleEx.WaitKey() is ConsoleKey.Enter) break;
         }
 
         // finalize

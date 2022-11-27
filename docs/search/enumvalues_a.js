@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['server_0',['Server',['../namespace_husty_1_1_i_o.html#ac98d1ecc7143d2769a47c5e04c69f913a9aa1b03934893d7134a660af4204f2a9',1,'Husty::IO']]]
+  ['server_0',['Server',['../_web_socket_stream_8cs.html#a01882f8d51611b90aa625429266c2849a9aa1b03934893d7134a660af4204f2a9',1,'WebSocketStream.cs']]]
 ];

@@ -9,7 +9,7 @@
     <Description>Microsoft Azure Kinect, Intel Realsense</Description>
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
-    <Version>1.5.1</Version>
+    <Version>1.5.2</Version>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 

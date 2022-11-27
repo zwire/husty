@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['b_0',['B',['../class_husty_1_1_neural_network_1_1_affine.html#afc06d0b32083ed148784a1e5d68a70f6',1,'Husty::NeuralNetwork::Affine']]],
-  ['baudrate_1',['Baudrate',['../class_husty_1_1_lawicel_1_1_can_usb_adapter.html#a7bc307d101ad2c90c0351b612782e862',1,'Husty::Lawicel::CanUsbAdapter']]],
-  ['beta_2',['Beta',['../class_husty_1_1_neural_network_1_1_adam.html#ad9e29c8af71aae86f1102e6ed0a25b81',1,'Husty::NeuralNetwork::Adam']]],
-  ['bgr_3',['BGR',['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_bgr_xyz_mat.html#a9dae51e81177d7b36ae53f4d10488350',1,'Husty::OpenCvSharp::DepthCamera::BgrXyzMat']]]
+  ['b_0',['B',['../class_affine.html#ab9518927b383c05dc796c0a6d15c70d4',1,'Affine']]],
+  ['baudrate_1',['Baudrate',['../class_can_usb_adapter.html#ace3a19e0eef13be45ab60e983d2d8e16',1,'CanUsbAdapter']]],
+  ['bbox_2',['bbox',['../classannotation.html#a4c284821d96acc44dca5920aba20d7df',1,'annotation']]],
+  ['beta_3',['Beta',['../class_adam.html#a2eb95629cb89f8b95a516cc4e9747951',1,'Adam']]],
+  ['bgr_4',['BGR',['../class_bgr_xyz_mat.html#af3fbc2a444225bcb522d615370482835',1,'BgrXyzMat']]]
 ];

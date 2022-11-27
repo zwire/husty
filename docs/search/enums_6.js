@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vectormattype_0',['VectorMatType',['../namespace_husty_1_1_open_cv_sharp_1_1_extensions.html#a672cd72bc8e9c24cd27fc57e4405726a',1,'Husty::OpenCvSharp::Extensions']]]
+  ['vectormattype_0',['VectorMatType',['../_vector_ex_8cs.html#a3e8ca7dffaae3c4101485c6b997533d7',1,'VectorEx.cs']]]
 ];

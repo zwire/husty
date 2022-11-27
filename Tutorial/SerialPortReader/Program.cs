@@ -1,4 +1,5 @@
-﻿using Husty.IO;
+﻿using Husty.Extensions;
+using Husty.IO;
 
 namespace SerialPortReader;
 
@@ -18,9 +19,8 @@ internal class Program
         while(true)
         {
             Console.WriteLine(port.ReadLine());
-            if (Console.KeyAvailable)
-                if (Console.ReadKey().Key is ConsoleKey.Escape)
-                    break;
+            if (Console.KeyAvailable && Console.ReadKey().Key is ConsoleKey.Enter)
+                break;
         }
 
         // finalize

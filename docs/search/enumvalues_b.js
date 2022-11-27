@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tensorrt_0',['TensorRT',['../namespace_husty_1_1_open_cv_sharp.html#a4ff7f1daf6a470b95a1a6d4f58706bc0a61918500e2bc645b2aea3f447086a8a5',1,'Husty::OpenCvSharp']]]
+  ['tensorrt_0',['TensorRT',['../_onnx_base_8cs.html#aefe78fa91706a68df61ffe346549dca3a61918500e2bc645b2aea3f447086a8a5',1,'OnnxBase.cs']]]
 ];

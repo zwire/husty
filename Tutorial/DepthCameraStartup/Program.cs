@@ -1,6 +1,7 @@
 ﻿using System.Reactive.Linq;
 using OpenCvSharp;
 using Husty.OpenCvSharp.DepthCamera;
+using Husty.Extensions;
 
 namespace DepthCameraStartup;
 
@@ -31,7 +32,8 @@ internal class Program
                 Cv2.WaitKey(1);
             });
 
-        Console.ReadKey();
+        Console.WriteLine("Press Enter key to exit...");
+        ConsoleEx.WaitKey(ConsoleKey.Enter);
         connector.Dispose();
         camera.Dispose();
 

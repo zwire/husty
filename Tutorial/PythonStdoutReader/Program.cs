@@ -1,4 +1,5 @@
-﻿using Husty.IO;
+﻿using Husty.Extensions;
+using Husty.IO;
 
 namespace PythonStdoutReader;
 
@@ -12,7 +13,8 @@ internal class Program
     {
         var reader = new StdOutReader(pythonExe, pythonFile);
         reader.GetStream().Subscribe(x => Console.WriteLine(x));
-        while (Console.ReadKey().Key is not ConsoleKey.Escape) ;
+        Console.WriteLine("Press Enter key to exit...");
+        ConsoleEx.WaitKey(ConsoleKey.Enter);
         reader.Dispose();
     }
 }

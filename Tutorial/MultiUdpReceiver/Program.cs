@@ -11,6 +11,7 @@ internal class Program
         var receiver2 = new UdpReceiver(3001);
         receiver1.GetStream<string>().Subscribe(x => Console.WriteLine(x));
         receiver2.GetStream<string>().Subscribe(x => Console.WriteLine(x));
-        ConsoleEx.WaitKey(ConsoleKey.Q, ConsoleKey.Escape);
+        Console.WriteLine("Press Enter key to exit...");
+        ConsoleEx.WaitKey(ConsoleKey.Enter);
     }
 }

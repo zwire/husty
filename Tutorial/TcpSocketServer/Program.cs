@@ -18,9 +18,8 @@ internal class Program
             var rcv = stream.ReadAsJson<Message>();
             if (rcv is null) break;
             Console.WriteLine($"{rcv.Greeting} : {rcv.Number}");
-            if (Console.KeyAvailable)
-                if (Console.ReadKey().Key is ConsoleKey.Escape)
-                    break;
+            if (Console.KeyAvailable && Console.ReadKey().Key is ConsoleKey.Enter)
+                break;
         }
 
         // finalize

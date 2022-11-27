@@ -18,6 +18,7 @@ internal class Program
                 Thread.Sleep(1000);
             }
         });
-        ConsoleEx.WaitKey(ConsoleKey.Q, ConsoleKey.Escape);
+        Console.WriteLine("Press Enter key to exit...");
+        ConsoleEx.WaitKey(ConsoleKey.Enter);
     }
 }

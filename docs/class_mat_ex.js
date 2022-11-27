@@ -1,0 +1,25 @@
+var class_mat_ex =
+[
+    [ "GetAspectRatio", "class_mat_ex.html#a0ea80a7ee395e9d2230931cf1446986f", null ],
+    [ "GetElementType", "class_mat_ex.html#ae0243450e605b043694ed83c23ec3164", null ],
+    [ "GetNonZeroLocations", "class_mat_ex.html#add22f2aae0ea36104ac1df8a8aded567", null ],
+    [ "Map< T >", "class_mat_ex.html#a6ae2bf8dbcff0206559b3c3420936153", null ],
+    [ "To1DByteArray", "class_mat_ex.html#ac7f6903512cc781b9ab0519534edd263", null ],
+    [ "To1DDoubleArray", "class_mat_ex.html#ae46c271160953ebf7cfe741de497be27", null ],
+    [ "To1DFloatArray", "class_mat_ex.html#a04cc6b4d4d82bc3e62979bec491a07bd", null ],
+    [ "To1DIntArray", "class_mat_ex.html#a62a100533bb734a8e9a4c3561e114ad5", null ],
+    [ "To1DShortArray", "class_mat_ex.html#a10b73c92d8a62f301d94fbd249d6d01b", null ],
+    [ "ToMat", "class_mat_ex.html#a18faf40e75960d7b4450ace725b7bf91", null ],
+    [ "ToMat", "class_mat_ex.html#acdf38ae3a412f1ed3a445e9506d1cc22", null ],
+    [ "ToMat", "class_mat_ex.html#a1e4d4b122a7181c5c1a3b3cbf1ef28f3", null ],
+    [ "ToMat", "class_mat_ex.html#a8ebe0374567a269a31010e96eb3c4218", null ],
+    [ "ToMat", "class_mat_ex.html#a33f6057964cbf0bda976dfb9211fb972", null ],
+    [ "ToVec2d", "class_mat_ex.html#a44e600a2f8c0fab6ce4411591ab5c641", null ],
+    [ "ToVec2f", "class_mat_ex.html#af44b4562c569456e1e65eddf47eef14b", null ],
+    [ "ToVec2i", "class_mat_ex.html#afcb8bdbb7644768bec77b69752eac7af", null ],
+    [ "ToVec2s", "class_mat_ex.html#ab67b522d700d339b1e387b3e54e69a35", null ],
+    [ "ToVec3d", "class_mat_ex.html#adb4b42945a8d98e42584becebc57af84", null ],
+    [ "ToVec3f", "class_mat_ex.html#aaa632ee3910fe4f7d3cc93c4333eb3bd", null ],
+    [ "ToVec3i", "class_mat_ex.html#a95939b020a6355d5a6f8cb2247da16d9", null ],
+    [ "ToVec3s", "class_mat_ex.html#a570f76c6b5c4e0f8b634c2085c5dffbf", null ]
+];

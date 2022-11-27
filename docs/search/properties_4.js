@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['elementtype_0',['ElementType',['../class_husty_1_1_open_cv_sharp_1_1_layer_info.html#a8666ae43dfe7b4b0220a2f245e417d69',1,'Husty::OpenCvSharp::LayerInfo']]],
-  ['encoding_1',['Encoding',['../class_husty_1_1_i_o_1_1_udp_receiver.html#a1e811b0be6dbf8c44ce8f9b8ca0ff87b',1,'Husty.IO.UdpReceiver.Encoding()'],['../class_husty_1_1_i_o_1_1_udp_sender.html#a9d894658bfefff67c4a5ff53873d5c03',1,'Husty.IO.UdpSender.Encoding()']]],
-  ['end_2',['End',['../class_husty_1_1_geometry_1_1_arc2_d.html#a715c3e7450754e69771bbf54739582de',1,'Husty.Geometry.Arc2D.End()'],['../class_husty_1_1_geometry_1_1_line_segment2_d.html#af56e8e2b5d119a586dcfa0c9419ce0b4',1,'Husty.Geometry.LineSegment2D.End()']]],
-  ['endpoints_3',['EndPoints',['../class_husty_1_1_i_o_1_1_udp_sender.html#ab6f06aab4539868924c1791c8584baa6',1,'Husty::IO::UdpSender']]],
-  ['expiresremainingsecondnotified_4',['ExpiresRemainingSecondNotified',['../class_husty_1_1_skyway_gateway_1_1_peer.html#a37afb3f930b60d95f7826e7f2d2f7589',1,'Husty::SkywayGateway::Peer']]]
+  ['elementtype_0',['ElementType',['../class_layer_info.html#abafa04b2c0c23dc827c6bb972856771f',1,'LayerInfo']]],
+  ['encoding_1',['Encoding',['../class_udp_receiver.html#ae79e850c309ba14135f697b89371ef3e',1,'UdpReceiver.Encoding()'],['../class_udp_sender.html#ae70c8f540a917283da74c59ea5bfc1cf',1,'UdpSender.Encoding()']]],
+  ['end_2',['End',['../class_arc2_d.html#a7c5acced7522600b63246e8c720dad0f',1,'Arc2D.End()'],['../class_line_segment2_d.html#a7fd5cab4acb649958a9575d36196a293',1,'LineSegment2D.End()']]],
+  ['endpoints_3',['EndPoints',['../class_udp_sender.html#a9b2ce07b3f9128ff8b45795c6377855a',1,'UdpSender']]],
+  ['expiresremainingsecondnotified_4',['ExpiresRemainingSecondNotified',['../class_peer.html#a41e7df1172772babc412d9b2b0859c1c',1,'Peer']]]
 ];

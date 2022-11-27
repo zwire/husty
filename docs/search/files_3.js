@@ -13,5 +13,6 @@ var searchData=
   ['consoleex_2ecs_10',['ConsoleEx.cs',['../_console_ex_8cs.html',1,'']]],
   ['converterextensions_2ecs_11',['ConverterExtensions.cs',['../_converter_extensions_8cs.html',1,'']]],
   ['csv2json_2ecs_12',['Csv2Json.cs',['../_csv2_json_8cs.html',1,'']]],
-  ['curvepointsbase_2ecs_13',['CurvePointsBase.cs',['../_curve_points_base_8cs.html',1,'']]]
+  ['csvcontainer_2ecs_13',['CsvContainer.cs',['../_csv_container_8cs.html',1,'']]],
+  ['curvepointsbase_2ecs_14',['CurvePointsBase.cs',['../_curve_points_base_8cs.html',1,'']]]
 ];

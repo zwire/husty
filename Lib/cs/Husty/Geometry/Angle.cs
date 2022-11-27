@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using static System.Math;
 
 namespace Husty.Geometry;
@@ -49,6 +50,8 @@ public struct Angle : IEquatable<Angle>
     public override bool Equals(object? obj) => GetHashCode() == obj?.GetHashCode();
 
     public override int GetHashCode() => new { Radian }.GetHashCode();
+
+    public override string ToString() => JsonSerializer.Serialize(this);
 
 
     // ------ operators ------ //

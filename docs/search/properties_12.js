@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['w_0',['W',['../class_husty_1_1_neural_network_1_1_affine.html#a9ce773a666cc791cee62840d7ad52543',1,'Husty::NeuralNetwork::Affine']]],
-  ['width_1',['Width',['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_bgr_xyz_mat.html#ab6635ea47a1a720c58f4e0684253898f',1,'Husty::OpenCvSharp::DepthCamera::BgrXyzMat']]],
-  ['withoutdistcoeffs_2',['WithoutDistCoeffs',['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_intrinsic_camera_parameters.html#a0bfed50197410a02be6ffd166080be9f',1,'Husty::OpenCvSharp::CameraCalibration::IntrinsicCameraParameters']]],
-  ['writetimeout_3',['WriteTimeout',['../class_husty_1_1_i_o_1_1_named_pipe_client.html#aef755bc8d9a08125ae5e5771a98e0998',1,'Husty.IO.NamedPipeClient.WriteTimeout()'],['../class_husty_1_1_i_o_1_1_named_pipe_server.html#acd3750a07f15b9bf623c254dc4b6aee9',1,'Husty.IO.NamedPipeServer.WriteTimeout()'],['../class_husty_1_1_i_o_1_1_tcp_socket_client.html#a82e20c4513461493e6402d94e0ec2a59',1,'Husty.IO.TcpSocketClient.WriteTimeout()'],['../class_husty_1_1_i_o_1_1_tcp_socket_server.html#aa6798ec7077a738e6c714a6540fe75c7',1,'Husty.IO.TcpSocketServer.WriteTimeout()']]]
+  ['unitvector_0',['UnitVector',['../class_vector2_d.html#a1be60a1382d59925348a79ff054b2e80',1,'Vector2D.UnitVector()'],['../class_vector3_d.html#a1b9e303f3add888475e8f2796aa7d992',1,'Vector3D.UnitVector()']]],
+  ['url_1',['url',['../classinfo.html#ad395e6b11c07f0f4219a0cfc7c2e8d27',1,'info.url()'],['../classlicense.html#aaad00af6540fdec77b0ca810c3202a4d',1,'license.url()']]]
 ];

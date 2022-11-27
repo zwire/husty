@@ -1,10 +1,6 @@
 var searchData=
 [
-  ['radian_0',['Radian',['../struct_husty_1_1_geometry_1_1_angle.html#a6442088da5b800678a224085274d3b09',1,'Husty::Geometry::Angle']]],
-  ['radius_1',['Radius',['../class_husty_1_1_geometry_1_1_arc2_d.html#afa290f6a79cfcde3e1df5d03811fdfbd',1,'Husty.Geometry.Arc2D.Radius()'],['../class_husty_1_1_geometry_1_1_circle.html#a6ba78c2d6fff4264b0cb957d6f4c6c1e',1,'Husty.Geometry.Circle.Radius()']]],
-  ['rate_2',['Rate',['../class_husty_1_1_neural_network_1_1_ada_grad.html#a606ac418c5208bc53e039ec98513a330',1,'Husty.NeuralNetwork.AdaGrad.Rate()'],['../class_husty_1_1_neural_network_1_1_adam.html#a151ec6aacaed05330a3cad9bb548f9f3',1,'Husty.NeuralNetwork.Adam.Rate()'],['../class_husty_1_1_neural_network_1_1_sgd.html#ab246beeed831a379dd20227660cea182',1,'Husty.NeuralNetwork.Sgd.Rate()']]],
-  ['readtimeout_3',['ReadTimeout',['../class_husty_1_1_i_o_1_1_named_pipe_client.html#a11e423f8efe7b4a0495b6f386b11d4f0',1,'Husty.IO.NamedPipeClient.ReadTimeout()'],['../class_husty_1_1_i_o_1_1_named_pipe_server.html#ab79bb3e4d539dbabce5b6ea5b1859377',1,'Husty.IO.NamedPipeServer.ReadTimeout()'],['../class_husty_1_1_i_o_1_1_tcp_socket_client.html#a3d3d61136f588e037024ebe5be610ad0',1,'Husty.IO.TcpSocketClient.ReadTimeout()'],['../class_husty_1_1_i_o_1_1_tcp_socket_server.html#aa7e0f5bc9209773e0b9a4bb75002b75e',1,'Husty.IO.TcpSocketServer.ReadTimeout()']]],
-  ['remotepeerid_4',['RemotePeerId',['../class_husty_1_1_skyway_gateway_1_1_data_channel.html#a1b0811b4915cad627477cc756246339c',1,'Husty.SkywayGateway.DataChannel.RemotePeerId()'],['../class_husty_1_1_skyway_gateway_1_1_media_channel.html#a58e74fdcabffec6ba59b6962b0527f1e',1,'Husty.SkywayGateway.MediaChannel.RemotePeerId()']]],
-  ['rotationmatrix_5',['RotationMatrix',['../class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_parameters.html#aef875a0bed45d59ce693007876d6f651',1,'Husty::OpenCvSharp::CameraCalibration::ExtrinsicCameraParameters']]],
-  ['rows_6',['Rows',['../class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_bgr_xyz_mat.html#a9b650bfba4b4da83891a59844e97dd02',1,'Husty::OpenCvSharp::DepthCamera::BgrXyzMat']]]
+  ['opened_0',['Opened',['../class_data_channel.html#a2717d4ab6e742bd197e856eb7eb93ee6',1,'DataChannel.Opened()'],['../class_media_channel.html#a1cc23a01f0b29370961187dc4cdab10e',1,'MediaChannel.Opened()'],['../class_peer.html#aabd95f4f8aec16c402a5dd43a216ded3',1,'Peer.Opened()']]],
+  ['optimizer_1',['Optimizer',['../class_affine.html#ae43a2356323cbb2a060603971037ee4f',1,'Affine']]],
+  ['outputlayers_2',['OutputLayers',['../class_onnx_base.html#a6170e8cfe57e1f23c1238d49f9ed1513',1,'OnnxBase']]]
 ];

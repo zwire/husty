@@ -1,153 +1,171 @@
 var hierarchy =
 [
-    [ "Husty.OpenCvSharp.Extensions.AngleExtensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_angle_extensions.html", null ],
-    [ "Husty.Geometry.Arc2D", "class_husty_1_1_geometry_1_1_arc2_d.html", null ],
-    [ "Husty.Extensions.ArrayCastExtensions", "class_husty_1_1_extensions_1_1_array_cast_extensions.html", null ],
-    [ "Husty.Extensions.ArrayExtensions", "class_husty_1_1_extensions_1_1_array_extensions.html", null ],
-    [ "Husty.Extensions.ArrayOperatorExtensions", "class_husty_1_1_extensions_1_1_array_operator_extensions.html", null ],
-    [ "Husty.Extensions.ArrayReshapeExtensions", "class_husty_1_1_extensions_1_1_array_reshape_extensions.html", null ],
-    [ "Husty.IO.Baudrate", "struct_husty_1_1_i_o_1_1_baudrate.html", null ],
-    [ "Husty.OpenCvSharp.DepthCamera.IO.BgrXyzImageIO", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_i_o_1_1_bgr_xyz_image_i_o.html", null ],
-    [ "Husty.Lawicel.CanMessage", "class_husty_1_1_lawicel_1_1_can_message.html", null ],
-    [ "Husty.Lawicel.CanUsbOption", "class_husty_1_1_lawicel_1_1_can_usb_option.html", null ],
-    [ "Husty.OpenCvSharp.CameraCalibration.Chessboard", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_chessboard.html", null ],
-    [ "Husty.Geometry.Circle", "class_husty_1_1_geometry_1_1_circle.html", null ],
-    [ "Husty.NeuralNetwork.Cmac.CmacNetwork", "class_husty_1_1_neural_network_1_1_cmac_1_1_cmac_network.html", null ],
-    [ "Husty.NeuralNetwork.Cmac.CmacTable", "class_husty_1_1_neural_network_1_1_cmac_1_1_cmac_table.html", null ],
-    [ "Husty.Extensions.ConsoleEx", "class_husty_1_1_extensions_1_1_console_ex.html", null ],
-    [ "Husty.Csv2Json", "class_husty_1_1_csv2_json.html", null ],
-    [ "Husty.Geometry.CurvePointsBase", "class_husty_1_1_geometry_1_1_curve_points_base.html", [
-      [ "Husty.Geometry.BSplineCurve", "class_husty_1_1_geometry_1_1_b_spline_curve.html", [
-        [ "Husty.Geometry.BezierCurve", "class_husty_1_1_geometry_1_1_bezier_curve.html", null ]
+    [ "AngleEx", "class_angle_ex.html", null ],
+    [ "annotation", "classannotation.html", null ],
+    [ "AnnotationData", "class_annotation_data.html", null ],
+    [ "Arc2D", "class_arc2_d.html", null ],
+    [ "ArrayCastEx", "class_array_cast_ex.html", null ],
+    [ "ArrayEx", "class_array_ex.html", null ],
+    [ "ArrayOperatorEx", "class_array_operator_ex.html", null ],
+    [ "ArrayReshapeEx", "class_array_reshape_ex.html", null ],
+    [ "Baudrate", "struct_baudrate.html", null ],
+    [ "BgrXyzImageIO", "class_bgr_xyz_image_i_o.html", null ],
+    [ "CanMessage", "class_can_message.html", null ],
+    [ "CanUsbOption", "class_can_usb_option.html", null ],
+    [ "category", "classcategory.html", null ],
+    [ "Chessboard", "class_chessboard.html", null ],
+    [ "Circle", "class_circle.html", null ],
+    [ "CmacNetwork", "class_cmac_network.html", null ],
+    [ "CmacTable", "class_cmac_table.html", null ],
+    [ "ConsoleEx", "class_console_ex.html", null ],
+    [ "Csv2Json", "class_csv2_json.html", null ],
+    [ "CsvContainer", "class_csv_container.html", null ],
+    [ "CurvePointsBase", "class_curve_points_base.html", [
+      [ "BSplineCurve", "class_b_spline_curve.html", [
+        [ "BezierCurve", "class_bezier_curve.html", null ]
       ] ],
-      [ "Husty.Geometry.SplineCurve", "class_husty_1_1_geometry_1_1_spline_curve.html", null ]
+      [ "SplineCurve", "class_spline_curve.html", null ]
     ] ],
-    [ "Husty.OpenCvSharp.Stats.DataContainer", "class_husty_1_1_open_cv_sharp_1_1_stats_1_1_data_container.html", null ],
-    [ "Husty.OpenCvSharp.Extensions.DataStreamExtensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_data_stream_extensions.html", null ],
-    [ "Husty.OpenCvSharp.CameraCalibration.ExtrinsicCameraCalibrator", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_calibrator.html", null ],
-    [ "Husty.OpenCvSharp.CameraCalibration.ExtrinsicCameraParameters", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_extrinsic_camera_parameters.html", null ],
-    [ "Husty.Filters.FirFilter", "class_husty_1_1_filters_1_1_fir_filter.html", null ],
-    [ "Husty.OpenCvSharp.Feature.Fourier1D", "class_husty_1_1_open_cv_sharp_1_1_feature_1_1_fourier1_d.html", null ],
-    [ "Husty.OpenCvSharp.Feature.Fourier2D", "class_husty_1_1_open_cv_sharp_1_1_feature_1_1_fourier2_d.html", null ],
-    [ "Husty.OpenCvSharp.Feature.Hog", "class_husty_1_1_open_cv_sharp_1_1_feature_1_1_hog.html", null ],
-    [ "Husty.OpenCvSharp.Feature.HoughSingleLine", "class_husty_1_1_open_cv_sharp_1_1_feature_1_1_hough_single_line.html", null ],
-    [ "Husty.OpenCvSharp.Extensions.HustyGeometryExtensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_husty_geometry_extensions.html", null ],
+    [ "DataContainer", "class_data_container.html", null ],
+    [ "DataStreamEx", "class_data_stream_ex.html", null ],
+    [ "EnumerableEx", "class_enumerable_ex.html", null ],
+    [ "Exception", null, [
+      [ "HustyInternalException", "class_husty_internal_exception.html", null ]
+    ] ],
+    [ "ExtrinsicCameraCalibrator", "class_extrinsic_camera_calibrator.html", null ],
+    [ "ExtrinsicCameraParameters", "class_extrinsic_camera_parameters.html", null ],
+    [ "FirFilter", "class_fir_filter.html", null ],
+    [ "Fourier1D", "class_fourier1_d.html", null ],
+    [ "Fourier2D", "class_fourier2_d.html", null ],
+    [ "Freq", "struct_freq.html", null ],
+    [ "Hog", "class_hog.html", null ],
+    [ "HoughSingleLine", "class_hough_single_line.html", null ],
+    [ "HustyGeometryEx", "class_husty_geometry_ex.html", null ],
     [ "IAsyncDisposable", null, [
-      [ "Husty.SkywayGateway.DataChannel", "class_husty_1_1_skyway_gateway_1_1_data_channel.html", null ],
-      [ "Husty.SkywayGateway.MediaChannel", "class_husty_1_1_skyway_gateway_1_1_media_channel.html", null ],
-      [ "Husty.SkywayGateway.Peer", "class_husty_1_1_skyway_gateway_1_1_peer.html", null ]
-    ] ],
-    [ "Husty.OpenCvSharp.Stats.IBinaryStats", "interface_husty_1_1_open_cv_sharp_1_1_stats_1_1_i_binary_stats.html", [
-      [ "Husty.OpenCvSharp.Stats.BinaryStatsBase", "class_husty_1_1_open_cv_sharp_1_1_stats_1_1_binary_stats_base.html", [
-        [ "Husty.OpenCvSharp.Stats.BayesClassifier", "class_husty_1_1_open_cv_sharp_1_1_stats_1_1_bayes_classifier.html", null ],
-        [ "Husty.OpenCvSharp.Stats.Svm", "class_husty_1_1_open_cv_sharp_1_1_stats_1_1_svm.html", null ]
-      ] ]
+      [ "DataChannel", "class_data_channel.html", null ],
+      [ "MediaChannel", "class_media_channel.html", null ],
+      [ "Peer", "class_peer.html", null ]
     ] ],
     [ "IDisposable", null, [
-      [ "Husty.DataLogger< T >", "class_husty_1_1_data_logger.html", null ],
-      [ "Husty.IO.BidirectionalDataStream", "class_husty_1_1_i_o_1_1_bidirectional_data_stream.html", null ],
-      [ "Husty.IO.ICommunicator", "interface_husty_1_1_i_o_1_1_i_communicator.html", [
-        [ "Husty.IO.NamedPipeClient", "class_husty_1_1_i_o_1_1_named_pipe_client.html", null ],
-        [ "Husty.IO.NamedPipeServer", "class_husty_1_1_i_o_1_1_named_pipe_server.html", null ],
-        [ "Husty.IO.TcpSocketClient", "class_husty_1_1_i_o_1_1_tcp_socket_client.html", null ],
-        [ "Husty.IO.TcpSocketServer", "class_husty_1_1_i_o_1_1_tcp_socket_server.html", null ]
+      [ "BgrXyzMat", "class_bgr_xyz_mat.html", null ],
+      [ "BgrXyzRecorder", "class_bgr_xyz_recorder.html", null ],
+      [ "BidirectionalDataStream", "class_bidirectional_data_stream.html", null ],
+      [ "CanUsbAdapter", "class_can_usb_adapter.html", null ],
+      [ "DataLogger< T >", "class_data_logger.html", null ],
+      [ "DataStream", "class_data_stream.html", null ],
+      [ "IBinaryStats", "interface_i_binary_stats.html", [
+        [ "BinaryStatsBase", "class_binary_stats_base.html", [
+          [ "BayesClassifier", "class_bayes_classifier.html", null ],
+          [ "Svm", "class_svm.html", null ]
+        ] ]
       ] ],
-      [ "Husty.IO.SerialPort", "class_husty_1_1_i_o_1_1_serial_port.html", null ],
-      [ "Husty.IO.StdOutReader", "class_husty_1_1_i_o_1_1_std_out_reader.html", null ],
-      [ "Husty.IO.WebSocketStream", "class_husty_1_1_i_o_1_1_web_socket_stream.html", null ],
-      [ "Husty.Lawicel.CanUsbAdapter", "class_husty_1_1_lawicel_1_1_can_usb_adapter.html", null ],
-      [ "Husty.ObjectPool< T >", "class_husty_1_1_object_pool.html", null ],
-      [ "Husty.OpenCvSharp.DepthCamera.BgrXyzMat", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_bgr_xyz_mat.html", null ],
-      [ "Husty.OpenCvSharp.DepthCamera.IO.BgrXyzRecorder", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_i_o_1_1_bgr_xyz_recorder.html", null ],
-      [ "Husty.OpenCvSharp.ImageStream.IImageStream< TImage >", "interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_image_stream.html", [
-        [ "Husty.OpenCvSharp.ImageStream.IVideoStream< TImage >", "interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_video_stream.html", null ]
+      [ "ICommunicator", "interface_i_communicator.html", [
+        [ "NamedPipeClient", "class_named_pipe_client.html", null ],
+        [ "NamedPipeServer", "class_named_pipe_server.html", null ],
+        [ "TcpSocketClient", "class_tcp_socket_client.html", null ],
+        [ "TcpSocketServer", "class_tcp_socket_server.html", null ]
       ] ],
-      [ "Husty.OpenCvSharp.OnnxBase< TInput, TOutput >", "class_husty_1_1_open_cv_sharp_1_1_onnx_base.html", null ],
-      [ "Husty.OpenCvSharp.Yolo.IYoloDetector", "interface_husty_1_1_open_cv_sharp_1_1_yolo_1_1_i_yolo_detector.html", [
-        [ "Husty.OpenCvSharp.Yolo.YoloX", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolo_x.html", null ],
-        [ "Husty.OpenCvSharp.Yolo.Yolov3v4", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolov3v4.html", null ],
-        [ "Husty.OpenCvSharp.Yolo.Yolov7", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolov7.html", null ]
+      [ "IImageStream< TImage >", "interface_i_image_stream.html", [
+        [ "IVideoStream< TImage >", "interface_i_video_stream.html", null ]
       ] ],
-      [ "Husty.SkywayGateway.DataStream", "class_husty_1_1_skyway_gateway_1_1_data_stream.html", null ]
+      [ "IInteractiveWindow", "interface_i_interactive_window.html", [
+        [ "InteractiveCvWindowBase", "class_interactive_cv_window_base.html", null ]
+      ] ],
+      [ "IYoloDetector", "interface_i_yolo_detector.html", [
+        [ "YoloX", "class_yolo_x.html", null ],
+        [ "Yolov3v4", "class_yolov3v4.html", null ],
+        [ "Yolov7", "class_yolov7.html", null ]
+      ] ],
+      [ "LapTimer", "class_lap_timer.html", null ],
+      [ "ObjectPool< T >", "class_object_pool.html", null ],
+      [ "OnnxBase< TInput, TOutput >", "class_onnx_base.html", null ],
+      [ "SerialPort", "class_serial_port.html", null ],
+      [ "StdOutReader", "class_std_out_reader.html", null ],
+      [ "WebSocketStream", "class_web_socket_stream.html", null ]
     ] ],
     [ "IEquatable", null, [
-      [ "Husty.Geometry.Angle", "struct_husty_1_1_geometry_1_1_angle.html", null ],
-      [ "Husty.Geometry.Point2D", "class_husty_1_1_geometry_1_1_point2_d.html", null ],
-      [ "Husty.Geometry.Point3D", "class_husty_1_1_geometry_1_1_point3_d.html", null ],
-      [ "Husty.Geometry.Vector2D", "class_husty_1_1_geometry_1_1_vector2_d.html", null ]
+      [ "Angle", "struct_angle.html", null ],
+      [ "Point2D", "class_point2_d.html", null ],
+      [ "Point3D", "class_point3_d.html", null ],
+      [ "Vector2D", "class_vector2_d.html", null ],
+      [ "Vector3D", "class_vector3_d.html", null ]
     ] ],
-    [ "Husty.OpenCvSharp.ImageStream.IImageStream< BgrXyzMat >", "interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_image_stream.html", [
-      [ "Husty.OpenCvSharp.DepthCamera.Device.IDepthCamera", "interface_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_i_depth_camera.html", [
-        [ "Husty.OpenCvSharp.DepthCamera.Device.Kinect", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_kinect.html", null ],
-        [ "Husty.OpenCvSharp.DepthCamera.Device.Realsense", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_device_1_1_realsense.html", null ]
+    [ "IImageStream< BgrXyzMat >", "interface_i_image_stream.html", [
+      [ "IDepthCamera", "interface_i_depth_camera.html", [
+        [ "Kinect", "class_kinect.html", null ],
+        [ "Realsense", "class_realsense.html", null ]
       ] ]
     ] ],
-    [ "Husty.OpenCvSharp.ImageStream.IImageStream< Mat >", "interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_image_stream.html", [
-      [ "Husty.OpenCvSharp.ImageStream.CameraStream", "class_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_camera_stream.html", null ]
+    [ "IImageStream< Mat >", "interface_i_image_stream.html", [
+      [ "CameraStream", "class_camera_stream.html", null ]
     ] ],
-    [ "Husty.NeuralNetwork.ILayer", "interface_husty_1_1_neural_network_1_1_i_layer.html", [
-      [ "Husty.NeuralNetwork.IActivationLayer", "interface_husty_1_1_neural_network_1_1_i_activation_layer.html", [
-        [ "Husty.NeuralNetwork.LeakyRelu", "class_husty_1_1_neural_network_1_1_leaky_relu.html", null ],
-        [ "Husty.NeuralNetwork.Relu", "class_husty_1_1_neural_network_1_1_relu.html", null ],
-        [ "Husty.NeuralNetwork.Sigmoid", "class_husty_1_1_neural_network_1_1_sigmoid.html", null ],
-        [ "Husty.NeuralNetwork.Tanh", "class_husty_1_1_neural_network_1_1_tanh.html", null ]
+    [ "ILayer", "interface_i_layer.html", [
+      [ "IActivationLayer", "interface_i_activation_layer.html", [
+        [ "LeakyRelu", "class_leaky_relu.html", null ],
+        [ "Relu", "class_relu.html", null ],
+        [ "Sigmoid", "class_sigmoid.html", null ],
+        [ "Tanh", "class_tanh.html", null ]
       ] ],
-      [ "Husty.NeuralNetwork.ITunableLayer", "interface_husty_1_1_neural_network_1_1_i_tunable_layer.html", [
-        [ "Husty.NeuralNetwork.Affine", "class_husty_1_1_neural_network_1_1_affine.html", null ],
-        [ "Husty.NeuralNetwork.Unit", "class_husty_1_1_neural_network_1_1_unit.html", null ]
+      [ "ITunableLayer", "interface_i_tunable_layer.html", [
+        [ "Affine", "class_affine.html", null ],
+        [ "Unit", "class_unit.html", null ]
       ] ]
     ] ],
-    [ "Husty.NeuralNetwork.INeuralNetwork", "interface_husty_1_1_neural_network_1_1_i_neural_network.html", [
-      [ "Husty.NeuralNetwork.Cmac.CmacBundler", "class_husty_1_1_neural_network_1_1_cmac_1_1_cmac_bundler.html", null ],
-      [ "Husty.NeuralNetwork.NetworkGraph", "class_husty_1_1_neural_network_1_1_network_graph.html", null ]
+    [ "image", "classimage.html", null ],
+    [ "INeuralNetwork", "interface_i_neural_network.html", [
+      [ "CmacBundler", "class_cmac_bundler.html", null ],
+      [ "NetworkGraph", "class_network_graph.html", null ]
     ] ],
-    [ "Husty.OpenCvSharp.CameraCalibration.IntrinsicCameraCalibrator", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_intrinsic_camera_calibrator.html", null ],
-    [ "Husty.OpenCvSharp.CameraCalibration.IntrinsicCameraParameters", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_intrinsic_camera_parameters.html", null ],
-    [ "Husty.NeuralNetwork.IOptimizer", "interface_husty_1_1_neural_network_1_1_i_optimizer.html", [
-      [ "Husty.NeuralNetwork.OptimizerBase", "class_husty_1_1_neural_network_1_1_optimizer_base.html", [
-        [ "Husty.NeuralNetwork.AdaGrad", "class_husty_1_1_neural_network_1_1_ada_grad.html", null ],
-        [ "Husty.NeuralNetwork.Adam", "class_husty_1_1_neural_network_1_1_adam.html", null ],
-        [ "Husty.NeuralNetwork.Sgd", "class_husty_1_1_neural_network_1_1_sgd.html", null ]
+    [ "info", "classinfo.html", null ],
+    [ "IntrinsicCameraCalibrator", "class_intrinsic_camera_calibrator.html", null ],
+    [ "IntrinsicCameraParameters", "class_intrinsic_camera_parameters.html", null ],
+    [ "IOptimizer", "interface_i_optimizer.html", [
+      [ "OptimizerBase", "class_optimizer_base.html", [
+        [ "AdaGrad", "class_ada_grad.html", null ],
+        [ "Adam", "class_adam.html", null ],
+        [ "Sgd", "class_sgd.html", null ]
       ] ]
     ] ],
-    [ "Husty.OpenCvSharp.ImageStream.IVideoStream< BgrXyzMat >", "interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_video_stream.html", [
-      [ "Husty.OpenCvSharp.DepthCamera.IO.BgrXyzPlayer", "class_husty_1_1_open_cv_sharp_1_1_depth_camera_1_1_i_o_1_1_bgr_xyz_player.html", null ]
+    [ "IVideoStream< BgrXyzMat >", "interface_i_video_stream.html", [
+      [ "BgrXyzPlayer", "class_bgr_xyz_player.html", null ]
     ] ],
-    [ "Husty.OpenCvSharp.ImageStream.IVideoStream< Mat >", "interface_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_i_video_stream.html", [
-      [ "Husty.OpenCvSharp.ImageStream.VideoStream", "class_husty_1_1_open_cv_sharp_1_1_image_stream_1_1_video_stream.html", null ]
+    [ "IVideoStream< Mat >", "interface_i_video_stream.html", [
+      [ "VideoStream", "class_video_stream.html", null ]
     ] ],
-    [ "Husty.Json2Csv", "class_husty_1_1_json2_csv.html", null ],
-    [ "Husty.Filters.KalmanFilter", "class_husty_1_1_filters_1_1_kalman_filter.html", null ],
-    [ "Husty.OpenCvSharp.LayerInfo", "class_husty_1_1_open_cv_sharp_1_1_layer_info.html", null ],
-    [ "Husty.Geometry.Line2D", "class_husty_1_1_geometry_1_1_line2_d.html", [
-      [ "Husty.Geometry.LineSegment2D", "class_husty_1_1_geometry_1_1_line_segment2_d.html", null ]
+    [ "Json2Csv", "class_json2_csv.html", null ],
+    [ "KalmanFilter", "class_kalman_filter.html", null ],
+    [ "LayerInfo", "class_layer_info.html", null ],
+    [ "license", "classlicense.html", null ],
+    [ "Line2D", "class_line2_d.html", [
+      [ "LineSegment2D", "class_line_segment2_d.html", null ]
     ] ],
-    [ "Husty.OpenCvSharp.Extensions.MatAndArrayExtensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_mat_and_array_extensions.html", null ],
-    [ "Husty.OpenCvSharp.Extensions.MatExtensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_mat_extensions.html", null ],
-    [ "Husty.MathEx", "class_husty_1_1_math_ex.html", null ],
-    [ "Husty.Extensions.MathExtensions", "class_husty_1_1_extensions_1_1_math_extensions.html", null ],
-    [ "Husty.Filters.MedianFilter", "class_husty_1_1_filters_1_1_median_filter.html", null ],
-    [ "Husty.MultidimensionalArray", "class_husty_1_1_multidimensional_array.html", null ],
-    [ "Husty.ObjectPool< Husty.OpenCvSharp.DepthCamera.BgrXyzMat >", "class_husty_1_1_object_pool.html", null ],
-    [ "Husty.ObjectPool< Mat >", "class_husty_1_1_object_pool.html", null ],
-    [ "Husty.OpenCvSharp.OnnxBase< Mat, YoloResult[]>", "class_husty_1_1_open_cv_sharp_1_1_onnx_base.html", [
-      [ "Husty.OpenCvSharp.Yolo.YoloX", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolo_x.html", null ],
-      [ "Husty.OpenCvSharp.Yolo.Yolov7", "class_husty_1_1_open_cv_sharp_1_1_yolo_1_1_yolov7.html", null ]
+    [ "MatEx", "class_mat_ex.html", null ],
+    [ "MathEx", "class_math_ex.html", null ],
+    [ "MedianFilter", "class_median_filter.html", null ],
+    [ "MsCoco", "class_ms_coco.html", null ],
+    [ "MultidimensionalArray", "class_multidimensional_array.html", null ],
+    [ "ObjectPool< BgrXyzMat >", "class_object_pool.html", null ],
+    [ "ObjectPool< Mat >", "class_object_pool.html", null ],
+    [ "ObservableEx", "class_observable_ex.html", null ],
+    [ "OnnxBase< Mat, YoloResult[]>", "class_onnx_base.html", [
+      [ "YoloX", "class_yolo_x.html", null ],
+      [ "Yolov7", "class_yolov7.html", null ]
     ] ],
-    [ "Husty.Filters.ParticleFilter", "class_husty_1_1_filters_1_1_particle_filter.html", null ],
-    [ "Husty.OpenCvSharp.Feature.Pca2D", "class_husty_1_1_open_cv_sharp_1_1_feature_1_1_pca2_d.html", null ],
-    [ "Husty.OpenCvSharp.CameraCalibration.PerspectiveTransformer", "class_husty_1_1_open_cv_sharp_1_1_camera_calibration_1_1_perspective_transformer.html", null ],
-    [ "Husty.OpenCvSharp.Extensions.Point2ArrayExtensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_point2_array_extensions.html", null ],
-    [ "Husty.OpenCvSharp.Extensions.Point2Extensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_point2_extensions.html", null ],
-    [ "Husty.IO.PortManager", "class_husty_1_1_i_o_1_1_port_manager.html", null ],
-    [ "Husty.Preset< T >", "class_husty_1_1_preset.html", null ],
-    [ "Husty.OpenCvSharp.Extensions.Rect2Extensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_rect2_extensions.html", null ],
-    [ "Husty.OpenCvSharp.Extensions.Size2Extensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_size2_extensions.html", null ],
-    [ "Husty.SpinLock", "class_husty_1_1_spin_lock.html", null ],
-    [ "Husty.OpenCvSharp.TypeConverter", "class_husty_1_1_open_cv_sharp_1_1_type_converter.html", null ],
-    [ "Husty.IO.UdpReceiver", "class_husty_1_1_i_o_1_1_udp_receiver.html", null ],
-    [ "Husty.IO.UdpSender", "class_husty_1_1_i_o_1_1_udp_sender.html", null ],
-    [ "Husty.OpenCvSharp.Extensions.Vector", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_vector.html", null ],
-    [ "Husty.Geometry.Vector3D", "class_husty_1_1_geometry_1_1_vector3_d.html", null ],
-    [ "Husty.OpenCvSharp.Extensions.VectorExtensions", "class_husty_1_1_open_cv_sharp_1_1_extensions_1_1_vector_extensions.html", null ]
+    [ "ParticleFilter", "class_particle_filter.html", null ],
+    [ "Pca2D", "class_pca2_d.html", null ],
+    [ "PerspectiveTransformer", "class_perspective_transformer.html", null ],
+    [ "PointAndArrayEx", "class_point_and_array_ex.html", null ],
+    [ "PointEx", "class_point_ex.html", null ],
+    [ "PortManager", "class_port_manager.html", null ],
+    [ "Preset< T >", "class_preset.html", null ],
+    [ "RectEx", "class_rect_ex.html", null ],
+    [ "SizeEx", "class_size_ex.html", null ],
+    [ "SpinLock", "class_spin_lock.html", null ],
+    [ "TypeConverter", "class_type_converter.html", null ],
+    [ "UdpReceiver", "class_udp_receiver.html", null ],
+    [ "UdpSender", "class_udp_sender.html", null ],
+    [ "Vector", "class_vector.html", null ],
+    [ "Vector< double >", "class_vector.html", null ],
+    [ "Vector< float >", "class_vector.html", null ],
+    [ "VectorEx", "class_vector_ex.html", null ]
 ];
