@@ -1,10 +1,5 @@
-﻿using System;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Text;
-using Intel.RealSense.Math;
-using Intel.RealSense;
-using MathNet.Numerics;
-using System.Xml.Linq;
 using OpenCvSharp;
 
 namespace Husty.OpenCvSharp.DepthCamera;
