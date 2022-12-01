@@ -84,13 +84,17 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
                 .Where(frame => frame is not null)
                 .Subscribe(frame =>
                 {
-                    _channel.Writer.TryWrite(frame);
-                    using var d8 = frame.Depth8(300, 5000);
-                    Dispatcher.Invoke(() =>
+                    try
                     {
-                        ColorFrame.Source = frame.BGR.ToBitmapSource();
-                        DepthFrame.Source = d8.ToBitmapSource();
-                    });
+                        _channel.Writer.TryWrite(frame);
+                        using var d8 = frame.Depth8(300, 5000);
+                        Dispatcher.Invoke(() =>
+                        {
+                            ColorFrame.Source = frame.BGR.ToBitmapSource();
+                            DepthFrame.Source = d8.ToBitmapSource();
+                        });
+                    }
+                    catch { }
                 });
         }
         else
@@ -113,13 +117,13 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
         {
             var frame = ReactiveFrame.Value;
             if (frame.Empty()) return;
-            BgrXyzImageIO.SaveAsZip(_saveDir, $"{DateTimeOffset.Now:yyyy-MM-dd-HH-mm-ss}", frame);
+            BgrXyzImageIO.SaveAsZip(_saveDir, $"{DateTime.Now:yyyy-MM-dd-HH-mm-ss}", frame);
         }
         if (_player != null)
         {
             _player.Seek((int)PlaySlider.Value);
             var frame = _player.Read();
-            BgrXyzImageIO.SaveAsZip(_saveDir, $"{DateTimeOffset.Now:yyyy-MM-dd-HH-mm-ss}", frame);
+            BgrXyzImageIO.SaveAsZip(_saveDir, $"{DateTime.Now:yyyy-MM-dd-HH-mm-ss}", frame);
         }
     }
 
@@ -140,8 +144,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
             _isConnected = AttemptConnection();
             if (!_isConnected) throw new Exception("Couldn't connect device!");
 
-            var time = DateTimeOffset.Now;
-            var filePath = $"{_saveDir}\\Movie_{time.Year}{time.Month:d2}{time.Day:d2}{time.Hour:d2}{time.Minute:d2}{time.Second:d2}{time.Millisecond:d2}.yms";
+            var filePath = $"{_saveDir}\\Movie_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.yms";
             var writer = new BgrXyzRecorder(filePath);
             ReactiveFrame = _camera.GetStream().ToReadOnlyReactivePropertySlim();
             ReactiveFrame
@@ -149,14 +152,18 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
                 .Finally(() => writer?.Dispose())
                 .Subscribe(frame =>
                 {
-                    writer?.WriteFrame(frame);
-                    _channel.Writer.TryWrite(frame);
-                    using var d8 = frame.Depth8(300, 5000);
-                    Dispatcher.Invoke(() =>
+                    try
                     {
-                        ColorFrame.Source = frame.BGR.ToBitmapSource();
-                        DepthFrame.Source = d8.ToBitmapSource();
-                    });
+                        writer?.WriteFrame(frame);
+                        _channel.Writer.TryWrite(frame);
+                        using var d8 = frame.Depth8(300, 5000);
+                        Dispatcher.Invoke(() =>
+                        {
+                            ColorFrame.Source = frame.BGR.ToBitmapSource();
+                            DepthFrame.Source = d8.ToBitmapSource();
+                        });
+                    }
+                    catch { }
                 });
         }
         else
@@ -165,8 +172,8 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
             RecButton.Background = Brushes.DarkGray;
             StartPauseButton.IsEnabled = true;
             PlayButton.IsEnabled = true;
-            ReactiveFrame?.Dispose();
             _isConnected = false;
+            ReactiveFrame?.Dispose();
             _camera?.Dispose();
             _camera = null;
         }

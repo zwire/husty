@@ -39,7 +39,7 @@ public sealed class BgrXyzRecorder : IDisposable
 
     private readonly BinaryWriter _binWriter;
     private readonly List<long> _indexes = new();
-    private readonly DateTimeOffset _firstTime;
+    private readonly DateTime _firstTime;
     private readonly object _locker = new();
     private bool _isDisposed;
 
@@ -55,10 +55,11 @@ public sealed class BgrXyzRecorder : IDisposable
         if (!Directory.Exists(Path.GetDirectoryName(filePath)))
             filePath = Path.GetFileName(filePath);
         _binWriter = new BinaryWriter(File.Open(filePath, FileMode.Create), Encoding.ASCII);
-        var fileFormatCode = Encoding.ASCII.GetBytes("HUSTY000");
+        var fileFormatCode = Encoding.ASCII.GetBytes("HUSTY001");
+        _firstTime = DateTime.Now.ToUniversalTime();
         _binWriter.Write(fileFormatCode);
+        _binWriter.Write(_firstTime.ToBinary());
         _binWriter.Write(-1L);
-        _firstTime = DateTimeOffset.Now;
     }
 
 
@@ -75,7 +76,7 @@ public sealed class BgrXyzRecorder : IDisposable
             if (!_isDisposed)
             {
                 _indexes.Add(_binWriter.BaseStream.Position);
-                _binWriter.Write((DateTimeOffset.Now - _firstTime).Ticks);
+                _binWriter.Write((DateTime.Now.ToUniversalTime() - _firstTime).Ticks);
                 var (bgr, xyz) = Bgrxyz.YmsEncode();
                 _binWriter.Write(bgr.Length);
                 _binWriter.Write(bgr);
@@ -93,7 +94,7 @@ public sealed class BgrXyzRecorder : IDisposable
         lock (_locker)
         {
             _isDisposed = true;
-            _binWriter.Seek(8, SeekOrigin.Begin);
+            _binWriter.Seek(16, SeekOrigin.Begin);
             _binWriter.Write(_binWriter.BaseStream.Length);
             _binWriter.Seek(0, SeekOrigin.End);
             _indexes.ForEach(p => _binWriter.Write(p));

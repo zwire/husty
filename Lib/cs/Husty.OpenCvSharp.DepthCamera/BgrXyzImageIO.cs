@@ -25,7 +25,7 @@ public static class BgrXyzImageIO
     public static void SaveAsZip(string directory, string name, BgrXyzMat image)
     {
         directory ??= Directory.GetCurrentDirectory();
-        name = name is null ? "" : "_" + name;
+        name ??= "_";
         var filePath = $"{directory}\\Image{name}.zip";
         Cv2.ImWrite($"{filePath}_C.png", image.BGR);
         Cv2.ImWrite($"{filePath}_D.png", image.Depth16());
@@ -56,7 +56,7 @@ public static class BgrXyzImageIO
             "end_header"
         };
         directory ??= Directory.GetCurrentDirectory();
-        name = name is null ? "_" : "_" + name;
+        name ??= "_";
         var filePath = $"{directory}\\{name}.ply";
         using var writer = new StreamWriter(File.Open(filePath, FileMode.Create), Encoding.ASCII);
         foreach (var h in headers)

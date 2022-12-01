@@ -64,6 +64,10 @@ public sealed class BgrXyzPlayer : IVideoStream<BgrXyzMat>
 
     public bool IsEnd => _positionIndex >= FrameCount - 1;
 
+    public DateTime InitialTime { get; } = default;
+
+    public DateTime CurrentTime => InitialTime + TimeSpan.FromTicks(_prevTime);
+
 
     // ------ constructors ------ //
 
@@ -78,12 +82,19 @@ public sealed class BgrXyzPlayer : IVideoStream<BgrXyzMat>
         var file = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite);
         _binReader = new BinaryReader(file, Encoding.ASCII);
         var fileFormatCode = Encoding.ASCII.GetString(_binReader.ReadBytes(8));
-        if (fileFormatCode is not "HUSTY000") throw new Exception();
+        if (fileFormatCode is "HUSTY001")
+        {
+            InitialTime = DateTime.FromBinary(_binReader.ReadInt64());
+        }
+        else if (fileFormatCode is not "HUSTY000")
+        {
+            throw new Exception("invalid file format");
+        }
         var indexesPos = _binReader.ReadInt64();
         var indexes = new List<long>();
         if (indexesPos is -1)
         {
-            _binReader.BaseStream.Position = 16;
+            _binReader.BaseStream.Position = fileFormatCode is "HUSTY000" ? 16 : 24;
             while (true)
             {
                 indexes.Add(_binReader.BaseStream.Position);
@@ -99,7 +110,7 @@ public sealed class BgrXyzPlayer : IVideoStream<BgrXyzMat>
             indexes.RemoveAt(indexes.Count - 1);
 
             var binWriter = new BinaryWriter(file, Encoding.ASCII);
-            binWriter.Seek(8, SeekOrigin.Begin);
+            binWriter.Seek(fileFormatCode is "HUSTY000" ? 8 : 16, SeekOrigin.Begin);
             binWriter.Write(binWriter.BaseStream.Length);
             binWriter.Seek(0, SeekOrigin.End);
             indexes.ForEach(p => binWriter.Write(p));
