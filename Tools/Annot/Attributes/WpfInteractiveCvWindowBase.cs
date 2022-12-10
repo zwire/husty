@@ -1,45 +1,52 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Media.Imaging;
+﻿using System.Windows.Media.Imaging;
 using System.Reactive.Subjects;
 using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using Husty;
 using Husty.Extensions;
-using Husty.OpenCvSharp;
 using Husty.OpenCvSharp.DatasetFormat;
 
 namespace Annot.Attributes;
 
-public abstract class WpfInteractiveCvWindowBase : IInteractiveWindow
+public abstract class WpfInteractiveCvWindowBase<T> : IWpfInteractiveWindow
 {
+
+    public record SelectedObject(int Id, T Value);
 
     // ------ fields ------ //
 
     private readonly string _name;
-    private readonly AnnotationData _ann;
+    private readonly List<AnnotationData> _ann;
     private readonly int _imageId;
     private readonly double _wheelSpeed;
-    private readonly double _windowScale;
     private readonly Mat _originalFrame;
     private readonly Size _windowSize;
     private readonly Mat _frame;
     private readonly ObjectPool<Mat> _pool1;
     private readonly ObjectPool<Mat> _pool2;
     private readonly Subject<string> _keySubject;
+    private readonly int _tolerance;
+    private readonly Func<double> _getRatio;
+    private readonly int _standardLineWidth;
+    private readonly int _boldLineWidth;
     private double _ratio = 1;
     private Rect _roi;
     private bool _lDown;
     private int _labelIndex;
     private bool _drawMode;
     private Scalar[] _colors;
+    private Point _prevDragPoint = default;
+    private Rect _prevDragRoi = default;
+    private SelectedObject? _selected = null;
 
 
     // ------ properties ------ //
 
     public string Name => _name;
 
-    public AnnotationData Annotation => _ann;
+    public List<AnnotationData> History => _ann;
+
+    public AnnotationData Annotation => _ann.LastOrDefault()!;
 
     public int ImageId => _imageId;
 
@@ -67,18 +74,24 @@ public abstract class WpfInteractiveCvWindowBase : IInteractiveWindow
     public WpfInteractiveCvWindowBase(
         string name,
         Mat frame,
-        AnnotationData ann,
+        IEnumerable<AnnotationData> ann,
         int labelIndex,
         int labelCount,
-        double windowScale,
+        int tolerance,
+        int standardLineWidth,
+        int boldLineWidth,
+        Func<double> getRatio,
         double wheelSpeed
     )
     {
         _name = name;
-        _ann = ann;
-        ann.TryGetImageId(name, out _imageId);
+        _ann = ann.ToList();
+        _ann.LastOrDefault()!.TryGetImageId(name, out _imageId);
         _labelIndex = labelIndex;
-        _windowScale = windowScale;
+        _tolerance = tolerance;
+        _standardLineWidth = standardLineWidth;
+        _boldLineWidth = boldLineWidth;
+        _getRatio = getRatio;
         _wheelSpeed = wheelSpeed;
         _colors = Enumerable
             .Range(0, labelCount)
@@ -90,7 +103,7 @@ public abstract class WpfInteractiveCvWindowBase : IInteractiveWindow
         _frame = frame.Clone();
         _pool1 = new(1, () => new(_windowSize, MatType.CV_8UC3));
         _pool2 = new(1, () => _frame.Clone());
-        _windowSize = new(_frame.Width * windowScale, _frame.Height * windowScale);
+        _windowSize = new(_frame.Width, _frame.Height);
         Cv2.Resize(_frame, _frame, _windowSize, 0, 0, InterpolationFlags.Cubic);
         _roi = new(0, 0, _frame.Width, _frame.Height);
         _keySubject = new();
@@ -104,6 +117,12 @@ public abstract class WpfInteractiveCvWindowBase : IInteractiveWindow
         _originalFrame.Dispose();
         _frame.Dispose();
         Canvas.Dispose();
+    }
+
+    public void Back()
+    {
+        if (_ann.Count > 1)
+            _ann.RemoveAt(_ann.Count - 1);
     }
 
     public void SetLabelIndex(int index)
@@ -126,13 +145,16 @@ public abstract class WpfInteractiveCvWindowBase : IInteractiveWindow
         return view2.ToBitmapSource();
     }
 
-    public abstract void ClickDown(Point point);
+    public void ClickDown(Point point)
+    {
+        _prevDragPoint = new((point.X - _roi.X) / _ratio, (point.Y - _roi.Y) / _ratio);
+        _prevDragRoi = _roi;
+        DoClickDown(point);
+    }
 
     public abstract void ClickUp(Point point);
 
     public abstract void Move(Point point);
-
-    public abstract void Drag(Point point);
 
     public abstract void Cancel();
 
@@ -142,8 +164,89 @@ public abstract class WpfInteractiveCvWindowBase : IInteractiveWindow
 
     public abstract void Clear();
 
+    public virtual void Drag(Point point)
+    {
+        var diffX = (int)(((point.X - _roi.X) / _ratio - _prevDragPoint.X) * _ratio);
+        var diffY = (int)(((point.Y - _roi.Y) / _ratio - _prevDragPoint.Y) * _ratio);
+        var x = _prevDragRoi.X - diffX;
+        var y = _prevDragRoi.Y - diffY;
+        var w = _prevDragRoi.Width;
+        var h = _prevDragRoi.Height;
+        if (x < 0)
+            x = 0;
+        if (y < 0)
+            y = 0;
+        if (x + w > _frame.Width - 1)
+            x = _frame.Width - w;
+        if (y + h > _frame.Height - 1)
+            y = _frame.Height - h;
+        _roi = new(x, y, w, h);
+    }
+
+
+    // ------ internal methods ------ //
+
+    public BitmapSource InputMouseWheel(System.Windows.Point p, bool up)
+    {
+        if (!_lDown)
+            Crop(new(p.X, p.Y), _ratio * (1 + _wheelSpeed * 0.08 * (up ? -1 : +1)));
+        return GetViewImage();
+    }
+
+    public BitmapSource InputLeftMouseDown(System.Windows.Point p)
+    {
+        var realP = new Point((int)(p.X * _ratio + _roi.X), (int)(p.Y * _ratio + _roi.Y));
+        _lDown = true;
+        ClickDown(realP);
+        return GetViewImage();
+    }
+
+    public BitmapSource InputLeftMouseUp(System.Windows.Point p)
+    {
+        var realP = new Point((int)(p.X * _ratio + _roi.X), (int)(p.Y * _ratio + _roi.Y));
+        realP.X = realP.X.InsideOf(0, Canvas.Width - 1);
+        realP.Y = realP.Y.InsideOf(0, Canvas.Height - 1);
+        if (_lDown)
+            ClickUp(realP);
+        _lDown = false;
+        return GetViewImage();
+    }
+
+    public BitmapSource InputRightMouseDown(System.Windows.Point p)
+    {
+        _lDown = false;
+        Cancel();
+        return GetViewImage();
+    }
+
+    public BitmapSource InputMouseLeave(System.Windows.Point p)
+    {
+        _lDown = false;
+        Cancel();
+        return GetViewImage();
+    }
+
+    public BitmapSource InputMouseMove(System.Windows.Point p)
+    {
+        var realP = new Point((int)(p.X * _ratio + _roi.X), (int)(p.Y * _ratio + _roi.Y));
+        realP.X = realP.X.InsideOf(0, _frame.Width - 1);
+        realP.Y = realP.Y.InsideOf(0, _frame.Height - 1);
+        if (_lDown)
+            Drag(realP);
+        else
+            Move(realP);
+        return GetViewImage();
+    }
+
 
     // ------ protected methods ------ //
+
+    protected void AddHistory(AnnotationData ann)
+    {
+        _ann.Add(ann.Clone());
+    }
+
+    protected abstract void DoClickDown(Point point);
 
     protected void DrawOnce(Action<Mat> action)
     {
@@ -176,75 +279,34 @@ public abstract class WpfInteractiveCvWindowBase : IInteractiveWindow
         Canvas = _originalFrame.Clone();
     }
 
-    protected void MoveROI(int x, int y)
+    protected int GetActualTolerence()
     {
-        x += _roi.X;
-        y += _roi.Y;
-        var w = _roi.Width;
-        var h = _roi.Height;
-        if (x < 0)
-            x = 0;
-        if (y < 0)
-            y = 0;
-        if (x + w > _frame.Width - 1)
-            x = _frame.Width - w;
-        if (y + h > _frame.Height - 1)
-            y = _frame.Height - h;
-        _roi = new(x, y, w, h);
+        return (int)(_tolerance * _getRatio()).OrAbove(1);
     }
 
-
-    // ------ internal methods ------ //
-
-    internal BitmapSource InputMouseWheel(System.Windows.Point p, bool up)
+    protected int GetActualGuideLineWidth()
     {
-        Crop(new(p.X, p.Y), _ratio * (1 + _wheelSpeed * 0.08 * (up ? -1 : +1)));
-        return GetViewImage();
+        return (int)(2 * _getRatio()).OrAbove(1);
     }
 
-    internal BitmapSource InputLeftMouseDown(System.Windows.Point p)
+    protected int GetActualStandardLineWidth()
     {
-        var realP = new Point((int)(p.X * _ratio + _roi.X / _windowScale), (int)(p.Y * _ratio + _roi.Y / _windowScale));
-        _lDown = true;
-        ClickDown(realP);
-        return GetViewImage();
+        return (int)(_standardLineWidth * _getRatio()).OrAbove(1);
     }
 
-    internal BitmapSource InputLeftMouseUp(System.Windows.Point p)
+    protected int GetActualBoldLineWidth()
     {
-        var realP = new Point((int)(p.X * _ratio + _roi.X / _windowScale), (int)(p.Y * _ratio + _roi.Y / _windowScale));
-        realP.X = realP.X.InsideOf(0, Canvas.Width - 1);
-        realP.Y = realP.Y.InsideOf(0, Canvas.Height - 1);
-        if (_lDown)
-            ClickUp(realP);
-        _lDown = false;
-        return GetViewImage();
+        return (int)(_boldLineWidth * _getRatio()).OrAbove(1);
     }
 
-    internal BitmapSource InputRightMouseDown(System.Windows.Point p)
+    protected void SetSelected(SelectedObject? obj)
     {
-        _lDown = false;
-        Cancel();
-        return GetViewImage();
+        _selected = obj;
     }
 
-    internal BitmapSource InputMouseLeave(System.Windows.Point p)
+    protected SelectedObject? GetSelected()
     {
-        _lDown = false;
-        Cancel();
-        return GetViewImage();
-    }
-
-    internal BitmapSource InputMouseMove(System.Windows.Point p)
-    {
-        var realP = new Point((int)(p.X * _ratio + _roi.X / _windowScale), (int)(p.Y * _ratio + _roi.Y / _windowScale));
-        realP.X = realP.X.InsideOf(0, Canvas.Width - 1);
-        realP.Y = realP.Y.InsideOf(0, Canvas.Height - 1);
-        if (_lDown)
-            Drag(realP);
-        else
-            Move(realP);
-        return GetViewImage();
+        return _selected;
     }
 
 

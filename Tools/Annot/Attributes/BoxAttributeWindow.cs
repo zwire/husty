@@ -1,82 +1,55 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using OpenCvSharp;
-using Husty.Extensions;
 using Husty.Geometry;
 using Husty.OpenCvSharp.Extensions;
 using Husty.OpenCvSharp.DatasetFormat;
 
 namespace Annot.Attributes;
 
-internal class BoxAttributeWindow : WpfInteractiveCvWindowBase
+internal class BoxAttributeWindow : WpfInteractiveCvWindowBase<(Rect Box, int CornerIndex, Vec2i RelativeVec)>
 {
 
     // ------ fields ------ //
 
-    private readonly int _standardLineWidth;
-    private readonly int _boldLineWidth;
-    private readonly int _tolerance;
     private Point? _firstPoint = null;
-    private SelectedBoxObject? _selected = null;
-    private int _cornerIndex; // 0: None, 1: TopLeft, 2: TopRight, 3: BottomLeft, 4: BottomRight
-    private Point _prevDragPoint = new(0, 0);
-
-    private record struct SelectedBoxObject(int Id, Rect Box, int Label, Vec2i RelativeVec);
 
 
     // ------ constructors ------ //
 
     public BoxAttributeWindow(
-        AnnotationData ann,
+        IEnumerable<AnnotationData> ann,
         string imagePath,
         int labelIndex,
         int labelCount,
         int standardLineWidth,
         int boldLineWidth,
         int tolerance,
-        double windowScale = 1,
-        double wheelSpeed = 1
-    ) : base(Path.GetFileName(imagePath), Cv2.ImRead(imagePath), ann, labelIndex, labelCount, windowScale, wheelSpeed)
+        Func<double> getRatio,
+        double wheelSpeed
+    ) : base(
+        Path.GetFileName(imagePath), 
+        Cv2.ImRead(imagePath), 
+        ann, 
+        labelIndex, 
+        labelCount, 
+        tolerance,
+        standardLineWidth,
+        boldLineWidth,
+        getRatio, 
+        wheelSpeed
+    )
     {
-        _standardLineWidth = standardLineWidth;
-        _boldLineWidth = boldLineWidth;
-        _tolerance = tolerance;
+        var stWidth = GetActualStandardLineWidth();
+        DrawOnce(f =>
+        {
+            var datas = Annotation.GetBoxDatas(ImageId);
+            foreach (var (k, v) in datas)
+                f.Rectangle(v.Box, LabelColors[v.Label], stWidth);
+        });
     }
 
 
     // ------ public methods ------ //
-
-    public override void ClickDown(Point point)
-    {
-        _prevDragPoint = point;
-        _selected = null;
-        _firstPoint = null;
-        if (!DrawMode)
-        {
-            Annotation.GetBoxDatas(ImageId).ForEach(x =>
-            {
-                var label = x.Value.Label;
-                var box = x.Value.Box;
-                if (OnBox(point, box))
-                {
-                    _selected = new(x.Key, box, label, new(point.X - box.Left, point.Y - box.Top));
-                    if (new Point2D(box.Left, box.Top).DistanceTo(point.ToHustyPoint2D()) < _tolerance)
-                        _cornerIndex = 1;
-                    else if (new Point2D(box.Right, box.Top).DistanceTo(point.ToHustyPoint2D()) < _tolerance)
-                        _cornerIndex = 2;
-                    else if (new Point2D(box.Left, box.Bottom).DistanceTo(point.ToHustyPoint2D()) < _tolerance)
-                        _cornerIndex = 3;
-                    else if (new Point2D(box.Right, box.Bottom).DistanceTo(point.ToHustyPoint2D()) < _tolerance)
-                        _cornerIndex = 4;
-                    else
-                        _cornerIndex = 0;
-                }
-            });
-        }
-        if (_selected is null)
-            _firstPoint = point;
-    }
 
     public override void ClickUp(Point point)
     {
@@ -86,13 +59,22 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase
             {
                 if (MakeBox(p, point) is Rect box)
                 {
+                    AddHistory(Annotation);
                     Annotation.AddBoxData(ImageId, LabelIndex, box, out var id);
                 }
             }
+            var stWidth = GetActualStandardLineWidth();
+            var blWidth = GetActualBoldLineWidth();
             DrawOnce(f =>
             {
                 foreach (var (k, v) in Annotation.GetBoxDatas(ImageId))
-                    f.Rectangle(v.Box, LabelColors[v.Label], _standardLineWidth);
+                    f.Rectangle(v.Box, LabelColors[v.Label], stWidth);
+
+                if (GetSelected() is SelectedObject obj)
+                {
+                    var data = Annotation.GetBoxDatas(ImageId)[obj.Id];
+                    f.Rectangle(data.Box, LabelColors[data.Label], blWidth);
+                }
             });
             SetDrawMode(false);
         }
@@ -104,95 +86,101 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase
         {
             if (DrawMode)
             {
-                f.Line(new(point.X - Canvas.Width, point.Y), new(point.X + Canvas.Width, point.Y), new(200, 200, 200), 2);
-                f.Line(new(point.X, point.Y - Canvas.Height), new(point.X, point.Y + Canvas.Height), new(200, 200, 200), 2);
+                var gw = GetActualGuideLineWidth();
+                f.Line(new(point.X - Canvas.Width, point.Y), new(point.X + Canvas.Width, point.Y), LabelColors[LabelIndex], gw);
+                f.Line(new(point.X, point.Y - Canvas.Height), new(point.X, point.Y + Canvas.Height), LabelColors[LabelIndex], gw);
             }
-            var datas = Annotation.GetBoxDatas(ImageId);
+            var datas = Annotation
+                .GetBoxDatas(ImageId)
+                .OrderBy(d => GetDistanceFromEdge(point, d.Value.Box))
+                .ToDictionary(x => x.Key, x => x.Value);
+            var nearest = datas.FirstOrDefault().Value;
+            var stWidth = GetActualStandardLineWidth();
+            var blWidth = GetActualBoldLineWidth();
             foreach (var (k, v) in datas)
-            {
-                if (OnBox(point, v.Box))
-                    f.Rectangle(v.Box, LabelColors[v.Label], _boldLineWidth);
-                else
-                    f.Rectangle(v.Box, LabelColors[v.Label], _standardLineWidth);
-            }
-            if (_selected is SelectedBoxObject obj)
-                f.Rectangle(datas[obj.Id].Box, LabelColors[obj.Label], _boldLineWidth);
+                f.Rectangle(v.Box, LabelColors[v.Label], stWidth);
+            if (!DrawMode && GetDistanceFromEdge(point, nearest.Box) < GetActualTolerence())
+                f.Rectangle(nearest.Box, LabelColors[nearest.Label], blWidth);
+            if (GetSelected() is SelectedObject obj)
+                f.Rectangle(datas[obj.Id].Box, LabelColors[datas[obj.Id].Label], blWidth);
         });
     }
 
     public override void Drag(Point point)
     {
-        var diffX = point.X - _prevDragPoint.X;
-        var diffY = point.Y - _prevDragPoint.Y;
-        _prevDragPoint = point;
-        if (_selected is SelectedBoxObject obj)
+        if (GetSelected() is SelectedObject obj)
         {
             int left = 0, top = 0, right = 0, bottom = 0, dx = 0, dy = 0;
-            var datas = Annotation.GetBoxDatas(ImageId);
-            var w = datas[obj.Id].Box.Width;
-            var h = datas[obj.Id].Box.Height;
-            if (_cornerIndex is 0)
+            var data = Annotation.GetBoxDatas(ImageId)[obj.Id];
+            var w = data.Box.Width;
+            var h = data.Box.Height;
+            if (obj.Value.CornerIndex is 0)
             {
-                left = point.X - obj.RelativeVec.Item0;
-                top = point.Y - obj.RelativeVec.Item1;
+                left = point.X - obj.Value.RelativeVec.Item0;
+                top = point.Y - obj.Value.RelativeVec.Item1;
                 right = left + w;
                 bottom = top + h;
             }
-            else if (_cornerIndex is 1) // top left
+            else if (obj.Value.CornerIndex is 1) // top left
             {
-                left = point.X - obj.RelativeVec.Item0;
-                top = point.Y - obj.RelativeVec.Item1;
-                right = obj.Box.Right;
-                bottom = obj.Box.Bottom;
+                left = point.X - obj.Value.RelativeVec.Item0;
+                top = point.Y - obj.Value.RelativeVec.Item1;
+                right = obj.Value.Box.Right;
+                bottom = obj.Value.Box.Bottom;
             }
-            else if (_cornerIndex is 2) // top right
+            else if (obj.Value.CornerIndex is 2) // top right
             {
                 right = point.X;
                 top = point.Y;
-                left = obj.Box.Left;
-                bottom = obj.Box.Bottom;
+                left = obj.Value.Box.Left;
+                bottom = obj.Value.Box.Bottom;
             }
-            else if (_cornerIndex is 3) // bottom left
+            else if (obj.Value.CornerIndex is 3) // bottom left
             {
                 left = point.X;
                 bottom = point.Y;
-                right = obj.Box.Right;
-                top = obj.Box.Top;
+                right = obj.Value.Box.Right;
+                top = obj.Value.Box.Top;
             }
-            else if (_cornerIndex is 4) // bottom right
+            else if (obj.Value.CornerIndex is 4) // bottom right
             {
                 right = point.X;
                 bottom = point.Y;
-                left = obj.Box.Left;
-                top = obj.Box.Top;
+                left = obj.Value.Box.Left;
+                top = obj.Value.Box.Top;
             }
             if (MakeBox(new(left, top), new(right, bottom)) is Rect box)
-                Annotation.SetBoxData(ImageId, datas[obj.Id].Label, box, obj.Id);
+            {
+                Annotation.SetBoxData(ImageId, data.Label, box, obj.Id);
+            }
         }
         else if (!DrawMode)
         {
-            MoveROI(-diffX, -diffY);
+            base.Drag(point);
         }
+        var stWidth = GetActualStandardLineWidth();
+        var blWidth = GetActualBoldLineWidth();
         DrawOnce(f =>
         {
             var datas = Annotation.GetBoxDatas(ImageId);
             foreach (var (k, v) in datas)
-                f.Rectangle(v.Box, LabelColors[v.Label], _standardLineWidth);
+                f.Rectangle(v.Box, LabelColors[v.Label], stWidth);
             if (DrawMode && _firstPoint is Point p)
-                f.Rectangle(p, point, LabelColors[LabelIndex], _standardLineWidth);
-            if (_selected is SelectedBoxObject obj)
-                f.Rectangle(datas[obj.Id].Box, LabelColors[obj.Label], _boldLineWidth);
+                f.Rectangle(p, point, LabelColors[LabelIndex], stWidth);
+            if (GetSelected() is SelectedObject obj)
+                f.Rectangle(datas[obj.Id].Box, LabelColors[datas[obj.Id].Label], blWidth);
         });
     }
 
     public override void Cancel()
     {
         _firstPoint = null;
-        _selected = null;
+        SetSelected(null);
+        var stWidth = GetActualStandardLineWidth();
         DrawOnce(f =>
         {
             foreach (var (k, v) in Annotation.GetBoxDatas(ImageId))
-                f.Rectangle(v.Box, LabelColors[v.Label], _standardLineWidth);
+                f.Rectangle(v.Box, LabelColors[v.Label], stWidth);
         });
     }
 
@@ -200,29 +188,34 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase
     {
         var datas = Annotation.GetBoxDatas(ImageId);
         if (datas.Count is 0) return;
-        if (_selected?.Id == datas.Count - 1)
-            _selected = null;
+        if (GetSelected()?.Id == datas.Count - 1)
+            SetSelected(null);
+        AddHistory(Annotation);
         Annotation.RemoveAnnotationData(datas.Last().Key);
+        var stWidth = GetActualStandardLineWidth();
+        var blWidth = GetActualBoldLineWidth();
         DrawOnce(f =>
         {
             foreach (var (k, v) in datas)
-                f.Rectangle(v.Box, LabelColors[v.Label], _standardLineWidth);
-            if (_selected is SelectedBoxObject obj)
-                f.Rectangle(datas[obj.Id].Box, LabelColors[obj.Label], _boldLineWidth);
+                f.Rectangle(v.Box, LabelColors[v.Label], stWidth);
+            if (GetSelected() is SelectedObject obj)
+                f.Rectangle(datas[obj.Id].Box, LabelColors[datas[obj.Id].Label], blWidth);
         });
         SetDrawMode(false);
     }
 
     public override void DeleteSelected()
     {
-        if (_selected is SelectedBoxObject obj)
+        if (GetSelected() is SelectedObject obj)
         {
-            _selected = null;
+            SetSelected(null);
+            AddHistory(Annotation);
             Annotation.RemoveAnnotationData(obj.Id);
+            var stWidth = GetActualStandardLineWidth();
             DrawOnce(f =>
             {
                 foreach (var (k, v) in Annotation.GetBoxDatas(ImageId))
-                    f.Rectangle(v.Box, LabelColors[v.Label], _standardLineWidth);
+                    f.Rectangle(v.Box, LabelColors[v.Label], stWidth);
             });
         }
         SetDrawMode(false);
@@ -230,8 +223,9 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase
 
     public override void Clear()
     {
-        _selected = null;
+        SetSelected(null);
         _firstPoint = null;
+        AddHistory(Annotation);
         var ids = Annotation.GetBoxDatas(ImageId).Keys;
         foreach (var id in ids)
             Annotation.RemoveAnnotationData(id);
@@ -239,21 +233,63 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase
     }
 
 
+    // ------ protected methods ------ //
+
+    protected override void DoClickDown(Point point)
+    {
+        SetSelected(null);
+        _firstPoint = null;
+        if (!DrawMode && Annotation.GetBoxDatas(ImageId).Count > 0)
+        {
+            var nearest = Annotation
+                .GetBoxDatas(ImageId)
+                .OrderBy(d => GetDistanceFromEdge(point, d.Value.Box))
+                .FirstOrDefault();
+            var tolerance = GetActualTolerence();
+            if (GetDistanceFromEdge(point, nearest.Value.Box) < tolerance)
+            {
+                var box = nearest.Value.Box;
+                // 0: None, 1: TopLeft, 2: TopRight, 3: BottomLeft, 4: BottomRight
+                var corner = 0;
+                if (new Point2D(box.Left, box.Top).DistanceTo(point.ToHustyPoint2D()) < tolerance)
+                    corner = 1;
+                else if (new Point2D(box.Right, box.Top).DistanceTo(point.ToHustyPoint2D()) < tolerance)
+                    corner = 2;
+                else if (new Point2D(box.Left, box.Bottom).DistanceTo(point.ToHustyPoint2D()) < tolerance)
+                    corner = 3;
+                else if (new Point2D(box.Right, box.Bottom).DistanceTo(point.ToHustyPoint2D()) < tolerance)
+                    corner = 4;
+                SetSelected(new(nearest.Key, (box, corner, new(point.X - box.Left, point.Y - box.Top))));
+                AddHistory(Annotation);
+            }
+        }
+        if (GetSelected() is null)
+            _firstPoint = point;
+    }
+
+
     // ------ private methods ------ //
 
-    private bool OnBox(Point p, Rect box)
+    private static int GetDistanceFromEdge(Point p, Rect box)
     {
-        var left = box.Left - _tolerance;
-        var top = box.Top - _tolerance;
-        var right = box.Right + _tolerance;
-        var bottom = box.Bottom + _tolerance;
-        if (p.X < left || p.Y < top || p.X > right || p.Y > bottom) return false;
-        left = box.Left + _tolerance;
-        top = box.Top + _tolerance;
-        right = box.Right - _tolerance;
-        bottom = box.Bottom - _tolerance;
-        if (p.X > left && p.Y > top && p.X < right && p.Y < bottom) return false;
-        return true;
+        if (p.X >= box.X && p.X <= box.X + box.Width)
+        {
+            return Math.Min(Math.Abs(p.Y - box.Y), Math.Abs(p.Y - box.Y - box.Height));
+        }
+        else if (p.Y >= box.Y && p.Y <= box.Y + box.Height)
+        {
+            return Math.Min(Math.Abs(p.X - box.X), Math.Abs(p.X - box.X - box.Width));
+        }
+        else
+        {
+            return (int)Math.Sqrt(new[]
+            {
+                Math.Pow(p.X - box.X, 2) + Math.Pow(p.Y - box.Y, 2),
+                Math.Pow(p.X - box.X - box.Width, 2) + Math.Pow(p.Y - box.Y, 2),
+                Math.Pow(p.X - box.X, 2) + Math.Pow(p.Y - box.Y - box.Height, 2),
+                Math.Pow(p.X - box.X - box.Width, 2) + Math.Pow(p.Y - box.Y - box.Height, 2)
+            }.Min());
+        }
     }
 
     private Rect? MakeBox(Point p0, Point p1)

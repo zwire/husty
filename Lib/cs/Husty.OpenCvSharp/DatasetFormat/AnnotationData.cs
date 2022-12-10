@@ -9,6 +9,11 @@ public class AnnotationData
     private readonly MsCoco _data;
 
 
+    private AnnotationData(MsCoco data)
+    {
+        _data = data.Clone();
+    }
+
     public AnnotationData(string filePath)
     {
         if (File.Exists(filePath))
@@ -79,6 +84,11 @@ public class AnnotationData
                 categories = labelData.Select((label, i) => new category() { id = i + 1, name = label }).ToList()
             };
         }
+    }
+
+    public AnnotationData Clone()
+    {
+        return new(_data);
     }
 
     public string ExportAsJson()
@@ -189,8 +199,29 @@ public class AnnotationData
     {
         return _data.annotations
             .Where(x => x.image_id == imageId)
+            .Where(x => x.bbox.Count is 4)
             .Select(x => (Id: x.id, Label: x.category_id, Box: new Rect((int)x.bbox[0], (int)x.bbox[1], (int)x.bbox[2], (int)x.bbox[3])))
             .ToDictionary(x => x.Id, x => (x.Label, x.Box));
+    }
+
+    public Dictionary<int, (int Label, Point[][] Points)> GetPolygonDatas(int imageId)
+    {
+        return _data.annotations
+            .Where(x => x.image_id == imageId)
+            .Where(x => x.segmentation.Any())
+            .Select(x => (Id: x.id, Label: x.category_id, 
+                Points: x
+                    .segmentation
+                    .Select(z =>
+                    {
+                        var points = new Point[z.Length / 2];
+                        for (int i = 0; i < z.Length / 2; i++)
+                            points[i] = new Point(z[i * 2], z[i * 2 + 1]);
+                        return points;
+                    })
+                    .ToArray()
+            ))
+            .ToDictionary(x => x.Id, x => (x.Label, x.Points));
     }
 
     public void RemoveAnnotationData(int annotationId)

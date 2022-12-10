@@ -1,4 +1,6 @@
-﻿namespace Husty.OpenCvSharp.DatasetFormat;
+﻿using System.Text.Json;
+
+namespace Husty.OpenCvSharp.DatasetFormat;
 
 public class MsCoco
 {
@@ -7,6 +9,7 @@ public class MsCoco
     public List<image> images { set; get; } = new();
     public List<annotation> annotations { set; get; } = new();
     public List<category> categories { set; get; } = new();
+    public MsCoco Clone() => JsonSerializer.Deserialize<MsCoco>(JsonSerializer.Serialize(this));
 }
 
 public class info
@@ -58,6 +61,5 @@ public class category
     public int id { set; get; } = 0;
     public string name { set; get; } = "";
     public string[] keypoints { set; get; } = Array.Empty<string>();
-
     public int[][] skeleton { set; get; } = Array.Empty<int[]>();
 }

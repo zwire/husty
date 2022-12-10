@@ -73,7 +73,11 @@ public static class BgrXyzImageIO
         using var archive = ZipFile.OpenRead(filePath);
         archive.GetEntry("C.png").ExtractToFile("C.png", true);
         archive.GetEntry("P.png").ExtractToFile("P.png", true);
-        return new BgrXyzMat(new Mat("C.png"), new Mat("P.png", ImreadModes.Unchanged));
+        var c = new Mat("C.png");
+        var p = new Mat("P.png", ImreadModes.Unchanged);
+        File.Delete("C.png");
+        File.Delete("P.png");
+        return new BgrXyzMat(c, p);
     }
 
 }

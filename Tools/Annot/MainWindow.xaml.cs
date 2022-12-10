@@ -1,11 +1,10 @@
 ﻿using System.IO;
-using System.Linq;
 using Microsoft.Extensions.Configuration;
 using OpenCvSharp.WpfExtensions;
 using Husty.Extensions;
+using Husty.OpenCvSharp.DatasetFormat;
 using Annot.Utils;
 using Annot.Attributes;
-using Husty.OpenCvSharp.DatasetFormat;
 
 namespace Annot;
 
@@ -15,12 +14,12 @@ public partial class MainWindow : System.Windows.Window
     {
         InitializeComponent();
         var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-        var type = config["Attribute"];
+        var type = config["Attribute"].ToLower();
         var dir = config["WorkingDirectory"];
         Directory.Exists(dir);
         File.Exists(config["ClassListFile"]);
         int.TryParse(config["StandardLineWidth"], out var standardLineWidth);
-        int.TryParse(config["BoldLineWidth"], out var emphasizedLineWidth);
+        int.TryParse(config["BoldLineWidth"], out var boldLineWidth);
         int.TryParse(config["SelectPixelTolerance"], out var tolerance);
         float.TryParse(config["WheelSpeed"], out var wheelSpeed);
         var navigator = new DirectoryNavigator(dir);
@@ -31,18 +30,10 @@ public partial class MainWindow : System.Windows.Window
             .Select(x => x.Split('\\').LastOrDefault())
             .Where(x => x is not null);
         FileList.SelectedIndex = 0;
+        var getRatio = () => (double)Image.ActualWidth / WindowFrame.Width;
+        var factory = new AttributeWindowFactory(type, ClassList.Items.Count, standardLineWidth, boldLineWidth, tolerance, getRatio, wheelSpeed);
         var ann = new AnnotationData("sample.json", navigator.ImagePaths, ClassList.Items.Cast<string>());
-        var window = new BoxAttributeWindow(
-            ann,
-            navigator.Current, 
-            ClassList.SelectedIndex,
-            ClassList.Items.Count,
-            standardLineWidth,
-            emphasizedLineWidth,
-            tolerance,
-            1,
-            wheelSpeed
-        );
+        IWpfInteractiveWindow window = factory.GetInstance(new[] { ann }, navigator.Current, ClassList.SelectedIndex);
         Image.Source = window.Canvas.ToBitmapSource();
         Image.MouseWheel            += (s, e) => Image.Source = window.InputMouseWheel(e.GetPosition(Image), e.Delta > 0);
         Image.MouseLeftButtonDown   += (s, e) => Image.Source = window.InputLeftMouseDown(e.GetPosition(Image));
@@ -54,21 +45,17 @@ public partial class MainWindow : System.Windows.Window
         FileList.SelectionChanged   += (s, e) =>
         {
             window.Dispose();
-            window = new(
-                ann,
-                navigator.Move(FileList.SelectedIndex),
-                ClassList.SelectedIndex,
-                standardLineWidth,
-                emphasizedLineWidth,
-                tolerance,
-                1,
-                wheelSpeed
-            );
+            window = factory.GetInstance(new[] { window.Annotation }, navigator.Move(FileList.SelectedIndex), ClassList.SelectedIndex);
         };
         KeyDown                     += (s, e) =>
         {
             var key = e.Key.ToString().ToLower();
-            if (key == config["KeyMap:GoPreviousImage"].ToLower())
+            if (key == config["KeyMap:Back"])
+            {
+                window.Back();
+                window = factory.GetInstance(window.History, navigator.Move(FileList.SelectedIndex), ClassList.SelectedIndex);
+            }
+            else if (key == config["KeyMap:GoPreviousImage"].ToLower())
             {
                 FileList.SelectedIndex = FileList.SelectedIndex.OrAbove(1) - 1;
             }
@@ -83,10 +70,11 @@ public partial class MainWindow : System.Windows.Window
             else if (key == config["KeyMap:DrawInactivation"].ToLower())
             {
                 window.SetDrawMode(false);
+                window.Cancel();
             }
             else if (key == config["KeyMap:Save"].ToLower())
             {
-                File.WriteAllText("sample.json", ann.ExportAsJson());
+                File.WriteAllText("sample.json", window.Annotation.ExportAsJson());
             }
             else if (key == config["KeyMap:DeleteLast"].ToLower())
             {
