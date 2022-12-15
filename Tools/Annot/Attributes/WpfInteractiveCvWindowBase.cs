@@ -34,10 +34,15 @@ internal abstract class WpfInteractiveCvWindowBase<T> : IWpfInteractiveWindow
     private bool _lDown;
     private int _labelIndex;
     private bool _drawMode;
-    private Scalar[] _colors;
     private Point _prevDragPoint = default;
     private Rect _prevDragRoi = default;
     private SelectedObject? _selected = null;
+    private static Scalar[] _colors = Enumerable
+        .Range(1000, 1000)
+        .Select(_ => new Random())
+        .Shuffle()
+        .Select(x => new Scalar(x.Next(200) + 55, x.Next(200) + 55, x.Next(200) + 55))
+        .ToArray();
 
 
     // ------ properties ------ //
@@ -76,7 +81,6 @@ internal abstract class WpfInteractiveCvWindowBase<T> : IWpfInteractiveWindow
         Mat frame,
         IEnumerable<AnnotationData> ann,
         int labelIndex,
-        int labelCount,
         int tolerance,
         int standardLineWidth,
         int boldLineWidth,
@@ -93,11 +97,10 @@ internal abstract class WpfInteractiveCvWindowBase<T> : IWpfInteractiveWindow
         _boldLineWidth = boldLineWidth;
         _getRatio = getRatio;
         _wheelSpeed = wheelSpeed;
-        _colors = Enumerable
-            .Range(0, labelCount)
-            .Select(x => new Random(x))
-            .Select(x => new Scalar(x.Next(155) + 100, x.Next(155) + 100, x.Next(155) + 100))
-            .ToArray();
+        var max = Math.Max(frame.Width / 1920.0, frame.Height / 1080.0);
+        var scale = max > 1 ? max : 1;
+        _ann.ForEach(ann => ann.SetScale(scale));
+        Cv2.Resize(frame, frame, Size.Zero, 1 / scale, 1 / scale);
         Canvas = frame;
         _originalFrame = frame.Clone();
         _frame = frame.Clone();
@@ -123,6 +126,14 @@ internal abstract class WpfInteractiveCvWindowBase<T> : IWpfInteractiveWindow
     {
         if (_ann.Count > 1)
             _ann.RemoveAt(_ann.Count - 1);
+    }
+
+    public void SetColors(int[][] colors)
+    {
+        _colors = colors
+            .Where(x => x.Length is 3)
+            .Select(x => new Scalar((byte)x[0], (byte)x[1], (byte)x[2]))
+            .ToArray();
     }
 
     public void SetLabelIndex(int index)
@@ -236,6 +247,11 @@ internal abstract class WpfInteractiveCvWindowBase<T> : IWpfInteractiveWindow
         else
             Move(realP);
         return GetViewImage();
+    }
+
+    public virtual void AcceptOtherKeyInput(string key)
+    {
+
     }
 
 

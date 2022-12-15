@@ -1,16 +1,23 @@
 ﻿using System.Text.Json;
+using Husty.OpenCvSharp.Extensions;
 using OpenCvSharp;
 
 namespace Husty.OpenCvSharp.DatasetFormat;
 
 public class AnnotationData
 {
+
+    // ------ fields ------ //
  
     private readonly MsCoco _data;
+    private double _scale = 1;
 
 
-    private AnnotationData(MsCoco data)
+    // ------- constructors ------ //
+
+    private AnnotationData(MsCoco data, double scale)
     {
+        _scale = scale;
         _data = data.Clone();
     }
 
@@ -86,14 +93,22 @@ public class AnnotationData
         }
     }
 
+
+    // ------ public methods ------ //
+
     public AnnotationData Clone()
     {
-        return new(_data);
+        return new(_data, _scale);
     }
 
     public string ExportAsJson()
     {
         return JsonSerializer.Serialize(_data);
+    }
+
+    public void SetScale(double scale)
+    {
+        _scale = scale;
     }
 
     public void SetImageData(string fileName, int width, int height, out int id)
@@ -114,7 +129,7 @@ public class AnnotationData
         {
             image_id = imageId, 
             category_id = labelId, 
-            bbox = new() { box.Left, box.Top, box.Width, box.Height } 
+            bbox = new() { box.Left * _scale, box.Top * _scale, box.Width * _scale, box.Height * _scale }
         });
         annotationId = _data.annotations.Last().id;
     }
@@ -125,7 +140,7 @@ public class AnnotationData
         {
             image_id = imageId,
             category_id = labelIndex,
-            segmentation = polygon.Select(pts => pts.Select(p => new double[] { p.X, p.Y }).SelectMany(x => x).ToArray()).ToList()
+            segmentation = polygon.Select(pts => pts.Select(p => new double[] { p.X * _scale, p.Y * _scale }).SelectMany(x => x).ToArray()).ToList()
         });
         annotationId = _data.annotations.Last().id;
     }
@@ -151,7 +166,7 @@ public class AnnotationData
         {
             image_id = imageId,
             category_id = labelIndex,
-            keypoints = keyPoints.Select(x => x.Select(i => (double)i).ToArray()).ToList()
+            keypoints = keyPoints.Select(x => x.Select(i => i * _scale).ToArray()).ToList()
         });
         annotationId = _data.annotations.Last().id;
     }
@@ -163,7 +178,7 @@ public class AnnotationData
         {
             image_id = imageId,
             category_id = labelId,
-            bbox = new() { box.Left, box.Top, box.Width, box.Height },
+            bbox = new() { box.Left * _scale, box.Top * _scale, box.Width * _scale, box.Height * _scale },
             id = annotationId
         });
     }
@@ -175,7 +190,7 @@ public class AnnotationData
         {
             image_id = imageId,
             category_id = labelIndex,
-            segmentation = polygon.Select(pts => pts.Select(p => new double[] { p.X, p.Y }).SelectMany(x => x).ToArray()).ToList(),
+            segmentation = polygon.Select(pts => pts.Select(p => new double[] { p.X * _scale, p.Y * _scale }).SelectMany(x => x).ToArray()).ToList(),
             id = annotationId
         });
     }
@@ -195,33 +210,34 @@ public class AnnotationData
         SetPolygonData(imageId, labelIndex, new[] { new[] { pt1, pt2 } }, annotationId);
     }
 
-    public Dictionary<int, (int Label, Rect Box)> GetBoxDatas(int imageId)
+    public Dictionary<int, (int Label, Rect Box)> GetBoxData(int imageId)
     {
         return _data.annotations
             .Where(x => x.image_id == imageId)
             .Where(x => x.bbox.Count is 4)
             .Select(x => (Id: x.id, Label: x.category_id, Box: new Rect((int)x.bbox[0], (int)x.bbox[1], (int)x.bbox[2], (int)x.bbox[3])))
-            .ToDictionary(x => x.Id, x => (x.Label, x.Box));
+            .ToDictionary(x => x.Id, x => (x.Label, x.Box.Scale(1 / _scale, 1 / _scale)));
     }
 
-    public Dictionary<int, (int Label, Point[][] Points)> GetPolygonDatas(int imageId)
+    public Dictionary<int, (int Label, Point[][] Points)> GetPolygonData(int imageId)
     {
-        return _data.annotations
-            .Where(x => x.image_id == imageId)
-            .Where(x => x.segmentation.Any())
-            .Select(x => (Id: x.id, Label: x.category_id, 
-                Points: x
-                    .segmentation
-                    .Select(z =>
-                    {
-                        var points = new Point[z.Length / 2];
-                        for (int i = 0; i < z.Length / 2; i++)
-                            points[i] = new Point(z[i * 2], z[i * 2 + 1]);
-                        return points;
-                    })
-                    .ToArray()
-            ))
+        return getPolygonData(imageId)
+            .Where(x => x.Points.All(y => y.Length > 2))
             .ToDictionary(x => x.Id, x => (x.Label, x.Points));
+    }
+
+    public Dictionary<int, (int Label, Point Point)> GetPointData(int imageId)
+    {
+        return getPolygonData(imageId)
+            .Where(x => x.Points.All(y => y.Length is 1))
+            .ToDictionary(x => x.Id, x => (x.Label, x.Points.FirstOrDefault().FirstOrDefault()));
+    }
+
+    public Dictionary<int, (int Label, Point P1, Point P2)> GetLineData(int imageId)
+    {
+        return getPolygonData(imageId)
+            .Where(x => x.Points.All(y => y.Length is 2))
+            .ToDictionary(x => x.Id, x => (x.Label, x.Points.FirstOrDefault()[0], x.Points.FirstOrDefault()[1]));
     }
 
     public void RemoveAnnotationData(int annotationId)
@@ -229,6 +245,28 @@ public class AnnotationData
         var index = _data.annotations.FindIndex(i => i.id == annotationId);
         if (index is not -1)
             _data.annotations.RemoveAt(index);
+    }
+
+
+    // ------ private methods ------ //
+
+    private IEnumerable<(int Id, int Label, Point[][] Points)> getPolygonData(int imageId)
+    {
+        return _data.annotations
+            .Where(x => x.image_id == imageId)
+            .Where(x => x.segmentation.Any())
+            .Select(x => (Id: x.id, Label: x.category_id,
+                Points: x
+                    .segmentation
+                    .Select(z =>
+                    {
+                        var points = new Point[z.Length / 2];
+                        for (int i = 0; i < z.Length / 2; i++)
+                            points[i] = new Point(z[i * 2] / _scale, z[i * 2 + 1] / _scale);
+                        return points;
+                    })
+                    .ToArray()
+            ));
     }
 
 }

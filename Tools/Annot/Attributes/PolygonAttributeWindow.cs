@@ -19,7 +19,6 @@ internal class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
         IEnumerable<AnnotationData> ann,
         string imagePath,
         int labelIndex,
-        int labelCount,
         int standardLineWidth,
         int boldLineWidth,
         int tolerance,
@@ -30,7 +29,6 @@ internal class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
         Cv2.ImRead(imagePath),
         ann,
         labelIndex,
-        labelCount,
         tolerance,
         standardLineWidth,
         boldLineWidth,
@@ -42,7 +40,7 @@ internal class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
         DrawOnce(f =>
         {
             var stWidth = GetActualStandardLineWidth();
-            foreach (var (k, v) in Annotation.GetPolygonDatas(ImageId))
+            foreach (var (k, v) in Annotation.GetPolygonData(ImageId))
                 DrawPolygons(f, v.Points.FirstOrDefault()!, LabelColors[v.Label], stWidth, true);
         });
     }
@@ -59,11 +57,11 @@ internal class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
             {
                 var stWidth = GetActualStandardLineWidth();
                 var blWidth = GetActualBoldLineWidth();
-                foreach (var (k, v) in Annotation.GetPolygonDatas(ImageId))
+                foreach (var (k, v) in Annotation.GetPolygonData(ImageId))
                     DrawPolygons(f, v.Points.FirstOrDefault()!, LabelColors[v.Label], stWidth, true);
                 if (GetSelected() is SelectedObject obj)
                 {
-                    var data = Annotation.GetPolygonDatas(ImageId)[obj.Id];
+                    var data = Annotation.GetPolygonData(ImageId)[obj.Id];
                     DrawPolygons(f, data.Points.FirstOrDefault()!, LabelColors[data.Label], blWidth, true);
                 }
                 DrawPolygons(f, _points, LabelColors[LabelIndex], stWidth, false);
@@ -85,18 +83,18 @@ internal class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
                 if (_points.Any())
                     f.Line(_points.LastOrDefault()!, point, LabelColors[LabelIndex], stWidth);
             }
-            foreach (var (k, v) in Annotation.GetPolygonDatas(ImageId))
+            foreach (var (k, v) in Annotation.GetPolygonData(ImageId))
                 DrawPolygons(f, v.Points.FirstOrDefault()!, LabelColors[v.Label], stWidth, true);
             if (GetSelected() is SelectedObject obj)
             {
-                var data = Annotation.GetPolygonDatas(ImageId)[obj.Id];
+                var data = Annotation.GetPolygonData(ImageId)[obj.Id];
                 DrawPolygons(f, data.Points.FirstOrDefault()!, LabelColors[data.Label], blWidth, true);
             }
             DrawPolygons(f, _points, LabelColors[LabelIndex], stWidth, false);
             if (!DrawMode)
             {
                 var nearest = Annotation
-                    .GetPolygonDatas(ImageId)
+                    .GetPolygonData(ImageId)
                     .Select(d => (Data: d, Info: GetDistanceFromEachPoint(point, d.Value.Points.FirstOrDefault()!)))
                     .OrderBy(d => d.Info.Dist)
                     .FirstOrDefault();
@@ -116,7 +114,7 @@ internal class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
     {
         if (GetSelected() is SelectedObject obj)
         {
-            var data = Annotation.GetPolygonDatas(ImageId)[obj.Id];
+            var data = Annotation.GetPolygonData(ImageId)[obj.Id];
             var pts = data.Points.FirstOrDefault()!;
             pts[obj.Value] = point;
             Annotation.SetPolygonData(ImageId, data.Label, new[] { pts }, obj.Id);
@@ -129,11 +127,11 @@ internal class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
         {
             var stWidth = GetActualStandardLineWidth();
             var blWidth = GetActualBoldLineWidth();
-            foreach (var (k, v) in Annotation.GetPolygonDatas(ImageId))
+            foreach (var (k, v) in Annotation.GetPolygonData(ImageId))
                 DrawPolygons(f, v.Points.FirstOrDefault()!, LabelColors[v.Label], stWidth, true);
             if (GetSelected() is SelectedObject obj)
             {
-                var data = Annotation.GetPolygonDatas(ImageId)[obj.Id];
+                var data = Annotation.GetPolygonData(ImageId)[obj.Id];
                 DrawPolygons(f, data.Points.FirstOrDefault()!, LabelColors[data.Label], blWidth, true);
             }
             DrawPolygons(f, _points, LabelColors[LabelIndex], stWidth, false);
@@ -151,7 +149,7 @@ internal class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
         DrawOnce(f =>
         {
             var stWidth = GetActualStandardLineWidth();
-            foreach (var (k, v) in Annotation.GetPolygonDatas(ImageId))
+            foreach (var (k, v) in Annotation.GetPolygonData(ImageId))
                 DrawPolygons(f, v.Points.FirstOrDefault()!, LabelColors[v.Label], stWidth, true);
         });
         SetDrawMode(false);
@@ -159,16 +157,16 @@ internal class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
 
     public override void DeleteLast()
     {
-        var datas = Annotation.GetPolygonDatas(ImageId);
-        if (datas.Count is 0) return;
-        if (GetSelected()?.Id == datas.Count - 1)
+        var data = Annotation.GetPolygonData(ImageId);
+        if (data.Count is 0) return;
+        if (GetSelected()?.Id == data.Count - 1)
             SetSelected(null);
         AddHistory(Annotation);
-        Annotation.RemoveAnnotationData(datas.Last().Key);
+        Annotation.RemoveAnnotationData(data.Last().Key);
         var stWidth = GetActualStandardLineWidth();
         DrawOnce(f =>
         {
-            foreach (var (k, v) in Annotation.GetPolygonDatas(ImageId))
+            foreach (var (k, v) in Annotation.GetPolygonData(ImageId))
                 DrawPolygons(f, v.Points.FirstOrDefault()!, LabelColors[v.Label], stWidth, true);
         });
         _points.Clear();
@@ -185,7 +183,7 @@ internal class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
             var stWidth = GetActualStandardLineWidth();
             DrawOnce(f =>
             {
-                foreach (var (k, v) in Annotation.GetPolygonDatas(ImageId))
+                foreach (var (k, v) in Annotation.GetPolygonData(ImageId))
                     DrawPolygons(f, v.Points.FirstOrDefault()!, LabelColors[v.Label], stWidth, true);
             });
         }
@@ -197,7 +195,7 @@ internal class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
     {
         _points.Clear();
         AddHistory(Annotation);
-        var ids = Annotation.GetPolygonDatas(ImageId).Keys;
+        var ids = Annotation.GetPolygonData(ImageId).Keys;
         foreach (var id in ids)
             Annotation.RemoveAnnotationData(id);
         ClearCanvas();
@@ -209,18 +207,16 @@ internal class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
     protected override void DoClickDown(Point point)
     {
         SetSelected(null);
-        if (!DrawMode && Annotation.GetBoxDatas(ImageId).Count > 0)
+        var data = Annotation.GetPolygonData(ImageId);
+        if (!DrawMode && data.Any())
         {
-            var nearest = Annotation
-                .GetPolygonDatas(ImageId)
+            var nearest = data
                 .Select(d => (Data: d, Info: GetDistanceFromEachPoint(point, d.Value.Points.FirstOrDefault()!)))
                 .OrderBy(d => d.Info.Dist)
                 .FirstOrDefault();
             var tolerance = GetActualTolerence();
             if (nearest.Data.Value.Points is not null && nearest.Info.Dist < tolerance)
             {
-                var label = nearest.Data.Value.Label;
-                var points = nearest.Data.Value.Points.FirstOrDefault()!;
                 SetSelected(new(nearest.Data.Key, nearest.Info.Index));
                 AddHistory(Annotation);
             }

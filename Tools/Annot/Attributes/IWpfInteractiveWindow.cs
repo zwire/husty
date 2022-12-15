@@ -22,6 +22,8 @@ internal interface IWpfInteractiveWindow : IInteractiveWindow
 
     public void Back();
 
+    public void SetColors(int[][] colors);
+
     public void SetLabelIndex(int index);
 
     public void SetDrawMode(bool on);
@@ -45,5 +47,7 @@ internal interface IWpfInteractiveWindow : IInteractiveWindow
     internal BitmapSource InputMouseLeave(System.Windows.Point p);
 
     internal BitmapSource InputMouseMove(System.Windows.Point p);
+
+    internal void AcceptOtherKeyInput(string key);
 
 }

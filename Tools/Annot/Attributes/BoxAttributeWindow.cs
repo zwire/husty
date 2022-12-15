@@ -20,7 +20,6 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase<(Rect Box, int Co
         IEnumerable<AnnotationData> ann,
         string imagePath,
         int labelIndex,
-        int labelCount,
         int standardLineWidth,
         int boldLineWidth,
         int tolerance,
@@ -31,7 +30,6 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase<(Rect Box, int Co
         Cv2.ImRead(imagePath), 
         ann, 
         labelIndex, 
-        labelCount, 
         tolerance,
         standardLineWidth,
         boldLineWidth,
@@ -42,8 +40,7 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase<(Rect Box, int Co
         var stWidth = GetActualStandardLineWidth();
         DrawOnce(f =>
         {
-            var datas = Annotation.GetBoxDatas(ImageId);
-            foreach (var (k, v) in datas)
+            foreach (var (k, v) in Annotation.GetBoxData(ImageId))
                 f.Rectangle(v.Box, LabelColors[v.Label], stWidth);
         });
     }
@@ -67,12 +64,11 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase<(Rect Box, int Co
             var blWidth = GetActualBoldLineWidth();
             DrawOnce(f =>
             {
-                foreach (var (k, v) in Annotation.GetBoxDatas(ImageId))
+                foreach (var (k, v) in Annotation.GetBoxData(ImageId))
                     f.Rectangle(v.Box, LabelColors[v.Label], stWidth);
-
                 if (GetSelected() is SelectedObject obj)
                 {
-                    var data = Annotation.GetBoxDatas(ImageId)[obj.Id];
+                    var data = Annotation.GetBoxData(ImageId)[obj.Id];
                     f.Rectangle(data.Box, LabelColors[data.Label], blWidth);
                 }
             });
@@ -91,7 +87,7 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase<(Rect Box, int Co
                 f.Line(new(point.X, point.Y - Canvas.Height), new(point.X, point.Y + Canvas.Height), LabelColors[LabelIndex], gw);
             }
             var datas = Annotation
-                .GetBoxDatas(ImageId)
+                .GetBoxData(ImageId)
                 .OrderBy(d => GetDistanceFromEdge(point, d.Value.Box))
                 .ToDictionary(x => x.Key, x => x.Value);
             var nearest = datas.FirstOrDefault().Value;
@@ -111,7 +107,7 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase<(Rect Box, int Co
         if (GetSelected() is SelectedObject obj)
         {
             int left = 0, top = 0, right = 0, bottom = 0, dx = 0, dy = 0;
-            var data = Annotation.GetBoxDatas(ImageId)[obj.Id];
+            var data = Annotation.GetBoxData(ImageId)[obj.Id];
             var w = data.Box.Width;
             var h = data.Box.Height;
             if (obj.Value.CornerIndex is 0)
@@ -162,7 +158,7 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase<(Rect Box, int Co
         var blWidth = GetActualBoldLineWidth();
         DrawOnce(f =>
         {
-            var datas = Annotation.GetBoxDatas(ImageId);
+            var datas = Annotation.GetBoxData(ImageId);
             foreach (var (k, v) in datas)
                 f.Rectangle(v.Box, LabelColors[v.Label], stWidth);
             if (DrawMode && _firstPoint is Point p)
@@ -179,27 +175,27 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase<(Rect Box, int Co
         var stWidth = GetActualStandardLineWidth();
         DrawOnce(f =>
         {
-            foreach (var (k, v) in Annotation.GetBoxDatas(ImageId))
+            foreach (var (k, v) in Annotation.GetBoxData(ImageId))
                 f.Rectangle(v.Box, LabelColors[v.Label], stWidth);
         });
     }
 
     public override void DeleteLast()
     {
-        var datas = Annotation.GetBoxDatas(ImageId);
-        if (datas.Count is 0) return;
-        if (GetSelected()?.Id == datas.Count - 1)
+        var data = Annotation.GetBoxData(ImageId);
+        if (data.Count is 0) return;
+        if (GetSelected()?.Id == data.Count - 1)
             SetSelected(null);
         AddHistory(Annotation);
-        Annotation.RemoveAnnotationData(datas.Last().Key);
+        Annotation.RemoveAnnotationData(data.Last().Key);
         var stWidth = GetActualStandardLineWidth();
         var blWidth = GetActualBoldLineWidth();
         DrawOnce(f =>
         {
-            foreach (var (k, v) in datas)
+            foreach (var (k, v) in data)
                 f.Rectangle(v.Box, LabelColors[v.Label], stWidth);
             if (GetSelected() is SelectedObject obj)
-                f.Rectangle(datas[obj.Id].Box, LabelColors[datas[obj.Id].Label], blWidth);
+                f.Rectangle(data[obj.Id].Box, LabelColors[data[obj.Id].Label], blWidth);
         });
         SetDrawMode(false);
     }
@@ -214,7 +210,7 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase<(Rect Box, int Co
             var stWidth = GetActualStandardLineWidth();
             DrawOnce(f =>
             {
-                foreach (var (k, v) in Annotation.GetBoxDatas(ImageId))
+                foreach (var (k, v) in Annotation.GetBoxData(ImageId))
                     f.Rectangle(v.Box, LabelColors[v.Label], stWidth);
             });
         }
@@ -226,7 +222,7 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase<(Rect Box, int Co
         SetSelected(null);
         _firstPoint = null;
         AddHistory(Annotation);
-        var ids = Annotation.GetBoxDatas(ImageId).Keys;
+        var ids = Annotation.GetBoxData(ImageId).Keys;
         foreach (var id in ids)
             Annotation.RemoveAnnotationData(id);
         ClearCanvas();
@@ -239,10 +235,10 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase<(Rect Box, int Co
     {
         SetSelected(null);
         _firstPoint = null;
-        if (!DrawMode && Annotation.GetBoxDatas(ImageId).Count > 0)
+        var data = Annotation.GetBoxData(ImageId);
+        if (!DrawMode && data.Any())
         {
-            var nearest = Annotation
-                .GetBoxDatas(ImageId)
+            var nearest = data
                 .OrderBy(d => GetDistanceFromEdge(point, d.Value.Box))
                 .FirstOrDefault();
             var tolerance = GetActualTolerence();
@@ -262,6 +258,18 @@ internal class BoxAttributeWindow : WpfInteractiveCvWindowBase<(Rect Box, int Co
                 SetSelected(new(nearest.Key, (box, corner, new(point.X - box.Left, point.Y - box.Top))));
                 AddHistory(Annotation);
             }
+            DrawOnce(f =>
+            {
+                var stWidth = GetActualStandardLineWidth();
+                var blWidth = GetActualBoldLineWidth();
+                foreach (var (k, v) in Annotation.GetBoxData(ImageId))
+                    f.Rectangle(v.Box, LabelColors[v.Label], stWidth);
+                if (GetSelected() is SelectedObject obj)
+                {
+                    var data = Annotation.GetBoxData(ImageId)[obj.Id];
+                    f.Rectangle(data.Box, LabelColors[data.Label], blWidth);
+                }
+            });
         }
         if (GetSelected() is null)
             _firstPoint = point;

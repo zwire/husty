@@ -7,7 +7,6 @@ internal class AttributeWindowFactory
 {
 
     private readonly string _attributeType;
-    private readonly int _labelCount;
     private readonly int _standardLineWidth;
     private readonly int _boldLineWidth;
     private readonly int _tolerance;
@@ -17,7 +16,6 @@ internal class AttributeWindowFactory
 
     public AttributeWindowFactory(
         string attributeType,
-        int labelCount,
         int standardLineWidth,
         int boldLineWidth,
         int tolerance,
@@ -26,7 +24,6 @@ internal class AttributeWindowFactory
     )
     {
         _attributeType = attributeType;
-        _labelCount = labelCount;
         _standardLineWidth = standardLineWidth;
         _boldLineWidth = boldLineWidth;
         _tolerance = tolerance;
@@ -43,8 +40,11 @@ internal class AttributeWindowFactory
     {
         return _attributeType switch
         {
-            "box"       => new BoxAttributeWindow(ann, imagePath, labelIndex, _labelCount, _standardLineWidth, _boldLineWidth, _tolerance, _getRatio, _wheelSpeed),
-            "polygon"   => new PolygonAttributeWindow(ann, imagePath, labelIndex, _labelCount, _standardLineWidth, _boldLineWidth, _tolerance, _getRatio, _wheelSpeed),
+            "box"       => new BoxAttributeWindow(ann, imagePath, labelIndex, _standardLineWidth, _boldLineWidth, _tolerance, _getRatio, _wheelSpeed),
+            "polygon"   => new PolygonAttributeWindow(ann, imagePath, labelIndex, _standardLineWidth, _boldLineWidth, _tolerance, _getRatio, _wheelSpeed),
+            "point"     => new PointAttributeWindow(ann, imagePath, labelIndex, _standardLineWidth, _boldLineWidth, _tolerance, _getRatio, _wheelSpeed),
+            "line"      => new LineAttributeWindow(ann, imagePath, labelIndex, _standardLineWidth, _boldLineWidth, _tolerance, _getRatio, _wheelSpeed),
+            "circle"    => new CircleAttributeWindow(ann, imagePath, labelIndex, _standardLineWidth, _boldLineWidth, _tolerance, _getRatio, _wheelSpeed),
             _           => throw new NotImplementedException()
         };
     }

@@ -63,5 +63,20 @@ public static class PointEx
         return new(x, y);
     }
 
+    public static Point Scale(this Point point, double x, double y)
+    {
+        return new(point.X * x, point.Y * y);
+    }
+
+    public static Point2f Scale(this Point2f point, double x, double y)
+    {
+        return new((float)(point.X * x), (float)(point.Y * y));
+    }
+
+    public static Point2d Scale(this Point2d point, double x, double y)
+    {
+        return new(point.X * x, point.Y * y);
+    }
+
 }
 
