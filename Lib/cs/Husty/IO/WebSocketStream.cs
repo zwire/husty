@@ -4,8 +4,6 @@ using System.Text;
 
 namespace Husty.IO;
 
-public enum WebSocketType { Server, Client }
-
 public class WebSocketStream : IDisposable
 {
 
@@ -28,32 +26,42 @@ public class WebSocketStream : IDisposable
 
     // ------ constructors ------ //
 
-    public WebSocketStream(WebSocketType type, string ip, int port)
+    private WebSocketStream(bool server, string ip, int port, string suffix)
     {
-        if (type is WebSocketType.Server)
+        if (server)
         {
             var listener = new HttpListener();
-            listener.Prefixes.Add($"http://{ip}:{port}/ws/");
+            listener.Prefixes.Add($"http://{ip}:{port}/{suffix}");
             listener.Start();
             var context = listener.GetContextAsync().Result;
             if (!context.Request.IsWebSocketRequest)
             {
                 context.Response.StatusCode = 400;
                 context.Response.Close();
-                return;
+                throw new Exception("Closed: (Response: 400)");
             }
             _socket = context.AcceptWebSocketAsync(null).Result.WebSocket;
         }
         else
         {
             var socket = new ClientWebSocket();
-            socket.ConnectAsync(new($"ws://{ip}:{port}/ws/"), CancellationToken.None).Wait();
+            socket.ConnectAsync(new($"ws://{ip}:{port}/{suffix}"), CancellationToken.None).Wait();
             _socket = socket;
         }
     }
 
 
     // ------ public methods ------ //
+
+    public static WebSocketStream CreateServer(string ip, int port, string suffix = "")
+    {
+        return new(true, ip, port, suffix);
+    }
+
+    public static WebSocketStream CreateClient(string ip, int port, string suffix = "")
+    {
+        return new(false, ip, port, suffix);
+    }
 
     public void Write(byte[] data)
     {

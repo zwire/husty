@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{d21d7a23-f983-490b-8d73-9ca40e8060c5}</ProjectGuid>
+    <RootNamespace>RxCpp</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;RXCPP_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;RXCPP_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;RXCPP_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;RXCPP_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="operators\rx-all.hpp" />
+    <ClInclude Include="operators\rx-amb.hpp" />
+    <ClInclude Include="operators\rx-any.hpp" />
+    <ClInclude Include="operators\rx-buffer_count.hpp" />
+    <ClInclude Include="operators\rx-buffer_time.hpp" />
+    <ClInclude Include="operators\rx-buffer_time_count.hpp" />
+    <ClInclude Include="operators\rx-combine_latest.hpp" />
+    <ClInclude Include="operators\rx-concat.hpp" />
+    <ClInclude Include="operators\rx-concat_map.hpp" />
+    <ClInclude Include="operators\rx-connect_forever.hpp" />
+    <ClInclude Include="operators\rx-debounce.hpp" />
+    <ClInclude Include="operators\rx-delay.hpp" />
+    <ClInclude Include="operators\rx-distinct.hpp" />
+    <ClInclude Include="operators\rx-distinct_until_changed.hpp" />
+    <ClInclude Include="operators\rx-element_at.hpp" />
+    <ClInclude Include="operators\rx-filter.hpp" />
+    <ClInclude Include="operators\rx-finally.hpp" />
+    <ClInclude Include="operators\rx-flat_map.hpp" />
+    <ClInclude Include="operators\rx-group_by.hpp" />
+    <ClInclude Include="operators\rx-ignore_elements.hpp" />
+    <ClInclude Include="operators\rx-lift.hpp" />
+    <ClInclude Include="operators\rx-map.hpp" />
+    <ClInclude Include="operators\rx-merge.hpp" />
+    <ClInclude Include="operators\rx-merge_delay_error.hpp" />
+    <ClInclude Include="operators\rx-multicast.hpp" />
+    <ClInclude Include="operators\rx-observe_on.hpp" />
+    <ClInclude Include="operators\rx-on_error_resume_next.hpp" />
+    <ClInclude Include="operators\rx-pairwise.hpp" />
+    <ClInclude Include="operators\rx-publish.hpp" />
+    <ClInclude Include="operators\rx-reduce.hpp" />
+    <ClInclude Include="operators\rx-ref_count.hpp" />
+    <ClInclude Include="operators\rx-repeat.hpp" />
+    <ClInclude Include="operators\rx-replay.hpp" />
+    <ClInclude Include="operators\rx-retry-repeat-common.hpp" />
+    <ClInclude Include="operators\rx-retry.hpp" />
+    <ClInclude Include="operators\rx-sample_time.hpp" />
+    <ClInclude Include="operators\rx-scan.hpp" />
+    <ClInclude Include="operators\rx-sequence_equal.hpp" />
+    <ClInclude Include="operators\rx-skip.hpp" />
+    <ClInclude Include="operators\rx-skip_last.hpp" />
+    <ClInclude Include="operators\rx-skip_until.hpp" />
+    <ClInclude Include="operators\rx-skip_while.hpp" />
+    <ClInclude Include="operators\rx-start_with.hpp" />
+    <ClInclude Include="operators\rx-subscribe.hpp" />
+    <ClInclude Include="operators\rx-subscribe_on.hpp" />
+    <ClInclude Include="operators\rx-switch_if_empty.hpp" />
+    <ClInclude Include="operators\rx-switch_on_next.hpp" />
+    <ClInclude Include="operators\rx-take.hpp" />
+    <ClInclude Include="operators\rx-take_last.hpp" />
+    <ClInclude Include="operators\rx-take_until.hpp" />
+    <ClInclude Include="operators\rx-take_while.hpp" />
+    <ClInclude Include="operators\rx-tap.hpp" />
+    <ClInclude Include="operators\rx-timeout.hpp" />
+    <ClInclude Include="operators\rx-timestamp.hpp" />
+    <ClInclude Include="operators\rx-time_interval.hpp" />
+    <ClInclude Include="operators\rx-window.hpp" />
+    <ClInclude Include="operators\rx-window_time.hpp" />
+    <ClInclude Include="operators\rx-window_time_count.hpp" />
+    <ClInclude Include="operators\rx-window_toggle.hpp" />
+    <ClInclude Include="operators\rx-with_latest_from.hpp" />
+    <ClInclude Include="operators\rx-zip.hpp" />
+    <ClInclude Include="rx-composite_exception.hpp" />
+    <ClInclude Include="rx-connectable_observable.hpp" />
+    <ClInclude Include="rx-coordination.hpp" />
+    <ClInclude Include="rx-coroutine.hpp" />
+    <ClInclude Include="rx-grouped_observable.hpp" />
+    <ClInclude Include="rx-includes.hpp" />
+    <ClInclude Include="rx-notification.hpp" />
+    <ClInclude Include="rx-observable-fwd.hpp" />
+    <ClInclude Include="rx-observable.hpp" />
+    <ClInclude Include="rx-observer.hpp" />
+    <ClInclude Include="rx-operators.hpp" />
+    <ClInclude Include="rx-predef.hpp" />
+    <ClInclude Include="rx-scheduler.hpp" />
+    <ClInclude Include="rx-sources.hpp" />
+    <ClInclude Include="rx-subjects.hpp" />
+    <ClInclude Include="rx-subscriber.hpp" />
+    <ClInclude Include="rx-subscription.hpp" />
+    <ClInclude Include="rx-test.hpp" />
+    <ClInclude Include="rx-trace.hpp" />
+    <ClInclude Include="rx-util.hpp" />
+    <ClInclude Include="rx.hpp" />
+    <ClInclude Include="schedulers\rx-currentthread.hpp" />
+    <ClInclude Include="schedulers\rx-eventloop.hpp" />
+    <ClInclude Include="schedulers\rx-immediate.hpp" />
+    <ClInclude Include="schedulers\rx-newthread.hpp" />
+    <ClInclude Include="schedulers\rx-runloop.hpp" />
+    <ClInclude Include="schedulers\rx-sameworker.hpp" />
+    <ClInclude Include="schedulers\rx-test.hpp" />
+    <ClInclude Include="schedulers\rx-virtualtime.hpp" />
+    <ClInclude Include="sources\rx-create.hpp" />
+    <ClInclude Include="sources\rx-defer.hpp" />
+    <ClInclude Include="sources\rx-empty.hpp" />
+    <ClInclude Include="sources\rx-error.hpp" />
+    <ClInclude Include="sources\rx-interval.hpp" />
+    <ClInclude Include="sources\rx-iterate.hpp" />
+    <ClInclude Include="sources\rx-never.hpp" />
+    <ClInclude Include="sources\rx-range.hpp" />
+    <ClInclude Include="sources\rx-scope.hpp" />
+    <ClInclude Include="sources\rx-timer.hpp" />
+    <ClInclude Include="subjects\rx-behavior.hpp" />
+    <ClInclude Include="subjects\rx-replaysubject.hpp" />
+    <ClInclude Include="subjects\rx-subject.hpp" />
+    <ClInclude Include="subjects\rx-synchronize.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

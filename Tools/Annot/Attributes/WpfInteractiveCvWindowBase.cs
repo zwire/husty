@@ -8,7 +8,7 @@ using Husty.OpenCvSharp.DatasetFormat;
 
 namespace Annot.Attributes;
 
-public abstract class WpfInteractiveCvWindowBase<T> : IWpfInteractiveWindow
+internal abstract class WpfInteractiveCvWindowBase<T> : IWpfInteractiveWindow
 {
 
     public record SelectedObject(int Id, T Value);

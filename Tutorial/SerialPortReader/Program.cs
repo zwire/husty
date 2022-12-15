@@ -1,5 +1,4 @@
-﻿using Husty.Extensions;
-using Husty.IO;
+﻿using Husty.IO;
 
 namespace SerialPortReader;
 

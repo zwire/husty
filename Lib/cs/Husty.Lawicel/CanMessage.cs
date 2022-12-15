@@ -35,6 +35,13 @@ public class CanMessage
         Data = BitConverter.ToUInt64(data);
     }
 
+    public override string ToString()
+    {
+        var id = Id.ToString("X");
+        var data = BitConverter.GetBytes(Data).Reverse().Select(x => x.ToString("X2")).ToArray();
+        return $"0x{id}:{string.Join('-', data)}";
+    }
+
     internal CANMsg ToCANMsg() 
         => new(Id, Timestamp, Flags, Length, Data);
 

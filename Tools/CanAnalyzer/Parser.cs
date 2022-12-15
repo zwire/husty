@@ -85,10 +85,10 @@ public static class Parser
         );
     }
 
-    public static string[] ParseMessage(CanMessage msg, int type = 16)
+    public static string[] ParseMessage(CanMessage msg)
     {
-        var id = "0x" + Convert.ToString(msg.Id, 16).ToUpper();
-        var data = BitConverter.GetBytes(msg.Data).Reverse().Select(x => Convert.ToString(x, type).ToUpper()).ToArray();
+        var id = "0x" + msg.Id.ToString("X");
+        var data = BitConverter.GetBytes(msg.Data).Reverse().Select(x => x.ToString("X2")).ToArray();
         return new[] { id, string.Join('-', data) };
     }
 

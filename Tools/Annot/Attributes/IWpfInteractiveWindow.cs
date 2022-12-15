@@ -5,7 +5,7 @@ using Husty.OpenCvSharp.DatasetFormat;
 
 namespace Annot.Attributes;
 
-public interface IWpfInteractiveWindow : IInteractiveWindow
+internal interface IWpfInteractiveWindow : IInteractiveWindow
 {
 
     public List<AnnotationData> History { get; }

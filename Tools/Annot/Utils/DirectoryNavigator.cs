@@ -3,7 +3,7 @@ using OpenCvSharp;
 
 namespace Annot.Utils;
 
-public class DirectoryNavigator
+internal class DirectoryNavigator
 {
 
     // ------ fields ------ //

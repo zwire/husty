@@ -5,23 +5,13 @@
     <Product>$(AssemblyName)</Product>
     <Company>$(Authors)</Company>
     <Authors>yamashita</Authors>
-    <Description>Lawicel CANUSB package wrapper. This package includes only canusbdrv64.dll.</Description>
-    <Version>1.1.1</Version>
+    <Description>Lawicel CANUSB package wrapper.</Description>
+    <Version>1.1.2</Version>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-	  <Content Include="Internal\canusbdrv64.dll" Pack="true" PackagePath="lib\" />
-	  <Content Include="Internal\canusbdrv64.dll" Pack="true">
-		  <PackageCopyToOutput>true</PackageCopyToOutput>
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
+    <PackageReference Include="System.IO.Ports" Version="7.0.0" />
   </ItemGroup>
-
-	<ItemGroup>
-		<None Update="Internal\canusbdrv64.dll">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
 
 </Project>

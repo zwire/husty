@@ -4,19 +4,16 @@ using static Husty.Lawicel.CanUsbOption;
 
 namespace Husty.Lawicel;
 
-public enum CanUsbStatus { Offline, Online }
-
-public class CanUsbAdapter : IDisposable
+public class CanUsbAdapter : ICanUsbAdapter
 {
 
     // ------ fields ------ //
 
     private bool _disposed;
+    private uint _handle;
 
 
     // ------ properties ------ //
-
-    public uint Handle { get; private set; }
 
     public string AdapterName { get; }
 
@@ -55,13 +52,13 @@ public class CanUsbAdapter : IDisposable
     {
         ThrowIfDisposed();
         ThrowIfNotOffline();
-        Handle = canusb_Open(
+        _handle = canusb_Open(
             AdapterName,
             Baudrate,
             ACCEPTANCE_CODE_ALL, ACCEPTANCE_MASK_ALL,
             FLAG_TIMESTAMP | FLAG_BLOCK
         );
-        if (Handle <= 0) throw new Exception("failed to open the CANUSB Adapter.");
+        if (_handle <= 0) throw new Exception("failed to open the CANUSB Adapter.");
         Status = CanUsbStatus.Online;
     }
 
@@ -69,7 +66,7 @@ public class CanUsbAdapter : IDisposable
     {
         if (_disposed) return;
         if (Status is CanUsbStatus.Offline) return;
-        var ret = canusb_Close(Handle);
+        var ret = canusb_Close(_handle);
         if (ret is not ERROR_OK) throw new Exception("failed to close the CANUSB adapter");
         Status = CanUsbStatus.Offline;
     }
@@ -80,15 +77,15 @@ public class CanUsbAdapter : IDisposable
         ThrowIfDisposed();
         ThrowIfNotOnline();
         var msg = message.ToCANMsg();
-        canusb_Flush(Handle, Convert.ToByte(FLUSH_WAIT));
-        var ret = canusb_Write(Handle, ref msg);
+        canusb_Flush(_handle, Convert.ToByte(FLUSH_WAIT));
+        var ret = canusb_Write(_handle, ref msg);
         if (ret is not ERROR_OK) throw new Exception("failed to send the message.");
     }
 
     public CanMessage Read()
     {
-        var ret = canusb_Read(Handle, out var message);
-        if (ret is not ERROR_OK) throw new Exception("Failed to receive the message.");
+        var ret = canusb_Read(_handle, out var message);
+        if (ret is not ERROR_OK) throw new Exception("failed to receive the message.");
         return CanMessage.FromCANMsg(message);
     }
 
@@ -108,13 +105,13 @@ public class CanUsbAdapter : IDisposable
     protected void ThrowIfNotOffline()
     {
         if (Status is not CanUsbStatus.Offline)
-            throw new InvalidOperationException("Must be invoked on Offline status.");
+            throw new InvalidOperationException("must be invoked on Offline status.");
     }
 
     protected void ThrowIfNotOnline()
     {
         if (Status is not CanUsbStatus.Online)
-            throw new InvalidOperationException("Must be invoked on Online status.");
+            throw new InvalidOperationException("must be invoked on Online status.");
     }
 
     protected void ThrowIfDisposed()

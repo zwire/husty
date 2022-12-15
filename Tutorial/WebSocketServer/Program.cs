@@ -8,7 +8,7 @@ internal class Program
     static void Main(string[] args)
     {
         Console.WriteLine("waiting for connection ...");
-        var server = new WebSocketStream(WebSocketType.Server, "127.0.0.1", 8000);
+        var server = WebSocketStream.CreateServer("127.0.0.1", 8000);
         Console.WriteLine("connected!");
         var counter = 0;
         while (!(Console.KeyAvailable && Console.ReadKey().Key is ConsoleKey.Escape) && server.IsOpened)

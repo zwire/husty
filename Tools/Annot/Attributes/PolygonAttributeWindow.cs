@@ -5,7 +5,7 @@ using Husty.OpenCvSharp.Extensions;
 
 namespace Annot.Attributes;
 
-public class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
+internal class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
 {
 
     // ------ fields ------ //
@@ -217,7 +217,7 @@ public class PolygonAttributeWindow : WpfInteractiveCvWindowBase<int>
                 .OrderBy(d => d.Info.Dist)
                 .FirstOrDefault();
             var tolerance = GetActualTolerence();
-            if (nearest.Info.Dist < tolerance)
+            if (nearest.Data.Value.Points is not null && nearest.Info.Dist < tolerance)
             {
                 var label = nearest.Data.Value.Label;
                 var points = nearest.Data.Value.Points.FirstOrDefault()!;

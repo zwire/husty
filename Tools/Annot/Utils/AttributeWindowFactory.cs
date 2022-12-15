@@ -3,7 +3,7 @@ using Annot.Attributes;
 
 namespace Annot.Utils;
 
-public class AttributeWindowFactory
+internal class AttributeWindowFactory
 {
 
     private readonly string _attributeType;

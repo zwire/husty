@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Version>1.5.3</Version>
+    <Version>1.5.4</Version>
     <Authors>yamashita</Authors>
     <Company>Husty</Company>
     <Product>Husty</Product>
@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.12.1" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.13.1" />
   </ItemGroup>
 
   <ItemGroup>
