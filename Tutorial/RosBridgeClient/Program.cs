@@ -8,10 +8,10 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        var stream = WebSocketStream.CreateClient("127.0.0.1", 9090);
-        var subscriber = RosSubscriber<RclInterfaces.Msg.Log>.Create(stream, "rosout");
+        var stream = WebSocketStream.CreateClient("192.168.6.239", 9090);
+        var subscriber = RosSubscriber<rcl_interfaces.Log>.Create(stream, "rosout");
         subscriber.MessageReceived.Subscribe(x => Console.WriteLine(x.msg));
-        var publisher = RosPublisher<GeometryMsgs.Twist>.Create(stream, "/turtle1/cmd_vel");
+        var publisher = RosPublisher<geometry_msgs.Twist>.Create(stream, "/turtle1/cmd_vel");
         
         ConsoleEx.WaitKeyUntil(key =>
         {
@@ -22,7 +22,7 @@ internal class Program
             else if (key is ConsoleKey.DownArrow) y--;
             else if (key is ConsoleKey.RightArrow) x++;
             else if (key is ConsoleKey.LeftArrow) x--;
-            var msg = new GeometryMsgs.Twist(new(x, y, 0), new(0, 0, 0));
+            var msg = new geometry_msgs.Twist(new(x, y, 0), new(0, 0, 0));
             publisher.WriteAsync(msg).Wait();
             return false;
         });
