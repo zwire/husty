@@ -34,7 +34,7 @@ internal class PointAttributeWindow : WpfInteractiveCvWindowBase<object>
         {
             var stWidth = GetActualStandardLineWidth();
             foreach (var (k, v) in Annotation.GetPointData(ImageId))
-                f.Circle(v.Point, stWidth, LabelColors[v.Label], stWidth);
+                f.Circle(v.Point, stWidth, LabelColors[v.Label], -1);
         });
     }
 
@@ -56,9 +56,9 @@ internal class PointAttributeWindow : WpfInteractiveCvWindowBase<object>
                 if (GetSelected() is SelectedObject obj)
                 {
                     var data = Annotation.GetPointData(ImageId)[obj.Id];
-                    f.Circle(data.Point, blWidth, LabelColors[data.Label], blWidth);
+                    f.Circle(data.Point, blWidth, LabelColors[data.Label], -1);
                 }
-                f.Circle(point, stWidth, LabelColors[LabelIndex], stWidth);
+                f.Circle(point, stWidth, LabelColors[LabelIndex], -1);
             });
         }
     }
@@ -76,11 +76,11 @@ internal class PointAttributeWindow : WpfInteractiveCvWindowBase<object>
                 f.Line(new(point.X, point.Y - Canvas.Height), new(point.X, point.Y + Canvas.Height), LabelColors[LabelIndex], gw);
             }
             foreach (var (k, v) in Annotation.GetPointData(ImageId))
-                f.Circle(v.Point, stWidth, LabelColors[v.Label], stWidth);
+                f.Circle(v.Point, stWidth, LabelColors[v.Label], -1);
             if (GetSelected() is SelectedObject obj)
             {
                 var data = Annotation.GetPointData(ImageId)[obj.Id];
-                f.Circle(data.Point, blWidth, LabelColors[data.Label], blWidth);
+                f.Circle(data.Point, blWidth, LabelColors[data.Label], -1);
             }
             if (!DrawMode)
             {
@@ -92,7 +92,7 @@ internal class PointAttributeWindow : WpfInteractiveCvWindowBase<object>
                 var tolerance = GetActualTolerence();
                 if (nearest.Dist < tolerance)
                 {
-                    f.Circle(nearest.Data.Value.Point, blWidth, LabelColors[nearest.Data.Value.Label], blWidth);
+                    f.Circle(nearest.Data.Value.Point, blWidth, LabelColors[nearest.Data.Value.Label], -1);
                 }
             }
         });
@@ -115,11 +115,11 @@ internal class PointAttributeWindow : WpfInteractiveCvWindowBase<object>
             var stWidth = GetActualStandardLineWidth();
             var blWidth = GetActualBoldLineWidth();
             foreach (var (k, v) in Annotation.GetPointData(ImageId))
-                f.Circle(v.Point, stWidth, LabelColors[v.Label], stWidth);
+                f.Circle(v.Point, stWidth, LabelColors[v.Label], -1);
             if (GetSelected() is SelectedObject obj)
             {
                 var data = Annotation.GetPointData(ImageId)[obj.Id];
-                f.Circle(data.Point, blWidth, LabelColors[data.Label], blWidth);
+                f.Circle(data.Point, blWidth, LabelColors[data.Label], -1);
             }
         });
     }
@@ -130,7 +130,7 @@ internal class PointAttributeWindow : WpfInteractiveCvWindowBase<object>
         {
             var stWidth = GetActualStandardLineWidth();
             foreach (var (k, v) in Annotation.GetPointData(ImageId))
-                f.Circle(v.Point, stWidth, LabelColors[v.Label], stWidth);
+                f.Circle(v.Point, stWidth, LabelColors[v.Label], -1);
         });
         SetDrawMode(false);
     }
@@ -147,7 +147,7 @@ internal class PointAttributeWindow : WpfInteractiveCvWindowBase<object>
         DrawOnce(f =>
         {
             foreach (var (k, v) in Annotation.GetPointData(ImageId))
-                f.Circle(v.Point, stWidth, LabelColors[v.Label], stWidth);
+                f.Circle(v.Point, stWidth, LabelColors[v.Label], -1);
         });
         SetDrawMode(false);
     }
@@ -163,7 +163,7 @@ internal class PointAttributeWindow : WpfInteractiveCvWindowBase<object>
             DrawOnce(f =>
             {
                 foreach (var (k, v) in Annotation.GetPointData(ImageId))
-                    f.Circle(v.Point, stWidth, LabelColors[v.Label], stWidth);
+                    f.Circle(v.Point, stWidth, LabelColors[v.Label], -1);
             });
         }
         SetDrawMode(false);
