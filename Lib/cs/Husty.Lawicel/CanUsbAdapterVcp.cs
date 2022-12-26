@@ -26,7 +26,19 @@ public class CanUsbAdapterVcp : ICanUsbAdapter
 
     public CanUsbAdapterVcp(string portName, string baudrate)
     {
-        _baudrate = baudrate;
+        _baudrate = baudrate switch
+        {
+            CanUsbOption.BAUD_10K => "0",
+            CanUsbOption.BAUD_20K => "1",
+            CanUsbOption.BAUD_50K => "2",
+            CanUsbOption.BAUD_100K => "3",
+            CanUsbOption.BAUD_125K => "4",
+            CanUsbOption.BAUD_250K => "5",
+            CanUsbOption.BAUD_500K => "6",
+            CanUsbOption.BAUD_800K => "7",
+            CanUsbOption.BAUD_1M => "8",
+            _ => throw new Exception()
+        };
         _port = new()
         {
             PortName = portName,
@@ -38,20 +50,46 @@ public class CanUsbAdapterVcp : ICanUsbAdapter
 
     // ------ public methods ------ //
 
-    public static string[] FindAdapterNames()
+    public static string[] FindAdapterNames(string baudrate)
     {
+        baudrate = baudrate switch
+        {
+            CanUsbOption.BAUD_10K => "0",
+            CanUsbOption.BAUD_20K => "1",
+            CanUsbOption.BAUD_50K => "2",
+            CanUsbOption.BAUD_100K => "3",
+            CanUsbOption.BAUD_125K => "4",
+            CanUsbOption.BAUD_250K => "5",
+            CanUsbOption.BAUD_500K => "6",
+            CanUsbOption.BAUD_800K => "7",
+            CanUsbOption.BAUD_1M => "8",
+            _ => throw new Exception()
+        };
         var list = new List<string>();
         foreach (var portName in SerialPort.GetPortNames())
         {
-            using var port = new SerialPort(portName);
+            using var port = new SerialPort()
+            {
+                PortName = portName,
+                BaudRate = 9600,
+                NewLine = "\r"
+            };
+            port.Open();
+            Thread.Sleep(20);
             if (port.IsOpen)
             {
+                port.DiscardInBuffer();
+                port.DiscardOutBuffer();
+                port.Write("C\r");
+                port.Write($"S{baudrate}\r");
+                port.Write("Z1\r");
+                port.Write("O\r");
                 for (int i = 0; i < 5; i++)
                 {
-                    Thread.Sleep(10);
+                    Thread.Sleep(20);
                     port.Write("N\r");
                     var line = port.ReadLine();
-                    if (line.FirstOrDefault() is 'N')
+                    if (line.FirstOrDefault() is 'N' or 't' or 'T' or 'r' or 'R')
                     {
                         list.Add(portName);
                         break;
@@ -120,7 +158,8 @@ public class CanUsbAdapterVcp : ICanUsbAdapter
                         uint.TryParse(line[pos..], NumberStyles.AllowHexSpecifier, null, out var timestamp)
                     )
                     {
-                        return new(id, data, default, len, timestamp);
+                        var ary = BitConverter.GetBytes(data).Reverse().ToArray();
+                        return new(id, ary, default, len, timestamp);
                     }
                 }
             }
@@ -138,7 +177,8 @@ public class CanUsbAdapterVcp : ICanUsbAdapter
                         uint.TryParse(line[pos..], NumberStyles.AllowHexSpecifier, null, out var timestamp)
                     )
                     {
-                        return new(id, data, default, len, timestamp);
+                        var ary = BitConverter.GetBytes(data).Reverse().ToArray();
+                        return new(id, ary, default, len, timestamp);
                     }
                 }
             }

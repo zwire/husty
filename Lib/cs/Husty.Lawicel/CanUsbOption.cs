@@ -21,15 +21,6 @@ public class CanUsbOption
     public const string BAUD_50K                = "50";
     public const string BAUD_20K                = "20";
     public const string BAUD_10K                = "10";
-    public const string BAUD_VCP_1M             = "8";
-    public const string BAUD_VCP_800K           = "7";
-    public const string BAUD_VCP_500K           = "6";
-    public const string BAUD_VCP_250K           = "5";
-    public const string BAUD_VCP_125K           = "4";
-    public const string BAUD_VCP_100K           = "3";
-    public const string BAUD_VCP_50K            = "2";
-    public const string BAUD_VCP_20K            = "1";
-    public const string BAUD_VCP_10K            = "0";
     public const int ERROR_OK                   = 1;
     public const int ERROR_OPEN_SUBSYSTEM       = -2;
     public const int ERROR_COMMAND_SUBSYSTEM    = -3;

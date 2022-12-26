@@ -5,10 +5,17 @@ public struct builtin_interfaces
 {
     public record struct Time(int sec, uint nanosec)
     {
-        public static Time Now()
+        public Time() : this(0, 0)
         {
-            var milli = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            return new((int)(milli / 1000), (uint)(milli * 1000000));
+            this = Now;
+        }
+        public static Time Now 
+        {
+            get
+            {
+                var milli = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                return new((int)(milli / 1000), (uint)(milli * 1000000));
+            }
         }
     }
     public record struct Duration(int sec, uint nanosec);
@@ -98,7 +105,11 @@ public struct std_msgs
     public record struct Float32MultiArray(MultiArrayLayout[] layout, float[] data);
     public record struct Float64(double data);
     public record struct Float64MultiArray(MultiArrayLayout[] layout, double[] data);
-    public record struct Header(builtin_interfaces.Time stamp, string frame_id);
+    public record struct Header(builtin_interfaces.Time stamp, string frame_id = "")
+    {
+        public Header() : this(new(), "") { }
+        public static Header Default => new();
+    }
     public record struct Int16(short data);
     public record struct Int16MultiArray(MultiArrayLayout[] layout, short[] data);
     public record struct Int32(int data);

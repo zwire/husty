@@ -4,7 +4,7 @@ using Husty.IO;
 
 namespace Husty.RosBridge;
 
-public class RosPublisher<TMsg> : IAsyncDisposable where TMsg : struct
+public class RosPublisher<TMsg> : IDisposable, IAsyncDisposable where TMsg : struct
 {
 
     // ------ fields ------- //
@@ -46,6 +46,11 @@ public class RosPublisher<TMsg> : IAsyncDisposable where TMsg : struct
     public async Task WriteAsync(TMsg msg, CancellationToken? ct = null)
     {
         await _stream.WriteAsync(JsonSerializer.Serialize(new { op = "publish", topic = Topic, type = Type, msg }), Encoding.ASCII, ct).ConfigureAwait(false);
+    }
+
+    public void Dispose()
+    {
+        DisposeAsync().AsTask().Wait();
     }
 
     public async ValueTask DisposeAsync()

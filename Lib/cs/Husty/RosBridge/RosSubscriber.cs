@@ -2,10 +2,11 @@
 using System.Text.Json;
 using System.Text;
 using System.Reactive.Subjects;
+using System.Reactive.Linq;
 
 namespace Husty.RosBridge;
 
-public class RosSubscriber<TMsg> : IAsyncDisposable where TMsg : struct
+public class RosSubscriber<TMsg> : IDisposable, IAsyncDisposable where TMsg : struct
 {
 
     private record SubType(string op, string topic, TMsg msg);
@@ -70,6 +71,11 @@ public class RosSubscriber<TMsg> : IAsyncDisposable where TMsg : struct
         var type = typeof(TMsg).FullName.Split('.').LastOrDefault().Replace('+', '/');
         await stream.WriteAsync(JsonSerializer.Serialize(new { op = "subscribe", topic, type }), Encoding.ASCII, ct).ConfigureAwait(false);
         return new(stream, topic, type);
+    }
+
+    public void Dispose()
+    {
+        DisposeAsync().AsTask().Wait();
     }
 
     public async ValueTask DisposeAsync()
