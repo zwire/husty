@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenCvSharp4.Windows" Version="4.5.5.20211231" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Lib\cs\Husty.SkywayGateway\Husty.SkywayGateway.csproj" />
   </ItemGroup>
 

@@ -10,10 +10,10 @@ internal class Program
         Task.Run(async () =>
         {
 
-            var apiKey = "API_KEY";    // publish at https://webrtc.ecl.ntt.com/
+            var apiKey = "API_KEY";    // get from https://webrtc.ecl.ntt.com/
             var localId = "Player1";
             var remoteId = "Player2";
-            var mode = "listen";            // listen or connect
+            var mode = "listen";            // listen or call
 
             // create my peer object
             await using var peer = await Peer.CreateNewAsync(apiKey, localId);
@@ -23,7 +23,7 @@ internal class Program
             await using var channel = await peer.CreateDataChannelAsync();
             channel.Closed.Subscribe(_ => Console.WriteLine("channel was disconnected!"));
 
-            // listen or connect
+            // listen or call
             using var stream = mode is "listen"
                 ? await channel.ListenAsync()
                 : await channel.CallConnectionAsync(remoteId);

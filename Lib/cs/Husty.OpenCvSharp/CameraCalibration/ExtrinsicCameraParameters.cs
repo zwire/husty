@@ -32,15 +32,15 @@ public sealed class ExtrinsicCameraParameters
 	}
 
 	public void Save(string fileName)
-        {
-            var obj = new ExtrinsicJson(this);
-            File.WriteAllText(fileName, obj.Serialize());
-        }
-
-        public static ExtrinsicCameraParameters Load(string fileName)
-        {
-            var str = File.ReadAllText(fileName);
-            return ExtrinsicJson.Deserialize(str);
-        }
-
+    {
+        var obj = new ExtrinsicJson(this);
+        File.WriteAllText(fileName, obj.Serialize());
     }
+
+    public static ExtrinsicCameraParameters Load(string fileName)
+    {
+        var str = File.ReadAllText(fileName);
+        return ExtrinsicJson.Deserialize(str);
+    }
+
+}

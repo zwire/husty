@@ -1,13 +1,15 @@
 ﻿namespace Husty.RosBridge;
 
 // https://github.com/ros2/rcl_interfaces
-public struct builtin_interfaces
+public class builtin_interfaces
 {
-    public record struct Time(int sec, uint nanosec)
+    public record class Time(int sec, uint nanosec)
     {
         public Time() : this(0, 0)
         {
-            this = Now;
+            var t = Now;
+            sec = t.sec;
+            nanosec = t.nanosec;
         }
         public static Time Now 
         {
@@ -18,15 +20,15 @@ public struct builtin_interfaces
             }
         }
     }
-    public record struct Duration(int sec, uint nanosec);
+    public record class Duration(int sec, uint nanosec);
 }
 
-public struct rcl_interfaces
+public class rcl_interfaces
 {
-    public record struct FloatingPointRange(double from_value, double to_value, double step);
-    public record struct IntegerRange(long from_value, long to_value, long step);
-    public record struct ListParametersResult(string[] names, string[] prefixes);
-    public record struct Log(builtin_interfaces.Time time, byte level, string name, string msg, string file, string function, int line)
+    public record class FloatingPointRange(double from_value, double to_value, double step);
+    public record class IntegerRange(long from_value, long to_value, long step);
+    public record class ListParametersResult(string[] names, string[] prefixes);
+    public record class Log(builtin_interfaces.Time time, byte level, string name, string msg, string file, string function, int line)
     {
         public const byte DEBUG = 10;
         public const byte INFO = 20;
@@ -34,21 +36,21 @@ public struct rcl_interfaces
         public const byte ERROR = 40;
         public const byte FATAL = 50;
     }
-    public record struct Parameter(string name, ParameterValue value);
-    public record struct ParameterDescriptor(
+    public record class Parameter(string name, ParameterValue value);
+    public record class ParameterDescriptor(
         string name, byte type, string description, string additional_constraints,
         bool read_only, bool dynamic_typing, FloatingPointRange[] floating_point_range, IntegerRange[] integer_range
     );
-    public record struct ParameterEvent(
+    public record class ParameterEvent(
         builtin_interfaces.Time stamp,  string node, 
         Parameter[] new_parameters, Parameter[] changed_parameters, Parameter[] deleted_parameters
     );
-    public record struct ParameterEventDescriptors(
+    public record class ParameterEventDescriptors(
         ParameterDescriptor[] new_parameters,
         ParameterDescriptor[] changed_parameters,
         ParameterDescriptor[] deleted_parameters
     );
-    public struct ParameterType
+    public class ParameterType
     {
         public const byte PARAMETER_NOT_SET = 0;
         public const byte PARAMETER_BOOL = 1;
@@ -61,26 +63,26 @@ public struct rcl_interfaces
         public const byte PARAMETER_DOUBLE_ARRAY = 8;
         public const byte PARAMETER_STRING_ARRAY = 9;
     }
-    public record struct ParameterValue(
+    public record class ParameterValue(
         byte type, bool bool_value, long integer_value, double double_value, string string_value, byte[] byte_array_value, 
         bool[] bool_array_value, long[] integer_array_value, double[] double_array_value, string[] string_array_value
     );
-    public record struct SetParametersResult(bool successful, string reason);
+    public record class SetParametersResult(bool successful, string reason);
 }
 
-public struct rosgraph_msgs
+public class rosgraph_msgs
 {
-    public record struct Clock(builtin_interfaces.Time clock);
+    public record class Clock(builtin_interfaces.Time clock);
 }
 
-public struct statistics_msgs
+public class statistics_msgs
 {
-    public record struct MetricsMessage(
+    public record class MetricsMessage(
         string measurement_source_name, string metrics_source, string unit,
         builtin_interfaces.Time window_start, builtin_interfaces.Time window_stop, StatisticDataPoint[] statistics
     );
-    public record struct StatisticDataPoint(byte data_type, double data);
-    public struct StatisticDataType
+    public record class StatisticDataPoint(byte data_type, double data);
+    public class StatisticDataType
     {
         public const byte STATISTICS_DATA_TYPE_UNINITIALIZED = 0;
         public const byte STATISTICS_DATA_TYPE_AVERAGE = 1;
@@ -92,83 +94,83 @@ public struct statistics_msgs
 }
 
 // https://github.com/ros2/common_interfaces
-public struct std_msgs
+public class std_msgs
 {
-    public record struct Bool(bool data);
-    public record struct Byte(byte data);
-    public record struct ByteMultiArray(MultiArrayLayout layout, byte[] data);
-    public record struct Char(sbyte data);
-    public record struct ColorRGBA(float r, float g, float b, float a);
-    public record struct Duration(builtin_interfaces.Duration data);
-    public record struct Empty();
-    public record struct Float32(float data);
-    public record struct Float32MultiArray(MultiArrayLayout[] layout, float[] data);
-    public record struct Float64(double data);
-    public record struct Float64MultiArray(MultiArrayLayout[] layout, double[] data);
-    public record struct Header(builtin_interfaces.Time stamp, string frame_id = "")
+    public record class Bool(bool data);
+    public record class Byte(byte data);
+    public record class ByteMultiArray(MultiArrayLayout layout, byte[] data);
+    public record class Char(sbyte data);
+    public record class ColorRGBA(float r, float g, float b, float a);
+    public record class Duration(builtin_interfaces.Duration data);
+    public record class Empty();
+    public record class Float32(float data);
+    public record class Float32MultiArray(MultiArrayLayout[] layout, float[] data);
+    public record class Float64(double data);
+    public record class Float64MultiArray(MultiArrayLayout[] layout, double[] data);
+    public record class Header(builtin_interfaces.Time stamp, string frame_id = "")
     {
         public Header() : this(new(), "") { }
         public static Header Default => new();
     }
-    public record struct Int16(short data);
-    public record struct Int16MultiArray(MultiArrayLayout[] layout, short[] data);
-    public record struct Int32(int data);
-    public record struct Int32MultiArray(MultiArrayLayout[] layout, int[] data);
-    public record struct Int64(long data);
-    public record struct Int64MultiArray(MultiArrayLayout[] layout, long[] data);
-    public record struct Int8(sbyte data);
-    public record struct Int8MultiArray(MultiArrayLayout[] layout, sbyte[] data);
-    public record struct MultiArrayDimension(string label, int size, int stride);
-    public record struct MultiArrayLayout(MultiArrayDimension[] dim, int data_offset);
-    public record struct String(string data);
-    public record struct Time(builtin_interfaces.Time data);
-    public record struct UInt16(ushort data);
-    public record struct UInt16MultiArray(MultiArrayLayout[] layout, ushort[] data);
-    public record struct UInt32(uint data);
-    public record struct UInt32MultiArray(MultiArrayLayout[] layout, uint[] data);
-    public record struct UInt64(ulong data);
-    public record struct UInt64MultiArray(MultiArrayLayout[] layout, ulong[] data);
-    public record struct UInt8(byte data);
-    public record struct UInt8MultiArray(MultiArrayLayout[] layout, byte[] data);
+    public record class Int16(short data);
+    public record class Int16MultiArray(MultiArrayLayout[] layout, short[] data);
+    public record class Int32(int data);
+    public record class Int32MultiArray(MultiArrayLayout[] layout, int[] data);
+    public record class Int64(long data);
+    public record class Int64MultiArray(MultiArrayLayout[] layout, long[] data);
+    public record class Int8(sbyte data);
+    public record class Int8MultiArray(MultiArrayLayout[] layout, sbyte[] data);
+    public record class MultiArrayDimension(string label, int size, int stride);
+    public record class MultiArrayLayout(MultiArrayDimension[] dim, int data_offset);
+    public record class String(string data);
+    public record class Time(builtin_interfaces.Time data);
+    public record class UInt16(ushort data);
+    public record class UInt16MultiArray(MultiArrayLayout[] layout, ushort[] data);
+    public record class UInt32(uint data);
+    public record class UInt32MultiArray(MultiArrayLayout[] layout, uint[] data);
+    public record class UInt64(ulong data);
+    public record class UInt64MultiArray(MultiArrayLayout[] layout, ulong[] data);
+    public record class UInt8(byte data);
+    public record class UInt8MultiArray(MultiArrayLayout[] layout, byte[] data);
 }
 
-public struct geometry_msgs
+public class geometry_msgs
 {
-    public record struct Accel(Vector3 linear, Vector3 angular);
-    public record struct AccelStamped(std_msgs.Header header, Accel accel);
-    public record struct AccelWithCovariance(Accel accel, double covariance);
-    public record struct AccelWithCovarianceStamped(std_msgs.Header header, AccelWithCovariance accel);
-    public record struct Inertia(double m, Vector3 com, double ixx, double ixy, double ixz, double iyy, double iyz, double izz);
-    public record struct InertiaStamped(std_msgs.Header header, Inertia inertia);
-    public record struct Point(double x, double y, double z);
-    public record struct PointStamped(std_msgs.Header header, Point point);
-    public record struct Point32(float x, float y, float z);
-    public record struct Polygon(Point32[] points);
-    public record struct PolygonStamped(std_msgs.Header header, Polygon polygon);
-    public record struct Pose(Point position, Quaternion orientation);
-    public record struct Pose2D(double x, double y, double theta);
-    public record struct PoseArray(std_msgs.Header header, Pose[] poses);
-    public record struct PoseStamped(std_msgs.Header header, Pose pose);
-    public record struct PoseWithCovariance(Pose pose, double[] covariance);
-    public record struct PoseWithCovarianceStamped(std_msgs.Header header, PoseWithCovariance pose);
-    public record struct Quaternion(double x, double y, double z, double w);
-    public record struct QuaternionStamped(std_msgs.Header header, Quaternion quaternion);
-    public record struct Transform(Vector3 translation, Quaternion rotation);
-    public record struct TransformStamped(std_msgs.Header header, Transform transform);
-    public record struct Twist(Vector3 linear, Vector3 angular);
-    public record struct TwistStamped(std_msgs.Header header, Twist twist);
-    public record struct TwistWithCovariance(Twist twist, double[] covariance);
-    public record struct TwistWithCovarianceStamped(std_msgs.Header header, TwistWithCovariance twist);
-    public record struct Vector3(double x, double y, double z);
-    public record struct Vector3Stamped(std_msgs.Header header, Vector3 vector);
-    public record struct Wrench(Vector3 force, Vector3 torque);
-    public record struct WrenchStamped(std_msgs.Header header, Wrench wrench);
+    public record class Accel(Vector3 linear, Vector3 angular);
+    public record class AccelStamped(std_msgs.Header header, Accel accel);
+    public record class AccelWithCovariance(Accel accel, double covariance);
+    public record class AccelWithCovarianceStamped(std_msgs.Header header, AccelWithCovariance accel);
+    public record class Inertia(double m, Vector3 com, double ixx, double ixy, double ixz, double iyy, double iyz, double izz);
+    public record class InertiaStamped(std_msgs.Header header, Inertia inertia);
+    public record class Point(double x, double y, double z);
+    public record class PointStamped(std_msgs.Header header, Point point);
+    public record class Point32(float x, float y, float z);
+    public record class Polygon(Point32[] points);
+    public record class PolygonStamped(std_msgs.Header header, Polygon polygon);
+    public record class Pose(Point position, Quaternion orientation);
+    public record class Pose2D(double x, double y, double theta);
+    public record class PoseArray(std_msgs.Header header, Pose[] poses);
+    public record class PoseStamped(std_msgs.Header header, Pose pose);
+    public record class PoseWithCovariance(Pose pose, double[] covariance);
+    public record class PoseWithCovarianceStamped(std_msgs.Header header, PoseWithCovariance pose);
+    public record class Quaternion(double x, double y, double z, double w);
+    public record class QuaternionStamped(std_msgs.Header header, Quaternion quaternion);
+    public record class Transform(Vector3 translation, Quaternion rotation);
+    public record class TransformStamped(std_msgs.Header header, Transform transform);
+    public record class Twist(Vector3 linear, Vector3 angular);
+    public record class TwistStamped(std_msgs.Header header, Twist twist);
+    public record class TwistWithCovariance(Twist twist, double[] covariance);
+    public record class TwistWithCovarianceStamped(std_msgs.Header header, TwistWithCovariance twist);
+    public record class Vector3(double x, double y, double z);
+    public record class Vector3Stamped(std_msgs.Header header, Vector3 vector);
+    public record class Wrench(Vector3 force, Vector3 torque);
+    public record class WrenchStamped(std_msgs.Header header, Wrench wrench);
 }
 
-public struct actionlib_msgs
+public class actionlib_msgs
 {
-    public record struct GoalID(builtin_interfaces.Time stamp, string id);
-    public record struct GoalStatus(GoalID goal_id, sbyte status, string text)
+    public record class GoalID(builtin_interfaces.Time stamp, string id);
+    public record class GoalStatus(GoalID goal_id, sbyte status, string text)
     {
         public const byte PENDING = 0;
         public const byte ACTIVE = 1;
@@ -181,37 +183,37 @@ public struct actionlib_msgs
         public const byte RECALLED = 8;
         public const byte LOST = 9;
     }
-    public record struct GoalStatusArray(GoalStatus[] status_list);
+    public record class GoalStatusArray(GoalStatus[] status_list);
 }
 
 // https://docs.ros2.org/foxy/api/diagnostic_msgs/index-msg.html
-public struct diagnostic_msgs
+public class diagnostic_msgs
 {
-    public record struct DiagnosticArray(std_msgs.Header header, DiagnosticStatus[] status);
-    public record struct DiagnosticStatus(byte level, string name, string message, string hardware_id, KeyValue[] values)
+    public record class DiagnosticArray(std_msgs.Header header, DiagnosticStatus[] status);
+    public record class DiagnosticStatus(byte level, string name, string message, string hardware_id, KeyValue[] values)
     {
         public const byte OK = 0;
         public const byte WARN = 1;
         public const byte ERROR = 2;
         public const byte STALE = 3;
     }
-    public record struct KeyValue(string key, string value);
+    public record class KeyValue(string key, string value);
 }
 
 // https://docs.ros2.org/foxy/api/nav_msgs/index-msg.html
-public struct nav_msgs
+public class nav_msgs
 {
-    public record struct GridCells(std_msgs.Header header, float cell_width, float cell_height, geometry_msgs.Point[] cells);
-    public record struct MapMetaData(builtin_interfaces.Time map_load_time, float resolution, uint width, uint height, geometry_msgs.Pose origin);
-    public record struct OccupancyGrid(std_msgs.Header header, MapMetaData info, sbyte[] data);
-    public record struct Odometry(std_msgs.Header header, string child_frame_id, geometry_msgs.PoseWithCovariance pose, geometry_msgs.TwistWithCovariance twist);
-    public record struct Path(std_msgs.Header header, geometry_msgs.PoseStamped[] poses);
+    public record class GridCells(std_msgs.Header header, float cell_width, float cell_height, geometry_msgs.Point[] cells);
+    public record class MapMetaData(builtin_interfaces.Time map_load_time, float resolution, uint width, uint height, geometry_msgs.Pose origin);
+    public record class OccupancyGrid(std_msgs.Header header, MapMetaData info, sbyte[] data);
+    public record class Odometry(std_msgs.Header header, string child_frame_id, geometry_msgs.PoseWithCovariance pose, geometry_msgs.TwistWithCovariance twist);
+    public record class Path(std_msgs.Header header, geometry_msgs.PoseStamped[] poses);
 }
 
 // https://docs.ros2.org/foxy/api/sensor_msgs/index-msg.html
-public struct sensor_msgs
+public class sensor_msgs
 {
-    public record struct BatteryState(
+    public record class BatteryState(
         std_msgs.Header header, float voltage, float temperature, float current,
         float charge, float capacity, float design_capacity, float percentage, 
         byte power_supply_status, byte power_supply_health, byte power_supply_technology, bool present,
@@ -240,47 +242,47 @@ public struct sensor_msgs
         public const byte POWER_SUPPLY_TECHNOLOGY_NICD = 5;
         public const byte POWER_SUPPLY_TECHNOLOGY_LIMN = 6;
     }
-    public record struct CameraInfo(
+    public record class CameraInfo(
         std_msgs.Header header, uint height, uint width, string distortion_model,
         double[] D, double[] K, double[] R, double[] P, uint binning_x, uint binning_y, RegionOfInterest roi
     );
-    public record struct ChannelFloat32(string name, float[] values);
-    public record struct CompressedImage(std_msgs.Header header, string format, byte[] data);
-    public record struct FluidPressure(std_msgs.Header header, double fluid_pressure, double variance);
-    public record struct Illuminance(std_msgs.Header header, double illuminance, double variance);
-    public record struct Image(
+    public record class ChannelFloat32(string name, float[] values);
+    public record class CompressedImage(std_msgs.Header header, string format, byte[] data);
+    public record class FluidPressure(std_msgs.Header header, double fluid_pressure, double variance);
+    public record class Illuminance(std_msgs.Header header, double illuminance, double variance);
+    public record class Image(
         std_msgs.Header header, uint height, uint width, string encoding,
         byte is_bigendian, uint step, byte[] data
     );
-    public record struct Imu(
+    public record class Imu(
         std_msgs.Header header, geometry_msgs.Quaternion orientation, double[] orientation_covariance,
         geometry_msgs.Vector3 angular_velocity, double[] angular_velocity_covariance,
         geometry_msgs.Vector3 linear_acceleration, double[] linear_acceleration_covariance
     );
-    public record struct JointState(std_msgs.Header header, string[] name, double[] position, double[] velocity, double[] effort);
-    public record struct Joy(std_msgs.Header header, float[] axes, int[] buttons);
-    public record struct JoyFeedback(byte type, byte id, float intensity)
+    public record class JointState(std_msgs.Header header, string[] name, double[] position, double[] velocity, double[] effort);
+    public record class Joy(std_msgs.Header header, float[] axes, int[] buttons);
+    public record class JoyFeedback(byte type, byte id, float intensity)
     {
         public const byte TYPE_LED = 0;
         public const byte TYPE_RUMBLE = 1;
         public const byte TYPE_BUZZER = 2;
     }
-    public record struct JoyFeedbackArray(JoyFeedback[] array);
-    public record struct LaserEcho(float[] echoes);
-    public record struct LaserScan(
+    public record class JoyFeedbackArray(JoyFeedback[] array);
+    public record class LaserEcho(float[] echoes);
+    public record class LaserScan(
         std_msgs.Header header, float angle_min, float angle_max, float angle_increment, float time_increment,
         float scan_time, float range_min, float range_max, float[] ranges, float[] intensities
     );
-    public record struct MagneticField(std_msgs.Header header, geometry_msgs.Vector3 magnetic_field, double[] magnetic_field_covariance);
-    public record struct MultiDOFJointState(
+    public record class MagneticField(std_msgs.Header header, geometry_msgs.Vector3 magnetic_field, double[] magnetic_field_covariance);
+    public record class MultiDOFJointState(
         std_msgs.Header header, string[] joint_names, 
         geometry_msgs.Transform[] transforms, geometry_msgs.Twist[] twist, geometry_msgs.Wrench[] wrench
     );
-    public record struct MultiEchoLaserScan(
+    public record class MultiEchoLaserScan(
         std_msgs.Header header, float angle_min, float angle_max, float angle_increment, float time_increment, 
         float scan_time, float range_min, float range_max, LaserEcho[] ranges, LaserEcho[] intensities
     );
-    public record struct NavSatFix(
+    public record class NavSatFix(
         std_msgs.Header header, NavSatStatus status, double latitude, double longitude,
         double altitude, double[] position_covariance, byte position_covariance_type
     )
@@ -290,7 +292,7 @@ public struct sensor_msgs
         public const byte COVARIANCE_TYPE_DIAGONAL_KNOWN = 2;
         public const byte COVARIANCE_TYPE_KNOWN = 3;
     }
-    public record struct NavSatStatus(sbyte status, ushort service)
+    public record class NavSatStatus(sbyte status, ushort service)
     {
         public const sbyte STATUS_NO_FIX = -1;
         public const sbyte STATUS_FIX = 0;
@@ -301,12 +303,12 @@ public struct sensor_msgs
         public const ushort SERVICE_COMPASS = 4;
         public const ushort SERVICE_GALILEO = 8;
     }
-    public record struct PointCloud(std_msgs.Header header, geometry_msgs.Point32[] points, ChannelFloat32[] channels);
-    public record struct PointCloud2(
+    public record class PointCloud(std_msgs.Header header, geometry_msgs.Point32[] points, ChannelFloat32[] channels);
+    public record class PointCloud2(
         std_msgs.Header header, uint height, uint width, PointField[] fields,
         bool is_bigendian, uint point_step, uint row_step, byte[] data, bool is_dense
     );
-    public record struct PointField(string name, uint offset, byte datatype, uint count)
+    public record class PointField(string name, uint offset, byte datatype, uint count)
     {
         public const byte INT8 = 1;
         public const byte UINT8 = 2;
@@ -317,23 +319,23 @@ public struct sensor_msgs
         public const byte FLOAT32 = 7;
         public const byte FLOAT64 = 8;
     }
-    public record struct Range(std_msgs.Header header, byte radiation_type, float field_of_view, float min_range, float max_range, float range)
+    public record class Range(std_msgs.Header header, byte radiation_type, float field_of_view, float min_range, float max_range, float range)
     {
         public const byte ULTRASOUND = 0;
         public const byte INFRARED = 1;
     }
-    public record struct RegionOfInterest(uint x_offset, uint y_offset, uint height, uint width, bool do_rectify);
-    public record struct RelativeHumidity(std_msgs.Header header, double relative_humidity, double variance);
-    public record struct Temperature(std_msgs.Header header, double temperature, double variance);
-    public record struct TimeReference(std_msgs.Header header, builtin_interfaces.Time time_ref, string source);
+    public record class RegionOfInterest(uint x_offset, uint y_offset, uint height, uint width, bool do_rectify);
+    public record class RelativeHumidity(std_msgs.Header header, double relative_humidity, double variance);
+    public record class Temperature(std_msgs.Header header, double temperature, double variance);
+    public record class TimeReference(std_msgs.Header header, builtin_interfaces.Time time_ref, string source);
 }
 
-public struct shape_msgs
+public class shape_msgs
 {
-    public record struct Mesh(MeshTriangle[] triangles, geometry_msgs.Point[] vertices);
-    public record struct MeshTriangle(uint[] vertex_indices);
-    public record struct Plane(double[] coef);
-    public record struct SolidPrimitive(byte type, double[] dimensions, geometry_msgs.Polygon polygon)
+    public record class Mesh(MeshTriangle[] triangles, geometry_msgs.Point[] vertices);
+    public record class MeshTriangle(uint[] vertex_indices);
+    public record class Plane(double[] coef);
+    public record class SolidPrimitive(byte type, double[] dimensions, geometry_msgs.Polygon polygon)
     {
         public const byte BOX = 1;
         public const byte SPHERE = 2;
@@ -352,29 +354,29 @@ public struct shape_msgs
     }
 }
 
-public struct stereo_msgs
+public class stereo_msgs
 {
-    public record struct DisparityImage(
+    public record class DisparityImage(
         std_msgs.Header header, sensor_msgs.Image image, float f, float t, 
         sensor_msgs.RegionOfInterest valid_window,
         float min_disparity, float max_disparity, float delta_d
     );
 }
 
-public struct trajectory_msgs
+public class trajectory_msgs
 {
-    public record struct JointTrajectory(std_msgs.Header header, string[] joint_names, JointTrajectoryPoint[] points);
-    public record struct JointTrajectoryPoint(double[] positions, double[] velocities, double[] accelerations, double[] effort, builtin_interfaces.Duration time_from_start);
-    public record struct MultiDOFJointTrajectory(std_msgs.Header header, string[] joint_names, MultiDOFJointTrajectoryPoint[] points);
-    public record struct MultiDOFJointTrajectoryPoint(
+    public record class JointTrajectory(std_msgs.Header header, string[] joint_names, JointTrajectoryPoint[] points);
+    public record class JointTrajectoryPoint(double[] positions, double[] velocities, double[] accelerations, double[] effort, builtin_interfaces.Duration time_from_start);
+    public record class MultiDOFJointTrajectory(std_msgs.Header header, string[] joint_names, MultiDOFJointTrajectoryPoint[] points);
+    public record class MultiDOFJointTrajectoryPoint(
         geometry_msgs.Transform[] transforms, geometry_msgs.Twist[] velocities,
         geometry_msgs.Twist[] accelerations, builtin_interfaces.Duration time_from_start
     );
 }
 
-public struct visualization_msgs
+public class visualization_msgs
 {
-    public record struct ImageMarker(
+    public record class ImageMarker(
         std_msgs.Header header, string ns, int id, int type, int action, geometry_msgs.Point position, float scale,
         std_msgs.ColorRGBA outline_color, byte filled, std_msgs.ColorRGBA fill_color, builtin_interfaces.Duration lifetime,
         geometry_msgs.Point[] points, std_msgs.ColorRGBA[] outline_colors
@@ -388,11 +390,11 @@ public struct visualization_msgs
         public const int ADD = 0;
         public const int REMOVE = 1;
     }
-    public record struct InteractiveMarker(
+    public record class InteractiveMarker(
         std_msgs.Header header, geometry_msgs.Pose pose, string name, string description,
         float scale, MenuEntry[] menu_entries, InteractiveMarkerControl[] controls
     );
-    public record struct InteractiveMarkerControl(
+    public record class InteractiveMarkerControl(
         string name, geometry_msgs.Quaternion orientation, byte orientation_mode, byte interaction_mode, bool always_visible, 
         Marker[] markers, bool independent_marker_orientation, string description
     )
@@ -411,7 +413,7 @@ public struct visualization_msgs
         public const byte ROTATE_3D = 8;
         public const byte MOVE_ROTATE_3D = 9;
     }
-    public record struct InteractiveMarkerFeedback(
+    public record class InteractiveMarkerFeedback(
         std_msgs.Header header, string client_id, string marker_name, string control_name, byte event_type, 
         geometry_msgs.Pose pose, uint menu_entry_id, geometry_msgs.Point mouse_point, bool mouse_point_valid
     )
@@ -423,9 +425,9 @@ public struct visualization_msgs
         public const byte MOUSE_DOWN = 4;
         public const byte MOUSE_UP = 5;
     }
-    public record struct InteractiveMarkerInit(string server_id, ulong seq_num, InteractiveMarker[] markers);
-    public record struct InteractiveMarkerPose(std_msgs.Header header, geometry_msgs.Pose pose, string name);
-    public record struct InteractiveMarkerUpdate(
+    public record class InteractiveMarkerInit(string server_id, ulong seq_num, InteractiveMarker[] markers);
+    public record class InteractiveMarkerPose(std_msgs.Header header, geometry_msgs.Pose pose, string name);
+    public record class InteractiveMarkerUpdate(
         string server_id, ulong seq_num, byte type,
         InteractiveMarker[] markers, InteractiveMarkerPose[] poses, string[] erases
     )
@@ -433,7 +435,7 @@ public struct visualization_msgs
         public const byte KEEP_ALIVE = 0;
         public const byte UPDATE = 1;
     }
-    public record struct Marker(
+    public record class Marker(
         std_msgs.Header header, string ns, int id, int type, int action,
         geometry_msgs.Pose pose, geometry_msgs.Vector3 scale, std_msgs.ColorRGBA color,
         builtin_interfaces.Duration lifetime, bool frame_locked, geometry_msgs.Point[] points,
@@ -458,13 +460,13 @@ public struct visualization_msgs
         public const int DELETE = 2;
         public const int DELETEALL = 3;
     }
-    public record struct MarkerArray(Marker[] markers);
-    public record struct MenuEntry(uint id, uint parent_id, string title, string command, byte command_type)
+    public record class MarkerArray(Marker[] markers);
+    public record class MenuEntry(uint id, uint parent_id, string title, string command, byte command_type)
     {
         public const byte FEEDBACK = 0;
         public const byte ROSRUN = 1;
         public const byte ROSLAUNCH = 2;
     }
-    public record struct MeshFile(string filename, byte[] data);
-    public record struct UVCoordinate(float u, float v);
+    public record class MeshFile(string filename, byte[] data);
+    public record class UVCoordinate(float u, float v);
 }

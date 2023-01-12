@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿// https://www.canusb.com/documents/canusb_manual.pdf
+
+using System.Globalization;
 using System.IO.Ports;
 
 namespace Husty.Lawicel;
@@ -26,19 +28,7 @@ public class CanUsbAdapterVcp : ICanUsbAdapter
 
     public CanUsbAdapterVcp(string portName, string baudrate)
     {
-        _baudrate = baudrate switch
-        {
-            CanUsbOption.BAUD_10K => "0",
-            CanUsbOption.BAUD_20K => "1",
-            CanUsbOption.BAUD_50K => "2",
-            CanUsbOption.BAUD_100K => "3",
-            CanUsbOption.BAUD_125K => "4",
-            CanUsbOption.BAUD_250K => "5",
-            CanUsbOption.BAUD_500K => "6",
-            CanUsbOption.BAUD_800K => "7",
-            CanUsbOption.BAUD_1M => "8",
-            _ => throw new Exception()
-        };
+        _baudrate = ParseBaudrate(baudrate);
         _port = new()
         {
             PortName = portName,
@@ -52,19 +42,6 @@ public class CanUsbAdapterVcp : ICanUsbAdapter
 
     public static string[] FindAdapterNames(string baudrate)
     {
-        baudrate = baudrate switch
-        {
-            CanUsbOption.BAUD_10K => "0",
-            CanUsbOption.BAUD_20K => "1",
-            CanUsbOption.BAUD_50K => "2",
-            CanUsbOption.BAUD_100K => "3",
-            CanUsbOption.BAUD_125K => "4",
-            CanUsbOption.BAUD_250K => "5",
-            CanUsbOption.BAUD_500K => "6",
-            CanUsbOption.BAUD_800K => "7",
-            CanUsbOption.BAUD_1M => "8",
-            _ => throw new Exception()
-        };
         var list = new List<string>();
         foreach (var portName in SerialPort.GetPortNames())
         {
@@ -78,18 +55,17 @@ public class CanUsbAdapterVcp : ICanUsbAdapter
             Thread.Sleep(20);
             if (port.IsOpen)
             {
-                port.DiscardInBuffer();
-                port.DiscardOutBuffer();
-                port.Write("C\r");
-                port.Write($"S{baudrate}\r");
-                port.Write("Z1\r");
-                port.Write("O\r");
+                InitPort(port, ParseBaudrate(baudrate));
                 for (int i = 0; i < 5; i++)
                 {
                     Thread.Sleep(20);
-                    port.Write("N\r");
+                    port.WriteLine("N");
                     var line = port.ReadLine();
-                    if (line.FirstOrDefault() is 'N' or 't' or 'T' or 'r' or 'R')
+                    if (
+                        TryParseSerialNumber(line, out _) || 
+                        TryParseMsgFrame(line, out _) ||
+                        TryParseRtrMsgFrame(line, out _)
+                    )
                     {
                         list.Add(portName);
                         break;
@@ -103,12 +79,7 @@ public class CanUsbAdapterVcp : ICanUsbAdapter
     public void Open()
     {
         _port.Open();
-        _port.DiscardInBuffer();
-        _port.DiscardOutBuffer();
-        _port.Write("C\r");
-        _port.Write($"S{_baudrate}\r");
-        _port.Write("Z1\r");
-        _port.Write("O\r");
+        InitPort(_port, _baudrate);
         Status = CanUsbStatus.Online;
     }
 
@@ -119,7 +90,7 @@ public class CanUsbAdapterVcp : ICanUsbAdapter
         if (_port.IsOpen)
         {
             Status = CanUsbStatus.Offline;
-            _port.Write("C\r");
+            _port.WriteLine("C");
             Thread.Sleep(100);
             _port.Close();
         }
@@ -133,8 +104,7 @@ public class CanUsbAdapterVcp : ICanUsbAdapter
         msg += message.Length;
         foreach (var d in BitConverter.GetBytes(message.Data))
             msg += d.ToString("X2");
-        msg += "\r";
-        _port.Write(msg);
+        _port.WriteLine(msg);
     }
 
     public CanMessage Read()
@@ -142,45 +112,14 @@ public class CanUsbAdapterVcp : ICanUsbAdapter
         if (_disposed) return null;
         if (_port.IsOpen)
         {
+            CanMessage msg = null;
             var line = _port.ReadLine();
-            var mode = line.FirstOrDefault();
-            if (mode is 't')
+            if (
+                TryParseMsgFrame(line, out msg) &&
+                TryParseRtrMsgFrame(line, out msg)
+            )
             {
-                if (
-                    line.Length > 6 &&
-                    uint.TryParse(line[1..4], NumberStyles.AllowHexSpecifier, null, out var id) &&
-                    byte.TryParse(line[4..5], out var len)
-                )
-                {
-                    var pos = 5 + len * 2;
-                    if (
-                        ulong.TryParse(line[5..pos], NumberStyles.AllowHexSpecifier, null, out var data) &&
-                        uint.TryParse(line[pos..], NumberStyles.AllowHexSpecifier, null, out var timestamp)
-                    )
-                    {
-                        var ary = BitConverter.GetBytes(data).Reverse().ToArray();
-                        return new(id, ary, default, len, timestamp);
-                    }
-                }
-            }
-            else if (mode is 'T')
-            {
-                if (
-                    line.Length > 11 &&
-                    uint.TryParse(line[1..9], NumberStyles.AllowHexSpecifier, null, out var id) &&
-                    byte.TryParse(line[9..10], out var len)
-                )
-                {
-                    var pos = 10 + len * 2;
-                    if (
-                        ulong.TryParse(line[10..pos], NumberStyles.AllowHexSpecifier, null, out var data) &&
-                        uint.TryParse(line[pos..], NumberStyles.AllowHexSpecifier, null, out var timestamp)
-                    )
-                    {
-                        var ary = BitConverter.GetBytes(data).Reverse().ToArray();
-                        return new(id, ary, default, len, timestamp);
-                    }
-                }
+                return msg;
             }
         }
         return null;
@@ -196,4 +135,101 @@ public class CanUsbAdapterVcp : ICanUsbAdapter
         }
     }
 
+
+    // ------ private methods ------ //
+
+    private static void InitPort(SerialPort port, string baudrate)
+    {
+        port.DiscardInBuffer();
+        port.DiscardOutBuffer();
+        port.WriteLine("C");
+        port.WriteLine("S" + baudrate);
+        port.WriteLine("Z1");
+        port.WriteLine("O");
+    }
+
+    private static string ParseBaudrate(string baudrate)
+    {
+        return baudrate switch
+        {
+            CanUsbOption.BAUD_10K => "0",
+            CanUsbOption.BAUD_20K => "1",
+            CanUsbOption.BAUD_50K => "2",
+            CanUsbOption.BAUD_100K => "3",
+            CanUsbOption.BAUD_125K => "4",
+            CanUsbOption.BAUD_250K => "5",
+            CanUsbOption.BAUD_500K => "6",
+            CanUsbOption.BAUD_800K => "7",
+            CanUsbOption.BAUD_1M => "8",
+            _ => throw new Exception()
+        };
+    }
+
+    private static bool TryParseSerialNumber(string line, out int id)
+    {
+        id = default;
+        var mode = line.FirstOrDefault();
+        if (mode is 'N')
+        {
+            if (line.Length is 5)
+            {
+                return int.TryParse(line[1..4], NumberStyles.AllowHexSpecifier, null, out id);
+            }
+        }
+        return false;
+    }
+
+    private static bool TryParseMsgFrame(string line, out CanMessage msg)
+    {
+        msg = null;
+        var mode = line.FirstOrDefault();
+        if (mode is 't')
+        {
+            if (
+                line.Length > 6 &&
+                uint.TryParse(line[1..4], NumberStyles.AllowHexSpecifier, null, out var id) &&
+                byte.TryParse(line[4..5], out var len)
+            )
+            {
+                var pos = 5 + len * 2;
+                if (
+                    ulong.TryParse(line[5..pos], NumberStyles.AllowHexSpecifier, null, out var data) &&
+                    uint.TryParse(line[pos..], NumberStyles.AllowHexSpecifier, null, out var timestamp)
+                )
+                {
+                    var ary = BitConverter.GetBytes(data).Reverse().ToArray();
+                    msg = new(id, ary, default, len, timestamp);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static bool TryParseRtrMsgFrame(string line, out CanMessage msg)
+    {
+        msg = null;
+        var mode = line.FirstOrDefault();
+        if (mode is 'T')
+        {
+            if (
+                line.Length > 11 &&
+                uint.TryParse(line[1..9], NumberStyles.AllowHexSpecifier, null, out var id) &&
+                byte.TryParse(line[9..10], out var len)
+            )
+            {
+                var pos = 10 + len * 2;
+                if (
+                    ulong.TryParse(line[10..pos], NumberStyles.AllowHexSpecifier, null, out var data) &&
+                    uint.TryParse(line[pos..], NumberStyles.AllowHexSpecifier, null, out var timestamp)
+                )
+                {
+                    var ary = BitConverter.GetBytes(data).Reverse().ToArray();
+                    msg = new(id, ary, default, len, timestamp);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

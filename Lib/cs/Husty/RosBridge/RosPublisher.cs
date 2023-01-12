@@ -1,10 +1,10 @@
-﻿using System.Text.Json;
-using System.Text;
+﻿using System.Text;
+using System.Text.Json;
 using Husty.IO;
 
 namespace Husty.RosBridge;
 
-public class RosPublisher<TMsg> : IDisposable, IAsyncDisposable where TMsg : struct
+public class RosPublisher<TMsg> : IDisposable, IAsyncDisposable where TMsg : class
 {
 
     // ------ fields ------- //

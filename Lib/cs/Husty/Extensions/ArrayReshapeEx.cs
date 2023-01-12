@@ -5,7 +5,7 @@ public static class ArrayReshapeEx
 
     // 1D array -> 2D array
 
-    public static T[,] To2DArray<T>(this T[] array, int rows, int cols)
+    public static T[,] To2DArray<T>(this T[] array, int rows, int cols) where T : IConvertible, IComparable
     {
         if (array.Length != rows * cols) 
             throw new ArgumentException("invalid size!");
@@ -18,7 +18,7 @@ public static class ArrayReshapeEx
         return array2;
     }
 
-    public static T[][] To2DJaggedArray<T>(this T[] array, int rows, int cols)
+    public static T[][] To2DJaggedArray<T>(this T[] array, int rows, int cols) where T : IConvertible, IComparable
     {
         if (array.Length != rows * cols)
             throw new ArgumentException("invalid size!");
@@ -40,7 +40,7 @@ public static class ArrayReshapeEx
 
     // 1D array -> 3D array
 
-    public static T[,,] To3DArray<T>(this T[] array, int rows, int cols, int depth)
+    public static T[,,] To3DArray<T>(this T[] array, int rows, int cols, int depth) where T : IConvertible, IComparable
     {
         if (array.Length != rows * cols * depth)
             throw new ArgumentException("invalid size!");
@@ -54,7 +54,7 @@ public static class ArrayReshapeEx
         return array2;
     }
 
-    public static T[][][] To3DJaggedArray<T>(this T[] array, int rows, int cols, int depth)
+    public static T[][][] To3DJaggedArray<T>(this T[] array, int rows, int cols, int depth) where T : IConvertible, IComparable
     {
         if (array.Length != rows * cols * depth)
             throw new ArgumentException("invalid size!");
@@ -80,7 +80,7 @@ public static class ArrayReshapeEx
 
     // 2D array -> 1D array
 
-    public static T[] To1DArray<T>(this T[,] array, bool transpose = false)
+    public static T[] To1DArray<T>(this T[,] array, bool transpose = false) where T : IConvertible, IComparable
     {
         var span = new T[array.Length].AsSpan();
         var rows = array.GetLength(0);
@@ -97,7 +97,7 @@ public static class ArrayReshapeEx
         return span.ToArray();
     }
 
-    public static T[] To1DArray<T>(this T[][] array, bool transpose = false)
+    public static T[] To1DArray<T>(this T[][] array, bool transpose = false) where T : IConvertible, IComparable
     {
         var rows = array.Length;
         var cols = array[0].Length;
@@ -117,7 +117,7 @@ public static class ArrayReshapeEx
 
     // 3D array -> 1D array
 
-    public static T[] To1DArray<T>(this T[,,] array)
+    public static T[] To1DArray<T>(this T[,,] array) where T : IConvertible, IComparable
     {
         var span = new T[array.Length].AsSpan();
         var rows = array.GetLength(0);
@@ -131,7 +131,7 @@ public static class ArrayReshapeEx
         return span.ToArray();
     }
 
-    public static T[] To1DArray<T>(this T[][][] array)
+    public static T[] To1DArray<T>(this T[][][] array) where T : IConvertible, IComparable
     {
         var rows = array.Length;
         var cols = array[0].Length;
@@ -148,7 +148,7 @@ public static class ArrayReshapeEx
 
     // 2D transpose
 
-    public static T[,] Transpose<T>(this T[,] array)
+    public static T[,] Transpose<T>(this T[,] array) where T : IConvertible, IComparable
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -159,7 +159,7 @@ public static class ArrayReshapeEx
         return array2;
     }
 
-    public static T[][] Transpose<T>(this T[][] array)
+    public static T[][] Transpose<T>(this T[][] array) where T : IConvertible, IComparable
     {
         var rows = array.Length;
         var cols = array[0].Length;
@@ -181,7 +181,7 @@ public static class ArrayReshapeEx
 
     // 3D transpose like numpy
 
-    public static T[,,] Transpose<T>(this T[,,] array, int dim0, int dim1, int dim2)
+    public static T[,,] Transpose<T>(this T[,,] array, int dim0, int dim1, int dim2) where T : IConvertible, IComparable
     {
         if (dim0 == dim1 || dim1 == dim2 || dim2 == dim0 ||
             dim0 < 0 || dim0 > 2 ||
@@ -261,7 +261,7 @@ public static class ArrayReshapeEx
         }
     }
 
-    public static T[][][] Transpose<T>(this T[][][] array, int dim0, int dim1, int dim2)
+    public static T[][][] Transpose<T>(this T[][][] array, int dim0, int dim1, int dim2) where T : IConvertible, IComparable
     {
         if (dim0 == dim1 || dim1 == dim2 || dim2 == dim0 ||
             dim0 < 0 || dim0 > 2 ||
@@ -322,6 +322,8 @@ public static class ArrayReshapeEx
                 var cols = array[0][0].Length;
                 var depth = array.Length;
                 var array2 = new T[rows][][];
+                var flatten = array.To1DArray();
+                var index = 0;
                 for (int y = 0; y < rows; y++)
                 {
                     array2[y] = new T[cols][];
@@ -330,7 +332,7 @@ public static class ArrayReshapeEx
                         array2[y][x] = new T[depth];
                         for (int c = 0; c < depth; c++)
                         {
-                            array2[y][x][c] = array[x][c][y];
+                            array2[y][x][c] = flatten[index++];
                         }
                     }
                 }
@@ -345,6 +347,8 @@ public static class ArrayReshapeEx
                 var cols = array.Length;
                 var depth = array[0].Length;
                 var array2 = new T[rows][][];
+                var flatten = array.To1DArray();
+                var index = 0;
                 for (int y = 0; y < rows; y++)
                 {
                     array2[y] = new T[cols][];
@@ -353,7 +357,7 @@ public static class ArrayReshapeEx
                         array2[y][x] = new T[depth];
                         for (int c = 0; c < depth; c++)
                         {
-                            array2[y][x][c] = array[c][y][x];
+                            array2[y][x][c] = flatten[index++];
                         }
                     }
                 }
@@ -384,7 +388,7 @@ public static class ArrayReshapeEx
 
     // 2D array <--> 2D jagged array
 
-    public static T[][] To2DJaggedArray<T>(this T[,] array)
+    public static T[][] To2DJaggedArray<T>(this T[,] array) where T : IConvertible, IComparable
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -400,7 +404,7 @@ public static class ArrayReshapeEx
         return array2;
     }
 
-    public static T[,] To2DArray<T>(this T[][] array)
+    public static T[,] To2DArray<T>(this T[][] array) where T : IConvertible, IComparable
     {
         var rows = array.Length;
         var cols = array[0].Length;
@@ -420,7 +424,7 @@ public static class ArrayReshapeEx
 
     // 3D array <--> 3D jagged array
 
-    public static T[][][] To3DJaggedArray<T>(this T[,,] array)
+    public static T[][][] To3DJaggedArray<T>(this T[,,] array) where T : IConvertible, IComparable
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -441,7 +445,7 @@ public static class ArrayReshapeEx
         return array2;
     }
 
-    public static T[,,] To3DArray<T>(this T[][][] array)
+    public static T[,,] To3DArray<T>(this T[][][] array) where T : IConvertible, IComparable
     {
         var rows = array.Length;
         var cols = array[0].Length;
@@ -467,7 +471,7 @@ public static class ArrayReshapeEx
 
     // 2D concatinate
 
-    public static T[,] AddRow<T>(this T[,] array, T[] row)
+    public static T[,] AddRow<T>(this T[,] array, T[] row) where T : IConvertible, IComparable
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -482,7 +486,7 @@ public static class ArrayReshapeEx
         return array2;
     }
 
-    public static T[][] AddRow<T>(this T[][] array, T[] row)
+    public static T[][] AddRow<T>(this T[][] array, T[] row) where T : IConvertible, IComparable
     {
         var rows = array.Length;
         var array2 = new T[rows + 1][];
@@ -492,7 +496,7 @@ public static class ArrayReshapeEx
         return array2;
     }
 
-    public static T[,] AddColumn<T>(this T[,] array, T[] col)
+    public static T[,] AddColumn<T>(this T[,] array, T[] col) where T : IConvertible, IComparable
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -507,7 +511,7 @@ public static class ArrayReshapeEx
         return array2;
     }
 
-    public static T[][] AddColumn<T>(this T[][] array, T[] col)
+    public static T[][] AddColumn<T>(this T[][] array, T[] col) where T : IConvertible, IComparable
     {
         var rows = array.Length;
         var cols = array[0].Length;

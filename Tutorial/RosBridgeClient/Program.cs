@@ -8,7 +8,6 @@ internal class Program
 {
     static void Main(string[] args)
     {
-
         using var stream = WebSocketStream.CreateClient("127.0.0.1", 9090);
         using var subscriber = RosSubscriber<rcl_interfaces.Log>.Create(stream, "/rosout");
         subscriber.MessageReceived.Subscribe(x => Console.WriteLine(x.msg));

@@ -24,7 +24,7 @@ internal class Program
         var yStep = 2;
 
         // initialize
-        var hough = new Husty.OpenCvSharp.Feature.HoughSingleLine(
+        var hough = new Husty.OpenCvSharp.Transform.HoughSingleLine(
             thetaMin, thetaMax,rhoMin, rhoMax,
             xMin, xMax, yMin, yMax,
             thetaStep, rhoStep, xStep, yStep);

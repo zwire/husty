@@ -41,10 +41,10 @@ public class CsvContainer
 
     // ------ public methods ------ //
 
-    public static CsvContainer Create<T>(T[][] array)
+    public static CsvContainer Create<T>(T[][] array) where T : IConvertible, IComparable
         => new(array.Select(ary => ary.Select(a => $"{a}").ToArray()).ToArray());
 
-    public static CsvContainer Create<T>(T[,] array)
+    public static CsvContainer Create<T>(T[,] array) where T : IConvertible, IComparable
         => Create(array.To2DJaggedArray());
 
     public static CsvContainer Create(string allText)

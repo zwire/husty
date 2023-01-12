@@ -258,6 +258,7 @@ public static class ArrayCastEx
             for (int x = 0; x < cols; x++)
             {
                 var depth = array[y][x].Length;
+                array2[y][x] = new byte[depth];
                 for (int c = 0; c < depth; c++)
                 {
                     array2[y][x][c] = Convert.ToByte(array[y][x][c]);
@@ -278,6 +279,7 @@ public static class ArrayCastEx
             for (int x = 0; x < cols; x++)
             {
                 var depth = array[y][x].Length;
+                array2[y][x] = new short[depth];
                 for (int c = 0; c < depth; c++)
                 {
                     array2[y][x][c] = Convert.ToInt16(array[y][x][c]);
@@ -298,6 +300,7 @@ public static class ArrayCastEx
             for (int x = 0; x < cols; x++)
             {
                 var depth = array[y][x].Length;
+                array2[y][x] = new int[depth];
                 for (int c = 0; c < depth; c++)
                 {
                     array2[y][x][c] = Convert.ToInt32(array[y][x][c]);
@@ -318,6 +321,7 @@ public static class ArrayCastEx
             for (int x = 0; x < cols; x++)
             {
                 var depth = array[y][x].Length;
+                array2[y][x] = new float[depth];
                 for (int c = 0; c < depth; c++)
                 {
                     array2[y][x][c] = Convert.ToSingle(array[y][x][c]);
@@ -338,6 +342,7 @@ public static class ArrayCastEx
             for (int x = 0; x < cols; x++)
             {
                 var depth = array[y][x].Length;
+                array2[y][x] = new double[depth];
                 for (int c = 0; c < depth; c++)
                 {
                     array2[y][x][c] = Convert.ToDouble(array[y][x][c]);

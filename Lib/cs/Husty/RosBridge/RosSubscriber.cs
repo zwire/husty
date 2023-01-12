@@ -1,12 +1,12 @@
-﻿using Husty.IO;
+﻿using System.Text;
 using System.Text.Json;
-using System.Text;
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
+using Husty.IO;
 
 namespace Husty.RosBridge;
 
-public class RosSubscriber<TMsg> : IDisposable, IAsyncDisposable where TMsg : struct
+public class RosSubscriber<TMsg> : IDisposable, IAsyncDisposable where TMsg : class
 {
 
     private record SubType(string op, string topic, TMsg msg);

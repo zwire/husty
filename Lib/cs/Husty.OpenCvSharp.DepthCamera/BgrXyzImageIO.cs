@@ -34,14 +34,30 @@ public static class BgrXyzImageIO
         File.Delete($"{filePath}_P.png");
     }
 
-    public static void SaveAsPly(string directory, string name, BgrXyzMat image, Func<BGRXYZ, bool> filter = null)
+    public static unsafe void SaveAsAsciiPly(string directory, string name, BgrXyzMat image)
     {
-        var pts = image.ToArray(filter);
+        var size = image.Width * image.Height;
+        var cp = image.BGR.DataPointer;
+        var p = (short*)image.XYZ.Data;
+        var lines = new List<string>();
+        for (int i = 0; i < size; i++)
+        {
+            if (p[i * 3 + 2] is not 0)
+            {
+                var b = cp[i * 3 + 0];
+                var g = cp[i * 3 + 1];
+                var r = cp[i * 3 + 2];
+                var x = p[i * 3 + 0] * 0.001f;
+                var y = p[i * 3 + 1] * 0.001f;
+                var z = p[i * 3 + 2] * 0.001f;
+                lines.Add($"{x} {y} {z} {r} {g} {b}");
+            }
+        }
         var headers = new[]
         {
             "ply",
             "format ascii 1.0",
-            $"element vertex {pts.Length}",
+            $"element vertex {lines.Count}",
             "property float x",
             "property float y",
             "property float z",
@@ -56,10 +72,55 @@ public static class BgrXyzImageIO
         using var writer = new StreamWriter(File.Open(filePath, FileMode.Create), Encoding.ASCII);
         foreach (var h in headers)
             writer.WriteLine(h);
-        foreach (var p in pts)
+        foreach (var line in lines)
+            writer.WriteLine(line);
+    }
+
+    public static unsafe void SaveAsBinaryPly(string directory, string name, BgrXyzMat image)
+    {
+        var size = image.Width * image.Height;
+        var cp = image.BGR.DataPointer;
+        var p = (short*)image.XYZ.Data;
+        var points = new List<byte[]>();
+        for (int i = 0; i < size; i++)
         {
-            writer.WriteLine($"{p.X * 0.001f} {p.Y * 0.001f} {p.Z * 0.001f} {p.R} {p.G} {p.B}");
+            if (p[i * 3 + 2] is not 0)
+            {
+                var buf = new byte[15];
+                Buffer.BlockCopy(new[] { p[i * 3 + 0] * 0.001f, p[i * 3 + 1] * 0.001f, p[i * 3 + 2] * 0.001f }, 0, buf, 0, 12);
+                buf[12] = cp[i * 3 + 2];
+                buf[13] = cp[i * 3 + 1];
+                buf[14] = cp[i * 3 + 0];
+                points.Add(buf);
+            }
         }
+        var headers = new[]
+        {
+            "ply",
+            "format binary_little_endian 1.0",
+            $"element vertex {points.Count}",
+            "property float x",
+            "property float y",
+            "property float z",
+            "property uchar red",
+            "property uchar green",
+            "property uchar blue",
+            "end_header"
+        };
+        directory ??= Directory.GetCurrentDirectory();
+        name ??= "_";
+        var filePath = $"{directory}\\{name}.ply";
+        var stream = File.Open(filePath, FileMode.Create);
+        var sw = new StreamWriter(stream, Encoding.ASCII);
+        foreach (var h in headers)
+            sw.WriteLine(h);
+        sw.Close();
+        stream = File.Open(filePath, FileMode.Append);
+        var bw = new BinaryWriter(stream, Encoding.ASCII);
+        bw.Seek(0, SeekOrigin.End);
+        foreach (var pt in points)
+            bw.Write(pt);
+        bw.Close();
     }
 
     /// <summary>
