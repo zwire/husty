@@ -38,21 +38,26 @@ internal class Program
             Console.WriteLine();
 
             // publish test video
-            Process.Start(
-                $"C:\\gstreamer\\1.0\\msvc_x86_64\\bin\\gst-launch-1.0 " +
-                $"-v videotestsrc " +
-                $"! videoscale ! video/x-raw,width=320,height=240 " +
-                $"! videorate ! video/x-raw,framerate=30/1 " +
-                $"! x264enc ! rtph264pay " +
-                $"! udpsink host={info.RemoteVideoEP.Address} port={info.RemoteVideoEP.Port} sync=false"
-            );
+            Process.Start(new ProcessStartInfo()
+            {
+                FileName = "C:\\gstreamer\\1.0\\msvc_x86_64\\bin\\gst-launch-1.0",
+                Arguments = 
+                    $"-v videotestsrc " +
+                    $"! videoscale ! video/x-raw,width=320,height=240 " +
+                    $"! videorate ! video/x-raw,framerate=30/1 " +
+                    $"! x264enc ! rtph264pay " +
+                    $"! udpsink host={info.RemoteVideoEP.Address} port={info.RemoteVideoEP.Port} sync=false"
+            });
+
             // subscribe video
-            //Process.Start(
-            //    $"C:\\gstreamer\\1.0\\msvc_x86_64\\bin\\gst-launch-1.0 " +
-            //    $"-v udpsrc port={info.LocalVideoEP.Port} " +
-            //    $"! application/x-rtp,media=video,encoding-name=H264 " +
-            //    $"! queue ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink"
-            //);
+            //Process.Start(new ProcessStartInfo()
+            //{
+            //    FileName = "C:\\gstreamer\\1.0\\msvc_x86_64\\bin\\gst-launch-1.0",
+            //    Arguments = 
+            //        $"-v udpsrc port={info.LocalVideoEP.Port} " +
+            //        $"! application/x-rtp,media=video,encoding-name=H264 " +
+            //        $"! queue ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink"
+            //});
 
             Console.WriteLine("press ESC key to finish ...");
             while (Console.ReadKey().Key is not ConsoleKey.Escape)
