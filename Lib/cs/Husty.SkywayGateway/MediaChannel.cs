@@ -14,16 +14,16 @@ public sealed class MediaChannel : IAsyncDisposable
 
     private readonly RestClient _client;
     private readonly string _token;
-    private readonly string _videoId;
-    private readonly string _videoRtcpId;
-    private readonly string _audioId;
-    private readonly string _audioRtcpId;
     private readonly MediaConnectionInfo _info;
     private readonly CancellationTokenSource _cts;
     private readonly Task<string> _called;
     private readonly AsyncSubject<bool> _ready = new();
     private readonly AsyncSubject<bool> _opened = new();
     private readonly AsyncSubject<bool> _closed = new();
+    private string _videoId;
+    private string _videoRtcpId;
+    private string _audioId;
+    private string _audioRtcpId;
     private string _mediaConnectionId;
 
 
@@ -122,14 +122,16 @@ public sealed class MediaChannel : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        _ready.Dispose();
-        _opened.Dispose();
-        _closed.Dispose();
         await _client.RequestAsync(ReqType.Delete, $"/media/connections/{_mediaConnectionId}").ConfigureAwait(false);
+        _mediaConnectionId = null;
         await _client.RequestAsync(ReqType.Delete, $"/media/rtcp/{_videoRtcpId}").ConfigureAwait(false);
+        _videoRtcpId = null;
         await _client.RequestAsync(ReqType.Delete, $"/media/rtcp/{_audioRtcpId}").ConfigureAwait(false);
+        _audioRtcpId = null;
         await _client.RequestAsync(ReqType.Delete, $"/media/{_videoId}").ConfigureAwait(false);
+        _videoId = null;
         await _client.RequestAsync(ReqType.Delete, $"/media/{_audioId}").ConfigureAwait(false);
+        _audioId = null;
     }
 
     public async Task<bool> ConfirmAliveAsync()

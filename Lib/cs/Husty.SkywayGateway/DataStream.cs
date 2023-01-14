@@ -65,9 +65,17 @@ public class DataStream : IDisposable
         return _client.Receive(ref ep);
     }
 
-    public async Task<byte[]> ReadBinaryAsync()
+    public async Task<byte[]> ReadBinaryAsync(CancellationToken? ct = null)
     {
-        return (await _client.ReceiveAsync().ConfigureAwait(false)).Buffer;
+        try
+        {
+            var rcv = await _client.ReceiveAsync(ct ?? CancellationToken.None).ConfigureAwait(false);
+            return rcv.Buffer;
+        }
+        catch
+        {
+            return Array.Empty<byte>();
+        }
     }
 
     public bool WriteString(string sendmsg) 
@@ -79,8 +87,8 @@ public class DataStream : IDisposable
     public string ReadString()
         => Encoding.UTF8.GetString(ReadBinary());
 
-    public async Task<string> ReadStringAsync()
-        => Encoding.UTF8.GetString(await ReadBinaryAsync().ConfigureAwait(false));
+    public async Task<string> ReadStringAsync(CancellationToken? ct = null)
+        => Encoding.UTF8.GetString(await ReadBinaryAsync(ct).ConfigureAwait(false));
 
     public bool WriteAsJson<T>(T sendmsg)
         => WriteString(JsonSerializer.Serialize(sendmsg));
@@ -91,7 +99,7 @@ public class DataStream : IDisposable
     public T ReadAsJson<T>()
         => JsonSerializer.Deserialize<T>(ReadString());
 
-    public async Task<T> ReadAsJsonAsync<T>()
-        => JsonSerializer.Deserialize<T>(await ReadStringAsync().ConfigureAwait(false));
+    public async Task<T> ReadAsJsonAsync<T>(CancellationToken? ct = null)
+        => JsonSerializer.Deserialize<T>(await ReadStringAsync(ct).ConfigureAwait(false));
 
 }

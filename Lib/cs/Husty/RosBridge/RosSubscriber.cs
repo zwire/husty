@@ -6,7 +6,7 @@ using Husty.IO;
 
 namespace Husty.RosBridge;
 
-public class RosSubscriber<TMsg> : IDisposable, IAsyncDisposable where TMsg : class
+public class RosSubscriber<TMsg> : IDisposable, IAsyncDisposable
 {
 
     private record SubType(string op, string topic, TMsg msg);
@@ -86,7 +86,7 @@ public class RosSubscriber<TMsg> : IDisposable, IAsyncDisposable where TMsg : cl
             await _loopTask.WaitAsync(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
         }
         catch { }
-        await _stream.WriteAsync(JsonSerializer.Serialize(new { op = "unsubscribe", topic = Topic, type = Type }), Encoding.ASCII, null).ConfigureAwait(false);
+        await _stream.WriteAsync(JsonSerializer.Serialize(new { op = "unsubscribe", topic = Topic }), Encoding.ASCII, null).ConfigureAwait(false);
     }
 
 }

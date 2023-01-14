@@ -2,7 +2,7 @@
 using Husty.OpenCvSharp.Extensions;
 using OpenCvSharp;
 
-namespace Husty.OpenCvSharp.HyperSpectral;
+namespace Husty.OpenCvSharp.HyperSpectralImaging;
 
 public abstract class HyperSpectralImageBase : IDisposable
 {

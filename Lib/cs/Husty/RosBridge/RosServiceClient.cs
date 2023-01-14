@@ -5,8 +5,6 @@ using Husty.IO;
 namespace Husty.RosBridge;
 
 public class RosServiceClient<TReq, TRes> : IDisposable, IAsyncDisposable
-    where TReq : class
-    where TRes : class
 {
 
     private record SubType(string op, string service, TRes values);
@@ -66,7 +64,7 @@ public class RosServiceClient<TReq, TRes> : IDisposable, IAsyncDisposable
                 }
             }
         }
-        return null;
+        return default;
     }
 
     public void Dispose()

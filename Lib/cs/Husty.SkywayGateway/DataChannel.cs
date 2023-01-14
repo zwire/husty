@@ -14,12 +14,12 @@ public sealed class DataChannel : IAsyncDisposable
 
     private readonly RestClient _client;
     private readonly string _token;
-    private readonly string _dataId;
     private readonly DataConnectionInfo _info;
     private readonly CancellationTokenSource _cts;
     private readonly Task<string> _called;
     private readonly AsyncSubject<bool> _opened = new();
     private readonly AsyncSubject<bool> _closed = new();
+    private string _dataId;
     private string _dataConnectionId;
 
 
@@ -83,11 +83,11 @@ public sealed class DataChannel : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        _opened.Dispose();
-        _closed.Dispose();
         if (_dataConnectionId is not null)
             await _client.RequestAsync(ReqType.Delete, $"/data/connections/{_dataConnectionId}").ConfigureAwait(false);
+        _dataConnectionId = null;
         await _client.RequestAsync(ReqType.Delete, $"/data/{_dataId}").ConfigureAwait(false);
+        _dataId = null;
     }
 
     public async Task<bool> ConfirmAliveAsync()

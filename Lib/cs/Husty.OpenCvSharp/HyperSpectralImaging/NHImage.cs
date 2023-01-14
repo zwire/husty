@@ -1,6 +1,6 @@
 ﻿using OpenCvSharp;
 
-namespace Husty.OpenCvSharp.HyperSpectral;
+namespace Husty.OpenCvSharp.HyperSpectralImaging;
 
 public class NHImage : HyperSpectralImageBase
 {

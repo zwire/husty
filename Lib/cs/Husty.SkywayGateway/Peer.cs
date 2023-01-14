@@ -96,11 +96,6 @@ public sealed class Peer : IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         _cts.Cancel();
-        _opened.Dispose();
-        _closed.Dispose();
-        _dataCalled.Dispose();
-        _mediaCalled.Dispose();
-        _expiresRemainingSecondNotified.Dispose();
         await _client.RequestAsync(ReqType.Delete, $"/peers/{_peerId}?token={_token}").ConfigureAwait(false);
     }
 

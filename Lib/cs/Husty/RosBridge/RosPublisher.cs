@@ -4,7 +4,7 @@ using Husty.IO;
 
 namespace Husty.RosBridge;
 
-public class RosPublisher<TMsg> : IDisposable, IAsyncDisposable where TMsg : class
+public class RosPublisher<TMsg> : IDisposable, IAsyncDisposable
 {
 
     // ------ fields ------- //
