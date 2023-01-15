@@ -36,7 +36,7 @@ public sealed class YoloX : OnnxBase<Mat, YoloResult[]>, IYoloDetector
         _size = new(InputLayers[0].Shape[3], InputLayers[0].Shape[2]);
         _confThresh = confidenceThreshold;
         _detectionCount = _strides.Select(x => _size.Width / x * _size.Height / x).Sum();
-        _paddingBase = new(_size.Height, _size.Width, MatType.CV_8UC3, new(114, 114, 114));
+        _paddingBase = new(_size.Height, _size.Width, MatType.CV_8UC3, new Scalar(114, 114, 114));
         _labels = File.ReadAllLines(namesFile);
     }
 

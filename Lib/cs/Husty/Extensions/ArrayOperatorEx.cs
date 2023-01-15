@@ -1,11 +1,13 @@
-﻿namespace Husty.Extensions;
+﻿using System.Numerics;
+
+namespace Husty.Extensions;
 
 public static class ArrayOperatorEx
 {
 
     // 1D array
 
-    public static T[] Plus<T>(this T[] array, double scalar) where T: IConvertible, IComparable
+    public static T[] Plus<T>(this T[] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0], out var _))
             throw new ArgumentException();
@@ -15,7 +17,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[] Minus<T>(this T[] array, double scalar) where T : IConvertible, IComparable
+    public static T[] Minus<T>(this T[] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0], out var _))
             throw new ArgumentException();
@@ -25,7 +27,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[] Mul<T>(this T[] array, double scalar) where T : IConvertible, IComparable
+    public static T[] Mul<T>(this T[] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0], out var _))
             throw new ArgumentException();
@@ -35,7 +37,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[] Div<T>(this T[] array, double scalar) where T : IConvertible, IComparable
+    public static T[] Div<T>(this T[] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0], out var _))
             throw new ArgumentException();
@@ -48,7 +50,7 @@ public static class ArrayOperatorEx
 
     // 2D array
 
-    public static T[,] Plus<T>(this T[,] array, double scalar) where T : IConvertible, IComparable
+    public static T[,] Plus<T>(this T[,] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0, 0], out var _))
             throw new ArgumentException();
@@ -61,7 +63,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[,] Minus<T>(this T[,] array, double scalar) where T : IConvertible, IComparable
+    public static T[,] Minus<T>(this T[,] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0, 0], out var _))
             throw new ArgumentException();
@@ -74,7 +76,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[,] Mul<T>(this T[,] array, double scalar) where T : IConvertible, IComparable
+    public static T[,] Mul<T>(this T[,] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0, 0], out var _))
             throw new ArgumentException();
@@ -87,7 +89,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[,] Div<T>(this T[,] array, double scalar) where T : IConvertible, IComparable
+    public static T[,] Div<T>(this T[,] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0, 0], out var _))
             throw new ArgumentException();
@@ -103,7 +105,7 @@ public static class ArrayOperatorEx
 
     // 2D jagged array
 
-    public static T[][] Plus<T>(this T[][] array, double scalar) where T : IConvertible, IComparable
+    public static T[][] Plus<T>(this T[][] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0][0], out var _))
             throw new ArgumentException();
@@ -121,7 +123,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[][] Minus<T>(this T[][] array, double scalar) where T : IConvertible, IComparable
+    public static T[][] Minus<T>(this T[][] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0][0], out var _))
             throw new ArgumentException();
@@ -139,7 +141,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[][] Mul<T>(this T[][] array, double scalar) where T : IConvertible, IComparable
+    public static T[][] Mul<T>(this T[][] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0][0], out var _))
             throw new ArgumentException();
@@ -157,7 +159,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[][] Div<T>(this T[][] array, double scalar) where T : IConvertible, IComparable
+    public static T[][] Div<T>(this T[][] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0][0], out var _))
             throw new ArgumentException();
@@ -178,7 +180,7 @@ public static class ArrayOperatorEx
 
     // 3D array
 
-    public static T[,,] Plus<T>(this T[,,] array, double scalar) where T : IConvertible, IComparable
+    public static T[,,] Plus<T>(this T[,,] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0, 0, 0], out var _))
             throw new ArgumentException();
@@ -193,7 +195,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[,,] Minus<T>(this T[,,] array, double scalar) where T : IConvertible, IComparable
+    public static T[,,] Minus<T>(this T[,,] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0, 0, 0], out var _))
             throw new ArgumentException();
@@ -208,7 +210,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[,,] Mul<T>(this T[,,] array, double scalar) where T : IConvertible, IComparable
+    public static T[,,] Mul<T>(this T[,,] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0, 0, 0], out var _))
             throw new ArgumentException();
@@ -223,7 +225,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[,,] Div<T>(this T[,,] array, double scalar) where T : IConvertible, IComparable
+    public static T[,,] Div<T>(this T[,,] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0, 0, 0], out var _))
             throw new ArgumentException();
@@ -241,7 +243,7 @@ public static class ArrayOperatorEx
 
     // 3D jagged array
 
-    public static T[][][] Plus<T>(this T[][][] array, double scalar) where T : IConvertible, IComparable
+    public static T[][][] Plus<T>(this T[][][] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0][0][0], out var _))
             throw new ArgumentException();
@@ -264,7 +266,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[][][] Minus<T>(this T[][][] array, double scalar) where T : IConvertible, IComparable
+    public static T[][][] Minus<T>(this T[][][] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0][0][0], out var _))
             throw new ArgumentException();
@@ -287,7 +289,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[][][] Mul<T>(this T[][][] array, double scalar) where T : IConvertible, IComparable
+    public static T[][][] Mul<T>(this T[][][] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0][0][0], out var _))
             throw new ArgumentException();
@@ -310,7 +312,7 @@ public static class ArrayOperatorEx
         return array2;
     }
 
-    public static T[][][] Div<T>(this T[][][] array, double scalar) where T : IConvertible, IComparable
+    public static T[][][] Div<T>(this T[][][] array, double scalar) where T : INumber<T>
     {
         if (double.TryParse((string)(object)array[0][0][0], out var _))
             throw new ArgumentException();

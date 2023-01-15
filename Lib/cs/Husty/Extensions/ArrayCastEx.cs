@@ -1,11 +1,13 @@
-﻿namespace Husty.Extensions;
+﻿using System.Numerics;
+
+namespace Husty.Extensions;
 
 public static class ArrayCastEx
 {
 
     // 1D array
 
-    public static byte[] AsByteArray<T>(this T[] array) where T : IConvertible, IComparable
+    public static byte[] AsByteArray<T>(this T[] array) where T : INumber<T>
     {
         var array2 = new byte[array.Length];
         for (int i = 0; i < array.Length; i++)
@@ -13,7 +15,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static short[] AsShortArray<T>(this T[] array) where T : IConvertible, IComparable
+    public static short[] AsShortArray<T>(this T[] array) where T : INumber<T>
     {
         var array2 = new short[array.Length];
         for (int i = 0; i < array.Length; i++)
@@ -21,7 +23,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static int[] AsIntArray<T>(this T[] array) where T : IConvertible, IComparable
+    public static int[] AsIntArray<T>(this T[] array) where T : INumber<T>
     {
         var array2 = new int[array.Length];
         for (int i = 0; i < array.Length; i++)
@@ -29,7 +31,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static float[] AsFloatArray<T>(this T[] array) where T : IConvertible, IComparable
+    public static float[] AsFloatArray<T>(this T[] array) where T : INumber<T>
     {
         var array2 = new float[array.Length];
         for (int i = 0; i < array.Length; i++)
@@ -37,7 +39,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static double[] AsDoubleArray<T>(this T[] array) where T : IConvertible, IComparable
+    public static double[] AsDoubleArray<T>(this T[] array) where T : INumber<T>
     {
         var array2 = new double[array.Length];
         for (int i = 0; i < array.Length; i++)
@@ -48,7 +50,7 @@ public static class ArrayCastEx
 
     // 2D array
 
-    public static byte[,] AsByteArray<T>(this T[,] array) where T : IConvertible, IComparable
+    public static byte[,] AsByteArray<T>(this T[,] array) where T : INumber<T>
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -59,7 +61,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static short[,] AsShortArray<T>(this T[,] array) where T : IConvertible, IComparable
+    public static short[,] AsShortArray<T>(this T[,] array) where T : INumber<T>
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -70,7 +72,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static int[,] AsIntArray<T>(this T[,] array) where T : IConvertible, IComparable
+    public static int[,] AsIntArray<T>(this T[,] array) where T : INumber<T>
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -81,7 +83,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static float[,] AsFloatArray<T>(this T[,] array) where T : IConvertible, IComparable
+    public static float[,] AsFloatArray<T>(this T[,] array) where T : INumber<T>
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -92,7 +94,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static double[,] AsDoubleArray<T>(this T[,] array) where T : IConvertible, IComparable
+    public static double[,] AsDoubleArray<T>(this T[,] array) where T : INumber<T>
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -106,7 +108,7 @@ public static class ArrayCastEx
 
     // 2D jagged array
 
-    public static byte[][] AsByteArray<T>(this T[][] array) where T : IConvertible, IComparable
+    public static byte[][] AsByteArray<T>(this T[][] array) where T : INumber<T>
     {
         var rows = array.Length;
         var array2 = new byte[rows][];
@@ -120,7 +122,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static short[][] AsShortArray<T>(this T[][] array) where T : IConvertible, IComparable
+    public static short[][] AsShortArray<T>(this T[][] array) where T : INumber<T>
     {
         var rows = array.Length;
         var array2 = new short[rows][];
@@ -134,7 +136,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static int[][] AsIntArray<T>(this T[][] array) where T : IConvertible, IComparable
+    public static int[][] AsIntArray<T>(this T[][] array) where T : INumber<T>
     {
         var rows = array.Length;
         var array2 = new int[rows][];
@@ -148,7 +150,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static float[][] AsFloatArray<T>(this T[][] array) where T : IConvertible, IComparable
+    public static float[][] AsFloatArray<T>(this T[][] array) where T : INumber<T>
     {
         var rows = array.Length;
         var array2 = new float[rows][];
@@ -162,7 +164,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static double[][] AsDoubleArray<T>(this T[][] array) where T : IConvertible, IComparable
+    public static double[][] AsDoubleArray<T>(this T[][] array) where T : INumber<T>
     {
         var rows = array.Length;
         var array2 = new double[rows][];
@@ -179,7 +181,7 @@ public static class ArrayCastEx
 
     // 3D array
 
-    public static byte[,,] AsByteArray<T>(this T[,,] array) where T : IConvertible, IComparable
+    public static byte[,,] AsByteArray<T>(this T[,,] array) where T : INumber<T>
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -192,7 +194,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static short[,,] AsShortArray<T>(this T[,,] array) where T : IConvertible, IComparable
+    public static short[,,] AsShortArray<T>(this T[,,] array) where T : INumber<T>
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -205,7 +207,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static int[,,] AsIntArray<T>(this T[,,] array) where T : IConvertible, IComparable
+    public static int[,,] AsIntArray<T>(this T[,,] array) where T : INumber<T>
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -218,7 +220,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static float[,,] AsFloatArray<T>(this T[,,] array) where T : IConvertible, IComparable
+    public static float[,,] AsFloatArray<T>(this T[,,] array) where T : INumber<T>
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -231,7 +233,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static double[,,] AsDoubleArray<T>(this T[,,] array) where T : IConvertible, IComparable
+    public static double[,,] AsDoubleArray<T>(this T[,,] array) where T : INumber<T>
     {
         var rows = array.GetLength(0);
         var cols = array.GetLength(1);
@@ -247,7 +249,7 @@ public static class ArrayCastEx
 
     // 3D jagged array
 
-    public static byte[][][] AsByteArray<T>(this T[][][] array) where T : IConvertible, IComparable
+    public static byte[][][] AsByteArray<T>(this T[][][] array) where T : INumber<T>
     {
         var rows = array.Length;
         var array2 = new byte[rows][][];
@@ -268,7 +270,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static short[][][] AsShortArray<T>(this T[][][] array) where T : IConvertible, IComparable
+    public static short[][][] AsShortArray<T>(this T[][][] array) where T : INumber<T>
     {
         var rows = array.Length;
         var array2 = new short[rows][][];
@@ -289,7 +291,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static int[][][] AsIntArray<T>(this T[][][] array) where T : IConvertible, IComparable
+    public static int[][][] AsIntArray<T>(this T[][][] array) where T : INumber<T>
     {
         var rows = array.Length;
         var array2 = new int[rows][][];
@@ -310,7 +312,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static float[][][] AsFloatArray<T>(this T[][][] array) where T : IConvertible, IComparable
+    public static float[][][] AsFloatArray<T>(this T[][][] array) where T : INumber<T>
     {
         var rows = array.Length;
         var array2 = new float[rows][][];
@@ -331,7 +333,7 @@ public static class ArrayCastEx
         return array2;
     }
 
-    public static double[][][] AsDoubleArray<T>(this T[][][] array) where T : IConvertible, IComparable
+    public static double[][][] AsDoubleArray<T>(this T[][][] array) where T : INumber<T>
     {
         var rows = array.Length;
         var array2 = new double[rows][][];

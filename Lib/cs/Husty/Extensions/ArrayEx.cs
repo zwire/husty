@@ -1,9 +1,11 @@
-﻿namespace Husty.Extensions;
+﻿using System.Numerics;
+
+namespace Husty.Extensions;
 
 public static class ArrayEx
 {
 
-    public static int ArgMax<T>(this IEnumerable<T> src, out double max) where T: struct, IConvertible, IComparable
+    public static int ArgMax<T>(this IEnumerable<T> src, out double max) where T : INumber<T>
     {
         max = double.MinValue;
         var index = 0;
@@ -21,7 +23,7 @@ public static class ArrayEx
         return index;
     }
 
-    public static int ArgMin<T>(this IEnumerable<T> src, out double min) where T : struct, IConvertible, IComparable
+    public static int ArgMin<T>(this IEnumerable<T> src, out double min) where T : INumber<T>
     {
         min = double.MaxValue;
         var index = 0;
@@ -39,7 +41,7 @@ public static class ArrayEx
         return index;
     }
 
-    public static double Median<T>(this IEnumerable<T> src) where T : struct, IComparable<T>, IEquatable<T>
+    public static double Median<T>(this IEnumerable<T> src) where T : INumber<T>
     {
         if (!src.Any()) throw new InvalidOperationException("Cannot compute median for an empty set.");
         var doubleArray = src.Select(a => Convert.ToDouble(a)).OrderBy(x => x).ToArray();
@@ -49,7 +51,7 @@ public static class ArrayEx
         return median;
     }
 
-    public static double Variance<T>(this IEnumerable<T> src) where T : struct, IComparable<T>, IEquatable<T>
+    public static double Variance<T>(this IEnumerable<T> src) where T : INumber<T>
     {
         if (!src.Any()) throw new InvalidOperationException("Cannot compute median for an empty set.");
         var doubleArray = src.Select(a => Convert.ToDouble(a)).ToArray();
@@ -60,7 +62,7 @@ public static class ArrayEx
     }
 
     public static double StdDev<T>(this IEnumerable<T> src)
-        where T : struct, IComparable<T>, IEquatable<T>
+        where T : INumber<T>
     {
         return Math.Sqrt(Variance(src));
     }

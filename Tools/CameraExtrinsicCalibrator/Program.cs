@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using OpenCvSharp;
 using Husty.OpenCvSharp.CameraCalibration;
+using Husty.OpenCvSharp.Transform;
 
 namespace CameraExtrinsicCalibrator;
 
@@ -78,7 +79,7 @@ internal class Program : ConsoleAppBase
             {
                 if (e is MouseEventTypes.LButtonDown)
                 {
-                    var p = trf.ConvertToWorldCoordinate(new(x, y));
+                    var p = trf.ConvertToWorldCoordinate(new Point2f(x, y)).FirstOrDefault();
                     Console.WriteLine($" {x}, {y} --> {p.X:f3}, {p.Y:f3}");
                     Cv2.Circle(frame, new Point(x, y), 2, new(0, 0, 220), 4);
                     Cv2.DestroyAllWindows();

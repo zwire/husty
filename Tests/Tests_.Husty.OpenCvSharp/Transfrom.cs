@@ -16,7 +16,7 @@ public class Transfrom
     }
 
     [Fact]
-    public unsafe void PerspectiveTransform()
+    public void PerspectiveTransform()
     {
         var inParam = IntrinsicCameraParameters.Load("..\\..\\..\\intrinsic.json");
         var exParam = ExtrinsicCameraParameters.Load("..\\..\\..\\extrinsic.json");
@@ -31,8 +31,6 @@ public class Transfrom
             _output.WriteLine($"{a} {b} {c}");
             Assert.Equal(a.ToPoint(), c.ToPoint());
         }
-
-        
 
     }
 }

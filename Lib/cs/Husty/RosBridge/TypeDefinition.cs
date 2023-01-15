@@ -132,13 +132,13 @@ public class action_msgs
         public record class GoalInfo(unique_identifier_msgs.msg.UUID goal_id, builtin_interfaces.msg.Time stamp);
         public record class GoalStatus(GoalInfo goal_info, sbyte status)
         {
-            public static sbyte STATUS_UNKNOWN = 0;
-            public static sbyte STATUS_ACCEPTED = 1;
-            public static sbyte STATUS_EXECUTING = 2;
-            public static sbyte STATUS_CANCELING = 3;
-            public static sbyte STATUS_SUCCEEDED = 4;
-            public static sbyte STATUS_CANCELED = 5;
-            public static sbyte STATUS_ABORTED = 6;
+            public const sbyte STATUS_UNKNOWN = 0;
+            public const sbyte STATUS_ACCEPTED = 1;
+            public const sbyte STATUS_EXECUTING = 2;
+            public const sbyte STATUS_CANCELING = 3;
+            public const sbyte STATUS_SUCCEEDED = 4;
+            public const sbyte STATUS_CANCELED = 5;
+            public const sbyte STATUS_ABORTED = 6;
         }
         public record class GoalStatusArray(GoalStatus[] status_list);
     }
@@ -149,10 +149,10 @@ public class action_msgs
             public record class Request(msg.GoalInfo goal_info);
             public record class Response(sbyte return_code, msg.GoalInfo[] goals_canceling)
             {
-                public static sbyte ERROR_NONE = 0;
-                public static sbyte ERROR_REJECTED = 1;
-                public static sbyte ERROR_UNKNOWN_GOAL_ID = 2;
-                public static sbyte ERROR_GOAL_TERMINATED = 3;
+                public const sbyte ERROR_NONE = 0;
+                public const sbyte ERROR_REJECTED = 1;
+                public const sbyte ERROR_UNKNOWN_GOAL_ID = 2;
+                public const sbyte ERROR_GOAL_TERMINATED = 3;
             }
         }
     }
@@ -392,12 +392,14 @@ public class nav_msgs
         public class LoadMap
         {
             public record class Request(string map_url);
-            public record class Response(msg.OccupancyGrid map, byte result);
-            public static byte RESULT_SUCCESS = 0;
-            public static byte RESULT_MAP_DOES_NOT_EXIST = 1;
-            public static byte RESULT_INVALID_MAP_DATA = 2;
-            public static byte RESULT_INVALID_MAP_METADATA = 3;
-            public static byte RESULT_UNDEFINED_FAILURE = 255;
+            public record class Response(msg.OccupancyGrid map, byte result)
+            {
+                public const byte RESULT_SUCCESS = 0;
+                public const byte RESULT_MAP_DOES_NOT_EXIST = 1;
+                public const byte RESULT_INVALID_MAP_DATA = 2;
+                public const byte RESULT_INVALID_MAP_METADATA = 3;
+                public const byte RESULT_UNDEFINED_FAILURE = 255;
+            }
         }
         public class SetMap
         {

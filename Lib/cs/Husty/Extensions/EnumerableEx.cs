@@ -1,4 +1,6 @@
-﻿namespace Husty.Extensions;
+﻿using System.Numerics;
+
+namespace Husty.Extensions;
 
 public static class EnumerableEx
 {
@@ -61,7 +63,7 @@ public static class EnumerableEx
     }
 
     public static double Median<T>(this IEnumerable<T> src)
-        where T : struct, IComparable<T>, IEquatable<T>
+        where T : INumber<T>
     {
         if (!src.Any()) throw new InvalidOperationException("cannot compute median for an empty set.");
         var doubleArray = src.Select(a => Convert.ToDouble(a)).OrderBy(x => x).ToArray();
@@ -72,7 +74,7 @@ public static class EnumerableEx
     }
 
     public static double Variance<T>(this IEnumerable<T> src)
-        where T : struct, IComparable<T>, IEquatable<T>
+        where T : INumber<T>
     {
         if (!src.Any()) throw new InvalidOperationException("cannot compute median for an empty set.");
         var doubleArray = src.Select(a => Convert.ToDouble(a)).ToArray();
@@ -83,7 +85,7 @@ public static class EnumerableEx
     }
 
     public static double StdDev<T>(this IEnumerable<T> src)
-        where T : struct, IComparable<T>, IEquatable<T>
+        where T : INumber<T>
     {
         return Math.Sqrt(Variance(src));
     }

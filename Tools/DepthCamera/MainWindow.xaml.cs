@@ -9,7 +9,9 @@ using Microsoft.Azure.Kinect.Sensor;
 using OpenCvSharp.WpfExtensions;
 using Husty;
 using Husty.OpenCvSharp.ImageStream;
-using Husty.OpenCvSharp.DepthCamera;
+using Husty.OpenCvSharp.SpatialImaging;
+using Kinect = Husty.OpenCvSharp.AzureKinect;
+using RealSense = Husty.OpenCvSharp.RealSense;
 
 namespace DepthCamera;
 
@@ -19,16 +21,16 @@ namespace DepthCamera;
 public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
 {
 
-    private IImageStream<BgrXyzMat> _camera;
-    private BgrXyzPlayer _player;
+    private IImageStream<SpatialImage> _camera;
+    private Husty.OpenCvSharp.SpatialImaging.VideoStream _player;
     private bool _isConnected;
     private string _saveDir = "";
     private string _videoDir = "";
-    private readonly Channel<BgrXyzMat> _channel;
+    private readonly Channel<SpatialImage> _channel;
 
     private record Preset(string SaveDir, string VideoDir);
 
-    private ReadOnlyReactivePropertySlim<BgrXyzMat> ReactiveFrame { set; get; }
+    private ReadOnlyReactivePropertySlim<SpatialImage> ReactiveFrame { set; get; }
 
     public MainWindow()
     {
@@ -43,7 +45,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
         _videoDir = preset.VideoDir;
         var t = DateTimeOffset.Now;
         SaveDir.Content = _saveDir;
-        _channel = Channel.CreateBounded<BgrXyzMat>(
+        _channel = Channel.CreateBounded<SpatialImage>(
             new BoundedChannelOptions(1)
             {
                 FullMode = BoundedChannelFullMode.DropOldest,
@@ -87,10 +89,10 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
                     try
                     {
                         _channel.Writer.TryWrite(frame);
-                        using var d8 = frame.Depth8(300, 5000);
+                        using var d8 = frame.GetDepth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
-                            ColorFrame.Source = frame.BGR.ToBitmapSource();
+                            ColorFrame.Source = frame.Color.ToBitmapSource();
                             DepthFrame.Source = d8.ToBitmapSource();
                         });
                     }
@@ -117,13 +119,14 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
         {
             var frame = ReactiveFrame.Value;
             if (frame.Empty()) return;
-            BgrXyzImageIO.SaveAsZip(_saveDir, $"{DateTime.Now:yyyy-MM-dd-HH-mm-ss}", frame);
+            frame.SaveAsZip($"{_saveDir}\\{DateTime.Now:yyyy-MM-dd-HH-mm-ss}");
         }
         if (_player != null)
         {
             _player.Seek((int)PlaySlider.Value);
             var frame = _player.Read();
-            BgrXyzImageIO.SaveAsZip(_saveDir, $"{DateTime.Now:yyyy-MM-dd-HH-mm-ss}", frame);
+            if (frame.Empty()) return;
+            frame.SaveAsZip($"{_saveDir}\\{DateTime.Now:yyyy-MM-dd-HH-mm-ss}");
         }
     }
 
@@ -144,8 +147,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
             _isConnected = AttemptConnection();
             if (!_isConnected) throw new Exception("Couldn't connect device!");
 
-            var filePath = $"{_saveDir}\\Movie_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.yms";
-            var writer = new BgrXyzRecorder(filePath);
+            var writer = new VideoRecorder($"{_saveDir}\\{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.yms");
             ReactiveFrame = _camera.GetStream().ToReadOnlyReactivePropertySlim();
             ReactiveFrame
                 .Where(frame => frame is not null)
@@ -154,12 +156,12 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
                 {
                     try
                     {
-                        writer?.WriteFrame(frame);
+                        writer?.Write(frame);
                         _channel.Writer.TryWrite(frame);
-                        using var d8 = frame.Depth8(300, 5000);
+                        using var d8 = frame.GetDepth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
-                            ColorFrame.Source = frame.BGR.ToBitmapSource();
+                            ColorFrame.Source = frame.Color.ToBitmapSource();
                             DepthFrame.Source = d8.ToBitmapSource();
                         });
                     }
@@ -210,7 +212,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
             PlayPauseButton.IsEnabled = true;
             PlayPauseButton.Visibility = Visibility.Visible;
             PlaySlider.Visibility = Visibility.Visible;
-            _player = new BgrXyzPlayer(cofd.FileName);
+            _player = new(cofd.FileName);
             PlaySlider.Maximum = _player.FrameCount;
             ReactiveFrame = _player.GetStream().ToReadOnlyReactivePropertySlim();
             ReactiveFrame
@@ -218,10 +220,10 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
                 .Subscribe(frame =>
                 {
                     _channel.Writer.TryWrite(frame);
-                    using var d8 = frame.Depth8(300, 5000);
+                    using var d8 = frame.GetDepth8(300, 5000);
                     Dispatcher.Invoke(() =>
                     {
-                        ColorFrame.Source = frame.BGR.ToBitmapSource();
+                        ColorFrame.Source = frame.Color.ToBitmapSource();
                         DepthFrame.Source = d8.ToBitmapSource();
                         PlaySlider.Value = _player.CurrentPosition;
                     });
@@ -244,10 +246,10 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
                 .Subscribe(frame =>
                 {
                     _channel.Writer.TryWrite(frame);
-                    using var d8 = frame.Depth8(300, 5000);
+                    using var d8 = frame.GetDepth8(300, 5000);
                     Dispatcher.Invoke(() =>
                     {
-                        ColorFrame.Source = frame.BGR.ToBitmapSource();
+                        ColorFrame.Source = frame.Color.ToBitmapSource();
                         DepthFrame.Source = d8.ToBitmapSource();
                         PlaySlider.Value = _player.CurrentPosition;
                     });
@@ -267,8 +269,8 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
     {
         _player?.Seek((int)PlaySlider.Value);
         var frame = _player?.Read();
-        ColorFrame.Source = frame?.BGR.ToBitmapSource();
-        DepthFrame.Source = frame?.Depth8(300, 5000).ToBitmapSource();
+        ColorFrame.Source = frame?.Color.ToBitmapSource();
+        DepthFrame.Source = frame?.GetDepth8(300, 5000).ToBitmapSource();
     }
 
     private void ColorFrame_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -288,7 +290,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
         if (_isConnected)
         {
             var frame = await _channel.Reader.ReadAsync();
-            var info = frame.GetPointInfo(new(x, y));
+            var info = frame.GetPixel(new(x, y));
             UV.Content = $"UV = ({x}, {y})";
             XYZ1.Content = $"XYZ = ({info.X}, {info.Y}, {info.Z})";
         }
@@ -298,7 +300,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
     {
         try
         {
-            _camera = new Kinect(
+            _camera = new Kinect.CameraStream(
                 new DeviceConfiguration
                 {
                     ColorFormat = ImageFormat.ColorBGRA32,
@@ -306,14 +308,14 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
                     DepthMode = DepthMode.WFOV_2x2Binned,
                     SynchronizedImagesOnly = true,
                     CameraFPS = FPS.FPS15
-                }, 0, AlignBase.Color);
+                }, 0, MatchingBase.Color);
         }
         catch
         {
             try
             {
-                _camera = new Realsense(new(640, 360)); // D
-                //_camera = new Realsense(new(640, 480)); // L
+                _camera = new RealSense.CameraStream(new(640, 360)); // D
+                //_camera = new RealSense.CameraStream(new(640, 480)); // L
             }
             catch
             {

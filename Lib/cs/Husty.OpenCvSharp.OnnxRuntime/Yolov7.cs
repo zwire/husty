@@ -25,7 +25,7 @@ public sealed class Yolov7 : OnnxBase<Mat, YoloResult[]>, IYoloDetector
     ) : base(onnxModel, provider, opt)
     {
         _size = new(InputLayers[0].Shape[2], InputLayers[0].Shape[3]);
-        _paddingBase = new(_size.Height, _size.Width, MatType.CV_8UC3, new(114, 114, 114));
+        _paddingBase = new(_size.Height, _size.Width, MatType.CV_8UC3, new Scalar(114, 114, 114));
         _confThresh = confThresh;
         _labels = File.ReadAllLines(namesFile).Where(x => x is not null && x is not "").ToArray();
     }

@@ -1,9 +1,10 @@
 ﻿using System.Reactive.Linq;
 using OpenCvSharp;
-using Husty.OpenCvSharp.DepthCamera;
 using Husty.Extensions;
-using Husty.OpenCvSharp.CameraCalibration;
-using Husty.OpenCvSharp.Transform;
+using Husty.OpenCvSharp.ImageStream;
+using Husty.OpenCvSharp.SpatialImaging;
+using Kinect = Husty.OpenCvSharp.AzureKinect;
+using RealSense = Husty.OpenCvSharp.RealSense;
 
 namespace DepthCameraStartup;
 
@@ -11,37 +12,22 @@ internal class Program
 {
     static void Main(string[] args)
     {
+        IImageStream<SpatialImage> camera = null;
 
-        var inParam = IntrinsicCameraParameters.Load("..\\..\\..\\intrinsic.json");
-        var exParam = ExtrinsicCameraParameters.Load("..\\..\\..\\extrinsic.json");
-        var transformer = new PerspectiveTransformer(inParam.CameraMatrix, exParam);
+        camera = new RealSense.CameraStream(new(640, 360));
+        // camera = new Kinect.CameraStream(MatchingBase.Color);
 
-        var bgr = new Mat("..\\..\\..\\000.png");
-        var pts = Enumerable.Range(0, 480).SelectMany(y => Enumerable.Range(0, 640).Select(x => new Point2f(x, y))).ToArray();
-        pts = transformer.ConvertToWorldCoordinate(pts);
-        var xyz = new Mat(480, 640, MatType.CV_16UC3, pts.SelectMany(p => new short[] { (short)p.X, (short)p.Y, 1 }).ToArray());
-        using var frame = new BgrXyzMat(bgr, xyz);
-        BgrXyzImageIO.SaveAsAsciiPly(null, "ascii", frame);
-
-        var f = pts.Select(p => new Scalar(p.X, p.Y, 0)).ToArray();
-
-
-        IDepthCamera camera = null;
-
-        camera = new Realsense(new(640, 360));
-        //camera = new Kinect(AlignBase.Color);
-
-        var connector = camera.GetBgrStream()
+        var connector = camera.GetStream()
             .TimeInterval()
-            .Subscribe(x =>
+            .Subscribe(v =>
             {
-                Console.WriteLine((int)x.Interval.TotalMilliseconds);
-                Cv2.ImShow(" ", x.Value);
+                Console.WriteLine((int)v.Interval.TotalMilliseconds);
+                Cv2.ImShow(" ", v.Value.Color);
                 Cv2.SetMouseCallback(" ", (t, x, y, f, _) =>
                 {
                     if (t is MouseEventTypes.LButtonDown)
                     {
-                        var xyz = camera.ReadXyz().At<Vec3s>(y, x);
+                        var xyz = v.Value.ActualSpace.At<Vec3s>(y, x);
                         Console.WriteLine(xyz);
                     }
                 });
