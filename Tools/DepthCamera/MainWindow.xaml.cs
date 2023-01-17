@@ -119,14 +119,14 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
         {
             var frame = ReactiveFrame.Value;
             if (frame.Empty()) return;
-            frame.SaveAsZip($"{_saveDir}\\{DateTime.Now:yyyy-MM-dd-HH-mm-ss}");
+            frame.SaveAsZip($"{_saveDir}\\{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.zip");
         }
         if (_player != null)
         {
             _player.Seek((int)PlaySlider.Value);
             var frame = _player.Read();
             if (frame.Empty()) return;
-            frame.SaveAsZip($"{_saveDir}\\{DateTime.Now:yyyy-MM-dd-HH-mm-ss}");
+            frame.SaveAsZip($"{_saveDir}\\{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.zip");
         }
     }
 

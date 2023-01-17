@@ -21,7 +21,7 @@ public class VideoRecorder : IDisposable
         if (!Directory.Exists(Path.GetDirectoryName(filePath)))
             filePath = Path.GetFileName(filePath);
         _binWriter = new BinaryWriter(File.Open(filePath, FileMode.Create), Encoding.ASCII);
-        var fileFormatCode = Encoding.ASCII.GetBytes("HUSTY001");
+        var fileFormatCode = Encoding.ASCII.GetBytes("HUSTY002");
         _firstTime = DateTime.Now.ToUniversalTime();
         _binWriter.Write(fileFormatCode);
         _binWriter.Write(_firstTime.ToBinary());
@@ -39,13 +39,19 @@ public class VideoRecorder : IDisposable
             {
                 _indexes.Add(_binWriter.BaseStream.Position);
                 _binWriter.Write((DateTime.Now.ToUniversalTime() - _firstTime).Ticks);
-                var (bgr, xyz) = frame;
+                var (bgr, x, y, z) = frame;
                 var bgrBytes = bgr.ImEncode();
-                var xyzBytes = xyz.ImEncode();
+                var xBytes = x.ImEncode();
+                var yBytes = y.ImEncode();
+                var zBytes = z.ImEncode();
                 _binWriter.Write(bgrBytes.Length);
                 _binWriter.Write(bgrBytes);
-                _binWriter.Write(xyzBytes.Length);
-                _binWriter.Write(xyzBytes);
+                _binWriter.Write(xBytes.Length);
+                _binWriter.Write(xBytes);
+                _binWriter.Write(yBytes.Length);
+                _binWriter.Write(yBytes);
+                _binWriter.Write(zBytes.Length);
+                _binWriter.Write(zBytes);
             }
         }
     }

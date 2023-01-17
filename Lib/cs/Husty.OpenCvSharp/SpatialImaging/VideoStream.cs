@@ -48,19 +48,16 @@ public class VideoStream : IVideoStream<SpatialImage>
         var file = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite);
         _binReader = new BinaryReader(file, Encoding.ASCII);
         var fileFormatCode = Encoding.ASCII.GetString(_binReader.ReadBytes(8));
-        if (fileFormatCode is "HUSTY001")
-        {
-            InitialTime = DateTime.FromBinary(_binReader.ReadInt64());
-        }
-        else if (fileFormatCode is not "HUSTY000")
+        if (fileFormatCode is not "HUSTY002")
         {
             throw new Exception("invalid file format");
         }
+        InitialTime = DateTime.FromBinary(_binReader.ReadInt64());
         var indexesPos = _binReader.ReadInt64();
         var indexes = new List<long>();
         if (indexesPos is -1)
         {
-            _binReader.BaseStream.Position = fileFormatCode is "HUSTY000" ? 16 : 24;
+            _binReader.BaseStream.Position = 24;
             while (true)
             {
                 indexes.Add(_binReader.BaseStream.Position);
@@ -76,7 +73,7 @@ public class VideoStream : IVideoStream<SpatialImage>
             indexes.RemoveAt(indexes.Count - 1);
 
             var binWriter = new BinaryWriter(file, Encoding.ASCII);
-            binWriter.Seek(fileFormatCode is "HUSTY000" ? 8 : 16, SeekOrigin.Begin);
+            binWriter.Seek(16, SeekOrigin.Begin);
             binWriter.Write(binWriter.BaseStream.Length);
             binWriter.Seek(0, SeekOrigin.End);
             indexes.ForEach(p => binWriter.Write(p));
@@ -96,14 +93,25 @@ public class VideoStream : IVideoStream<SpatialImage>
         _binReader.ReadInt64();
         var bgrDataSize = _binReader.ReadInt32();
         var bgrBytes = _binReader.ReadBytes(bgrDataSize);
-        var xyzDataSize = _binReader.ReadInt32();
-        var xyzBytes = _binReader.ReadBytes(xyzDataSize);
-        using var frame = new SpatialImage(Cv2.ImDecode(bgrBytes, ImreadModes.Unchanged), Cv2.ImDecode(xyzBytes, ImreadModes.Unchanged));
+        var xDataSize = _binReader.ReadInt32();
+        var xBytes = _binReader.ReadBytes(xDataSize);
+        var yDataSize = _binReader.ReadInt32();
+        var yBytes = _binReader.ReadBytes(yDataSize);
+        var zDataSize = _binReader.ReadInt32();
+        var zBytes = _binReader.ReadBytes(zDataSize);
+        using var frame = new SpatialImage(
+            Cv2.ImDecode(bgrBytes, ImreadModes.Unchanged), 
+            Cv2.ImDecode(xBytes, ImreadModes.Unchanged),
+            Cv2.ImDecode(yBytes, ImreadModes.Unchanged),
+            Cv2.ImDecode(zBytes, ImreadModes.Unchanged)
+        );
         FrameSize = new(frame.Width, frame.Height);
 
         _pool = new(2, () => new(
             new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_8UC3),
-            new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC3))
+            new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC1),
+            new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC1),
+            new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC1))
         );
 
         long ticks = 0;
@@ -143,7 +151,9 @@ public class VideoStream : IVideoStream<SpatialImage>
         if (frame.Width != FrameSize.Width || frame.Height != FrameSize.Height)
         {
             frame.Color.Create(FrameSize, MatType.CV_8UC3);
-            frame.ActualSpace.Create(FrameSize, MatType.CV_16UC3);
+            frame.X.Create(FrameSize, MatType.CV_16UC1);
+            frame.Y.Create(FrameSize, MatType.CV_16UC1);
+            frame.Z.Create(FrameSize, MatType.CV_16UC1);
         }
         delay = default;
         if (_positionIndex == FrameCount - 1)
@@ -155,9 +165,18 @@ public class VideoStream : IVideoStream<SpatialImage>
         _prevTime = time;
         var bgrDataSize = _binReader.ReadInt32();
         var bgrBytes = _binReader.ReadBytes(bgrDataSize);
-        var xyzDataSize = _binReader.ReadInt32();
-        var xyzBytes = _binReader.ReadBytes(xyzDataSize);
-        frame.CopyFrom(Cv2.ImDecode(bgrBytes, ImreadModes.Unchanged), Cv2.ImDecode(xyzBytes, ImreadModes.Unchanged));
+        var xDataSize = _binReader.ReadInt32();
+        var xBytes = _binReader.ReadBytes(xDataSize);
+        var yDataSize = _binReader.ReadInt32();
+        var yBytes = _binReader.ReadBytes(yDataSize);
+        var zDataSize = _binReader.ReadInt32();
+        var zBytes = _binReader.ReadBytes(zDataSize);
+        frame.CopyFrom(
+            Cv2.ImDecode(bgrBytes, ImreadModes.Unchanged), 
+            Cv2.ImDecode(xBytes, ImreadModes.Unchanged),
+            Cv2.ImDecode(yBytes, ImreadModes.Unchanged),
+            Cv2.ImDecode(zBytes, ImreadModes.Unchanged)
+        );
         HasFrame = true;
         return true;
     }

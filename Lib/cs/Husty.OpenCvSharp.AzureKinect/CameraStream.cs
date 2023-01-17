@@ -50,7 +50,9 @@ public class CameraStream : IImageStream<SpatialImage>
         };
         _pool = new(2, () => new(
             new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_8UC3),
-            new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC3))
+            new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC1),
+            new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC1),
+            new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC1))
         );
         Fps = config.CameraFPS switch
         {
@@ -85,7 +87,7 @@ public class CameraStream : IImageStream<SpatialImage>
             using var pointCloudFrame = _transformation.DepthImageToPointCloud(depthFrame, CalibrationDeviceType.Color);
             var frame = _pool.GetObject();
             CopyColorPixels(colorFrame, frame.Color);
-            CopyPointCloudPixels(pointCloudFrame, frame.ActualSpace);
+            CopyPointCloudPixels(pointCloudFrame, frame.X, frame.Y, frame.Z);
             HasFrame = true;
             return frame;
         }
@@ -95,7 +97,7 @@ public class CameraStream : IImageStream<SpatialImage>
             using var pointCloudFrame = _transformation.DepthImageToPointCloud(capture.Depth);
             var frame = _pool.GetObject();
             CopyColorPixels(colorFrame, frame.Color);
-            CopyPointCloudPixels(pointCloudFrame, frame.ActualSpace);
+            CopyPointCloudPixels(pointCloudFrame, frame.X, frame.Y, frame.Z);
             HasFrame = true;
             return frame;
         }
@@ -139,20 +141,25 @@ public class CameraStream : IImageStream<SpatialImage>
         }
     }
 
-    private unsafe static void CopyPointCloudPixels(Image pointCloudFrame, Mat pointCloudMat)
+    private unsafe static void CopyPointCloudPixels(Image pointCloudFrame, Mat xMat, Mat yMat, Mat zMat)
     {
         var w = pointCloudFrame.WidthPixels;
         var h = pointCloudFrame.HeightPixels;
-        if (pointCloudMat.IsDisposed || pointCloudMat.Width != w || pointCloudMat.Height != h || pointCloudMat.Type() != MatType.CV_16UC3)
+        if (
+            xMat.IsDisposed || xMat.Width != w || xMat.Height != h || xMat.Type() != MatType.CV_16UC1 ||
+            yMat.IsDisposed || yMat.Width != w || yMat.Height != h || yMat.Type() != MatType.CV_16UC1 ||
+            zMat.IsDisposed || zMat.Width != w || zMat.Height != h || zMat.Type() != MatType.CV_16UC1
+        )
             return;
         var pdAry = pointCloudFrame.GetPixels<Short3>().Span;
-        var p = (ushort*)pointCloudMat.Data;
-        int index = 0;
+        var xp = (ushort*)xMat.Data;
+        var yp = (ushort*)yMat.Data;
+        var zp = (ushort*)zMat.Data;
         for (int i = 0; i < pdAry.Length; i++)
         {
-            p[index++] = (ushort)pdAry[i].X;
-            p[index++] = (ushort)pdAry[i].Y;
-            p[index++] = (ushort)pdAry[i].Z;
+            xp[i] = (ushort)pdAry[i].X;
+            yp[i] = (ushort)pdAry[i].Y;
+            zp[i] = (ushort)pdAry[i].Z;
         }
     }
 }

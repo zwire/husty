@@ -41,7 +41,9 @@ public class CameraStream : IImageStream<SpatialImage>
     {
         _pool = new(2, () => new(
             new Mat(size.Height, size.Width, MatType.CV_8UC3),
-            new Mat(size.Height, size.Width, MatType.CV_16UC3))
+            new Mat(size.Height, size.Width, MatType.CV_16UC1),
+            new Mat(size.Height, size.Width, MatType.CV_16UC1),
+            new Mat(size.Height, size.Width, MatType.CV_16UC1))
         );
         var width = size.Width;
         var height = size.Height;
@@ -96,7 +98,7 @@ public class CameraStream : IImageStream<SpatialImage>
         using var depth6 = _hfill?.Process(depth5) ?? depth5;
         var frame = _pool.GetObject();
         CopyColorPixels(color, frame.Color);
-        CopyPointCloudPixels(depth6, frame.ActualSpace, color.Width, color.Height);
+        CopyPointCloudPixels(depth6, frame.X, frame.Y, frame.Z, color.Width, color.Height);
         HasFrame = true;
         return frame;
     }
@@ -129,20 +131,26 @@ public class CameraStream : IImageStream<SpatialImage>
         Cv2.CvtColor(colorMat, colorMat, ColorConversionCodes.RGB2BGR);
     }
 
-    private unsafe static void CopyPointCloudPixels(Frame frame, Mat pointCloudMat, int width, int height)
+    private unsafe static void CopyPointCloudPixels(Frame frame, Mat xMat, Mat yMat, Mat zMat, int width, int height)
     {
-        if (pointCloudMat.IsDisposed || pointCloudMat.Width != width || pointCloudMat.Height != height || pointCloudMat.Type() != MatType.CV_16UC3)
+        if (
+            xMat.IsDisposed || xMat.Width != width || xMat.Height != height || xMat.Type() != MatType.CV_16UC1 ||
+            yMat.IsDisposed || yMat.Width != width || yMat.Height != height || yMat.Type() != MatType.CV_16UC1 ||
+            zMat.IsDisposed || zMat.Width != width || zMat.Height != height || zMat.Type() != MatType.CV_16UC1
+        )
             return;
         using var pdFrame0 = new PointCloud();
         using var pdFrame1 = pdFrame0.Process(frame);
         var pData = (float*)pdFrame1.Data;
-        var pixels = (ushort*)pointCloudMat.Data;
+        var xp = (ushort*)xMat.Data;
+        var yp = (ushort*)yMat.Data;
+        var zp = (ushort*)zMat.Data;
         int index = 0;
-        for (int i = 0; i < pointCloudMat.Width * pointCloudMat.Height; i++)
+        for (int i = 0; i < xMat.Width * xMat.Height; i++)
         {
-            pixels[index] = (ushort)(pData[index++] * 1000);
-            pixels[index] = (ushort)(pData[index++] * 1000);
-            pixels[index] = (ushort)(pData[index++] * 1000);
+            xp[i] = (ushort)(pData[index++] * 1000);
+            yp[i] = (ushort)(pData[index++] * 1000);
+            zp[i] = (ushort)(pData[index++] * 1000);
         }
     }
 

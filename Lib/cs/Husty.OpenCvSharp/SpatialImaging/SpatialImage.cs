@@ -18,7 +18,11 @@ public class SpatialImage : IDisposable
 
     public Mat Color { get; }
 
-    public Mat ActualSpace { get; }
+    public Mat X { get; }
+
+    public Mat Y { get; }
+
+    public Mat Z { get; }
 
     public int Width => Color.Width;
 
@@ -28,18 +32,20 @@ public class SpatialImage : IDisposable
 
     public int Cols => Color.Cols;
 
-    public bool IsDisposed => Color.IsDisposed || ActualSpace.IsDisposed;
+    public bool IsDisposed => Color.IsDisposed || X.IsDisposed || Y.IsDisposed || Z.IsDisposed;
 
     public SpatialImage this[Rect box]
     {
         set
         {
             Color[box] = value.Color;
-            ActualSpace[box] = value.ActualSpace;
+            X[box] = value.X;
+            Y[box] = value.Y;
+            Z[box] = value.Z;
         }
         get
         {
-            return new(Color[box], ActualSpace[box]);
+            return new(Color[box], X[box], Y[box], Z[box]);
         }
     }
 
@@ -49,23 +55,37 @@ public class SpatialImage : IDisposable
     public SpatialImage()
     {
         Color = new();
-        ActualSpace = new();
+        X = new();
+        Y = new();
+        Z = new();
     }
 
-    public SpatialImage(Mat color, Mat actualSpace)
+    public SpatialImage(Mat color, Mat x, Mat y, Mat z)
     {
         Color = color;
-        ActualSpace = actualSpace;
-        if (Color.Width != ActualSpace.Width || Color.Height != ActualSpace.Height)
-            throw new InvalidOperationException("Require: Color size == ActualSpace size");
+        X = x;
+        Y = y;
+        Z = z;
+        if (
+            Color.Width != X.Width || Color.Height != X.Height ||
+            X.Width != Y.Width || X.Height != Y.Height ||
+            Y.Width != Z.Width || Y.Height != Z.Height
+        )
+            throw new InvalidOperationException("Require: Color size == XYZ size");
     }
 
-    public SpatialImage(byte[] color, byte[] actualSpace)
+    public SpatialImage(byte[] color, byte[] x, byte[] y, byte[] z)
     {
         Color = Cv2.ImDecode(color, ImreadModes.Unchanged);
-        ActualSpace = Cv2.ImDecode(actualSpace, ImreadModes.Unchanged);
-        if (Color.Width != ActualSpace.Width || Color.Height != ActualSpace.Height)
-            throw new InvalidOperationException("Require: Color size == ActualSpace size");
+        X = Cv2.ImDecode(x, ImreadModes.Unchanged);
+        Y = Cv2.ImDecode(y, ImreadModes.Unchanged);
+        Z = Cv2.ImDecode(z, ImreadModes.Unchanged);
+        if (
+            Color.Width != X.Width || Color.Height != X.Height ||
+            X.Width != Y.Width || X.Height != Y.Height ||
+            Y.Width != Z.Width || Y.Height != Z.Height
+        )
+            throw new InvalidOperationException("Require: Color size == XYZ size");
     }
 
     public unsafe SpatialImage(int width, int height, IEnumerable<SpatialImagePixel> src)
@@ -73,9 +93,13 @@ public class SpatialImage : IDisposable
         if (width * height != src.Count())
             throw new ArgumentException("Require: width * height == src.Count()");
         Color = new Mat(height, width, MatType.CV_8UC3);
-        ActualSpace= new Mat(height, width, MatType.CV_16UC3);
+        X = new Mat(height, width, MatType.CV_16UC1);
+        Y = new Mat(height, width, MatType.CV_16UC1);
+        Z = new Mat(height, width, MatType.CV_16UC1);
         var bgr = Color.DataPointer;
-        var xyz = (short*)ActualSpace.Data;
+        var x = (short*)X.Data;
+        var y = (short*)Y.Data;
+        var z = (short*)Z.Data;
         var index = 0;
         foreach (var s in src)
         {
@@ -83,9 +107,9 @@ public class SpatialImage : IDisposable
             bgr[i + 0] = s.B;
             bgr[i + 1] = s.G;
             bgr[i + 2] = s.R;
-            xyz[i + 0] = s.X;
-            xyz[i + 1] = s.Y;
-            xyz[i + 2] = s.Z;
+            x[i] = s.X;
+            y[i] = s.Y;
+            z[i] = s.Z;
             index++;
         }
     }
@@ -96,52 +120,63 @@ public class SpatialImage : IDisposable
     public void Dispose()
     {
         Color?.Dispose();
-        ActualSpace?.Dispose();
+        X?.Dispose();
+        Y?.Dispose();
+        Z?.Dispose();
     }
 
-    public void Deconstruct(out Mat color, out Mat actualSpace)
+    public void Deconstruct(out Mat color, out Mat x, out Mat y, out Mat z)
     {
         color = Color;
-        actualSpace = ActualSpace;
+        x = X;
+        y = Y;
+        z = Z;
     }
 
-    public SpatialImage Clone() => new(Color.Clone(), ActualSpace.Clone());
+    public SpatialImage Clone() => new(Color.Clone(), X.Clone(), Y.Clone(), Z.Clone());
 
-    public bool Empty() => Color.Empty() || ActualSpace.Empty();
+    public bool Empty() => Color.Empty() || X.Empty() || Y.Empty() || Z.Empty();
 
-    public void CopyFrom(Mat color, Mat actualSpace)
+    public void CopyFrom(Mat color, Mat x, Mat y, Mat z)
     {
         if (color.Width != Color.Width || color.Height != Color.Height ||
-            actualSpace.Width != ActualSpace.Width || actualSpace.Height != ActualSpace.Height
+            x.Width != X.Width || x.Height != X.Height ||
+            y.Width != Y.Width || y.Height != Y.Height ||
+            z.Width != Z.Width || z.Height != Z.Height
         ) throw new InvalidOperationException("Require: src size == dst size");
         color.CopyTo(Color);
-        actualSpace.CopyTo(ActualSpace);
+        x.CopyTo(X);
+        y.CopyTo(Y);
+        z.CopyTo(Z);
     }
 
     public SpatialImage Resize(Size size, InterpolationFlags flags = InterpolationFlags.Linear)
     {
         Cv2.Resize(Color, Color, size, 0, 0, flags);
-        Cv2.Resize(ActualSpace, ActualSpace, size, 0, 0, flags);
+        Cv2.Resize(X, X, size, 0, 0, flags);
+        Cv2.Resize(Y, Y, size, 0, 0, flags);
+        Cv2.Resize(Z, Z, size, 0, 0, flags);
         return this;
     }
 
     public SpatialImage Resize(double fx, double fy, InterpolationFlags flags = InterpolationFlags.Linear)
     {
         Cv2.Resize(Color, Color, Size.Zero, fx, fy, flags);
-        Cv2.Resize(ActualSpace, ActualSpace, Size.Zero, fx, fy, flags);
+        Cv2.Resize(X, X, Size.Zero, fx, fy, flags);
+        Cv2.Resize(Y, Y, Size.Zero, fx, fy, flags);
+        Cv2.Resize(Z, Z, Size.Zero, fx, fy, flags);
         return this;
     }
 
     public unsafe Mat GetDepth16()
     {
-        var d16 = new Mat();
-        Cv2.ExtractChannel(ActualSpace, d16, 2);
-        return d16;
+        return Z.Clone();
     }
 
     public unsafe Mat GetDepth8(int minDistance, int maxDistance)
     {
         var d = GetDepth16();
+        d.At<Vec3s>(0, 0) = new(0, 0, (short)maxDistance);
         Cv2.Threshold(d, d, maxDistance, maxDistance, ThresholdTypes.TozeroInv);
         Cv2.Threshold(d, d, minDistance, minDistance, ThresholdTypes.Tozero);
         Cv2.Normalize(d, d, 0, 255, NormTypes.MinMax, MatType.CV_8U);
@@ -152,22 +187,40 @@ public class SpatialImage : IDisposable
     {
         if (point.X < 0 || point.Y < 0 || point.X >= Color.Width || point.Y >= Color.Height)
             throw new ArgumentOutOfRangeException();
-        var index = (point.Y * Color.Cols + point.X) * 3;
+        var index = point.Y * Color.Cols + point.X;
         var bgr = Color.DataPointer;
-        var xyz = (short*)ActualSpace.Data;
-        var b = bgr[index + 0];
-        var g = bgr[index + 1];
-        var r = bgr[index + 2];
-        var x = xyz[index + 0];
-        var y = xyz[index + 1];
-        var z = xyz[index + 2];
-        return new(b, g, r, x, y, z);
+        var xp = (short*)X.Data;
+        var yp = (short*)Y.Data;
+        var zp = (short*)Z.Data;
+        var b = bgr[index * 3 + 0];
+        var g = bgr[index * 3 + 1];
+        var r = bgr[index * 3 + 2];
+        return new(b, g, r, xp[index], yp[index], zp[index]);
+    }
+
+    public unsafe void SetPixel(int x, int y, SpatialImagePixel value)
+    {
+        if (x < 0 || y < 0 || x >= Color.Width || y >= Color.Height)
+            throw new ArgumentOutOfRangeException();
+        var index = y * Color.Cols + x;
+        var bgr = Color.DataPointer;
+        var xp = (short*)X.Data;
+        var yp = (short*)Y.Data;
+        var zp = (short*)Z.Data;
+        bgr[index * 3 + 0] = value.B;
+        bgr[index * 3 + 1] = value.G;
+        bgr[index * 3 + 2] = value.R;
+        xp[index] = value.X;
+        yp[index] = value.Y;
+        zp[index] = value.Z;
     }
 
     public unsafe SpatialImagePixel[] ToArray(Func<SpatialImagePixel, bool> filter = null)
     {
         var bgr = Color.DataPointer;
-        var xyz = (short*)ActualSpace.Data;
+        var x = (short*)X.Data;
+        var y = (short*)Y.Data;
+        var z = (short*)Z.Data;
         var ary = new SpatialImagePixel[Width * Height];
         for (int i = 0; i < Width * Height; i++)
         {
@@ -175,10 +228,7 @@ public class SpatialImage : IDisposable
             var b = bgr[index + 0];
             var g = bgr[index + 1];
             var r = bgr[index + 2];
-            var x = xyz[index + 0];
-            var y = xyz[index + 1];
-            var z = xyz[index + 2];
-            ary[i] = new(b, g, r, x, y, z);
+            ary[i] = new(b, g, r, x[index], y[index], z[index]);
         }
         if (filter is null)
             return ary;
@@ -188,7 +238,9 @@ public class SpatialImage : IDisposable
     public unsafe SpatialImage Map(Func<SpatialImagePixel, SpatialImagePixel> func)
     {
         var bgr = Color.DataPointer;
-        var xyz = (short*)ActualSpace.Data;
+        var x = (short*)X.Data;
+        var y = (short*)Y.Data;
+        var z = (short*)Z.Data;
         var ary = new SpatialImagePixel[Width * Height];
         for (int i = 0; i < Width * Height; i++)
         {
@@ -196,36 +248,35 @@ public class SpatialImage : IDisposable
             var b = bgr[index + 0];
             var g = bgr[index + 1];
             var r = bgr[index + 2];
-            var x = xyz[index + 0];
-            var y = xyz[index + 1];
-            var z = xyz[index + 2];
-            ary[i] = func(new(b, g, r, x, y, z));
+            ary[i] = func(new(b, g, r, x[index], y[index], z[index]));
         }
         return new(Width, Height, ary);
     }
 
     public unsafe SpatialImage Move(Vec3s delta)
     {
-        var s = (short*)ActualSpace.Data;
-        var index = 0;
-        for (int i = 0; i < ActualSpace.Rows * ActualSpace.Cols; i++)
+        var x = (short*)X.Data;
+        var y = (short*)Y.Data;
+        var z = (short*)Z.Data;
+        for (int i = 0; i < X.Rows * X.Cols; i++)
         {
-            s[index++] += delta.Item0;
-            s[index++] += delta.Item1;
-            s[index++] += delta.Item2;
+            x[i] += delta.Item0;
+            y[i] += delta.Item1;
+            z[i] += delta.Item2;
         }
         return this;
     }
 
     public unsafe SpatialImage Scale(Vec3s delta)
     {
-        var s = (short*)ActualSpace.Data;
-        var index = 0;
-        for (int i = 0; i < ActualSpace.Rows * ActualSpace.Cols; i++)
+        var x = (short*)X.Data;
+        var y = (short*)Y.Data;
+        var z = (short*)Z.Data;
+        for (int i = 0; i < X.Rows * X.Cols; i++)
         {
-            s[index++] *= delta.Item0;
-            s[index++] *= delta.Item1;
-            s[index++] *= delta.Item2;
+            x[i] *= delta.Item0;
+            y[i] *= delta.Item1;
+            z[i] *= delta.Item2;
         }
         return this;
     }
@@ -233,15 +284,17 @@ public class SpatialImage : IDisposable
     public unsafe SpatialImage Rotate(Mat rotationMat)
     {
         var d = (float*)rotationMat.Data;
-        var s = (short*)ActualSpace.Data;
-        for (int i = 0; i < ActualSpace.Rows * ActualSpace.Cols * 3; i += 3)
+        var xp = (short*)X.Data;
+        var yp = (short*)Y.Data;
+        var zp = (short*)Z.Data;
+        for (int i = 0; i < X.Rows * X.Cols; i += 3)
         {
-            var x = s[i + 0];
-            var y = s[i + 1];
-            var z = s[i + 2];
-            s[i + 0] = (short)(d[0] * x + d[1] * y + d[2] * z);
-            s[i + 1] = (short)(d[3] * x + d[4] * y + d[5] * z);
-            s[i + 2] = (short)(d[6] * x + d[7] * y + d[8] * z);
+            var x = xp[i];
+            var y = yp[i];
+            var z = zp[i];
+            xp[i] = (short)(d[0] * x + d[1] * y + d[2] * z);
+            yp[i] = (short)(d[3] * x + d[4] * y + d[5] * z);
+            zp[i] = (short)(d[6] * x + d[7] * y + d[8] * z);
         }
         return this;
     }
@@ -249,30 +302,38 @@ public class SpatialImage : IDisposable
     public void SaveAsZip(string filePath)
     {
         Cv2.ImWrite($"{filePath}_C.png", Color);
-        Cv2.ImWrite($"{filePath}_P.png", ActualSpace);
+        Cv2.ImWrite($"{filePath}_X.png", X);
+        Cv2.ImWrite($"{filePath}_Y.png", Y);
+        Cv2.ImWrite($"{filePath}_Z.png", Z);
         using var z = ZipFile.Open($"{filePath}", ZipArchiveMode.Update);
-        z.CreateEntryFromFile($"{filePath}_C.png", $"C.png", CompressionLevel.Optimal);
-        z.CreateEntryFromFile($"{filePath}_P.png", $"P.png", CompressionLevel.Optimal);
+        z.CreateEntryFromFile($"{filePath}_C.png", "C.png", CompressionLevel.Optimal);
+        z.CreateEntryFromFile($"{filePath}_X.png", "X.png", CompressionLevel.Optimal);
+        z.CreateEntryFromFile($"{filePath}_Y.png", "Y.png", CompressionLevel.Optimal);
+        z.CreateEntryFromFile($"{filePath}_Z.png", "Z.png", CompressionLevel.Optimal);
         File.Delete($"{filePath}_C.png");
-        File.Delete($"{filePath}_P.png");
+        File.Delete($"{filePath}_X.png");
+        File.Delete($"{filePath}_Y.png");
+        File.Delete($"{filePath}_Z.png");
     }
 
     public unsafe void SaveAsAsciiPly(string filePath)
     {
         var size = Width * Height;
         var cp = Color.DataPointer;
-        var p = (short*)ActualSpace.Data;
+        var xp = (short*)X.Data;
+        var yp = (short*)Y.Data;
+        var zp = (short*)Z.Data;
         var lines = new List<string>();
         for (int i = 0; i < size; i++)
         {
-            if (p[i * 3 + 2] is not 0)
+            if (zp[i] > 0)
             {
                 var b = cp[i * 3 + 0];
                 var g = cp[i * 3 + 1];
                 var r = cp[i * 3 + 2];
-                var x = p[i * 3 + 0] * 0.001f;
-                var y = p[i * 3 + 1] * 0.001f;
-                var z = p[i * 3 + 2] * 0.001f;
+                var x = xp[i] * 0.001f;
+                var y = yp[i] * 0.001f;
+                var z = zp[i] * 0.001f;
                 lines.Add($"{x} {y} {z} {r} {g} {b}");
             }
         }
@@ -300,14 +361,16 @@ public class SpatialImage : IDisposable
     {
         var size = Width * Height;
         var cp = Color.DataPointer;
-        var p = (short*)ActualSpace.Data;
+        var xp = (short*)X.Data;
+        var yp = (short*)Y.Data;
+        var zp = (short*)Z.Data;
         var points = new List<byte[]>();
         for (int i = 0; i < size; i++)
         {
-            if (p[i * 3 + 2] is not 0)
+            if (zp[i] > 0)
             {
                 var buf = new byte[15];
-                Buffer.BlockCopy(new[] { p[i * 3 + 0] * 0.001f, p[i * 3 + 1] * 0.001f, p[i * 3 + 2] * 0.001f }, 0, buf, 0, 12);
+                Buffer.BlockCopy(new[] { xp[i] * 0.001f, yp[i] * 0.001f, zp[i] * 0.001f }, 0, buf, 0, 12);
                 buf[12] = cp[i * 3 + 2];
                 buf[13] = cp[i * 3 + 1];
                 buf[14] = cp[i * 3 + 0];
@@ -346,12 +409,18 @@ public class SpatialImage : IDisposable
             throw new FileNotFoundException();
         using var archive = ZipFile.OpenRead(filePath);
         archive.GetEntry("C.png").ExtractToFile("C.png", true);
-        archive.GetEntry("P.png").ExtractToFile("P.png", true);
+        archive.GetEntry("X.png").ExtractToFile("X.png", true);
+        archive.GetEntry("Y.png").ExtractToFile("Y.png", true);
+        archive.GetEntry("Z.png").ExtractToFile("Z.png", true);
         var c = new Mat("C.png");
-        var p = new Mat("P.png", ImreadModes.Unchanged);
+        var x = new Mat("X.png", ImreadModes.Unchanged);
+        var y = new Mat("Y.png", ImreadModes.Unchanged);
+        var z = new Mat("Z.png", ImreadModes.Unchanged);
         File.Delete("C.png");
-        File.Delete("P.png");
-        return new(c, p);
+        File.Delete("X.png");
+        File.Delete("Y.png");
+        File.Delete("Z.png");
+        return new SpatialImage(c, x, y, z);
     }
 
 }

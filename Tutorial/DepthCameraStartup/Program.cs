@@ -27,8 +27,8 @@ internal class Program
                 {
                     if (t is MouseEventTypes.LButtonDown)
                     {
-                        var xyz = v.Value.ActualSpace.At<Vec3s>(y, x);
-                        Console.WriteLine(xyz);
+                        var px = v.Value.GetPixel(new(x, y));
+                        Console.WriteLine(px);
                     }
                 });
                 Cv2.WaitKey(1);
