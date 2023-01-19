@@ -2,16 +2,25 @@
 using System.IO.Compression;
 using OpenCvSharp;
 
-namespace Husty.OpenCvSharp.SpatialImaging;
+namespace Husty.OpenCvSharp.ThreeDimensionalImaging;
 
 public enum MatchingBase { Color, Depth }
 
-public record struct SpatialImagePixel(byte R, byte G, byte B, short X, short Y, short Z)
+public record struct BgrXyzPixel(byte R, byte G, byte B, short X, short Y, short Z)
 {
-    public static SpatialImagePixel Zero => new(0, 0, 0, 0, 0, 0);
+    public static BgrXyzPixel Zero => new(0, 0, 0, 0, 0, 0);
+    public void Deconstruct(out byte b, out byte g, out byte r, out short x, out short y, out short z)
+    {
+        b = B;
+        g = G;
+        r = R;
+        x = X;
+        y = Y;
+        z = Z;
+    }
 }
 
-public class SpatialImage : IDisposable
+public class BgrXyzImage : IDisposable
 {
 
     // ------ properties ------ //
@@ -34,7 +43,7 @@ public class SpatialImage : IDisposable
 
     public bool IsDisposed => Color.IsDisposed || X.IsDisposed || Y.IsDisposed || Z.IsDisposed;
 
-    public SpatialImage this[Rect box]
+    public BgrXyzImage this[Rect box]
     {
         set
         {
@@ -52,7 +61,7 @@ public class SpatialImage : IDisposable
 
     // ------ constructors ------ //
 
-    public SpatialImage()
+    public BgrXyzImage()
     {
         Color = new();
         X = new();
@@ -60,7 +69,7 @@ public class SpatialImage : IDisposable
         Z = new();
     }
 
-    public SpatialImage(Mat color, Mat x, Mat y, Mat z)
+    public BgrXyzImage(Mat color, Mat x, Mat y, Mat z)
     {
         Color = color;
         X = x;
@@ -74,7 +83,7 @@ public class SpatialImage : IDisposable
             throw new InvalidOperationException("Require: Color size == XYZ size");
     }
 
-    public SpatialImage(byte[] color, byte[] x, byte[] y, byte[] z)
+    public BgrXyzImage(byte[] color, byte[] x, byte[] y, byte[] z)
     {
         Color = Cv2.ImDecode(color, ImreadModes.Unchanged);
         X = Cv2.ImDecode(x, ImreadModes.Unchanged);
@@ -88,7 +97,7 @@ public class SpatialImage : IDisposable
             throw new InvalidOperationException("Require: Color size == XYZ size");
     }
 
-    public unsafe SpatialImage(int width, int height, IEnumerable<SpatialImagePixel> src)
+    public unsafe BgrXyzImage(int width, int height, IEnumerable<BgrXyzPixel> src)
     {
         if (width * height != src.Count())
             throw new ArgumentException("Require: width * height == src.Count()");
@@ -100,17 +109,16 @@ public class SpatialImage : IDisposable
         var x = (short*)X.Data;
         var y = (short*)Y.Data;
         var z = (short*)Z.Data;
-        var index = 0;
+        var i = 0;
         foreach (var s in src)
         {
-            var i = index * 3;
-            bgr[i + 0] = s.B;
-            bgr[i + 1] = s.G;
-            bgr[i + 2] = s.R;
+            bgr[i * 3 + 0] = s.B;
+            bgr[i * 3 + 1] = s.G;
+            bgr[i * 3 + 2] = s.R;
             x[i] = s.X;
             y[i] = s.Y;
             z[i] = s.Z;
-            index++;
+            i++;
         }
     }
 
@@ -133,7 +141,7 @@ public class SpatialImage : IDisposable
         z = Z;
     }
 
-    public SpatialImage Clone() => new(Color.Clone(), X.Clone(), Y.Clone(), Z.Clone());
+    public BgrXyzImage Clone() => new(Color.Clone(), X.Clone(), Y.Clone(), Z.Clone());
 
     public bool Empty() => Color.Empty() || X.Empty() || Y.Empty() || Z.Empty();
 
@@ -150,7 +158,7 @@ public class SpatialImage : IDisposable
         z.CopyTo(Z);
     }
 
-    public SpatialImage Resize(Size size, InterpolationFlags flags = InterpolationFlags.Linear)
+    public BgrXyzImage Resize(Size size, InterpolationFlags flags = InterpolationFlags.Linear)
     {
         Cv2.Resize(Color, Color, size, 0, 0, flags);
         Cv2.Resize(X, X, size, 0, 0, flags);
@@ -159,7 +167,7 @@ public class SpatialImage : IDisposable
         return this;
     }
 
-    public SpatialImage Resize(double fx, double fy, InterpolationFlags flags = InterpolationFlags.Linear)
+    public BgrXyzImage Resize(double fx, double fy, InterpolationFlags flags = InterpolationFlags.Linear)
     {
         Cv2.Resize(Color, Color, Size.Zero, fx, fy, flags);
         Cv2.Resize(X, X, Size.Zero, fx, fy, flags);
@@ -183,7 +191,7 @@ public class SpatialImage : IDisposable
         return d;
     }
 
-    public unsafe SpatialImagePixel GetPixel(Point point)
+    public unsafe BgrXyzPixel GetPixel(Point point)
     {
         if (point.X < 0 || point.Y < 0 || point.X >= Color.Width || point.Y >= Color.Height)
             throw new ArgumentOutOfRangeException();
@@ -198,7 +206,7 @@ public class SpatialImage : IDisposable
         return new(b, g, r, xp[index], yp[index], zp[index]);
     }
 
-    public unsafe void SetPixel(int x, int y, SpatialImagePixel value)
+    public unsafe void SetPixel(int x, int y, BgrXyzPixel value)
     {
         if (x < 0 || y < 0 || x >= Color.Width || y >= Color.Height)
             throw new ArgumentOutOfRangeException();
@@ -215,13 +223,13 @@ public class SpatialImage : IDisposable
         zp[index] = value.Z;
     }
 
-    public unsafe SpatialImagePixel[] ToArray(Func<SpatialImagePixel, bool> filter = null)
+    public unsafe BgrXyzPixel[] ToArray(Func<BgrXyzPixel, bool> filter = null)
     {
         var bgr = Color.DataPointer;
         var x = (short*)X.Data;
         var y = (short*)Y.Data;
         var z = (short*)Z.Data;
-        var ary = new SpatialImagePixel[Width * Height];
+        var ary = new BgrXyzPixel[Width * Height];
         for (int i = 0; i < Width * Height; i++)
         {
             var index = i * 3;
@@ -235,13 +243,13 @@ public class SpatialImage : IDisposable
         return ary.Where(filter).ToArray();
     }
 
-    public unsafe SpatialImage Map(Func<SpatialImagePixel, SpatialImagePixel> func)
+    public unsafe BgrXyzImage Map(Func<BgrXyzPixel, BgrXyzPixel> func)
     {
         var bgr = Color.DataPointer;
         var x = (short*)X.Data;
         var y = (short*)Y.Data;
         var z = (short*)Z.Data;
-        var ary = new SpatialImagePixel[Width * Height];
+        var ary = new BgrXyzPixel[Width * Height];
         for (int i = 0; i < Width * Height; i++)
         {
             var index = i * 3;
@@ -253,7 +261,7 @@ public class SpatialImage : IDisposable
         return new(Width, Height, ary);
     }
 
-    public unsafe SpatialImage Move(Vec3s delta)
+    public unsafe BgrXyzImage Move(Vec3s delta)
     {
         var x = (short*)X.Data;
         var y = (short*)Y.Data;
@@ -267,7 +275,7 @@ public class SpatialImage : IDisposable
         return this;
     }
 
-    public unsafe SpatialImage Scale(Vec3s delta)
+    public unsafe BgrXyzImage Scale(Vec3s delta)
     {
         var x = (short*)X.Data;
         var y = (short*)Y.Data;
@@ -281,7 +289,7 @@ public class SpatialImage : IDisposable
         return this;
     }
 
-    public unsafe SpatialImage Rotate(Mat rotationMat)
+    public unsafe BgrXyzImage Rotate(Mat rotationMat)
     {
         var d = (float*)rotationMat.Data;
         var xp = (short*)X.Data;
@@ -403,7 +411,7 @@ public class SpatialImage : IDisposable
         bw.Close();
     }
 
-    public static SpatialImage FromZip(string filePath)
+    public static BgrXyzImage FromZip(string filePath)
     {
         if (!File.Exists(filePath))
             throw new FileNotFoundException();
@@ -420,7 +428,7 @@ public class SpatialImage : IDisposable
         File.Delete("X.png");
         File.Delete("Y.png");
         File.Delete("Z.png");
-        return new SpatialImage(c, x, y, z);
+        return new BgrXyzImage(c, x, y, z);
     }
 
 }

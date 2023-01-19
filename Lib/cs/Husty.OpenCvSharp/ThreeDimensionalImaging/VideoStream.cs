@@ -4,16 +4,16 @@ using System.Reactive.Linq;
 using OpenCvSharp;
 using Husty.OpenCvSharp.ImageStream;
 
-namespace Husty.OpenCvSharp.SpatialImaging;
+namespace Husty.OpenCvSharp.ThreeDimensionalImaging;
 
-public class VideoStream : IVideoStream<SpatialImage>
+public class VideoStream : IVideoStream<BgrXyzImage>
 {
 
     // ------ fields ------ //
 
     private readonly long[] _indexes;
     private readonly BinaryReader _binReader;
-    private readonly ObjectPool<SpatialImage> _pool;
+    private readonly ObjectPool<BgrXyzImage> _pool;
     private int _positionIndex;
     private long _prevTime;
 
@@ -99,7 +99,7 @@ public class VideoStream : IVideoStream<SpatialImage>
         var yBytes = _binReader.ReadBytes(yDataSize);
         var zDataSize = _binReader.ReadInt32();
         var zBytes = _binReader.ReadBytes(zDataSize);
-        using var frame = new SpatialImage(
+        using var frame = new BgrXyzImage(
             Cv2.ImDecode(bgrBytes, ImreadModes.Unchanged), 
             Cv2.ImDecode(xBytes, ImreadModes.Unchanged),
             Cv2.ImDecode(yBytes, ImreadModes.Unchanged),
@@ -127,12 +127,12 @@ public class VideoStream : IVideoStream<SpatialImage>
 
     // ------ public methods ------ //
 
-    public SpatialImage Read()
+    public BgrXyzImage Read()
     {
         return Read(out _);
     }
 
-    public SpatialImage Read(out TimeSpan delay)
+    public BgrXyzImage Read(out TimeSpan delay)
     {
         var frame = _pool.GetObject();
         if (TryRead(frame, out delay))
@@ -141,12 +141,12 @@ public class VideoStream : IVideoStream<SpatialImage>
             return null;
     }
 
-    public bool TryRead(SpatialImage frame)
+    public bool TryRead(BgrXyzImage frame)
     {
         return TryRead(frame, out _);
     }
 
-    public bool TryRead(SpatialImage frame, out TimeSpan delay)
+    public bool TryRead(BgrXyzImage frame, out TimeSpan delay)
     {
         if (frame.Width != FrameSize.Width || frame.Height != FrameSize.Height)
         {
@@ -181,7 +181,7 @@ public class VideoStream : IVideoStream<SpatialImage>
         return true;
     }
 
-    public IObservable<SpatialImage> GetStream()
+    public IObservable<BgrXyzImage> GetStream()
     {
         return Observable.Repeat(0, ThreadPoolScheduler.Instance)
             .Where(_ => _positionIndex < FrameCount)

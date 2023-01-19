@@ -9,7 +9,7 @@ using Microsoft.Azure.Kinect.Sensor;
 using OpenCvSharp.WpfExtensions;
 using Husty;
 using Husty.OpenCvSharp.ImageStream;
-using Husty.OpenCvSharp.SpatialImaging;
+using Husty.OpenCvSharp.ThreeDimensionalImaging;
 using Kinect = Husty.OpenCvSharp.AzureKinect;
 using RealSense = Husty.OpenCvSharp.RealSense;
 
@@ -21,16 +21,16 @@ namespace DepthCamera;
 public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
 {
 
-    private IImageStream<SpatialImage> _camera;
-    private Husty.OpenCvSharp.SpatialImaging.VideoStream _player;
+    private IImageStream<BgrXyzImage> _camera;
+    private Husty.OpenCvSharp.ThreeDimensionalImaging.VideoStream _player;
     private bool _isConnected;
     private string _saveDir = "";
     private string _videoDir = "";
-    private readonly Channel<SpatialImage> _channel;
+    private readonly Channel<BgrXyzImage> _channel;
 
     private record Preset(string SaveDir, string VideoDir);
 
-    private ReadOnlyReactivePropertySlim<SpatialImage> ReactiveFrame { set; get; }
+    private ReadOnlyReactivePropertySlim<BgrXyzImage> ReactiveFrame { set; get; }
 
     public MainWindow()
     {
@@ -45,7 +45,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
         _videoDir = preset.VideoDir;
         var t = DateTimeOffset.Now;
         SaveDir.Content = _saveDir;
-        _channel = Channel.CreateBounded<SpatialImage>(
+        _channel = Channel.CreateBounded<BgrXyzImage>(
             new BoundedChannelOptions(1)
             {
                 FullMode = BoundedChannelFullMode.DropOldest,

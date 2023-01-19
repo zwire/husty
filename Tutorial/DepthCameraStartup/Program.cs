@@ -2,7 +2,7 @@
 using OpenCvSharp;
 using Husty.Extensions;
 using Husty.OpenCvSharp.ImageStream;
-using Husty.OpenCvSharp.SpatialImaging;
+using Husty.OpenCvSharp.ThreeDimensionalImaging;
 using Kinect = Husty.OpenCvSharp.AzureKinect;
 using RealSense = Husty.OpenCvSharp.RealSense;
 
@@ -12,10 +12,11 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        IImageStream<SpatialImage> camera = null;
+
+        IImageStream<BgrXyzImage> camera = null;
 
         camera = new RealSense.CameraStream(new(640, 360));
-        // camera = new Kinect.CameraStream(MatchingBase.Color);
+        //camera = new Kinect.CameraStream();
 
         var connector = camera.GetStream()
             .TimeInterval()

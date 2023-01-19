@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Husty.OpenCvSharp.SpatialImaging;
+namespace Husty.OpenCvSharp.ThreeDimensionalImaging;
 
 public class VideoRecorder : IDisposable
 {
@@ -31,7 +31,7 @@ public class VideoRecorder : IDisposable
 
     // ------ public methods ------ //
 
-    public void Write(SpatialImage frame)
+    public void Write(BgrXyzImage frame)
     {
         lock (_locker)
         {

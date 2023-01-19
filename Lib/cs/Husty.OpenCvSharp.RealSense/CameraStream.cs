@@ -3,12 +3,12 @@ using System.Reactive.Linq;
 using OpenCvSharp;
 using Intel.RealSense;
 using Husty.OpenCvSharp.ImageStream;
-using Husty.OpenCvSharp.SpatialImaging;
+using Husty.OpenCvSharp.ThreeDimensionalImaging;
 using Stream = Intel.RealSense.Stream;
 
 namespace Husty.OpenCvSharp.RealSense;
 
-public class CameraStream : IImageStream<SpatialImage>
+public class CameraStream : IImageStream<BgrXyzImage>
 {
 
     // ------ fields ------ //
@@ -20,7 +20,7 @@ public class CameraStream : IImageStream<SpatialImage>
     private readonly SpatialFilter _sfill;
     private readonly TemporalFilter _tfill;
     private readonly HoleFillingFilter _hfill;
-    private readonly ObjectPool<SpatialImage> _pool;
+    private readonly ObjectPool<BgrXyzImage> _pool;
 
 
     // ------ properties ------ //
@@ -84,7 +84,7 @@ public class CameraStream : IImageStream<SpatialImage>
 
     // ------ public methods ------ //
 
-    public SpatialImage Read()
+    public BgrXyzImage Read()
     {
         using var frames1 = _pipeline.WaitForFrames();
         using var frames2 = _align.Process(frames1);
@@ -103,7 +103,7 @@ public class CameraStream : IImageStream<SpatialImage>
         return frame;
     }
 
-    public IObservable<SpatialImage> GetStream()
+    public IObservable<BgrXyzImage> GetStream()
     {
         return Observable
             .Repeat(0, ThreadPoolScheduler.Instance)

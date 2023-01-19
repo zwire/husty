@@ -3,11 +3,11 @@ using System.Reactive.Linq;
 using Microsoft.Azure.Kinect.Sensor;
 using OpenCvSharp;
 using Husty.OpenCvSharp.ImageStream;
-using Husty.OpenCvSharp.SpatialImaging;
+using Husty.OpenCvSharp.ThreeDimensionalImaging;
 
 namespace Husty.OpenCvSharp.AzureKinect;
 
-public class CameraStream : IImageStream<SpatialImage>
+public class CameraStream : IImageStream<BgrXyzImage>
 {
 
     // ------ fields ------ //
@@ -15,7 +15,7 @@ public class CameraStream : IImageStream<SpatialImage>
     private readonly MatchingBase _align;
     private readonly Device _device;
     private readonly Transformation _transformation;
-    private readonly ObjectPool<SpatialImage> _pool;
+    private readonly ObjectPool<BgrXyzImage> _pool;
 
 
     // ------ properties ------ //
@@ -77,7 +77,7 @@ public class CameraStream : IImageStream<SpatialImage>
 
     // ------ public methods ------ //
 
-    public SpatialImage Read()
+    public BgrXyzImage Read()
     {
         using var capture = _device.GetCapture();
         if (_align is MatchingBase.Color)
@@ -103,7 +103,7 @@ public class CameraStream : IImageStream<SpatialImage>
         }
     }
 
-    public IObservable<SpatialImage> GetStream()
+    public IObservable<BgrXyzImage> GetStream()
     {
         return Observable
             .Repeat(0, ThreadPoolScheduler.Instance)
@@ -129,7 +129,6 @@ public class CameraStream : IImageStream<SpatialImage>
         var h = colorFrame.HeightPixels;
         if (colorMat.IsDisposed || colorMat.Width != w || colorMat.Height != h || colorMat.Type() != MatType.CV_8UC3)
             return;
-        var m = colorFrame.Memory;
         var cAry = colorFrame.GetPixels<BGRA>().Span;
         var p = colorMat.DataPointer;
         int index = 0;

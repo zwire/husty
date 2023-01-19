@@ -5,40 +5,6 @@ namespace Tests_.Husty;
 public class ArrayEx
 {
     [Fact]
-    public void Cast()
-    {
-        var first = new[] { 1, 2, 3, 4 };
-        first.AsByteArray();
-        first.AsShortArray();
-        first.AsIntArray();
-        first.AsFloatArray();
-        first.AsDoubleArray();
-        var second = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6 } };
-        second.AsByteArray();
-        second.AsShortArray();
-        second.AsIntArray();
-        second.AsFloatArray();
-        second.AsDoubleArray();
-        var second2 = new[,] { { 1, 2 }, { 3, 4 } };
-        second2.AsByteArray();
-        second2.AsShortArray();
-        second2.AsIntArray();
-        second2.AsFloatArray();
-        second2.AsDoubleArray();
-        var third = new[] { new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6 }, new[] { 7, 8, 9 } } };
-        third.AsByteArray();
-        third.AsShortArray();
-        third.AsIntArray();
-        third.AsFloatArray();
-        third.AsDoubleArray();
-        var third2 = new[, ,] { { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } } };
-        third2.AsShortArray();
-        third2.AsIntArray();
-        third2.AsFloatArray();
-        third2.AsDoubleArray();
-    }
-
-    [Fact]
     public void Reshape()
     {
         var first = new[] { 1, 2, 3, 4, 5, 6 };

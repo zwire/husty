@@ -1,4 +1,5 @@
-﻿using OpenCvSharp;
+﻿using System.Numerics;
+using OpenCvSharp;
 
 namespace Husty.OpenCvSharp.Extensions;
 
@@ -7,10 +8,33 @@ public static class MatEx
 
     public static Type GetElementType(this Mat input)
     {
-        return input.Type().ToElementType();
+        var type = input.Type();
+        if (type == MatType.CV_8UC1 || type == MatType.CV_8UC2 || type == MatType.CV_8UC3 || type == MatType.CV_8UC4)
+            return typeof(byte);
+        else if (type == MatType.CV_8SC1 || type == MatType.CV_8SC2 || type == MatType.CV_8SC3 || type == MatType.CV_8SC4)
+            return typeof(sbyte);
+        else if (type == MatType.CV_16UC1 || type == MatType.CV_16UC2 || type == MatType.CV_16UC3 || type == MatType.CV_16UC4)
+            return typeof(ushort);
+        else if (type == MatType.CV_16SC1 || type == MatType.CV_16SC2 || type == MatType.CV_16SC3 || type == MatType.CV_16SC4)
+            return typeof(short);
+        else if (type == MatType.CV_32SC1 || type == MatType.CV_32SC2 || type == MatType.CV_32SC3 || type == MatType.CV_32SC4)
+            return typeof(int);
+        else if (type == MatType.CV_32FC1 || type == MatType.CV_32FC2 || type == MatType.CV_32FC3 || type == MatType.CV_32FC4)
+            return typeof(float);
+        else if (type == MatType.CV_64FC1 || type == MatType.CV_64FC2 || type == MatType.CV_64FC3 || type == MatType.CV_64FC4)
+            return typeof(double);
+        else
+            throw new NotSupportedException();
     }
 
-    public unsafe static Mat Map<T>(this Mat mat, Func<T, T> func) where T : unmanaged, IComparable
+    public unsafe static Span<T> AsSpan<T>(this Mat mat) where T : unmanaged, INumber<T>
+    {
+        if (mat.GetElementType() != typeof(T))
+            throw new ArgumentException();
+        return new Span<T>((T*)mat.Data, mat.Width * mat.Height * mat.Channels());
+    }
+
+    public unsafe static Mat Map<T>(this Mat mat, Func<T, T> func) where T : unmanaged, INumber<T>
     {
         if (mat.GetElementType() != typeof(T))
             throw new TypeLoadException(nameof(T));
@@ -28,7 +52,7 @@ public static class MatEx
     /// <returns>array of points</returns>
     public unsafe static Point[] GetNonZeroLocations(this Mat input)
     {
-        
+
         if (input.Channels() is not 1)
             throw new ArgumentException("Require: channels == 1");
 
@@ -53,7 +77,7 @@ public static class MatEx
         else
             throw new NotSupportedException();
 
-        unsafe static Point[] Do<T>(T* data, T zero, int w, int h, int length) where T : unmanaged, IComparable
+        unsafe static Point[] Do<T>(T* data, T zero, int w, int h, int length) where T : unmanaged, INumber<T>
         {
             var count = 0;
             var p = new Point[length];
