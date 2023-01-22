@@ -97,7 +97,7 @@ public class CameraStream : IImageStream<BgrXyzImage>
         using var depth5 = _todepth?.Process(depth4) ?? depth4;
         using var depth6 = _hfill?.Process(depth5) ?? depth5;
         var frame = _pool.GetObject();
-        CopyColorPixels(color, frame.Color);
+        CopyColorPixels(color, frame.Bgr);
         CopyPointCloudPixels(depth6, frame.X, frame.Y, frame.Z, color.Width, color.Height);
         HasFrame = true;
         return frame;

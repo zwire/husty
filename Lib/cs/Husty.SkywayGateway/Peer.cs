@@ -19,6 +19,7 @@ public sealed class Peer : IAsyncDisposable
     private readonly string _token;
     private readonly IPAddress _host = IPAddress.Parse("127.0.0.1");
     private readonly CancellationTokenSource _cts = new();
+    private readonly Subject<string> _errorReceived = new();
     private readonly AsyncSubject<bool> _opened = new();
     private readonly AsyncSubject<bool> _closed = new();
     private readonly AsyncSubject<string> _dataCalled = new();
@@ -33,6 +34,8 @@ public sealed class Peer : IAsyncDisposable
     public IObservable<bool> Opened => _opened;
 
     public IObservable<bool> Closed => _closed;
+
+    public IObservable<string> ErrorReceived => _errorReceived;
 
     public IObservable<int> ExpiresRemainingSecondNotified => _expiresRemainingSecondNotified;
 
@@ -216,7 +219,7 @@ public sealed class Peer : IAsyncDisposable
                 _expiresRemainingSecondNotified.OnCompleted();
                 break;
             case "ERROR":
-                Debug.WriteLine(p["error_message"]);
+                _errorReceived.OnNext(p["error_message"].ToString());
                 break;
             default:
                 throw new Exception(e);

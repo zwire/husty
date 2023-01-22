@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using OpenCvSharp;
 using Husty.OpenCvSharp.Yolo;
+using Husty.OpenCvSharp.Extensions;
 
 namespace Yolo;
 

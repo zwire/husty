@@ -23,7 +23,7 @@ internal class Program
             .Subscribe(v =>
             {
                 Console.WriteLine((int)v.Interval.TotalMilliseconds);
-                Cv2.ImShow(" ", v.Value.Color);
+                Cv2.ImShow(" ", v.Value.Bgr);
                 Cv2.SetMouseCallback(" ", (t, x, y, f, _) =>
                 {
                     if (t is MouseEventTypes.LButtonDown)

@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Authors>yamashita</Authors>
-    <Version>0.9.7</Version>
+    <Version>0.9.9</Version>
     <Company>$(Authors)</Company>
     <Product>$(AssemblyName)</Product>
     <PackageProjectUrl>https://github.com/husty530/Husty-public/tree/master/Lib/cs/Husty.SkywayGateway</PackageProjectUrl>

@@ -50,6 +50,7 @@ public class VideoStream : IVideoStream<BgrXyzImage>
         var fileFormatCode = Encoding.ASCII.GetString(_binReader.ReadBytes(8));
         if (fileFormatCode is not "HUSTY002")
         {
+            file.Close();
             throw new Exception("invalid file format");
         }
         InitialTime = DateTime.FromBinary(_binReader.ReadInt64());
@@ -150,7 +151,7 @@ public class VideoStream : IVideoStream<BgrXyzImage>
     {
         if (frame.Width != FrameSize.Width || frame.Height != FrameSize.Height)
         {
-            frame.Color.Create(FrameSize, MatType.CV_8UC3);
+            frame.Bgr.Create(FrameSize, MatType.CV_8UC3);
             frame.X.Create(FrameSize, MatType.CV_16UC1);
             frame.Y.Create(FrameSize, MatType.CV_16UC1);
             frame.Z.Create(FrameSize, MatType.CV_16UC1);

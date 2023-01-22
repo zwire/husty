@@ -27,13 +27,6 @@ public static class MatEx
             throw new NotSupportedException();
     }
 
-    public unsafe static Span<T> AsSpan<T>(this Mat mat) where T : unmanaged, INumber<T>
-    {
-        if (mat.GetElementType() != typeof(T))
-            throw new ArgumentException();
-        return new Span<T>((T*)mat.Data, mat.Width * mat.Height * mat.Channels());
-    }
-
     public unsafe static Mat Map<T>(this Mat mat, Func<T, T> func) where T : unmanaged, INumber<T>
     {
         if (mat.GetElementType() != typeof(T))

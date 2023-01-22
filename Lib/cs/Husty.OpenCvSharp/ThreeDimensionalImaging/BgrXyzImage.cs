@@ -25,7 +25,7 @@ public class BgrXyzImage : IDisposable
 
     // ------ properties ------ //
 
-    public Mat Color { get; }
+    public Mat Bgr { get; }
 
     public Mat X { get; }
 
@@ -33,28 +33,28 @@ public class BgrXyzImage : IDisposable
 
     public Mat Z { get; }
 
-    public int Width => Color.Width;
+    public int Width => Bgr.Width;
 
-    public int Height => Color.Height;
+    public int Height => Bgr.Height;
 
-    public int Rows => Color.Rows;
+    public int Rows => Bgr.Rows;
 
-    public int Cols => Color.Cols;
+    public int Cols => Bgr.Cols;
 
-    public bool IsDisposed => Color.IsDisposed || X.IsDisposed || Y.IsDisposed || Z.IsDisposed;
+    public bool IsDisposed => Bgr.IsDisposed || X.IsDisposed || Y.IsDisposed || Z.IsDisposed;
 
     public BgrXyzImage this[Rect box]
     {
         set
         {
-            Color[box] = value.Color;
+            Bgr[box] = value.Bgr;
             X[box] = value.X;
             Y[box] = value.Y;
             Z[box] = value.Z;
         }
         get
         {
-            return new(Color[box], X[box], Y[box], Z[box]);
+            return new(Bgr[box], X[box], Y[box], Z[box]);
         }
     }
 
@@ -63,34 +63,34 @@ public class BgrXyzImage : IDisposable
 
     public BgrXyzImage()
     {
-        Color = new();
+        Bgr = new();
         X = new();
         Y = new();
         Z = new();
     }
 
-    public BgrXyzImage(Mat color, Mat x, Mat y, Mat z)
+    public BgrXyzImage(Mat bgr, Mat x, Mat y, Mat z)
     {
-        Color = color;
+        Bgr = bgr;
         X = x;
         Y = y;
         Z = z;
         if (
-            Color.Width != X.Width || Color.Height != X.Height ||
+            Bgr.Width != X.Width || Bgr.Height != X.Height ||
             X.Width != Y.Width || X.Height != Y.Height ||
             Y.Width != Z.Width || Y.Height != Z.Height
         )
             throw new InvalidOperationException("Require: Color size == XYZ size");
     }
 
-    public BgrXyzImage(byte[] color, byte[] x, byte[] y, byte[] z)
+    public BgrXyzImage(byte[] bgr, byte[] x, byte[] y, byte[] z)
     {
-        Color = Cv2.ImDecode(color, ImreadModes.Unchanged);
+        Bgr = Cv2.ImDecode(bgr, ImreadModes.Unchanged);
         X = Cv2.ImDecode(x, ImreadModes.Unchanged);
         Y = Cv2.ImDecode(y, ImreadModes.Unchanged);
         Z = Cv2.ImDecode(z, ImreadModes.Unchanged);
         if (
-            Color.Width != X.Width || Color.Height != X.Height ||
+            Bgr.Width != X.Width || Bgr.Height != X.Height ||
             X.Width != Y.Width || X.Height != Y.Height ||
             Y.Width != Z.Width || Y.Height != Z.Height
         )
@@ -101,11 +101,11 @@ public class BgrXyzImage : IDisposable
     {
         if (width * height != src.Count())
             throw new ArgumentException("Require: width * height == src.Count()");
-        Color = new Mat(height, width, MatType.CV_8UC3);
+        Bgr = new Mat(height, width, MatType.CV_8UC3);
         X = new Mat(height, width, MatType.CV_16UC1);
         Y = new Mat(height, width, MatType.CV_16UC1);
         Z = new Mat(height, width, MatType.CV_16UC1);
-        var bgr = Color.DataPointer;
+        var bgr = Bgr.DataPointer;
         var x = (short*)X.Data;
         var y = (short*)Y.Data;
         var z = (short*)Z.Data;
@@ -127,32 +127,32 @@ public class BgrXyzImage : IDisposable
 
     public void Dispose()
     {
-        Color?.Dispose();
+        Bgr?.Dispose();
         X?.Dispose();
         Y?.Dispose();
         Z?.Dispose();
     }
 
-    public void Deconstruct(out Mat color, out Mat x, out Mat y, out Mat z)
+    public void Deconstruct(out Mat bgr, out Mat x, out Mat y, out Mat z)
     {
-        color = Color;
+        bgr = Bgr;
         x = X;
         y = Y;
         z = Z;
     }
 
-    public BgrXyzImage Clone() => new(Color.Clone(), X.Clone(), Y.Clone(), Z.Clone());
+    public BgrXyzImage Clone() => new(Bgr.Clone(), X.Clone(), Y.Clone(), Z.Clone());
 
-    public bool Empty() => Color.Empty() || X.Empty() || Y.Empty() || Z.Empty();
+    public bool Empty() => Bgr.Empty() || X.Empty() || Y.Empty() || Z.Empty();
 
-    public void CopyFrom(Mat color, Mat x, Mat y, Mat z)
+    public void CopyFrom(Mat bgr, Mat x, Mat y, Mat z)
     {
-        if (color.Width != Color.Width || color.Height != Color.Height ||
+        if (bgr.Width != Bgr.Width || bgr.Height != Bgr.Height ||
             x.Width != X.Width || x.Height != X.Height ||
             y.Width != Y.Width || y.Height != Y.Height ||
             z.Width != Z.Width || z.Height != Z.Height
         ) throw new InvalidOperationException("Require: src size == dst size");
-        color.CopyTo(Color);
+        bgr.CopyTo(Bgr);
         x.CopyTo(X);
         y.CopyTo(Y);
         z.CopyTo(Z);
@@ -160,7 +160,7 @@ public class BgrXyzImage : IDisposable
 
     public BgrXyzImage Resize(Size size, InterpolationFlags flags = InterpolationFlags.Linear)
     {
-        Cv2.Resize(Color, Color, size, 0, 0, flags);
+        Cv2.Resize(Bgr, Bgr, size, 0, 0, flags);
         Cv2.Resize(X, X, size, 0, 0, flags);
         Cv2.Resize(Y, Y, size, 0, 0, flags);
         Cv2.Resize(Z, Z, size, 0, 0, flags);
@@ -169,7 +169,7 @@ public class BgrXyzImage : IDisposable
 
     public BgrXyzImage Resize(double fx, double fy, InterpolationFlags flags = InterpolationFlags.Linear)
     {
-        Cv2.Resize(Color, Color, Size.Zero, fx, fy, flags);
+        Cv2.Resize(Bgr, Bgr, Size.Zero, fx, fy, flags);
         Cv2.Resize(X, X, Size.Zero, fx, fy, flags);
         Cv2.Resize(Y, Y, Size.Zero, fx, fy, flags);
         Cv2.Resize(Z, Z, Size.Zero, fx, fy, flags);
@@ -193,10 +193,10 @@ public class BgrXyzImage : IDisposable
 
     public unsafe BgrXyzPixel GetPixel(Point point)
     {
-        if (point.X < 0 || point.Y < 0 || point.X >= Color.Width || point.Y >= Color.Height)
+        if (point.X < 0 || point.Y < 0 || point.X >= Bgr.Width || point.Y >= Bgr.Height)
             throw new ArgumentOutOfRangeException();
-        var index = point.Y * Color.Cols + point.X;
-        var bgr = Color.DataPointer;
+        var index = point.Y * Bgr.Cols + point.X;
+        var bgr = Bgr.DataPointer;
         var xp = (short*)X.Data;
         var yp = (short*)Y.Data;
         var zp = (short*)Z.Data;
@@ -208,10 +208,10 @@ public class BgrXyzImage : IDisposable
 
     public unsafe void SetPixel(int x, int y, BgrXyzPixel value)
     {
-        if (x < 0 || y < 0 || x >= Color.Width || y >= Color.Height)
+        if (x < 0 || y < 0 || x >= Bgr.Width || y >= Bgr.Height)
             throw new ArgumentOutOfRangeException();
-        var index = y * Color.Cols + x;
-        var bgr = Color.DataPointer;
+        var index = y * Bgr.Cols + x;
+        var bgr = Bgr.DataPointer;
         var xp = (short*)X.Data;
         var yp = (short*)Y.Data;
         var zp = (short*)Z.Data;
@@ -225,7 +225,7 @@ public class BgrXyzImage : IDisposable
 
     public unsafe BgrXyzPixel[] ToArray(Func<BgrXyzPixel, bool> filter = null)
     {
-        var bgr = Color.DataPointer;
+        var bgr = Bgr.DataPointer;
         var x = (short*)X.Data;
         var y = (short*)Y.Data;
         var z = (short*)Z.Data;
@@ -245,7 +245,7 @@ public class BgrXyzImage : IDisposable
 
     public unsafe BgrXyzImage Map(Func<BgrXyzPixel, BgrXyzPixel> func)
     {
-        var bgr = Color.DataPointer;
+        var bgr = Bgr.DataPointer;
         var x = (short*)X.Data;
         var y = (short*)Y.Data;
         var z = (short*)Z.Data;
@@ -309,11 +309,12 @@ public class BgrXyzImage : IDisposable
 
     public void SaveAsZip(string filePath)
     {
-        Cv2.ImWrite($"{filePath}_C.png", Color);
+        if (File.Exists(filePath)) File.Delete(filePath);
+        Cv2.ImWrite($"{filePath}_C.png", Bgr);
         Cv2.ImWrite($"{filePath}_X.png", X);
         Cv2.ImWrite($"{filePath}_Y.png", Y);
         Cv2.ImWrite($"{filePath}_Z.png", Z);
-        using var z = ZipFile.Open($"{filePath}", ZipArchiveMode.Update);
+        using var z = ZipFile.Open($"{filePath}", ZipArchiveMode.Create);
         z.CreateEntryFromFile($"{filePath}_C.png", "C.png", CompressionLevel.Optimal);
         z.CreateEntryFromFile($"{filePath}_X.png", "X.png", CompressionLevel.Optimal);
         z.CreateEntryFromFile($"{filePath}_Y.png", "Y.png", CompressionLevel.Optimal);
@@ -327,7 +328,7 @@ public class BgrXyzImage : IDisposable
     public unsafe void SaveAsAsciiPly(string filePath)
     {
         var size = Width * Height;
-        var cp = Color.DataPointer;
+        var cp = Bgr.DataPointer;
         var xp = (short*)X.Data;
         var yp = (short*)Y.Data;
         var zp = (short*)Z.Data;
@@ -368,7 +369,7 @@ public class BgrXyzImage : IDisposable
     public unsafe void SaveAsBinaryPly(string filePath)
     {
         var size = Width * Height;
-        var cp = Color.DataPointer;
+        var cp = Bgr.DataPointer;
         var xp = (short*)X.Data;
         var yp = (short*)Y.Data;
         var zp = (short*)Z.Data;

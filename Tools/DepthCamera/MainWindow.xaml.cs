@@ -92,7 +92,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
                         using var d8 = frame.GetDepth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
-                            ColorFrame.Source = frame.Color.ToBitmapSource();
+                            ColorFrame.Source = frame.Bgr.ToBitmapSource();
                             DepthFrame.Source = d8.ToBitmapSource();
                         });
                     }
@@ -161,7 +161,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
                         using var d8 = frame.GetDepth8(300, 5000);
                         Dispatcher.Invoke(() =>
                         {
-                            ColorFrame.Source = frame.Color.ToBitmapSource();
+                            ColorFrame.Source = frame.Bgr.ToBitmapSource();
                             DepthFrame.Source = d8.ToBitmapSource();
                         });
                     }
@@ -223,7 +223,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
                     using var d8 = frame.GetDepth8(300, 5000);
                     Dispatcher.Invoke(() =>
                     {
-                        ColorFrame.Source = frame.Color.ToBitmapSource();
+                        ColorFrame.Source = frame.Bgr.ToBitmapSource();
                         DepthFrame.Source = d8.ToBitmapSource();
                         PlaySlider.Value = _player.CurrentPosition;
                     });
@@ -249,7 +249,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
                     using var d8 = frame.GetDepth8(300, 5000);
                     Dispatcher.Invoke(() =>
                     {
-                        ColorFrame.Source = frame.Color.ToBitmapSource();
+                        ColorFrame.Source = frame.Bgr.ToBitmapSource();
                         DepthFrame.Source = d8.ToBitmapSource();
                         PlaySlider.Value = _player.CurrentPosition;
                     });
@@ -269,7 +269,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
     {
         _player?.Seek((int)PlaySlider.Value);
         var frame = _player?.Read();
-        ColorFrame.Source = frame?.Color.ToBitmapSource();
+        ColorFrame.Source = frame?.Bgr.ToBitmapSource();
         DepthFrame.Source = frame?.GetDepth8(300, 5000).ToBitmapSource();
     }
 

@@ -86,7 +86,7 @@ public class CameraStream : IImageStream<BgrXyzImage>
             using var depthFrame = _transformation.DepthImageToColorCamera(capture.Depth);
             using var pointCloudFrame = _transformation.DepthImageToPointCloud(depthFrame, CalibrationDeviceType.Color);
             var frame = _pool.GetObject();
-            CopyColorPixels(colorFrame, frame.Color);
+            CopyColorPixels(colorFrame, frame.Bgr);
             CopyPointCloudPixels(pointCloudFrame, frame.X, frame.Y, frame.Z);
             HasFrame = true;
             return frame;
@@ -96,7 +96,7 @@ public class CameraStream : IImageStream<BgrXyzImage>
             using var colorFrame = _transformation.ColorImageToDepthCamera(capture);
             using var pointCloudFrame = _transformation.DepthImageToPointCloud(capture.Depth);
             var frame = _pool.GetObject();
-            CopyColorPixels(colorFrame, frame.Color);
+            CopyColorPixels(colorFrame, frame.Bgr);
             CopyPointCloudPixels(pointCloudFrame, frame.X, frame.Y, frame.Z);
             HasFrame = true;
             return frame;

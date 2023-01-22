@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CompatibilityCommands": {
+      "commandName": "Project",
+      "commandLineArgs": "ymsconvert . ."
+    }
+  }
+}

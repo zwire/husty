@@ -64,7 +64,7 @@ public class VideoRecorder : IDisposable
             _binWriter.Seek(16, SeekOrigin.Begin);
             _binWriter.Write(_binWriter.BaseStream.Length);
             _binWriter.Seek(0, SeekOrigin.End);
-            _indexes.ForEach(p => _binWriter.Write(p));
+            _indexes.ForEach(_binWriter.Write);
             _binWriter.Flush();
             _binWriter.Close();
             _binWriter.Dispose();

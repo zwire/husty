@@ -59,7 +59,7 @@ internal static class RestEx
                 throw new InvalidOperationException($"failed to {type} {resource}.");
             return response;
         }
-        catch (System.Net.Http.HttpRequestException)
+        catch (HttpRequestException)
         {
             return null;
         }

@@ -35,34 +35,49 @@ public class DataStream : IDisposable
     {
         if (!_disposed)
         {
+            _disposed = true;
             _client.Close();
             _client.Dispose();
         }
-        _disposed = true;
     }
 
     public bool WriteBinary(byte[] bytes)
     {
-        var sent = 0;
-        var len = bytes.Length;
-        while (sent < len)
-            sent += _client.Send(bytes[sent..], len - sent, _info.RemoteEP);
-        return true;
+        try
+        {
+            var sent = 0;
+            var len = bytes.Length;
+            while (sent < len)
+                sent += _client.Send(bytes[sent..], len - sent, _info.RemoteEP);
+            return true;
+        }
+        catch { return false; }
     }
 
-    public async Task<bool> WriteBinaryAsync(byte[] bytes)
+    public async Task<bool> WriteBinaryAsync(byte[] bytes, CancellationToken? ct = null)
     {
-        var sent = 0;
-        var len = bytes.Length;
-        while (sent < len)
-            sent += await _client.SendAsync(bytes[sent..], len - sent, _info.RemoteEP).ConfigureAwait(false);
-        return true;
+        try
+        {
+            var sent = 0;
+            var len = bytes.Length;
+            while (sent < len)
+            {
+                var m = new ReadOnlyMemory<byte>(bytes[sent..]);
+                sent += await _client.SendAsync(m, _info.RemoteEP, ct ?? CancellationToken.None).ConfigureAwait(false);
+            }
+            return true;
+        }
+        catch { return false; }
     }
 
     public byte[] ReadBinary()
     {
-        IPEndPoint ep = null;
-        return _client.Receive(ref ep);
+        try
+        {
+            IPEndPoint ep = null;
+            return _client.Receive(ref ep);
+        }
+        catch { return Array.Empty<byte>(); }
     }
 
     public async Task<byte[]> ReadBinaryAsync(CancellationToken? ct = null)
@@ -72,17 +87,14 @@ public class DataStream : IDisposable
             var rcv = await _client.ReceiveAsync(ct ?? CancellationToken.None).ConfigureAwait(false);
             return rcv.Buffer;
         }
-        catch
-        {
-            return Array.Empty<byte>();
-        }
+        catch { return Array.Empty<byte>(); }
     }
 
     public bool WriteString(string sendmsg) 
         => WriteBinary(Encoding.UTF8.GetBytes(sendmsg));
 
-    public async Task<bool> WriteStringAsync(string sendmsg) 
-        => await WriteBinaryAsync(Encoding.UTF8.GetBytes(sendmsg)).ConfigureAwait(false);
+    public async Task<bool> WriteStringAsync(string sendmsg, CancellationToken? ct = null) 
+        => await WriteBinaryAsync(Encoding.UTF8.GetBytes(sendmsg), ct).ConfigureAwait(false);
 
     public string ReadString()
         => Encoding.UTF8.GetString(ReadBinary());
@@ -93,8 +105,8 @@ public class DataStream : IDisposable
     public bool WriteAsJson<T>(T sendmsg)
         => WriteString(JsonSerializer.Serialize(sendmsg));
 
-    public async Task<bool> WriteAsJsonAsync<T>(T sendmsg)
-        => await WriteStringAsync(JsonSerializer.Serialize(sendmsg)).ConfigureAwait(false);
+    public async Task<bool> WriteAsJsonAsync<T>(T sendmsg, CancellationToken? ct = null)
+        => await WriteStringAsync(JsonSerializer.Serialize(sendmsg), ct).ConfigureAwait(false);
 
     public T ReadAsJson<T>()
         => JsonSerializer.Deserialize<T>(ReadString());
