@@ -5,7 +5,7 @@
     <Product>$(AssemblyName)</Product>
     <Company>$(Authors)</Company>
     <Authors>yamashita</Authors>
-    <Description>Lawicel CANUSB package wrapper.</Description>
+    <Description>Lawicel CANUSB wrapper.</Description>
     <Version>2.0.0</Version>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>

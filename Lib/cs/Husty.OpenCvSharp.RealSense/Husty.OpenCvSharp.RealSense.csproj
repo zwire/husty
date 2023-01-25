@@ -9,6 +9,10 @@
 
   <ItemGroup>
     <PackageReference Include="Intel.RealSenseWithNativeDll" Version="2.51.1.1" />
+    <Content Include="realsense2.dll" Pack="true">
+        <PackageCopyToOutput>true</PackageCopyToOutput>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
