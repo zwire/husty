@@ -2,7 +2,7 @@ using Husty.Extensions;
 
 namespace Tests_.Husty;
 
-public class ArrayEx
+public class ArrayEx_Test
 {
     [Fact]
     public void Reshape()

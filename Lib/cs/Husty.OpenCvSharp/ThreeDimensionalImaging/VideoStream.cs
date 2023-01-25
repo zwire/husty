@@ -48,7 +48,7 @@ public class VideoStream : IVideoStream<BgrXyzImage>
         var file = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite);
         _binReader = new BinaryReader(file, Encoding.ASCII);
         var fileFormatCode = Encoding.ASCII.GetString(_binReader.ReadBytes(8));
-        if (fileFormatCode is not "HUSTY002")
+        if (fileFormatCode is not "HUSTY002" and not "HQVDST01")
         {
             file.Close();
             throw new Exception("invalid file format");
@@ -77,7 +77,7 @@ public class VideoStream : IVideoStream<BgrXyzImage>
             binWriter.Seek(16, SeekOrigin.Begin);
             binWriter.Write(binWriter.BaseStream.Length);
             binWriter.Seek(0, SeekOrigin.End);
-            indexes.ForEach(p => binWriter.Write(p));
+            indexes.ForEach(binWriter.Write);
         }
         else
         {
@@ -89,23 +89,15 @@ public class VideoStream : IVideoStream<BgrXyzImage>
         }
         _indexes = indexes.ToArray();
 
-        _binReader.BaseStream.Position = 0;
         _binReader.BaseStream.Seek(_indexes[0], SeekOrigin.Begin);
         _binReader.ReadInt64();
+        var userDataSize = _binReader.ReadUInt16();
+        if (userDataSize > 0)
+            _binReader.Read(new byte[userDataSize], 0, userDataSize);
+        _binReader.ReadInt32();
         var bgrDataSize = _binReader.ReadInt32();
         var bgrBytes = _binReader.ReadBytes(bgrDataSize);
-        var xDataSize = _binReader.ReadInt32();
-        var xBytes = _binReader.ReadBytes(xDataSize);
-        var yDataSize = _binReader.ReadInt32();
-        var yBytes = _binReader.ReadBytes(yDataSize);
-        var zDataSize = _binReader.ReadInt32();
-        var zBytes = _binReader.ReadBytes(zDataSize);
-        using var frame = new BgrXyzImage(
-            Cv2.ImDecode(bgrBytes, ImreadModes.Unchanged), 
-            Cv2.ImDecode(xBytes, ImreadModes.Unchanged),
-            Cv2.ImDecode(yBytes, ImreadModes.Unchanged),
-            Cv2.ImDecode(zBytes, ImreadModes.Unchanged)
-        );
+        using var frame = Cv2.ImDecode(bgrBytes, ImreadModes.Unchanged);
         FrameSize = new(frame.Width, frame.Height);
 
         _pool = new(2, () => new(
@@ -118,7 +110,7 @@ public class VideoStream : IVideoStream<BgrXyzImage>
         long ticks = 0;
         for (int i = 0; i < 5; i++)
         {
-            Read(out var time);
+            Read(out var time, out _);
             ticks += time.Ticks;
         }
         ticks /= 5;
@@ -130,13 +122,13 @@ public class VideoStream : IVideoStream<BgrXyzImage>
 
     public BgrXyzImage Read()
     {
-        return Read(out _);
+        return Read(out _, out _);
     }
 
-    public BgrXyzImage Read(out TimeSpan delay)
+    public BgrXyzImage Read(out TimeSpan delay, out byte[] userData)
     {
         var frame = _pool.GetObject();
-        if (TryRead(frame, out delay))
+        if (TryRead(frame, out delay, out userData))
             return frame;
         else
             return null;
@@ -144,11 +136,12 @@ public class VideoStream : IVideoStream<BgrXyzImage>
 
     public bool TryRead(BgrXyzImage frame)
     {
-        return TryRead(frame, out _);
+        return TryRead(frame, out _, out _);
     }
 
-    public bool TryRead(BgrXyzImage frame, out TimeSpan delay)
+    public bool TryRead(BgrXyzImage frame, out TimeSpan delay, out byte[] userData)
     {
+        userData = null;
         if (frame.Width != FrameSize.Width || frame.Height != FrameSize.Height)
         {
             frame.Bgr.Create(FrameSize, MatType.CV_8UC3);
@@ -164,6 +157,14 @@ public class VideoStream : IVideoStream<BgrXyzImage>
         var ticks = time - _prevTime > 0 ? time - _prevTime : 0;
         delay = TimeSpan.FromTicks(ticks);
         _prevTime = time;
+        var userDataSize = _binReader.ReadUInt16();
+        if (userDataSize > 0)
+        {
+            userData = new byte[userDataSize];
+            var nRead = _binReader.Read(userData, 0, userDataSize);
+            if (nRead < userDataSize) userData = null;
+        }
+        _binReader.ReadInt32();
         var bgrDataSize = _binReader.ReadInt32();
         var bgrBytes = _binReader.ReadBytes(bgrDataSize);
         var xDataSize = _binReader.ReadInt32();
@@ -188,7 +189,7 @@ public class VideoStream : IVideoStream<BgrXyzImage>
             .Where(_ => _positionIndex < FrameCount)
             .Select(_ =>
             {
-                var frame = Read(out var span);
+                var frame = Read(out var span, out var data);
                 if (frame is not null)
                     Task.Delay(span).Wait();
                 return frame;

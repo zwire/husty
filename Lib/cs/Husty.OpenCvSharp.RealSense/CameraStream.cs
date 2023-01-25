@@ -50,8 +50,10 @@ public class CameraStream : IImageStream<BgrXyzImage>
         FrameSize = size;
         _pipeline = new Pipeline();
         var cfg = new Config();
-        cfg.EnableStream(Stream.Depth, width, height, Format.Any, fps);
-        cfg.EnableStream(Stream.Color, width, height, Format.Rgb8, fps);
+        cfg.EnableStream(Stream.Depth, width, height, Format.Z16, fps);
+        cfg.EnableStream(Stream.Color, width, height, Format.Bgr8, fps);
+        if (!cfg.CanResolve(_pipeline))
+            throw new Exception("cannot resolve configuration for the device");
         _pipeline.Start(cfg);
         _align = align switch
         {
@@ -128,7 +130,6 @@ public class CameraStream : IImageStream<BgrXyzImage>
         if (colorMat.IsDisposed || colorMat.Width != frame.Width || colorMat.Height != frame.Height || colorMat.Type() != MatType.CV_8UC3)
             return;
         frame.CopyTo(colorMat.Data);
-        Cv2.CvtColor(colorMat, colorMat, ColorConversionCodes.RGB2BGR);
     }
 
     private unsafe static void CopyPointCloudPixels(Frame frame, Mat xMat, Mat yMat, Mat zMat, int width, int height)

@@ -35,7 +35,6 @@ public class CanUsbAdapter : ICanUsbAdapter
 
     public static string[] FindAdapterNames()
     {
-
         var adapterList = new List<string>();
         var buf = new StringBuilder(32);
         int numAdapters = canusb_getFirstAdapter(buf, 32);

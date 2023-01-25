@@ -1,5 +1,4 @@
-﻿
-// zipconvert, ymsconvert
+﻿// zipconvert, ymsconvert
 using System.IO.Compression;
 using System.Text;
 using Husty.OpenCvSharp.ThreeDimensionalImaging;
@@ -81,19 +80,18 @@ void ConvertYmsFile(string srcPath, string dstPath)
     try
     {
         var frame = new VideoStream(srcPath);
-        Console.WriteLine("src zip file version is latest.");
+        Console.WriteLine("src yms file version is latest.");
     }
     catch
     {
         try
         {
             var file = File.Open(srcPath, FileMode.Open, FileAccess.ReadWrite);
-            var initialTime = DateTime.Now;
             var binReader = new BinaryReader(file, Encoding.ASCII);
             var fileFormatCode = Encoding.ASCII.GetString(binReader.ReadBytes(8));
             if (fileFormatCode is "HUSTY001")
             {
-                initialTime = DateTime.FromBinary(binReader.ReadInt64());
+                binReader.ReadInt64();
             }
             else if (fileFormatCode is not "HUSTY000")
             {
@@ -122,7 +120,7 @@ void ConvertYmsFile(string srcPath, string dstPath)
                 writer.Seek(fileFormatCode is "HUSTY000" ? 8 : 16, SeekOrigin.Begin);
                 writer.Write(writer.BaseStream.Length);
                 writer.Seek(0, SeekOrigin.End);
-                indexes.ForEach(p => writer.Write(p));
+                indexes.ForEach(writer.Write);
             }
             else
             {
@@ -139,9 +137,8 @@ void ConvertYmsFile(string srcPath, string dstPath)
             binReader.ReadInt64();
 
             using var binWriter = new BinaryWriter(File.Open(dstPath, FileMode.Create), Encoding.ASCII);
-            var firstTime = initialTime;
             binWriter.Write(Encoding.ASCII.GetBytes("HUSTY002"));
-            binWriter.Write(firstTime.ToBinary());
+            binWriter.Write(0L);
             binWriter.Write(-1L);
             var wIndexes = new List<long>();
             var positionIndex = 0;
@@ -161,6 +158,8 @@ void ConvertYmsFile(string srcPath, string dstPath)
                 var zBytes = mats[2].ImEncode();
                 wIndexes.Add(binWriter.BaseStream.Position);
                 binWriter.Write(time);
+                binWriter.Write((ushort)0);
+                binWriter.Write(sizeof(int) * 4 + bgrBytes.Length + xBytes.Length + yBytes.Length + zBytes.Length);
                 binWriter.Write(bgrBytes.Length);
                 binWriter.Write(bgrBytes);
                 binWriter.Write(xBytes.Length);

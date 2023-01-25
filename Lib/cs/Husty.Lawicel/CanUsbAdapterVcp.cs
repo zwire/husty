@@ -112,10 +112,10 @@ public class CanUsbAdapterVcp : ICanUsbAdapter
         if (_disposed) return null;
         if (_port.IsOpen)
         {
-            CanMessage msg = null;
+            CanMessage msg;
             var line = _port.ReadLine();
             if (
-                TryParseMsgFrame(line, out msg) &&
+                TryParseMsgFrame(line, out _) &&
                 TryParseRtrMsgFrame(line, out msg)
             )
             {

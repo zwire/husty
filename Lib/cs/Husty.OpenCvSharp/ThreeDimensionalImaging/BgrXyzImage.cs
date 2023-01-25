@@ -6,7 +6,7 @@ namespace Husty.OpenCvSharp.ThreeDimensionalImaging;
 
 public enum MatchingBase { Color, Depth }
 
-public record struct BgrXyzPixel(byte R, byte G, byte B, short X, short Y, short Z)
+public record struct BgrXyzPixel(byte B, byte G, byte R, short X, short Y, short Z)
 {
     public static BgrXyzPixel Zero => new(0, 0, 0, 0, 0, 0);
     public void Deconstruct(out byte b, out byte g, out byte r, out short x, out short y, out short z)
@@ -236,7 +236,7 @@ public class BgrXyzImage : IDisposable
             var b = bgr[index + 0];
             var g = bgr[index + 1];
             var r = bgr[index + 2];
-            ary[i] = new(b, g, r, x[index], y[index], z[index]);
+            ary[i] = new(b, g, r, x[i], y[i], z[i]);
         }
         if (filter is null)
             return ary;
@@ -256,7 +256,7 @@ public class BgrXyzImage : IDisposable
             var b = bgr[index + 0];
             var g = bgr[index + 1];
             var r = bgr[index + 2];
-            ary[i] = func(new(b, g, r, x[index], y[index], z[index]));
+            ary[i] = func(new(b, g, r, x[i], y[i], z[i]));
         }
         return new(Width, Height, ary);
     }
@@ -266,7 +266,7 @@ public class BgrXyzImage : IDisposable
         var x = (short*)X.Data;
         var y = (short*)Y.Data;
         var z = (short*)Z.Data;
-        for (int i = 0; i < X.Rows * X.Cols; i++)
+        for (int i = 0; i < Width * Height; i++)
         {
             x[i] += delta.Item0;
             y[i] += delta.Item1;
@@ -280,7 +280,7 @@ public class BgrXyzImage : IDisposable
         var x = (short*)X.Data;
         var y = (short*)Y.Data;
         var z = (short*)Z.Data;
-        for (int i = 0; i < X.Rows * X.Cols; i++)
+        for (int i = 0; i < Width * Height; i++)
         {
             x[i] *= delta.Item0;
             y[i] *= delta.Item1;
@@ -295,7 +295,7 @@ public class BgrXyzImage : IDisposable
         var xp = (short*)X.Data;
         var yp = (short*)Y.Data;
         var zp = (short*)Z.Data;
-        for (int i = 0; i < X.Rows * X.Cols; i += 3)
+        for (int i = 0; i < Width * Height; i += 3)
         {
             var x = xp[i];
             var y = yp[i];

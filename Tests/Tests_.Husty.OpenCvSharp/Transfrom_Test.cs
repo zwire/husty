@@ -5,12 +5,12 @@ using Xunit.Abstractions;
 
 namespace Tests_.Husty.OpenCvSharp;
 
-public class Transfrom
+public class Transfrom_Test
 {
 
     private readonly ITestOutputHelper _output;
 
-    public Transfrom(ITestOutputHelper output)
+    public Transfrom_Test(ITestOutputHelper output)
     {
         _output = output;
     }
