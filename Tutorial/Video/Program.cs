@@ -1,40 +1,30 @@
 ﻿using OpenCvSharp;
 using Husty.OpenCvSharp.ImageStream;
 
-namespace Video;
-
-internal class Program
+// optional : you can set video capture properties served by OpenCvSharp
+var properties = new List<Properties>()
 {
-    static void Main(string[] args)
-    {
+    new(VideoCaptureProperties.FrameWidth, 640),
+    new(VideoCaptureProperties.FrameHeight, 480),
+    new(VideoCaptureProperties.Fps, 10)
+};
 
-        // optional : you can set video capture properties served by OpenCvSharp
-        var properties = new List<Properties>()
-        { 
-            new(VideoCaptureProperties.FrameWidth, 640),
-            new(VideoCaptureProperties.FrameHeight, 480),
-            new(VideoCaptureProperties.Fps, 10)
-        };
+// initialize
+using var video = new VideoStream("..\\..\\..\\sample.mp4", properties);
 
-        // initialize
-        var video = new VideoStream("..\\..\\..\\sample.mp4", properties);
+// capturing loop is asynchronize against main thread
+while (video.CurrentPosition < video.FrameCount - 1)
+{
+    // be careful that this instance may read null object.
+    var frame = video.Read();
+    if (frame is null) continue;
 
-        // capturing loop is asynchronize against main thread
-        while (video.CurrentPosition < video.FrameCount - 1)
-        {
-            // be careful that this instance may read null object.
-            var frame = video.Read();
-            if (frame is null) continue;
+    // or you can read frame like OpenCV Python binding method
+    // using var frame = video.Read();
 
-            // or you can read frame like OpenCV Python binding method
-            // using var frame = video.Read();
-
-            Cv2.ImShow(" ", frame);
-            Cv2.WaitKey(1);
-            Console.WriteLine($"{video.CurrentPosition}");
-        }
-
-        Console.WriteLine("completed.");
-
-    }
+    Cv2.ImShow(" ", frame);
+    Cv2.WaitKey(1);
+    Console.WriteLine($"{video.CurrentPosition}");
 }
+
+Console.WriteLine("completed.");
