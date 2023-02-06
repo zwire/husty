@@ -16,6 +16,8 @@ public class Vector3D : IEquatable<Vector3D>
 
     public double Z { get; }
 
+    public string? ID { get; }
+
     public double Length { get; }
 
     public Vector3D UnitVector => Length == 0.0 ? Zero : this / Length;
@@ -25,12 +27,13 @@ public class Vector3D : IEquatable<Vector3D>
 
     // ------ constructors ------ //
 
-    public Vector3D(double x, double y, double z)
+    public Vector3D(double x, double y, double z, string? id = default)
     {
         X = x;
         Y = y;
         Z = z;
         Length = Sqrt(X * X + Y * Y + Z * Z);
+        ID = id;
     }
 
     public Vector3D(Point3D p1, Point3D p2)
@@ -44,11 +47,9 @@ public class Vector3D : IEquatable<Vector3D>
 
     // ------ public methods ------ //
 
-    public double[] ToArray() => new[] { X, Y, Z };
+    public Vector3D Clone() => new(X, Y, Z, ID);
 
-    public Vector3D Clone() => new(X, Y, Z);
-
-    public Point3D ToPoint3D() => new(X, Y, Z);
+    public Point3D ToPoint3D() => new(X, Y, Z, ID);
 
     public Angle GetAngle(Axis axis)
     {
@@ -86,16 +87,16 @@ public class Vector3D : IEquatable<Vector3D>
             y = Y * Cos(angle.Radian) - Z * Sin(angle.Radian);
             z = Y * Sin(angle.Radian) + Z * Cos(angle.Radian);
         }
-        return new(x, y, z);
+        return new(x, y, z, ID);
     }
 
-    public void Deconstruct(out double x, out double y, out double z) => (x, y, z) = (X, Y, Z);
+    public void Deconstruct(out double x, out double y, out double z, out string? id) => (x, y, z, id) = (X, Y, Z, ID);
 
     public bool Equals(Vector3D? obj) => GetHashCode() == obj?.GetHashCode();
 
     public override bool Equals(object? obj) => GetHashCode() == obj?.GetHashCode();
 
-    public override int GetHashCode() => new { X, Y, Z }.GetHashCode();
+    public override int GetHashCode() => new { X, Y, Z, ID }.GetHashCode();
 
     public override string ToString() => JsonSerializer.Serialize(this);
 

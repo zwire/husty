@@ -33,22 +33,30 @@ public class LineSegment2D : Line2D
     public override double GetY(double x)
     {
         if (Start.X < End.X)
+        {
             if (x >= Start.X && x <= End.X)
                 return base.GetY(x);
-            else
+        }
+        else 
+        {
             if (x >= End.X && x <= Start.X)
                 return base.GetY(x);
+        }
         throw new ArgumentException("Given X is out of segment range.");
     }
 
     public override double GetX(double y)
     {
         if (Start.Y < End.Y)
+        {
             if (y >= Start.Y && y <= End.Y)
                 return base.GetX(y);
-            else
+        }
+        else 
+        {
             if (y >= End.Y && y <= Start.Y)
                 return base.GetX(y);
+        }
         throw new ArgumentException("Given Y is out of segment range.");
     }
 
