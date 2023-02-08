@@ -50,7 +50,7 @@ public abstract class HyperSpectralImageBase : IDisposable
 
     public Mat GetViewImage(int waveLength)
     {
-        var img = GetImage(_convert(waveLength));
+        var img = GetImage(waveLength);
         Cv2.Normalize(img, img, 255, 0, NormTypes.MinMax);
         img.ConvertTo(img, MatType.CV_8UC1);
         return img;
@@ -63,12 +63,12 @@ public abstract class HyperSpectralImageBase : IDisposable
 
     public double[,] Get2DArray(int waveLength)
     {
-        return GetImage(_convert(waveLength)).To1DDoubleArray().To2DArray(Width, Height);
+        return GetImage(waveLength).To1DDoubleArray().To2DArray(Width, Height);
     }
 
     public double[][] Get2DJaggedArray(int waveLength)
     {
-        return GetImage(_convert(waveLength)).To1DDoubleArray().To2DJaggedArray(Width, Height);
+        return GetImage(waveLength).To1DDoubleArray().To2DJaggedArray(Width, Height);
     }
 
 }

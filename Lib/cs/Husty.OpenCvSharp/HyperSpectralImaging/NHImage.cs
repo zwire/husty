@@ -55,12 +55,12 @@ public class NHImage : HyperSpectralImageBase
             default:
                 break;
         }
-        var span = File.ReadAllBytes(filePath).AsSpan();
+        var span = File.ReadAllBytes(filePath);
         var image = new Mat(size, MatType.CV_64FC(bands));
         var ptr = (double*)image.Data;
         var w = image.Width;
         var h = image.Height;
-        for (int y = 0; y < h; y++)
+        Parallel.For(0, h, y =>
         {
             var perY = y * w * bands;
             for (int x = 0; x < w; x++)
@@ -72,7 +72,7 @@ public class NHImage : HyperSpectralImageBase
                     ptr[perY + perX + c] = span[loc] | span[loc + 1] << 8;
                 }
             }
-        }
+        });
         return image;
     }
 
