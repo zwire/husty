@@ -14,7 +14,7 @@ public class Point2D : IEquatable<Point2D>
 
     public string? ID { get; }
 
-    public static Point2D Zero => new(0, 0);
+    public static Point2D Zero { get; } = new(0, 0);
 
 
     // ------ constructors ------ //

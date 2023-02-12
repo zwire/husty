@@ -22,7 +22,7 @@ public class Vector3D : IEquatable<Vector3D>
 
     public Vector3D UnitVector => Length == 0.0 ? Zero : this / Length;
 
-    public static Vector3D Zero => new(0, 0, 0);
+    public static Vector3D Zero { get; } = new(0, 0, 0);
 
 
     // ------ constructors ------ //

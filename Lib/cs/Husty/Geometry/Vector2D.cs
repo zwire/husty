@@ -22,7 +22,7 @@ public class Vector2D : IEquatable<Vector2D>
 
     public Vector2D UnitVector => Length == 0.0 ? Zero : this / Length;
 
-    public static Vector2D Zero => new(0, 0);
+    public static Vector2D Zero { get; } = new(0, 0);
 
 
     // ------ constructors ------ //

@@ -16,7 +16,7 @@ public class Point3D : IEquatable<Point3D>
 
     public string? ID { get; }
 
-    public static Point3D Zero => new(0, 0, 0);
+    public static Point3D Zero { get; } = new(0, 0, 0);
 
 
     // ------ constructors ------ //

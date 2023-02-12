@@ -18,11 +18,7 @@ public struct Angle : IEquatable<Angle>
 
     public double Degree => _radian * 180 / PI;
 
-    public static Angle Zero => new(0);
-
-    public static Angle MinValue => new(-PI + 1e-16);
-
-    public static Angle MaxValue => new(PI - 1e-16);
+    public static Angle Zero { get; } = default;
 
 
     // ------ constructors ------ //
@@ -30,9 +26,7 @@ public struct Angle : IEquatable<Angle>
     [JsonConstructor]
     public Angle(double radian)
     {
-        if (radian < -PI || radian > PI)
-            throw new ArgumentOutOfRangeException("must be -PI <= value <= PI");
-        _radian = radian;
+        _radian = RegulateRange(radian);
     }
 
 
@@ -79,8 +73,8 @@ public struct Angle : IEquatable<Angle>
 
     private static double RegulateRange(double radian)
     {
-        if (radian > PI) return radian - PI * 2;
-        if (radian < -PI) return radian + PI * 2;
+        while (radian > PI) return radian - PI * 2;
+        while (radian < -PI) return radian + PI * 2;
         return radian;
     }
 
