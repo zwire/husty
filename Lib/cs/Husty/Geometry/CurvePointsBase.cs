@@ -1,7 +1,5 @@
 ﻿namespace Husty.Geometry;
 
-public record TrajectoryPoint(Point2D Position, Angle Heading);
-
 public abstract class CurvePointsBase
 {
 
@@ -28,9 +26,9 @@ public abstract class CurvePointsBase
 
     public Point2D[] GetPoints() => _curvePoints;
 
-    public TrajectoryPoint[] GetTrajectoryPoints()
+    public Pose2D[] GetTrajectoryPoints()
     {
-        var results = new TrajectoryPoint[_curvePoints.Length];
+        var results = new Pose2D[_curvePoints.Length];
         for (int i = 0; i < results.Length; i++)
             results[i] = new(_curvePoints[i], GetHeading(i));
         return results;

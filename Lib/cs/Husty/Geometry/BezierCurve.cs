@@ -9,7 +9,7 @@ public class BezierCurve : BSplineCurve
 
 
     // https://watlab-blog.com/2022/01/03/bezier-curve/
-    public static TrajectoryPoint GenerateCurvePoint(Point2D[] points, double t)
+    public static Pose2D GenerateCurvePoint(Point2D[] points, double t)
     {
         var n = points.Length - 1;
         var px = 0.0;
