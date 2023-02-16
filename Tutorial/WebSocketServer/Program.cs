@@ -1,19 +1,21 @@
-﻿using System.Text;
-using Husty.IO;
+﻿using Husty.IO;
 
 Console.WriteLine("waiting for connection ...");
-var server = WebSocketStream.CreateServer("127.0.0.1", 8000);
+var server = await WebSocketDataTransporter.CreateServerAsync("127.0.0.1", 8000);
 Console.WriteLine("connected!");
 var counter = 0;
 while (!(Console.KeyAvailable && Console.ReadKey().Key is ConsoleKey.Escape) && server.IsOpened)
 {
     var msg = $"Hello {counter++}";
-    server.Write(msg, Encoding.UTF8);
+    await server.TryWriteLineAsync(msg);
     Console.WriteLine("-->" + msg);
-    var res = server.Read();
-    Console.WriteLine("<--" + res.FirstOrDefault());
+    var (success, data) = await server.TryReadLineAsync();
+    if (success)
+        Console.WriteLine("<--" + data);
+    else
+        break;
     Thread.Sleep(1000);
 }
-server.Close();
+server.Dispose();
 Console.WriteLine("completed");
 Console.ReadKey();

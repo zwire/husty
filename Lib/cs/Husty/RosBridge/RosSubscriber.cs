@@ -13,7 +13,7 @@ public class RosSubscriber<TMsg> : IDisposable, IAsyncDisposable
 
     // ------ fields ------- //
 
-    private readonly WebSocketStream _stream;
+    private readonly WebSocketDataTransporter _stream;
     private readonly Subject<TMsg> _subject;
     private readonly CancellationTokenSource _cts;
     private readonly Task _loopTask;
@@ -30,7 +30,7 @@ public class RosSubscriber<TMsg> : IDisposable, IAsyncDisposable
 
     // ------ constructors ------ //
 
-    private RosSubscriber(WebSocketStream stream, string topic, string type)
+    private RosSubscriber(WebSocketDataTransporter stream, string topic, string type)
     {
         _stream = stream;
         Topic = topic;
@@ -43,8 +43,8 @@ public class RosSubscriber<TMsg> : IDisposable, IAsyncDisposable
             {
                 try
                 {
-                    var rcv = _stream.ReadAsync(Encoding.ASCII, CancellationToken.None).Result;
-                    if (rcv is not null && rcv.Contains(topic))
+                    var (success, rcv) = _stream.TryReadAsync(4096, default, _cts.Token).Result;
+                    if (success && Encoding.ASCII.GetString(rcv).Contains(topic))
                     {
                         var x = JsonSerializer.Deserialize<SubType>(rcv);
                         if (x is not null)
@@ -61,15 +61,15 @@ public class RosSubscriber<TMsg> : IDisposable, IAsyncDisposable
 
     // ------ public methods ------ //
 
-    public static RosSubscriber<TMsg> Create(WebSocketStream stream, string topic, CancellationToken? ct = null)
+    public static RosSubscriber<TMsg> Create(WebSocketDataTransporter stream, string topic, CancellationToken ct = default)
     {
-        return CreateAsync(stream, topic, ct).GetAwaiter().GetResult();
+        return CreateAsync(stream, topic, ct).Result;
     }
 
-    public static async Task<RosSubscriber<TMsg>> CreateAsync(WebSocketStream stream, string topic, CancellationToken? ct = null)
+    public static async Task<RosSubscriber<TMsg>> CreateAsync(WebSocketDataTransporter stream, string topic, CancellationToken ct = default)
     {
         var type = typeof(TMsg).FullName.Split('.').LastOrDefault().Replace('+', '/');
-        await stream.WriteAsync(JsonSerializer.Serialize(new { op = "subscribe", topic, type }), Encoding.ASCII, ct).ConfigureAwait(false);
+        await stream.TryWriteAsync(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(new { op = "subscribe", topic, type })), default, ct).ConfigureAwait(false);
         return new(stream, topic, type);
     }
 
@@ -86,7 +86,7 @@ public class RosSubscriber<TMsg> : IDisposable, IAsyncDisposable
             await _loopTask.WaitAsync(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
         }
         catch { }
-        await _stream.WriteAsync(JsonSerializer.Serialize(new { op = "unsubscribe", topic = Topic }), Encoding.ASCII, null).ConfigureAwait(false);
+        await _stream.TryWriteAsync(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(new { op = "unsubscribe", topic = Topic })), default, default).ConfigureAwait(false);
     }
 
 }

@@ -1,8 +1,9 @@
 ﻿using System.IO.Pipes;
+using System.Text;
 
 namespace Husty.IO;
 
-public sealed class NamedPipeClient : ICommunicator
+public sealed class NamedPipeClient : ICommunicationProtocol
 {
 
     // ------ fields ------ //
@@ -14,9 +15,9 @@ public sealed class NamedPipeClient : ICommunicator
 
     // ------ properties ------ //
 
-    public int ReadTimeout { set; get; } = -1;
+    public string NewLine { init; get; } = "\n";
 
-    public int WriteTimeout { set; get; } = -1;
+    public Encoding Encoding { init; get; } = Encoding.UTF8;
 
 
     // ------ constructors ------ //
@@ -42,15 +43,21 @@ public sealed class NamedPipeClient : ICommunicator
 
     // ------ public methods ------ //
 
-    public BidirectionalDataStream GetStream()
+    public ResultExpression<IDataTransporter> GetStream()
     {
-        _connectionTask.Wait();
-        return new BidirectionalDataStream(_writer, _reader, WriteTimeout, ReadTimeout);
+        return GetStreamAsync().Result;
     }
 
-    public async Task<BidirectionalDataStream> GetStreamAsync()
+    public async Task<ResultExpression<IDataTransporter>> GetStreamAsync(
+        TimeSpan timeout = default,
+        CancellationToken ct = default
+    )
     {
-        return await Task.FromResult(GetStream()).ConfigureAwait(false);
+        if (ct.IsCancellationRequested) return new(false, default!);
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        if (timeout != default) cts.CancelAfter(timeout);
+        await _connectionTask.WaitAsync(cts.Token).ConfigureAwait(false);
+        return new(true, new TcpDataTransporter(_writer, _reader, Encoding, NewLine));
     }
 
     public void Dispose()

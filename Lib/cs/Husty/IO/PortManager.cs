@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 
 namespace Husty.IO;
 
@@ -28,30 +29,29 @@ public static class PortManager
 
     public static string SearchPort(int baudrate, params string[] keyPetterns)
     {
-        foreach (var p in SerialPort.GetPortNames())
+        foreach (var p in SerialPortDataTransporter.GetPortNames())
         {
             try
             {
-                using var port = new SerialPort(p, baudrate, System.IO.Ports.StopBits.One, default, default, 500);
+                using var port = new SerialPortDataTransporter(p, baudrate, System.IO.Ports.StopBits.One, default, default, 500);
                 foreach (var key in keyPetterns)
                 {
                     for (int i = 0; i < 10; i++)
                     {
                         try
                         {
-                            var line = port.ReadLine();
-                            if (line is null) break;
+                            var (success, line) = port.TryReadLineAsync().Result;
+                            if (!success) break;
                             if (line.Contains(key) is true)
                             {
                                 Debug.WriteLine($"find port: '{p}' for {keyPetterns.Aggregate((line, k) => line += $"{k} ")}");
                                 return p;
                             }
                         }
-                        catch (TimeoutException)
+                        catch
                         {
                             break;
                         }
-                        catch { }
                     }
                 }
             }

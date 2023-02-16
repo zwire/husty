@@ -1,13 +1,13 @@
 ﻿using Husty.Extensions;
 using Husty.IO;
 
-var sender = new UdpSender(3000, 3001);
+var sock = new UdpDataTransporter(2999, 3000, 3001);
 var data = "DATA";
-Task.Run(async () =>
+_ = Task.Run(async () =>
 {
     while (true)
     {
-        await sender.SendAsync(null, data);
+        if (!await sock.TryWriteLineAsync(data)) break;
         Console.WriteLine("!");
         Thread.Sleep(1000);
     }

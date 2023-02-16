@@ -1,16 +1,17 @@
 ﻿using Husty.IO;
 
 // get ports
-var names = SerialPort.GetPortNames();
+var names = SerialPortDataTransporter.GetPortNames();
 if (names.Length is 0) throw new Exception("find no port!");
 
 // access first found port
-var port = new SerialPort(names[0], 115250);
+var port = new SerialPortDataTransporter(names[0], 115250);
 
 // read messages until key interrupt
 while (true)
 {
-    Console.WriteLine(port.ReadLine());
+    var (success, data) = await port.TryReadLineAsync();
+    if (success) Console.WriteLine(data);
     if (Console.KeyAvailable && Console.ReadKey().Key is ConsoleKey.Enter)
         break;
 }

@@ -1,12 +1,10 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace Husty.IO;
 
-/// <summary>
-/// Tcp socket server class
-/// </summary>
-public sealed class TcpSocketServer : ICommunicator
+public sealed class TcpSocketServer : ICommunicationProtocol
 {
 
     // ------ fields ------ //
@@ -20,9 +18,9 @@ public sealed class TcpSocketServer : ICommunicator
 
     // ------ properties ------ //
 
-    public int ReadTimeout { set; get; } = -1;
+    public string NewLine { init; get; } = "\n";
 
-    public int WriteTimeout { set; get; } = -1;
+    public Encoding Encoding { init; get; } = Encoding.UTF8;
 
 
     // ------ constructors ------ //
@@ -67,29 +65,35 @@ public sealed class TcpSocketServer : ICommunicator
 
     // ------ public methods ------ //
 
-    public BidirectionalDataStream GetStream()
+    public ResultExpression<IDataTransporter> GetStream()
     {
-        _connectionTask.Wait();
+        return GetStreamAsync().Result;
+    }
+
+    public async Task<ResultExpression<IDataTransporter>> GetStreamAsync(
+        TimeSpan timeout = default,
+        CancellationToken ct = default
+    )
+    {
+        if (ct.IsCancellationRequested) return new(false, default!);
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        if (timeout != default) cts.CancelAfter(timeout);
+        await _connectionTask.WaitAsync(cts.Token).ConfigureAwait(false);
         if (_client1 is not null && _client2 is null)
         {
             var stream = _client1.GetStream();
-            return new BidirectionalDataStream(stream, stream, WriteTimeout, ReadTimeout);
+            return new(true, new TcpDataTransporter(stream, stream, Encoding, NewLine));
         }
         else if (_client1 is not null && _client2 is not null)
         {
             var stream1 = _client1.GetStream();
             var stream2 = _client2.GetStream();
-            return new BidirectionalDataStream(stream2, stream1, WriteTimeout, ReadTimeout);
+            return new(true, new TcpDataTransporter(stream2, stream1, Encoding, NewLine));
         }
         else
         {
-            throw new Exception("failed to get stream!");
+            return new(false, default!);
         }
-    }
-
-    public async Task<BidirectionalDataStream> GetStreamAsync()
-    {
-        return await Task.FromResult(GetStream()).ConfigureAwait(false);
     }
 
     public void Dispose()

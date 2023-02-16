@@ -11,7 +11,7 @@ public class RosServiceServer<TReq, TRes> : IDisposable, IAsyncDisposable
 
     // ------ fields ------- //
 
-    private readonly WebSocketStream _stream;
+    private readonly WebSocketDataTransporter _stream;
     private readonly CancellationTokenSource _cts;
     private readonly Task _loopTask;
     private Func<TReq, TRes> _func;
@@ -26,7 +26,7 @@ public class RosServiceServer<TReq, TRes> : IDisposable, IAsyncDisposable
 
     // ------ constructors ------ //
 
-    private RosServiceServer(WebSocketStream stream, string service, string type, Func<TReq, TRes> func)
+    private RosServiceServer(WebSocketDataTransporter stream, string service, string type, Func<TReq, TRes> func)
     {
         _stream = stream;
         _func = func;
@@ -39,14 +39,31 @@ public class RosServiceServer<TReq, TRes> : IDisposable, IAsyncDisposable
             {
                 try
                 {
-                    var rcv = _stream.ReadAsync(Encoding.ASCII, CancellationToken.None).Result;
-                    if (rcv is not null && rcv.Contains(service))
+                    var (success, rcv) = _stream.TryReadAsync(4096, default, _cts.Token).Result;
+                    if (success)
                     {
-                        var x = JsonSerializer.Deserialize<SubType>(rcv);
-                        if (x is not null && _func is not null)
+                        var data = Encoding.ASCII.GetString(rcv);
+                        if (data.Contains(service))
                         {
-                            var response = _func(x.args);
-                            _stream.WriteAsync(JsonSerializer.Serialize(new { op = "service_response", x.id, service = Service, values = response, result = true }), Encoding.ASCII, CancellationToken.None).Wait();
+                            var x = JsonSerializer.Deserialize<SubType>(data);
+                            if (x is not null && _func is not null)
+                            {
+                                var response = _func(x.args);
+                                _stream.TryWriteAsync(
+                                    Encoding.ASCII.GetBytes(
+                                        JsonSerializer.Serialize(new
+                                        {
+                                            op = "service_response",
+                                            x.id,
+                                            service = Service,
+                                            values = response,
+                                            result = true
+                                        })
+                                    ),
+                                    default,
+                                    _cts.Token
+                                ).Wait();
+                            }
                         }
                     }
                 }
@@ -59,27 +76,27 @@ public class RosServiceServer<TReq, TRes> : IDisposable, IAsyncDisposable
     // ------ public methods ------ //
 
     public static RosServiceServer<TReq, TRes> Create(
-        WebSocketStream stream, 
+        WebSocketDataTransporter stream, 
         string topic,
         Func<TReq, TRes> func,
-        CancellationToken? ct = null
+        CancellationToken ct = default
     )
     {
-        return CreateAsync(stream, topic, func, ct).GetAwaiter().GetResult();
+        return CreateAsync(stream, topic, func, ct).Result;
     }
 
     public static async Task<RosServiceServer<TReq, TRes>> CreateAsync(
-        WebSocketStream stream, 
+        WebSocketDataTransporter stream, 
         string service,
         Func<TReq, TRes> func,
-        CancellationToken? ct = null
+        CancellationToken ct = default
     )
     {
         var type = typeof(TReq).FullName.Split('.').LastOrDefault().Replace('+', '/').Replace("/Request", "");
         var type2 = typeof(TRes).FullName.Split('.').LastOrDefault().Replace('+', '/').Replace("/Response", "");
         if (type != type2)
             throw new ArgumentException();
-        await stream.WriteAsync(JsonSerializer.Serialize(new { op = "advertise_service", service, type }), Encoding.ASCII, ct).ConfigureAwait(false);
+        await stream.TryWriteAsync(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(new { op = "advertise_service", service, type })), default, ct).ConfigureAwait(false);
         return new(stream, service, type, func);
     }
 
@@ -101,7 +118,7 @@ public class RosServiceServer<TReq, TRes> : IDisposable, IAsyncDisposable
             await _loopTask.WaitAsync(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
         }
         catch { }
-        await _stream.WriteAsync(JsonSerializer.Serialize(new { op = "unadvertise_service", service = Service }), Encoding.ASCII, null).ConfigureAwait(false);
+        await _stream.TryWriteAsync(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(new { op = "unadvertise_service", service = Service })), default, default).ConfigureAwait(false);
     }
 
 }

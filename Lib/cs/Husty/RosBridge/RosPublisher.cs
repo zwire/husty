@@ -9,7 +9,7 @@ public class RosPublisher<TMsg> : IDisposable, IAsyncDisposable
 
     // ------ fields ------- //
 
-    private readonly WebSocketStream _stream;
+    private readonly WebSocketDataTransporter _stream;
 
 
     // ------ properties ------ //
@@ -21,7 +21,7 @@ public class RosPublisher<TMsg> : IDisposable, IAsyncDisposable
 
     // ------ constructors ------ //
 
-    private RosPublisher(WebSocketStream stream, string topic, string type)
+    private RosPublisher(WebSocketDataTransporter stream, string topic, string type)
     {
         _stream = stream;
         Topic = topic;
@@ -31,21 +31,21 @@ public class RosPublisher<TMsg> : IDisposable, IAsyncDisposable
 
     // ------ public methods ------ //
 
-    public static RosPublisher<TMsg> Create(WebSocketStream stream, string topic, CancellationToken? ct = null)
+    public static RosPublisher<TMsg> Create(WebSocketDataTransporter stream, string topic, CancellationToken ct = default)
     {
         return CreateAsync(stream, topic, ct).GetAwaiter().GetResult();
     }
 
-    public static async Task<RosPublisher<TMsg>> CreateAsync(WebSocketStream stream, string topic, CancellationToken? ct = null)
+    public static async Task<RosPublisher<TMsg>> CreateAsync(WebSocketDataTransporter stream, string topic, CancellationToken ct = default)
     {
         var type = typeof(TMsg).FullName.Split('.').LastOrDefault().Replace('+', '/');
-        await stream.WriteAsync(JsonSerializer.Serialize(new { op = "advertise", topic, type }), Encoding.ASCII, ct).ConfigureAwait(false);
+        await stream.TryWriteAsync(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(new { op = "advertise", topic, type })), default, ct).ConfigureAwait(false);
         return new(stream, topic, type);
     }
 
-    public async Task WriteAsync(TMsg msg, CancellationToken? ct = null)
+    public async Task WriteAsync(TMsg msg, CancellationToken ct = default)
     {
-        await _stream.WriteAsync(JsonSerializer.Serialize(new { op = "publish", topic = Topic, type = Type, msg }), Encoding.ASCII, ct).ConfigureAwait(false);
+        await _stream.TryWriteAsync(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(new { op = "publish", topic = Topic, type = Type, msg })), default, ct).ConfigureAwait(false);
     }
 
     public void Dispose()
@@ -55,7 +55,7 @@ public class RosPublisher<TMsg> : IDisposable, IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        await _stream.WriteAsync(JsonSerializer.Serialize(new { op = "unadvertise", topic = Topic, type = Type }), Encoding.ASCII, null).ConfigureAwait(false);
+        await _stream.TryWriteAsync(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(new { op = "unadvertise", topic = Topic, type = Type })), default, default).ConfigureAwait(false);
     }
 
 }

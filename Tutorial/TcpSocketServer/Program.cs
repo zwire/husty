@@ -1,12 +1,14 @@
 ﻿// initialize
+
 var server = new Husty.IO.TcpSocketServer(5000);
-var stream = server.GetStream();
+var (success, stream) = server.GetStream();
+if (!success) return;
 
 // loop
 while (true)
 {
-    var rcv = stream.ReadAsJson<Message>();
-    if (rcv is null) break;
+    var (has, rcv) = await stream.TryReadAsJsonAsync<Message>();
+    if (!has) break;
     Console.WriteLine($"{rcv.Greeting} : {rcv.Number}");
     if (Console.KeyAvailable && Console.ReadKey().Key is ConsoleKey.Enter)
         break;

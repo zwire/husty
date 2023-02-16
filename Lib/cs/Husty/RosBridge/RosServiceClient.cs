@@ -11,7 +11,7 @@ public class RosServiceClient<TReq, TRes> : IDisposable, IAsyncDisposable
 
     // ------ fields ------- //
 
-    private readonly WebSocketStream _stream;
+    private readonly WebSocketDataTransporter _stream;
     private readonly CancellationTokenSource _cts;
 
 
@@ -24,7 +24,7 @@ public class RosServiceClient<TReq, TRes> : IDisposable, IAsyncDisposable
 
     // ------ constructors ------ //
 
-    private RosServiceClient(WebSocketStream stream, string service, string type)
+    private RosServiceClient(WebSocketDataTransporter stream, string service, string type)
     {
         _stream = stream;
         Service = service;
@@ -35,12 +35,12 @@ public class RosServiceClient<TReq, TRes> : IDisposable, IAsyncDisposable
 
     // ------ public methods ------ //
 
-    public static RosServiceClient<TReq, TRes> Create(WebSocketStream stream, string service, CancellationToken? ct = null)
+    public static RosServiceClient<TReq, TRes> Create(WebSocketDataTransporter stream, string service, CancellationToken? ct = null)
     {
         return CreateAsync(stream, service, ct).GetAwaiter().GetResult();
     }
 
-    public static async Task<RosServiceClient<TReq, TRes>> CreateAsync(WebSocketStream stream, string service, CancellationToken? ct = null)
+    public static async Task<RosServiceClient<TReq, TRes>> CreateAsync(WebSocketDataTransporter stream, string service, CancellationToken? ct = null)
     {
         var type = typeof(TReq).FullName.Split('.').LastOrDefault().Replace('+', '/').Replace("/Request", "");
         var type2 = typeof(TRes).FullName.Split('.').LastOrDefault().Replace('+', '/').Replace("/Response", "");
@@ -49,18 +49,22 @@ public class RosServiceClient<TReq, TRes> : IDisposable, IAsyncDisposable
         return new(stream, service, type);
     }
 
-    public async Task<TRes> CallAsync(TReq req, CancellationToken? ct = null)
+    public async Task<TRes> CallAsync(TReq req, CancellationToken ct = default)
     {
-        await _stream.WriteAsync(JsonSerializer.Serialize(new { op = "call_service", service = Service, args = req }), Encoding.ASCII, ct ?? CancellationToken.None).ConfigureAwait(false);
+        await _stream.TryWriteAsync(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(new { op = "call_service", service = Service, args = req })), default, ct).ConfigureAwait(false);
         while (!_cts.IsCancellationRequested)
         {
-            var rcv = await _stream.ReadAsync(Encoding.ASCII, ct ?? CancellationToken.None).ConfigureAwait(false);
-            if (rcv is not null && rcv.Contains("service_response") && rcv.Contains(Service))
+            var (success, rcv) = await _stream.TryReadAsync(4096, default, ct).ConfigureAwait(false);
+            if (success)
             {
-                var x = JsonSerializer.Deserialize<SubType>(rcv);
-                if (x is not null)
+                var data = Encoding.ASCII.GetString(rcv);
+                if (data.Contains("service_response") && data.Contains(Service))
                 {
-                    return x.values;
+                    var x = JsonSerializer.Deserialize<SubType>(data);
+                    if (x is not null)
+                    {
+                        return x.values;
+                    }
                 }
             }
         }
