@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
-using Husty.IO;
+using Husty.Communication;
 
 namespace Husty.RosBridge;
 

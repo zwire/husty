@@ -1,5 +1,5 @@
 ﻿using OpenCvSharp;
-using Husty.IO;
+using Husty.Communication;
 
 namespace Husty.OpenCvSharp.Extensions;
 

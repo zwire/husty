@@ -1,15 +1,23 @@
 ﻿using System.Text;
 using System.Text.Json;
 
-namespace Husty.IO;
+namespace Husty.Communication;
 
 public abstract class DataTransporterBase : IDataTransporter
 {
 
-    private CancellationTokenSource _cts = new();
+    // ------ fields ------ //
+
+    private readonly CancellationTokenSource _cts;
+
+
+    // ------ properties ------ //
 
     public string NewLine { init; get; } = "\n";
     public Encoding Encoding { init; get; } = Encoding.UTF8;
+
+
+    // ------ protected methods ------ //
 
     protected abstract void DoDispose();
     protected abstract Task<bool> DoTryWriteAsync(byte[] data, CancellationToken ct);
@@ -17,10 +25,57 @@ public abstract class DataTransporterBase : IDataTransporter
     protected abstract Task<bool> DoTryWriteLineAsync(string data, CancellationToken ct);
     protected abstract Task<ResultExpression<string>> DoTryReadLineAsync(CancellationToken ct);
 
+
+    // ------ constructors ------ //
+
+    public DataTransporterBase()
+    {
+        _cts = new();
+    }
+
+
+    // ------ public methods ------ //
+
     public void Dispose()
     {
         _cts.Cancel();
         DoDispose();
+    }
+
+    public bool TryWrite(byte[] data)
+    {
+        return TryWriteAsync(data).Result;
+    }
+
+    public byte[]? Read(int count = 4096)
+    {
+        var (s, v) = TryReadAsync(count).Result;
+        if (s) return v;
+        return null;
+    }
+
+    public bool TryWriteLine(string data)
+    {
+        return TryWriteLineAsync(data).Result;
+    }
+
+    public string? ReadLine()
+    {
+        var (s, v) = TryReadLineAsync().Result;
+        if (s) return v;
+        return null;
+    }
+
+    public bool TryWriteAsJson<T>(T data)
+    {
+        return TryWriteAsJsonAsync(data).Result;
+    }
+
+    public T? ReadAsJson<T>()
+    {
+        var (s, v) = TryReadAsJsonAsync<T>().Result;
+        if (s) return v;
+        return default;
     }
 
     public async Task<bool> TryWriteAsync(

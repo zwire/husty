@@ -1,7 +1,6 @@
-﻿using System.Net.Sockets;
-using System.Text;
+﻿using System.Text;
 
-namespace Husty.IO;
+namespace Husty.Communication;
 
 public sealed class TcpDataTransporter : DataTransporterBase
 {

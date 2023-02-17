@@ -1,8 +1,8 @@
 ﻿using Husty.Extensions;
-using Husty.IO;
+using Husty.Communication;
 
-var receiver1 = new UdpDataTransporter(3000);
-var receiver2 = new UdpDataTransporter(3001);
+var receiver1 = new UdpDataTransporter().SetListeningPort(3000);
+var receiver2 = new UdpDataTransporter().SetListeningPort(3001);
 _ = Task.Run(async () =>
 {
     while (true)

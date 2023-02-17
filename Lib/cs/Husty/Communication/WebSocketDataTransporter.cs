@@ -1,9 +1,8 @@
 ﻿using System.Net;
 using System.Net.WebSockets;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Husty.IO;
+namespace Husty.Communication;
 
 public class WebSocketDataTransporter : DataTransporterBase
 {
@@ -37,7 +36,7 @@ public class WebSocketDataTransporter : DataTransporterBase
 
     protected override void DoDispose()
     {
-        if (!IsClosed) CloseAsync().Wait();
+        if (!IsClosed && !IsAborted) CloseAsync().Wait();
         _socket.Dispose();
     }
 
@@ -87,7 +86,7 @@ public class WebSocketDataTransporter : DataTransporterBase
     {
         try
         {
-            await _socket.SendAsync(Encoding.GetBytes(data), WebSocketMessageType.Text, true, ct).ConfigureAwait(false);
+            await _socket.SendAsync(Encoding.GetBytes(data + NewLine), WebSocketMessageType.Text, true, ct).ConfigureAwait(false);
             return true;
         }
         catch
@@ -98,9 +97,14 @@ public class WebSocketDataTransporter : DataTransporterBase
 
     protected override async Task<ResultExpression<string>> DoTryReadLineAsync(CancellationToken ct)
     {
-        var (success, data) = await DoTryReadAsync(4096, ct).ConfigureAwait(false);
-        if (!success) return new(false, default!);
-        return new(true, Encoding.GetString(data));
+        var txt = "";
+        while (true)
+        {
+            var (success, data) = await DoTryReadAsync(4096, ct).ConfigureAwait(false);
+            if (!success) return new(false, default!);
+            txt += Encoding.GetString(data);
+            if (NewLine is "" || txt.Contains(NewLine)) return new(true, txt.TrimEnd());
+        }
     }
 
 

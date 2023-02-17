@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Husty.IO;
+namespace Husty.Communication;
 
 public interface ICommunicationProtocol : IDisposable
 {

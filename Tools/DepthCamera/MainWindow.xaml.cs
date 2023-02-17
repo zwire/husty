@@ -81,7 +81,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
             if (!_isConnected) new Exception("Couldn't connect device!");
 
             ShutterButton.IsEnabled = true;
-            ReactiveFrame = _camera.GetStream().ToReadOnlyReactivePropertySlim();
+            ReactiveFrame = _camera.ImageSequence.ToReadOnlyReactivePropertySlim();
             ReactiveFrame
                 .Where(frame => frame is not null)
                 .Subscribe(frame =>
@@ -148,7 +148,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
             if (!_isConnected) throw new Exception("Couldn't connect device!");
 
             var writer = new VideoRecorder($"{_saveDir}\\{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.yms");
-            ReactiveFrame = _camera.GetStream().ToReadOnlyReactivePropertySlim();
+            ReactiveFrame = _camera.ImageSequence.ToReadOnlyReactivePropertySlim();
             ReactiveFrame
                 .Where(frame => frame is not null)
                 .Finally(() => writer?.Dispose())
@@ -214,7 +214,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
             PlaySlider.Visibility = Visibility.Visible;
             _player = new(cofd.FileName);
             PlaySlider.Maximum = _player.FrameCount;
-            ReactiveFrame = _player.GetStream().ToReadOnlyReactivePropertySlim();
+            ReactiveFrame = _player.ImageSequence.ToReadOnlyReactivePropertySlim();
             ReactiveFrame
                 .Where(frame => frame is not null && !frame.IsDisposed && !frame.Empty())
                 .Subscribe(frame =>
@@ -240,7 +240,7 @@ public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
             PlayPauseButton.Content = "| |";
             ShutterButton.IsEnabled = false;
             _player.Seek((int)PlaySlider.Value);
-            ReactiveFrame = _player.GetStream().ToReadOnlyReactivePropertySlim();
+            ReactiveFrame = _player.ImageSequence.ToReadOnlyReactivePropertySlim();
             ReactiveFrame
                 .Where(frame => frame is not null && !frame.Empty())
                 .Subscribe(frame =>

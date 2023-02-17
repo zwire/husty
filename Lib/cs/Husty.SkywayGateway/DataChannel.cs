@@ -2,6 +2,8 @@
 using System.Net;
 using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
+using System.Text;
+using Husty.Communication;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
@@ -98,7 +100,7 @@ public sealed class DataChannel : IAsyncDisposable
         return JObject.Parse(response.Content)["open"].Value<bool>();
     }
 
-    public async Task<DataStream> ListenAsync()
+    public async Task<UdpDataTransporter> ListenAsync()
     {
         _dataConnectionId = await _called.ConfigureAwait(false);
         await _opened.ToTask().ConfigureAwait(false);
@@ -121,10 +123,12 @@ public sealed class DataChannel : IAsyncDisposable
         await _client.RequestAsync(ReqType.Put, $"/data/connections/{_dataConnectionId}", json).ConfigureAwait(false);
         var response = await _client.RequestAsync(ReqType.Get, $"/data/connections/{_dataConnectionId}/status").ConfigureAwait(false);
         RemotePeerId = JObject.Parse(response.Content)["remote_id"].Value<string>();
-        return new(_info);
+        return new UdpDataTransporter() { Encoding = Encoding.UTF8, NewLine = "" }
+            .SetListeningPort(_info.LocalEP.Port)
+            .SetTargetPorts(_info.RemoteEP.Port);
     }
 
-    public async Task<DataStream> CallConnectionAsync(string remoteId)
+    public async Task<UdpDataTransporter> CallConnectionAsync(string remoteId)
     {
         RemotePeerId = remoteId;
         var json = new Dictionary<string, dynamic>
@@ -154,7 +158,9 @@ public sealed class DataChannel : IAsyncDisposable
         var response = await _client.RequestAsync(ReqType.Post, "/data/connections", json).ConfigureAwait(false);
         _dataConnectionId = JObject.Parse(response.Content)["params"]["data_connection_id"].Value<string>();
         await _opened.ToTask().ConfigureAwait(false);
-        return new(_info);
+        return new UdpDataTransporter() { Encoding = Encoding.UTF8, NewLine = "" }
+            .SetListeningPort(_info.LocalEP.Port)
+            .SetTargetPorts(_info.RemoteEP.Port);
     }
 
 

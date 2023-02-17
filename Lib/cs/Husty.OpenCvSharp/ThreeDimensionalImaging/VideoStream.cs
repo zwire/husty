@@ -3,6 +3,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using OpenCvSharp;
 using Husty.OpenCvSharp.ImageStream;
+using System.Reflection;
 
 namespace Husty.OpenCvSharp.ThreeDimensionalImaging;
 
@@ -11,9 +12,11 @@ public class VideoStream : IVideoStream<BgrXyzImage>
 
     // ------ fields ------ //
 
+    private bool _disposed;
     private readonly long[] _indexes;
     private readonly BinaryReader _binReader;
     private readonly ObjectPool<BgrXyzImage> _pool;
+    private readonly IObservable<(BgrXyzImage frame, TimeSpan delay, byte[] userData)> _rootSequence;
     private int _positionIndex;
     private long _prevTime;
 
@@ -26,7 +29,7 @@ public class VideoStream : IVideoStream<BgrXyzImage>
 
     public Size FrameSize { get; }
 
-    public bool HasFrame { private set; get; }
+    public IObservable<BgrXyzImage> ImageSequence { get; }
 
     public int FrameCount => _indexes.Length;
 
@@ -107,14 +110,36 @@ public class VideoStream : IVideoStream<BgrXyzImage>
             new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC1))
         );
 
+        var f = _pool.GetObject();
         long ticks = 0;
         for (int i = 0; i < 5; i++)
         {
-            Read(out var time, out _);
+            TryRead(f, out var time, out _);
             ticks += time.Ticks;
         }
         ticks /= 5;
         Fps = 1000 / TimeSpan.FromTicks(ticks).Milliseconds;
+
+        var connectable = Observable
+            .Repeat(0, ThreadPoolScheduler.Instance)
+            .TakeUntil(_ => _disposed)
+            .Where(_ => !IsEnd)
+            .Select(_ =>
+            {
+                if (IsEnd) return default;
+                var frame = _pool.GetObject();
+                if (TryRead(frame, out var delay, out var userData))
+                {
+                    Task.Delay(delay).Wait();
+                    return (frame, delay, userData);
+                }
+                return default;
+            })
+            .Where(x => x.frame is not null && !x.frame.IsDisposed && !x.frame.Empty())
+            .Publish();
+        connectable.Connect();
+        _rootSequence = connectable;
+        ImageSequence = _rootSequence.Select(x => x.frame);
     }
 
 
@@ -122,81 +147,21 @@ public class VideoStream : IVideoStream<BgrXyzImage>
 
     public BgrXyzImage Read()
     {
-        return Read(out _, out _);
+        while (!_disposed)
+            if (ImageSequence.FirstOrDefaultAsync().Wait() is BgrXyzImage img) return img;
+        return null;
     }
 
     public BgrXyzImage Read(out TimeSpan delay, out byte[] userData)
     {
-        var frame = _pool.GetObject();
-        if (TryRead(frame, out delay, out userData))
-            return frame;
-        else
-            return null;
-    }
-
-    public bool TryRead(BgrXyzImage frame)
-    {
-        return TryRead(frame, out _, out _);
-    }
-
-    public bool TryRead(BgrXyzImage frame, out TimeSpan delay, out byte[] userData)
-    {
+        delay = TimeSpan.Zero;
         userData = null;
-        if (frame.Width != FrameSize.Width || frame.Height != FrameSize.Height)
+        while (!_disposed)
         {
-            frame.Bgr.Create(FrameSize, MatType.CV_8UC3);
-            frame.X.Create(FrameSize, MatType.CV_16UC1);
-            frame.Y.Create(FrameSize, MatType.CV_16UC1);
-            frame.Z.Create(FrameSize, MatType.CV_16UC1);
+            (var frame, delay, userData) = _rootSequence.FirstOrDefaultAsync().Wait();
+            if (frame is not null) return frame;
         }
-        delay = default;
-        if (_positionIndex == FrameCount - 1)
-            return false;
-        _binReader.BaseStream.Seek(_indexes[_positionIndex++], SeekOrigin.Begin);
-        var time = _binReader.ReadInt64();
-        var ticks = time - _prevTime > 0 ? time - _prevTime : 0;
-        delay = TimeSpan.FromTicks(ticks);
-        _prevTime = time;
-        var userDataSize = _binReader.ReadUInt16();
-        if (userDataSize > 0)
-        {
-            userData = new byte[userDataSize];
-            var nRead = _binReader.Read(userData, 0, userDataSize);
-            if (nRead < userDataSize) userData = null;
-        }
-        _binReader.ReadInt32();
-        var bgrDataSize = _binReader.ReadInt32();
-        var bgrBytes = _binReader.ReadBytes(bgrDataSize);
-        var xDataSize = _binReader.ReadInt32();
-        var xBytes = _binReader.ReadBytes(xDataSize);
-        var yDataSize = _binReader.ReadInt32();
-        var yBytes = _binReader.ReadBytes(yDataSize);
-        var zDataSize = _binReader.ReadInt32();
-        var zBytes = _binReader.ReadBytes(zDataSize);
-        frame.CopyFrom(
-            Cv2.ImDecode(bgrBytes, ImreadModes.Unchanged), 
-            Cv2.ImDecode(xBytes, ImreadModes.Unchanged),
-            Cv2.ImDecode(yBytes, ImreadModes.Unchanged),
-            Cv2.ImDecode(zBytes, ImreadModes.Unchanged)
-        );
-        HasFrame = true;
-        return true;
-    }
-
-    public IObservable<BgrXyzImage> GetStream()
-    {
-        return Observable.Repeat(0, ThreadPoolScheduler.Instance)
-            .Where(_ => _positionIndex < FrameCount)
-            .Select(_ =>
-            {
-                var frame = Read(out var span, out var data);
-                if (frame is not null)
-                    Task.Delay(span).Wait();
-                return frame;
-            })
-            .TakeUntil(x => x is null)
-            .Where(x => x is not null && !x.IsDisposed && !x.Empty())
-            .Publish().RefCount();
+        return null;
     }
 
     public void Seek(int position)
@@ -208,9 +173,58 @@ public class VideoStream : IVideoStream<BgrXyzImage>
 
     public void Dispose()
     {
-        HasFrame = false;
+        if (_disposed) return;
+        _disposed = true;
         _binReader?.Close();
         _binReader?.Dispose();
+    }
+
+
+    // ------ private methods ------ //
+
+    private bool TryRead(BgrXyzImage frame, out TimeSpan delay, out byte[] userData)
+    {
+        _binReader.BaseStream.Seek(_indexes[_positionIndex++], SeekOrigin.Begin);
+        var time = _binReader.ReadInt64();
+        var ticks = time - _prevTime > 0 ? time - _prevTime : 0;
+        delay = TimeSpan.FromTicks(ticks);
+        userData = null;
+        try
+        {
+            _prevTime = time;
+            var userDataSize = _binReader.ReadUInt16();
+            
+            if (userDataSize > 0)
+            {
+                userData = new byte[userDataSize];
+                var nRead = _binReader.Read(userData, 0, userDataSize);
+                if (nRead < userDataSize) userData = null;
+            }
+            _binReader.ReadInt32();
+            var bgrDataSize = _binReader.ReadInt32();
+            var bgrBytes = _binReader.ReadBytes(bgrDataSize);
+            var xDataSize = _binReader.ReadInt32();
+            var xBytes = _binReader.ReadBytes(xDataSize);
+            var yDataSize = _binReader.ReadInt32();
+            var yBytes = _binReader.ReadBytes(yDataSize);
+            var zDataSize = _binReader.ReadInt32();
+            var zBytes = _binReader.ReadBytes(zDataSize);
+            if (frame.Width != FrameSize.Width || frame.Height != FrameSize.Height)
+            {
+                frame.Bgr.Create(FrameSize, MatType.CV_8UC3);
+                frame.X.Create(FrameSize, MatType.CV_16UC1);
+                frame.Y.Create(FrameSize, MatType.CV_16UC1);
+                frame.Z.Create(FrameSize, MatType.CV_16UC1);
+            }
+            frame.CopyFrom(
+                Cv2.ImDecode(bgrBytes, ImreadModes.Unchanged),
+                Cv2.ImDecode(xBytes, ImreadModes.Unchanged),
+                Cv2.ImDecode(yBytes, ImreadModes.Unchanged),
+                Cv2.ImDecode(zBytes, ImreadModes.Unchanged)
+            );
+            return true;
+        }
+        catch {  return false; }
     }
 
 }

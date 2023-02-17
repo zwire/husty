@@ -1,9 +1,9 @@
 ﻿using Husty.SkywayGateway;
 
-var apiKey = "API_KEY";         // get from https://webrtc.ecl.ntt.com/
-var localId = "Player1";
-var remoteId = "Player2";
+var apiKey = "API_KEY";         // get from https://console-webrtc-free.ecl.ntt.com/users/login
 var mode = "listen";            // listen or call
+var localId = mode is "listen" ? "listener" : "caller";
+var remoteId = mode is "listen" ? "caller" : "listener";
 
 // create my peer object
 await using var peer = await Peer.CreateNewAsync(apiKey, localId);
@@ -27,18 +27,19 @@ Console.WriteLine(alive is true ? "connected!" : "failed to connect!");
 Console.WriteLine();
 
 // loop
-var t = Task.Run(async () =>
+_ = Task.Run(async () =>
 {
     var count = 0;
     while (true)
     {
         // send
         var msg = $"Message {count++} from {localId}.";
-        await stream.WriteStringAsync(msg);
+        await stream.TryWriteLineAsync(msg);
         Console.WriteLine("---> : " + msg);
         // receive
-        var rcv = await stream.ReadStringAsync();
-        Console.WriteLine("<--- : " + rcv);
+        var rcv = await stream.TryReadLineAsync();
+        if (rcv.HasValue)
+            Console.WriteLine("<--- : " + rcv.Value);
         await Task.Delay(1000);
     }
 });

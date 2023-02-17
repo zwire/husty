@@ -55,8 +55,6 @@ internal static class RestEx
                 ReqType.Put     => await client.PutAsync(request).ConfigureAwait(false),
                 _               => default
             };
-            if (!response.IsSuccessful)
-                throw new InvalidOperationException($"failed to {type} {resource}.");
             return response;
         }
         catch (HttpRequestException)

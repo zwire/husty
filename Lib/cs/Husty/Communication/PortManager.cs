@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
-using System.Text;
 
-namespace Husty.IO;
+namespace Husty.Communication;
 
 public struct Baudrate
 {

@@ -9,6 +9,7 @@ public sealed class CameraStream : IImageStream<Mat>
 
     // ------ fields ------ //
 
+    private bool _disposed;
     private readonly VideoCapture _cap;
     private readonly ObjectPool<Mat> _pool;
 
@@ -21,7 +22,7 @@ public sealed class CameraStream : IImageStream<Mat>
 
     public Size FrameSize { get; }
 
-    public bool HasFrame { private set; get; }
+    public IObservable<Mat> ImageSequence { get; }
 
 
     // ------ constructors ------ //
@@ -36,6 +37,18 @@ public sealed class CameraStream : IImageStream<Mat>
         Fps = (int)_cap.Fps;
         Channels = (int)_cap.Get(VideoCaptureProperties.Channel);
         FrameSize = new(_cap.FrameWidth, _cap.FrameHeight);
+        var connectable = Observable
+            .Repeat(0, ThreadPoolScheduler.Instance)
+            .TakeUntil(_ => _disposed)
+            .Select(_ =>
+            {
+                var frame = _pool.GetObject();
+                return _cap.Read(frame) ? frame : null;
+            })
+            .Where(x => x is not null)
+            .Publish();
+        connectable.Connect();
+        ImageSequence = connectable;
     }
 
 
@@ -43,25 +56,15 @@ public sealed class CameraStream : IImageStream<Mat>
 
     public Mat Read()
     {
-        var frame = _pool.GetObject();
-        HasFrame = _cap.Read(frame);
-        if (HasFrame)
-            return frame;
-        else
-            return null;
-    }
-
-    public IObservable<Mat> GetStream()
-    {
-        return Observable
-            .Repeat(0, ThreadPoolScheduler.Instance)
-            .Select(_ => Read())
-            .Publish().RefCount();
+        while (!_disposed)
+            if (ImageSequence.FirstOrDefaultAsync().Wait() is Mat img) return img;
+        return null;
     }
 
     public void Dispose()
     {
-        HasFrame = false;
+        if (_disposed) return;
+        _disposed = true;
         _cap?.Dispose();
         _pool?.Dispose();
     }

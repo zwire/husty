@@ -1,7 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Text;
 
-namespace Husty.IO;
+namespace Husty.Communication;
 
 public sealed class TcpSocketClient : ICommunicationProtocol
 {
@@ -22,14 +22,14 @@ public sealed class TcpSocketClient : ICommunicationProtocol
 
     // ------ constructors ------ //
 
-    public TcpSocketClient(string ip, int inoutPort)
+    public TcpSocketClient(string ip, int port)
     {
         _client1 = new();
         _connectionTask = Task.Run(() =>
         {
             try
             {
-                _client1 = new(ip, inoutPort);
+                _client1 = new(ip, port);
             }
             catch
             {
@@ -38,7 +38,7 @@ public sealed class TcpSocketClient : ICommunicationProtocol
         });
     }
 
-    public TcpSocketClient(string ip, int inPort, int outPort)
+    public TcpSocketClient(string ip, int listeningPort, int targetPort)
     {
         _client1 = new();
         _client2 = new();
@@ -46,8 +46,8 @@ public sealed class TcpSocketClient : ICommunicationProtocol
         {
             try
             {
-                _client1 = new(ip, outPort);
-                _client2 = new(ip, inPort);
+                _client1 = new(ip, targetPort);
+                _client2 = new(ip, listeningPort);
             }
             catch
             {

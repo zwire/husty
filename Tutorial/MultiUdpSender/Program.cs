@@ -1,7 +1,7 @@
 ﻿using Husty.Extensions;
-using Husty.IO;
+using Husty.Communication;
 
-var sock = new UdpDataTransporter(2999, 3000, 3001);
+var sock = new UdpDataTransporter().SetTargetPorts(3000, 3001);
 var data = "DATA";
 _ = Task.Run(async () =>
 {

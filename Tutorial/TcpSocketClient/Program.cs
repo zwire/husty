@@ -1,21 +1,19 @@
-﻿using Husty.Extensions;
+﻿using Husty.Communication;
+using Husty.Extensions;
 
 // initialize
-var client = new Husty.IO.TcpSocketClient("127.0.0.1", 5000);
+var client = new TcpSocketClient("127.0.0.1", 5000);
 var (success, stream) = client.GetStream();
 if (!success) return;
 
 // loop
-var count = 0;
-while (true)
-{
-    var snd = new Message("Hello", count++);
-    if (!await stream.TryWriteAsJsonAsync(snd)) break;
-    Console.WriteLine(snd);
-    if (ConsoleEx.WaitKey() is ConsoleKey.Enter) break;
-}
+var cts = new CancellationTokenSource();
+ObservableEx2
+    .Loop(i => stream.TryWriteAsJson(new Message("Hello", i)), TimeSpan.FromSeconds(1), default, cts.Token);
+ConsoleEx.WaitKey(ConsoleKey.Enter);
 
 // finalize
+cts.Cancel();
 stream.Dispose();
 client.Dispose();
 

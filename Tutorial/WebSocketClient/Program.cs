@@ -1,16 +1,24 @@
-﻿using Husty.IO;
+﻿using Husty.Extensions;
+using Husty.Communication;
 
 Console.WriteLine("attempt to connect ...");
 var client = await WebSocketDataTransporter.CreateClientAsync("127.0.0.1", 8000);
 Console.WriteLine("connected!");
-while (!(Console.KeyAvailable && Console.ReadKey().Key is ConsoleKey.Escape) && client.IsOpened)
-{
-    var (success, data) = await client.TryReadLineAsync();
-    if (success)
-        Console.WriteLine("<--" + data);
-    await client.TryWriteLineAsync("Hi!");
-    Console.WriteLine("-->");
-}
+
+var cts = new CancellationTokenSource();
+ObservableEx2
+    .Loop(i =>
+    {
+        var t = client.ReadLine();
+        if (t is null) cts.Cancel();
+        Console.WriteLine("<-- " + t);
+        var msg = $"Hello {i}";
+        client.TryWriteLine(msg);
+        Console.WriteLine("--> " + msg);
+    }, default, cts.Token);
+ConsoleEx.WaitKey(ConsoleKey.Enter);
+cts.Cancel();
+
 client.Dispose();
 Console.WriteLine("completed");
 Console.ReadKey();

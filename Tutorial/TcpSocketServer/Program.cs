@@ -1,20 +1,22 @@
-﻿// initialize
+﻿using System.Reactive.Linq;
+using Husty.Extensions;
+using Husty.Communication;
 
-var server = new Husty.IO.TcpSocketServer(5000);
-var (success, stream) = server.GetStream();
+// initialize
+var server = new TcpSocketServer(5000);
+var (success, stream) = await server.GetStreamAsync();
 if (!success) return;
 
 // loop
-while (true)
-{
-    var (has, rcv) = await stream.TryReadAsJsonAsync<Message>();
-    if (!has) break;
-    Console.WriteLine($"{rcv.Greeting} : {rcv.Number}");
-    if (Console.KeyAvailable && Console.ReadKey().Key is ConsoleKey.Enter)
-        break;
-}
+var cts = new CancellationTokenSource();
+ObservableEx2
+    .Loop(stream.ReadAsJson<Message>, default, cts.Token)
+    .Where(x => x is not null)
+    .Subscribe(x => Console.WriteLine($"{x.Greeting} : {x.Number}"));
+ConsoleEx.WaitKey(ConsoleKey.Enter);
 
 // finalize
+cts.Cancel();
 stream.Dispose();
 server.Dispose();
 

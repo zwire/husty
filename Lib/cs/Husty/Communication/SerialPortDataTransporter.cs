@@ -1,7 +1,6 @@
 ﻿using System.IO.Ports;
-using System.Text;
 
-namespace Husty.IO;
+namespace Husty.Communication;
 
 public class SerialPortDataTransporter : DataTransporterBase
 {

@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <Description>The utility of XInput and Logitech steering wheel SDK.
 Target framework is only WinForms or WPF.</Description>
+    <Version>2.0.5</Version>
   </PropertyGroup>
 
   <ItemGroup>

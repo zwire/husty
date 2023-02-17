@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
-using Husty.IO;
+using Husty.Communication;
 
 namespace Husty.RosBridge;
 

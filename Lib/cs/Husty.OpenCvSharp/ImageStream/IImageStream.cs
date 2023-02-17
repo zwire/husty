@@ -13,10 +13,8 @@ public interface IImageStream<TImage> : IDisposable
 
     public Size FrameSize { get; }
 
-    public bool HasFrame { get; }
+    public IObservable<TImage> ImageSequence { get; }
 
     public TImage Read();
-
-    public IObservable<TImage> GetStream();
 
 }

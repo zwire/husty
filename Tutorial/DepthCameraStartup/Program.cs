@@ -11,7 +11,8 @@ IImageStream<BgrXyzImage> camera = null;
 camera = new RealSense.CameraStream(new(640, 360));
 //camera = new Kinect.CameraStream();
 
-var connector = camera.GetStream()
+var connector = camera
+    .ImageSequence
     .TimeInterval()
     .Subscribe(v =>
     {

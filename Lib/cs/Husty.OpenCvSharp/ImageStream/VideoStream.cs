@@ -9,6 +9,7 @@ public sealed class VideoStream : IVideoStream<Mat>
 
     // ------ fields ------ //
 
+    private bool _disposed;
     private int _positionIndex;
     private readonly VideoCapture _cap;
     private readonly ObjectPool<Mat> _pool;
@@ -22,9 +23,9 @@ public sealed class VideoStream : IVideoStream<Mat>
 
     public Size FrameSize { get; }
 
-    public bool HasFrame { private set; get; }
-
     public int FrameCount { get; }
+
+    public IObservable<Mat> ImageSequence { get; }
 
     public int CurrentPosition => _positionIndex;
 
@@ -44,6 +45,22 @@ public sealed class VideoStream : IVideoStream<Mat>
         Channels = (int)_cap.Get(VideoCaptureProperties.Channel);
         FrameSize = new(_cap.FrameWidth, _cap.FrameHeight);
         FrameCount = _cap.FrameCount;
+        var connectable = Observable
+            .Repeat(0, ThreadPoolScheduler.Instance)
+            .TakeUntil(_ => _disposed)
+            .Where(_ => !IsEnd)
+            .Select(_ =>
+            {
+                if (IsEnd) return null;
+                _cap.Set(VideoCaptureProperties.PosFrames, _positionIndex++);
+                var frame = _pool.GetObject();
+                Task.Delay(1000 / Fps).Wait();
+                return _cap.Read(frame) ? frame : null;
+            })
+            .Where(x => x is not null)
+            .Publish();
+        connectable.Connect();
+        ImageSequence = connectable;
     }
 
 
@@ -51,23 +68,9 @@ public sealed class VideoStream : IVideoStream<Mat>
 
     public Mat Read()
     {
-        if (_positionIndex == FrameCount - 1) return null;
-        _cap.Set(VideoCaptureProperties.PosFrames, _positionIndex++);
-        var frame = _pool.GetObject();
-        HasFrame = _cap.Read(frame);
-        if (HasFrame)
-            return frame;
-        else
-            return null;
-    }
-
-    public IObservable<Mat> GetStream()
-    {
-        return Observable.Interval(TimeSpan.FromMilliseconds(1000 / Fps), ThreadPoolScheduler.Instance)
-            .Where(_ => _positionIndex < FrameCount)
-            .Select(_ => Read())
-            .TakeWhile(x => x is not null)
-            .Publish().RefCount();
+        while (!_disposed)
+            if (ImageSequence.FirstOrDefaultAsync().Wait() is Mat img) return img;
+        return null;
     }
 
     public void Seek(int position)
@@ -77,7 +80,8 @@ public sealed class VideoStream : IVideoStream<Mat>
 
     public void Dispose()
     {
-        HasFrame = false;
+        if (_disposed) return;
+        _disposed = true;
         _cap?.Dispose();
         _pool?.Dispose();
     }

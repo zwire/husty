@@ -13,6 +13,7 @@ public class CameraStream : IImageStream<BgrXyzImage>
 
     // ------ fields ------ //
 
+    private bool _disposed;
     private readonly Align _align;
     private readonly Pipeline _pipeline;
     private readonly DisparityTransform _depthto;
@@ -31,7 +32,7 @@ public class CameraStream : IImageStream<BgrXyzImage>
 
     public Size FrameSize { get; }
 
-    public bool HasFrame { private set; get; }
+    public IObservable<BgrXyzImage> ImageSequence { get; }
 
 
     // ------ constructors ------ //
@@ -81,6 +82,30 @@ public class CameraStream : IImageStream<BgrXyzImage>
         if (fps < 1) fps = 1;
         if (fps > 50) fps = 50;
         Fps = fps;
+        var connectable = Observable
+            .Repeat(0, ThreadPoolScheduler.Instance)
+            .TakeUntil(_ => _disposed)
+            .Select(_ =>
+            {
+                using var frames1 = _pipeline.WaitForFrames();
+                using var frames2 = _align.Process(frames1);
+                using var frames3 = frames2.AsFrameSet();
+                using var color = frames3.ColorFrame.DisposeWith(frames3);
+                using var depth1 = frames3.DepthFrame.DisposeWith(frames3);
+                using var depth2 = _depthto?.Process(depth1) ?? depth1;
+                using var depth3 = _sfill?.Process(depth2) ?? depth2;
+                using var depth4 = _tfill?.Process(depth3) ?? depth3;
+                using var depth5 = _todepth?.Process(depth4) ?? depth4;
+                using var depth6 = _hfill?.Process(depth5) ?? depth5;
+                var frame = _pool.GetObject();
+                CopyColorPixels(color, frame.Bgr);
+                CopyPointCloudPixels(depth6, frame.X, frame.Y, frame.Z, color.Width, color.Height);
+                return frame;
+            })
+            .Where(x => !x.IsDisposed && !x.Empty())
+            .Publish();
+        connectable.Connect();
+        ImageSequence = connectable;
     }
 
 
@@ -88,35 +113,15 @@ public class CameraStream : IImageStream<BgrXyzImage>
 
     public BgrXyzImage Read()
     {
-        using var frames1 = _pipeline.WaitForFrames();
-        using var frames2 = _align.Process(frames1);
-        using var frames3 = frames2.AsFrameSet();
-        using var color = frames3.ColorFrame.DisposeWith(frames3);
-        using var depth1 = frames3.DepthFrame.DisposeWith(frames3);
-        using var depth2 = _depthto?.Process(depth1) ?? depth1;
-        using var depth3 = _sfill?.Process(depth2) ?? depth2;
-        using var depth4 = _tfill?.Process(depth3) ?? depth3;
-        using var depth5 = _todepth?.Process(depth4) ?? depth4;
-        using var depth6 = _hfill?.Process(depth5) ?? depth5;
-        var frame = _pool.GetObject();
-        CopyColorPixels(color, frame.Bgr);
-        CopyPointCloudPixels(depth6, frame.X, frame.Y, frame.Z, color.Width, color.Height);
-        HasFrame = true;
-        return frame;
-    }
-
-    public IObservable<BgrXyzImage> GetStream()
-    {
-        return Observable
-            .Repeat(0, ThreadPoolScheduler.Instance)
-            .Select(_ => Read())
-            .Where(x => !x.IsDisposed && !x.Empty())
-            .Publish().RefCount();
+        while (!_disposed)
+            if (ImageSequence.FirstOrDefaultAsync().Wait() is BgrXyzImage img) return img;
+        return null;
     }
 
     public void Dispose()
     {
-        HasFrame = false;
+        if (_disposed) return;
+        _disposed = true;
         _pipeline?.Stop();
         _pipeline?.Dispose();
         _pool?.Dispose();

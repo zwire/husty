@@ -1,12 +1,24 @@
 ﻿using System.Text;
 
-namespace Husty.IO;
+namespace Husty.Communication;
 
 public interface IDataTransporter : IDisposable
 {
 
     public string NewLine { get; }
     public Encoding Encoding { get; }
+
+    public bool TryWrite(byte[] data);
+
+    public byte[]? Read(int count = 4096);
+
+    public bool TryWriteLine(string data);
+
+    public string? ReadLine();
+
+    public bool TryWriteAsJson<T>(T data);
+
+    public T? ReadAsJson<T>();
 
     public Task<bool> TryWriteAsync(
         byte[] data,
