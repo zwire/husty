@@ -1,6 +1,6 @@
 ﻿using OpenCvSharp;
 
-namespace DataArranger;
+namespace Annot.PluginCLI;
 
 public class BrightnessDisperse : IFunction
 {

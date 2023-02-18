@@ -1,13 +1,13 @@
 ﻿using OpenCvSharp;
 
-namespace DataArranger;
+namespace Annot.PluginCLI;
 
 public class ImgResize : IFunction
 {
 
     public string GetFunctionExplanation()
     {
-        return "";
+        return "resize images";
     }
 
     public string[] GetArgsExplanation()

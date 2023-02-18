@@ -1,8 +1,8 @@
 ﻿using OpenCvSharp;
 
-namespace DataArranger;
+namespace Annot.PluginCLI;
 
-public class HorizonalFlip : IFunction
+public class ValueEqualize : IFunction
 {
 
     public string GetFunctionExplanation()
@@ -34,10 +34,12 @@ public class HorizonalFlip : IFunction
             var maskFile = maskFiles[i];
             var img = Cv2.ImRead(inputFile);
             var mask = Cv2.ImRead(maskFile);
-            Cv2.Flip(img, img, FlipMode.Y);
-            Cv2.Flip(mask, mask, FlipMode.Y);
-            Cv2.ImWrite(input + "\\flipped_" + Path.GetFileName(inputFile), img);
-            Cv2.ImWrite(output + "\\flipped_" + Path.GetFileName(maskFile), mask);
+            var hsv = img.CvtColor(ColorConversionCodes.BGR2HSV).Split();
+            Cv2.EqualizeHist(hsv[2], hsv[2]);
+            Cv2.Merge(hsv, img);
+            Cv2.CvtColor(img, img, ColorConversionCodes.HSV2BGR);
+            Cv2.ImWrite(input + "\\equalized_" + Path.GetFileName(inputFile), img);
+            Cv2.ImWrite(output + "\\equalized_" + Path.GetFileName(maskFile), mask);
         }
     }
 }

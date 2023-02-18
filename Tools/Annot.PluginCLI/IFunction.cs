@@ -1,4 +1,4 @@
-﻿namespace DataArranger;
+﻿namespace Annot.PluginCLI;
 
 public interface IFunction
 {

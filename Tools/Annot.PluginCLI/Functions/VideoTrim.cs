@@ -1,6 +1,6 @@
 ﻿using OpenCvSharp;
 
-namespace DataArranger;
+namespace Annot.PluginCLI;
 
 public class VideoTrim : IFunction
 {
@@ -31,8 +31,8 @@ public class VideoTrim : IFunction
         {
             if (count++ % int.Parse(args[0]) is 0)
             {
-                while (File.Exists($"{output}\\{imnum:d3}.png")) imnum++;
-                Cv2.ImWrite($"{output}\\{imnum:d3}.png", img);
+                while (File.Exists($"{output}\\{imnum:d4}.png")) imnum++;
+                Cv2.ImWrite($"{output}\\{imnum:d4}.png", img);
                 Cv2.ImShow(" ", img);
                 Cv2.WaitKey(1);
             }

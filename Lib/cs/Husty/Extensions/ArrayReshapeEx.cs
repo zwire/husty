@@ -163,17 +163,17 @@ public static class ArrayReshapeEx
     {
         var rows = array.Length;
         var cols = array[0].Length;
-        var array2 = new T[rows][];
-        for (int y = 0; y < rows; y++)
-        {
-            if (array[y].Length != cols) 
+        for (int i = 0; i < rows; i++)
+            if (array[i].Length != cols)
                 throw new ArgumentException("invalid array shape");
-            var span2 = new T[cols].AsSpan();
-            for (int x = 0; x < cols; x++)
+        var array2 = new T[cols][];
+        for (int y = 0; y < cols; y++)
+        {
+            array2[y] = new T[rows];
+            for (int x = 0; x < rows; x++)
             {
-                span2[x] = array[y][x];
+                array2[y][x] = array[x][y];
             }
-            array2[y] = span2.ToArray();
         }
         return array2;
     }

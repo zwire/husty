@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using OpenCvSharp;
 
-namespace DataArranger;
+namespace Annot.PluginCLI;
 
 public class J2Mask : IFunction
 {

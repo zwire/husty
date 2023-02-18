@@ -1,4 +1,4 @@
-﻿namespace DataArranger;
+﻿namespace Annot.PluginCLI;
 
 // see https://piyonekochannel.com/entry/2020/02/11/211416
 public class LSTMDataGenerate : IFunction
