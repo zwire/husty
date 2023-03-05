@@ -6,7 +6,13 @@
     <Nullable>enable</Nullable>
     <Platforms>AnyCPU;x64</Platforms>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Version>2.0.7</Version>
+    <Version>2.0.8</Version>
+    <Authors>Takumi Yamashita</Authors>
+    <PackageProjectUrl>https://github.com/husty530/Husty-public/tree/master/Lib/cs/Husty.OpenCvSharp.AzureKinect</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/husty530/Husty-public</RepositoryUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Description>Azure Kinect SDK wrapper depending on Husty.OpenCvSharp</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +29,17 @@
         <PackageCopyToOutput>true</PackageCopyToOutput>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
