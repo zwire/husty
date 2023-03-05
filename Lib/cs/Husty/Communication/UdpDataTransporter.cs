@@ -22,11 +22,16 @@ public class UdpDataTransporter : DataTransporterBase
         return this;
     }
 
-    public UdpDataTransporter SetTargetPorts(params int[] ports)
+    public UdpDataTransporter SetTargetPorts(params IPEndPoint[] ep)
     {
         _sender = new();
-        _targets = ports.Select(p => new IPEndPoint(IPAddress.Broadcast, p)).ToArray();
+        _targets = ep;
         return this;
+    }
+
+    public UdpDataTransporter SetTargetPorts(params int[] ports)
+    {
+        return SetTargetPorts(ports.Select(p => new IPEndPoint(IPAddress.Loopback, p)).ToArray());
     }
 
 
