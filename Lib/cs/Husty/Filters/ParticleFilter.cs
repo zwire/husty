@@ -1,259 +1,105 @@
-﻿using System;
-using MathNet.Numerics.Distributions;
+﻿using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace Husty.Filters;
 
-// k ... State Vector Length
-// m ... Measurement Vector Length
-// n ... Control Vector Length
-// 
-// If you describe Matrix like,
-// 
-//     M = A B C
-//         D E F
-//         G H I
-//         
-// you should write code like this,
-// 
-// m = { a, b, c, d, e, f, g, h, i }
-// 
-// Simple version constructor is available if you need.
-
-/// <summary>
-/// Filtering & control methods subject to Gaussian distribution
-/// </summary>
-public sealed class ParticleFilter
+public sealed class ParticleFilter : NonlinearStateFilterBase
 {
 
-    // ------ fields ------ //
-
-    private readonly int k;                 // State Vector Length
-    private readonly int m;                 // Measurement Vector Length
-    private readonly int n;                 // Control Vector Length
-    private readonly int N;                 // Count of Particle
-    private readonly Matrix<double> A;      // Transition Matrix
-    private readonly Matrix<double> B;      // Control Matrix
-    private readonly Matrix<double> C;      // Measure Matrix
-    private readonly Matrix<double> Q;      // Process Noise Matrix
-    private readonly Matrix<double> R;      // Measure Noise Matrix
-    private readonly Matrix<double> RInv;
-    private readonly double _denominator;
+    public record struct Particle(Vector<double> State, double Likelihood);
 
 
     // ------ properties ------ //
 
-    public List<Vector<double>> Particles { private set; get; }
+    public Particle[] Particles { private set; get; }
 
 
     // ------ constructors ------ //
 
-    /// <summary>
-    /// Use same status and observe parameter.
-    /// You can input control.
-    /// Noise covariance is default value.
-    /// </summary>        
-    /// <param name="initialStateVec">X (k * 1)</param>
-    /// <param name="controlMatrix">B (k * n)</param>
-    /// <param name="filterStrength"></param>
-    /// <param name="N">Particles Count (default)</param>
-    public ParticleFilter(double[] initialStateVec, double[]? controlMatrix, double filterStrength = 1.0, int N = 100)
+    /// <remarks>diagonal values of all matrix is initialized as one.</remarks>
+    public ParticleFilter(
+        IEnumerable<double> x0, 
+        int observationVectorSize, 
+        int controlVectorSize, 
+        int n
+    ) : base(x0, observationVectorSize, controlVectorSize)
     {
-
-        k = initialStateVec.Length;
-        m = initialStateVec.Length;
-        n = controlMatrix is not null ? controlMatrix.Length / k : 0;
-        this.N = N;
-        B = controlMatrix is not null ? new DenseMatrix(n, k, controlMatrix).Transpose() : null;
-        C = DenseMatrix.OfArray(new double[m, k]);
-        A = DenseMatrix.OfArray(new double[k, k]);
-        R = DenseMatrix.OfArray(new double[m, m]);
-        Q = DenseMatrix.OfArray(new double[k, k]);
-        Particles = new List<Vector<double>>();
-        for (int i = 0; i < k; i++)
-        {
-            C[i, i] = 1;
-            A[i, i] = 1;
-            R[i, i] = filterStrength;
-            Q[i, i] = 1.0 / filterStrength;
-        }
-        for (int i = 0; i < N; i++)
-            Particles.Add(MakeVectorRandom(new DenseVector(initialStateVec)));
-        _denominator = Math.Sqrt(Math.Pow(2 * Math.PI, k) * R.Determinant());
-        RInv = R.Inverse();
-    }
-
-    /// <summary>
-    /// Use same status and observe parameter.
-    /// You can input control.
-    /// Noise covariance is default value.
-    /// </summary>        
-    /// <param name="initialStateVec">X (k * 1)</param>
-    /// <param name="controlMatrix">B (k * n)</param>
-    /// <param name="measurementNoise">R (default)</param>
-    /// <param name="processNoise">Q (default)</param>
-    /// <param name="N">Particles Count (default)</param>
-    public ParticleFilter(double[] initialStateVec, double[]? controlMatrix, double measurementNoise = 0.01, double processNoise = 0.01, int N = 100)
-    {
-
-        k = initialStateVec.Length;
-        m = initialStateVec.Length;
-        n = controlMatrix is not null ? controlMatrix.Length / k : 0;
-        this.N = N;
-        B = controlMatrix is not null ? new DenseMatrix(n, k, controlMatrix).Transpose() : null;
-        C = DenseMatrix.OfArray(new double[m, k]);
-        A = DenseMatrix.OfArray(new double[k, k]);
-        R = DenseMatrix.OfArray(new double[m, m]);
-        Q = DenseMatrix.OfArray(new double[k, k]);
-        Particles = new List<Vector<double>>();
-        for (int i = 0; i < k; i++)
-        {
-            C[i, i] = 1;
-            A[i, i] = 1;
-            R[i, i] = measurementNoise;
-            Q[i, i] = processNoise;
-        }
-        for (int i = 0; i < N; i++)
-            Particles.Add(MakeVectorRandom(new DenseVector(initialStateVec)));
-        _denominator = Math.Sqrt(Math.Pow(2 * Math.PI, k) * R.Determinant());
-        RInv = R.Inverse();
-    }
-
-    /// <summary>
-    /// In the case of that observe differ from status.
-    /// You can input control.
-    /// </summary>
-    /// <param name="initialStateVec">X (k * 1)</param>
-    /// <param name="controlMatrix">B (k * n)</param>
-    /// <param name="transitionMatrix">A (k * k)</param>
-    /// <param name="measurementMatrix">C (m * k)</param>
-    /// <param name="measurementNoise">R (default)</param>
-    /// <param name="processNoise">Q (default)</param>
-    /// <param name="N">Particles Count(default)</param>
-    public ParticleFilter(double[] initialStateVec, double[]? controlMatrix, double[] transitionMatrix, double[] measurementMatrix, double measurementNoise = 0.01, double processNoise = 0.01, int N = 100)
-    {
-        k = initialStateVec.Length;
-        m = measurementMatrix.Length / k;
-        n = controlMatrix is not null ? controlMatrix.Length / k : 0;
-        this.N = N;
-        B = controlMatrix is not null ? new DenseMatrix(n, k, controlMatrix).Transpose() : null;
-        C = new DenseMatrix(k, m, measurementMatrix).Transpose();
-        A = new DenseMatrix(k, k, transitionMatrix).Transpose();
-        R = DenseMatrix.OfArray(new double[m, m]);
-        Q = DenseMatrix.OfArray(new double[k, k]);
-        Particles = new List<Vector<double>>();
-        for (int i = 0; i < k; i++)
-            Q[i, i] = processNoise;
-        for (int i = 0; i < m; i++)
-            R[i, i] = measurementNoise;
-        for (int i = 0; i < N; i++)
-            Particles.Add(MakeVectorRandom(new DenseVector(initialStateVec)));
-        _denominator = Math.Sqrt(Math.Pow(2 * Math.PI, k) * R.Determinant());
-        RInv = R.Inverse();
-
-    }
-
-    /// <summary>
-    /// You can design noise covariance matrix.
-    /// But can input control.
-    /// </summary>
-    /// <param name="initialStateVec">X (k * 1)</param>
-    /// <param name="controlMatrix">B (k * n)</param>
-    /// <param name="transitionMatrix">A (k * k)</param>
-    /// <param name="measurementMatrix">C (m * k)</param>
-    /// <param name="measurementNoiseMatrix">R (m * m)</param>
-    /// <param name="processNoiseMatrix">Q (k * k)</param>
-    /// <param name="N">Particles Count (default)</param>
-    public ParticleFilter(double[] initialStateVec, double[]? controlMatrix, double[] transitionMatrix, double[] measurementMatrix, double[] measurementNoiseMatrix, double[] processNoiseMatrix, int N = 100)
-    {
-        k = initialStateVec.Length;
-        m = measurementMatrix.Length / k;
-        n = controlMatrix is not null ? controlMatrix.Length / k : 0;
-        this.N = N;
-        B = controlMatrix is not null ? new DenseMatrix(n, k, controlMatrix).Transpose() : null;
-        C = new DenseMatrix(k, m, measurementMatrix).Transpose();
-        A = new DenseMatrix(k, k, transitionMatrix).Transpose();
-        R = new DenseMatrix(m, m, measurementNoiseMatrix).Transpose();
-        Q = new DenseMatrix(k, k, processNoiseMatrix).Transpose();
-        Particles = new List<Vector<double>>();
-        for (int i = 0; i < N; i++)
-            Particles.Add(MakeVectorRandom(new DenseVector(initialStateVec)));
-        _denominator = Math.Sqrt(Math.Pow(2 * Math.PI, k) * R.Determinant());
-        RInv = R.Inverse();
-
+        Particles = new Particle[n];
+        for (int i = 0; i < n; i++)
+            Particles[i] = Randmize(new(DenseVector.OfEnumerable(x0), 1.0 / n));
     }
 
 
     // ------ public methods ------ //
 
-    public (double[] Correct, double[] Predict) Update(double[] measurementVec, double[]? controlVec = null)
+    public override double[] Predict(params double[] u)
     {
-        var y = new DenseVector(measurementVec);
-        var wList = new List<double>();
-        foreach (var x in Particles)
-            wList.Add(CalcLikelihood(x, y));
-        var wSum = wList.Sum();
-        var correct = new double[k];
-        for (int i = 0; i < N; i++)
+        if (Dt <= 0) throw new Exception("Require: Dt > 0");
+        // predict next state
+        for (int i = 0; i < Particles.Length; i++)
         {
-            wList[i] /= wSum;
-            for (int j = 0; j < k; j++)
-                correct[j] += Particles[i][j] * wList[i];
+            var nextState = NonlinearTransitionFunction(new(Particles[i].State, DenseVector.OfArray(u), Dt));
+            Particles[i] = Randmize(new(nextState, Particles[i].Likelihood));
         }
-        Particles = Resample(wList).ToList();
-        Particles = PredictNextState(controlVec).ToList();
-        var predict = new double[k];
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < k; j++)
-                predict[j] += Particles[i][j] * wList[i];
-        return (correct, predict);
+        // approximate next state as weighted average
+        var state = new double[_k];
+        for (int i = 0; i < Particles.Length; i++)
+            for (int j = 0; j < _k; j++)
+                state[j] += Particles[i].State[j] * Particles[i].Likelihood;
+        return state;
+    }
+
+    public override double[] Update(params double[] y)
+    {
+        // update likelihood
+        var sum = 0.0;
+        var likelihoods = new double[Particles.Length];
+        for (int i = 0; i < Particles.Length; i++)
+        {
+            // TODO: likelihood design
+            var e = DenseVector.OfArray(y) - NonlinearObservationFunction(new(Particles[i].State));
+            likelihoods[i] = 1.0 / Math.Exp((e * e * R).L2Norm());
+            sum += likelihoods[i];
+        }
+        for (int i = 0; i < Particles.Length; i++)
+        {
+            Particles[i] = new(Particles[i].State, likelihoods[i] / sum);
+        }
+        // approximate current state as weighted average
+        var state = new double[_k];
+        for (int i = 0; i < Particles.Length; i++)
+            for (int j = 0; j < _k; j++)
+                state[j] += Particles[i].State[j] * Particles[i].Likelihood;
+        // resampling to keep the important particles alive.
+        var tmp = new List<Particle>();
+        var scale = 1.0 / Particles.Length;
+        for (var d = scale / 2; d < 1; d += scale)
+        {
+            var sum2 = 0.0;
+            for (int i = 0; i < Particles.Length; i++)
+            {
+                sum2 += Particles[i].Likelihood;
+                if (sum2 > d)
+                {
+                    tmp.Add(Particles[i]);
+                    break;
+                }
+            }
+        }
+        Particles = tmp.ToArray();
+        return state;
     }
 
 
     // ------ private methods ------ //
 
-    private DenseVector MakeVectorRandom(Vector<double> vec)
+    private Particle Randmize(Particle p)
     {
-        var value = new double[k];
-        for (int i = 0; i < k; i++)
-            value[i] = Normal.Samples(vec[i], Q[i, i]).Take(1).ToArray()[0];
-        return new DenseVector(value);
-    }
-
-    private double CalcLikelihood(Vector<double> x, Vector<double> y)
-    {
-        var err = y - C * x;
-        var errT = err.ToRowMatrix();
-        var index = (-errT * RInv * err / 2)[0];
-        return Math.Exp(index) / _denominator;
-    }
-
-    private IEnumerable<Vector<double>> Resample(List<double> likelihoodList)
-    {
-        for (double d = 1.0 / N / 2; d < 1.0; d += 1.0 / N)
-        {
-            var sum = 0.0;
-            for (int i = 0; i < N; i++)
-            {
-                sum += likelihoodList[i];
-                if (sum > d)
-                {
-                    yield return Particles[i];
-                    break;
-                }
-            }
-        }
-    }
-
-    private IEnumerable<Vector<double>> PredictNextState(double[]? controlVec)
-    {
-        if (B is null || controlVec is null)
-            foreach (var p in Particles)
-                yield return MakeVectorRandom(A * p);
-        else
-            foreach (var p in Particles)
-                yield return MakeVectorRandom(A * p + B * new DenseVector(controlVec));
+        var state = new DenseVector(p.State.Count);
+        for (int i = 0; i < _k; i++)
+            state[i] = Normal.Sample(p.State[i], Q[i, i]);
+        return new(state, p.Likelihood);
     }
 
 }
