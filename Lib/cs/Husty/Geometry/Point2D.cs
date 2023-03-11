@@ -37,6 +37,8 @@ public class Point2D : IEquatable<Point2D>
 
     public Vector2D ToVector2D() => new(X, Y, ID);
 
+    public void Deconstruct(out double x, out double y) => (x, y) = (X, Y);
+
     public void Deconstruct(out double x, out double y, out string? id) => (x, y, id) = (X, Y, ID);
 
     public bool Equals(Point2D? obj) => GetHashCode() == obj?.GetHashCode();

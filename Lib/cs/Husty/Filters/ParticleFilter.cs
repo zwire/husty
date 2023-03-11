@@ -1,4 +1,5 @@
-﻿using MathNet.Numerics.Distributions;
+﻿using MathNet.Numerics;
+using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
@@ -7,7 +8,16 @@ namespace Husty.Filters;
 public sealed class ParticleFilter : NonlinearStateFilterBase
 {
 
-    public record struct Particle(Vector<double> State, double Likelihood);
+    public struct Particle
+    {
+        public Vector<double> State { set; get; } 
+        public double Likelihood { set; get; }
+        public Particle(Vector<double> state, double likelihood)
+        {
+            State = state;
+            Likelihood = likelihood;
+        }
+    }
 
 
     // ------ properties ------ //
@@ -27,7 +37,7 @@ public sealed class ParticleFilter : NonlinearStateFilterBase
     {
         Particles = new Particle[n];
         for (int i = 0; i < n; i++)
-            Particles[i] = Randmize(new(DenseVector.OfEnumerable(x0), 1.0 / n));
+            Particles[i] = Randomize(new(DenseVector.OfEnumerable(x0), 1.0 / n));
     }
 
 
@@ -36,70 +46,93 @@ public sealed class ParticleFilter : NonlinearStateFilterBase
     public override double[] Predict(params double[] u)
     {
         if (Dt <= 0) throw new Exception("Require: Dt > 0");
+        var ps = Particles.ToArray();
         // predict next state
-        for (int i = 0; i < Particles.Length; i++)
+        for (int i = 0; i < ps.Length; i++)
         {
-            var nextState = NonlinearTransitionFunction(new(Particles[i].State, DenseVector.OfArray(u), Dt));
-            Particles[i] = Randmize(new(nextState, Particles[i].Likelihood));
+            var nextState = NonlinearTransitionFunction(new(ps[i].State, DenseVector.OfArray(u), Dt));
+            ps[i] = Randomize(new(nextState, ps[i].Likelihood));
         }
-        // approximate next state as weighted average
-        var state = new double[_k];
-        for (int i = 0; i < Particles.Length; i++)
-            for (int j = 0; j < _k; j++)
-                state[j] += Particles[i].State[j] * Particles[i].Likelihood;
+        var state = GetWeightedState(ps);
+        X = DenseVector.OfArray(GetWeightedState(ps));
+        Particles = ps;
         return state;
     }
 
     public override double[] Update(params double[] y)
     {
+        var ps = Particles.ToArray();
         // update likelihood
         var sum = 0.0;
-        var likelihoods = new double[Particles.Length];
-        for (int i = 0; i < Particles.Length; i++)
+        var best = double.MaxValue;
+        var bestIndex = 0;
+        for (int i = 0; i < ps.Length; i++)
         {
-            // TODO: likelihood design
-            var e = DenseVector.OfArray(y) - NonlinearObservationFunction(new(Particles[i].State));
-            likelihoods[i] = 1.0 / Math.Exp((e * e * R).L2Norm());
-            sum += likelihoods[i];
-        }
-        for (int i = 0; i < Particles.Length; i++)
-        {
-            Particles[i] = new(Particles[i].State, likelihoods[i] / sum);
-        }
-        // approximate current state as weighted average
-        var state = new double[_k];
-        for (int i = 0; i < Particles.Length; i++)
-            for (int j = 0; j < _k; j++)
-                state[j] += Particles[i].State[j] * Particles[i].Likelihood;
-        // resampling to keep the important particles alive.
-        var tmp = new List<Particle>();
-        var scale = 1.0 / Particles.Length;
-        for (var d = scale / 2; d < 1; d += scale)
-        {
-            var sum2 = 0.0;
-            for (int i = 0; i < Particles.Length; i++)
+            var diff = (DenseVector.OfArray(y) - NonlinearObservationFunction(new(ps[i].State))).ToRowMatrix();
+            var e = (diff * R.Inverse() * diff.Transpose())[0, 0];
+            var ex = Math.Exp(-0.5 * e);
+            ps[i].Likelihood = ex;
+            sum += ex;
+            if (e < best)
             {
-                sum2 += Particles[i].Likelihood;
-                if (sum2 > d)
-                {
-                    tmp.Add(Particles[i]);
-                    break;
-                }
+                best = e;
+                bestIndex = i;
             }
         }
-        Particles = tmp.ToArray();
+        if (sum is 0)
+        {
+            ps[bestIndex].Likelihood = 1;
+        }
+        NormalizeLikelihood(ref ps);
+        var state = GetWeightedState(ps);
+        X = DenseVector.OfArray(state);
+        // resampling to keep the important particles alive
+        var ps2 = new List<Particle>();
+        var sum2 = 0.0;
+        var j = 0;
+        var scale = 1.0 / ps.Length;
+        for (var d = scale / 2; d < 1; d += scale)
+        {
+            while (sum2 + ps[j].Likelihood < d)
+            {
+                sum2 += ps[j].Likelihood;
+                j++;
+            }
+            ps2.Add(ps[j]);
+        }
+        ps = ps2.ToArray();
+        NormalizeLikelihood(ref ps);
+        Particles = ps;
         return state;
     }
 
 
     // ------ private methods ------ //
 
-    private Particle Randmize(Particle p)
+    private Particle Randomize(Particle p)
     {
         var state = new DenseVector(p.State.Count);
         for (int i = 0; i < _k; i++)
-            state[i] = Normal.Sample(p.State[i], Q[i, i]);
+            state[i] = Normal.Sample(p.State[i], Math.Sqrt(Q[i, i]));
         return new(state, p.Likelihood);
+    }
+
+    private double[] GetWeightedState(Particle[] ps)
+    {
+        var state = new double[_k];
+        for (int i = 0; i < ps.Length; i++)
+            for (int j = 0; j < _k; j++)
+                state[j] += ps[i].State[j] * ps[i].Likelihood;
+        return state;
+    }
+
+    private static void NormalizeLikelihood(ref Particle[] ps)
+    {
+        var sum = 0.0;
+        for (int i = 0; i < ps.Length; i++)
+            sum += ps[i].Likelihood;
+        for (int i = 0; i < ps.Length; i++)
+            ps[i].Likelihood = ps[i].Likelihood / sum;
     }
 
 }

@@ -90,6 +90,8 @@ public class Vector3D : IEquatable<Vector3D>
         return new(x, y, z, ID);
     }
 
+    public void Deconstruct(out double x, out double y, out double z) => (x, y, z) = (X, Y, Z);
+    
     public void Deconstruct(out double x, out double y, out double z, out string? id) => (x, y, z, id) = (X, Y, Z, ID);
 
     public bool Equals(Vector3D? obj) => GetHashCode() == obj?.GetHashCode();

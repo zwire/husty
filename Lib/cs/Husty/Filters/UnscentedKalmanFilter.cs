@@ -100,7 +100,7 @@ public sealed class UnscentedKalmanFilter : NonlinearStateFilterBase
     private void UpdateSigmas()
     {
         for (int i = 0; i < P.RowCount; i++)
-            if (P[i, i] is 0) P[i, i] += 1e-9;
+            if (P[i, i] is 0) P[i, i] = 1e-9;
         var sigmas = _lambda * P.Cholesky().Factor;
         _sigmas[0] = X;
         for (int i = 1; i <= _k; i++)

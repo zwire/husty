@@ -4,8 +4,12 @@ using MathNet.Numerics.LinearAlgebra.Double;
 namespace Husty.Filters;
 
 /// <remarks>
-/// Xt+1 = AXt + BUt + W
+/// -- linear state expression --
+/// Xt+1 = (AXt + BUt) * dt + W
 /// Yt+1 = CXt+1 + V
+/// -- non-linear state expression --
+/// Xt+1 = nonlinear_transition_function(Xt, Ut, W, dt)
+/// Yt+1 = nonlinear_observation_function(Xt+1, V)
 /// where: W ~ Q, V ~ R
 /// </remarks>
 
@@ -47,7 +51,7 @@ public interface INonlinearStateFilter
     public double[] Predict(params double[] u);
 
     /// <summary>correct current state</summary>
-    /// <param name="y">observed vector</param>
+    /// <param name="y">observation</param>
     public double[] Update(params double[] y);
 
 }
@@ -89,7 +93,13 @@ public abstract class NonlinearStateFilterBase : INonlinearStateFilter
         P = DenseMatrix.CreateIdentity(_k);
         Q = DenseMatrix.CreateIdentity(_k);
         R = DenseMatrix.CreateIdentity(_m);
-        NonlinearTransitionFunction = v => (A * v.X + B * v.U) * v.Dt;
+        NonlinearTransitionFunction = v =>
+        {
+            if  (B.RowCount is 0 || B.ColumnCount is 0 || v.U.Count is 0)
+                return A * v.X * v.Dt;
+            else
+                return (A * v.X + B * v.U) * v.Dt;
+        };
         NonlinearObservationFunction = v => C * v.X;
     }
 

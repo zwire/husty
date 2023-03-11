@@ -38,7 +38,9 @@ public class Point3D : IEquatable<Point3D>
 
     public Vector3D ToVector3D() => new(X, Y, Z, ID);
 
-    public void Deconstruct(out double x, out double y, out double z, string? id) => (x, y, z, id) = (X, Y, Z, ID);
+    public void Deconstruct(out double x, out double y, out double z) => (x, y, z) = (X, Y, Z);
+
+    public void Deconstruct(out double x, out double y, out double z, out string? id) => (x, y, z, id) = (X, Y, Z, ID);
 
     public bool Equals(Point3D? obj) => GetHashCode() == obj?.GetHashCode();
 
