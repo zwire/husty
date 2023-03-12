@@ -3,7 +3,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace Husty.Filters;
 
-public sealed class UnscentedKalmanFilter : NonlinearStateFilterBase
+public sealed class UnscentedKalmanFilter : SequentialBayesianFilterBase
 {
 
     // ------ fields ------ //
@@ -46,7 +46,7 @@ public sealed class UnscentedKalmanFilter : NonlinearStateFilterBase
         var x = Vector<double>.Build.Dense(_k);
         for (int i = 0; i < _sigmas.Length; i++)
         {
-            _sigmas[i] = NonlinearTransitionFunction(new(_sigmas[i], uv, Dt));
+            _sigmas[i] = TransitionFunc(new(_sigmas[i], uv, Dt));
             x += (i is 0 ? _ws0 : _wi) * _sigmas[i];
         }
         // evaluate prediction errors covariance
@@ -59,6 +59,7 @@ public sealed class UnscentedKalmanFilter : NonlinearStateFilterBase
         // update X, P
         X = x;
         P = p + Q;
+        P = (P + P.Transpose()) * 0.5;
         return X.ToArray();
     }
 
@@ -72,7 +73,7 @@ public sealed class UnscentedKalmanFilter : NonlinearStateFilterBase
         var ym = Vector<double>.Build.Dense(_m);
         for (int i = 0; i < gammas.Length; i++)
         {
-            gammas[i] = NonlinearObservationFunction(new(_sigmas[i]));
+            gammas[i] = ObservationFunc(new(_sigmas[i]));
             ym += (i is 0 ? _ws0 : _wi) * gammas[i];
         }
         // evaluate estimation errors covariance
@@ -90,6 +91,7 @@ public sealed class UnscentedKalmanFilter : NonlinearStateFilterBase
         var K = Cxy * S.Inverse();    // optimal kalman gain
         X += K * E;                   // update state estimate
         P -= K * S * K.Transpose();   // update estimate covariance
+        P = (P + P.Transpose()) * 0.5;
         return X.ToArray();
     }
 

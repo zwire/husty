@@ -5,7 +5,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace Husty.Filters;
 
-public sealed class ParticleFilter : NonlinearStateFilterBase
+public sealed class ParticleFilter : SequentialBayesianFilterBase
 {
 
     public struct Particle
@@ -24,6 +24,10 @@ public sealed class ParticleFilter : NonlinearStateFilterBase
 
     public Particle[] Particles { private set; get; }
 
+    public Func<Particle[], Particle[]> ResamplingFunc { set; get; }
+
+    public Func<Vector<double>, double> GetLikelihoodFunc { set; get; }
+
 
     // ------ constructors ------ //
 
@@ -35,9 +39,31 @@ public sealed class ParticleFilter : NonlinearStateFilterBase
         int n
     ) : base(x0, observationVectorSize, controlVectorSize)
     {
-        Particles = new Particle[n];
-        for (int i = 0; i < n; i++)
-            Particles[i] = Randomize(new(DenseVector.OfEnumerable(x0), 1.0 / n));
+        Particles = Enumerable.Range(0, n).Select(_ => new Particle(DenseVector.OfEnumerable(x0), 1.0 / n)).ToArray();
+        Randomize(Particles);
+        // systematic resampling
+        ResamplingFunc = ps =>
+        {
+            var tmp = new List<Particle>();
+            var sum = 0.0;
+            var i = 0;
+            var scale = 1.0 / ps.Length;
+            for (var d = scale / 2; d < 1; d += scale)
+            {
+                while (sum + ps[i].Likelihood < d)
+                {
+                    sum += ps[i].Likelihood;
+                    i++;
+                }
+                tmp.Add(ps[i]);
+            }
+            return tmp.ToArray();
+        };
+        // fitting a Gaussian distribution
+        GetLikelihoodFunc = e =>
+        {
+            return Math.Exp(-0.5 * e * R.Inverse() * e);
+        };
     }
 
 
@@ -49,10 +75,8 @@ public sealed class ParticleFilter : NonlinearStateFilterBase
         var ps = Particles.ToArray();
         // predict next state
         for (int i = 0; i < ps.Length; i++)
-        {
-            var nextState = NonlinearTransitionFunction(new(ps[i].State, DenseVector.OfArray(u), Dt));
-            ps[i] = Randomize(new(nextState, ps[i].Likelihood));
-        }
+            ps[i].State = TransitionFunc(new(ps[i].State, DenseVector.OfArray(u), Dt));
+        Randomize(ps);
         var state = GetWeightedState(ps);
         X = DenseVector.OfArray(GetWeightedState(ps));
         Particles = ps;
@@ -65,43 +89,25 @@ public sealed class ParticleFilter : NonlinearStateFilterBase
         // update likelihood
         var sum = 0.0;
         var best = double.MaxValue;
-        var bestIndex = 0;
+        var index = 0;
         for (int i = 0; i < ps.Length; i++)
         {
-            var diff = (DenseVector.OfArray(y) - NonlinearObservationFunction(new(ps[i].State))).ToRowMatrix();
-            var e = (diff * R.Inverse() * diff.Transpose())[0, 0];
-            var ex = Math.Exp(-0.5 * e);
-            ps[i].Likelihood = ex;
-            sum += ex;
-            if (e < best)
+            var e = DenseVector.OfArray(y) - ObservationFunc(new(ps[i].State));
+            ps[i].Likelihood = GetLikelihoodFunc(e);
+            sum += ps[i].Likelihood;
+            var norm = e * e;
+            if (norm < best)
             {
-                best = e;
-                bestIndex = i;
+                index = i;
+                best = norm;
             }
         }
-        if (sum is 0)
-        {
-            ps[bestIndex].Likelihood = 1;
-        }
-        NormalizeLikelihood(ref ps);
+        if (sum is 0) ps[index].Likelihood = 1;
+        NormalizeLikelihood(ps);
         var state = GetWeightedState(ps);
         X = DenseVector.OfArray(state);
-        // resampling to keep the important particles alive
-        var ps2 = new List<Particle>();
-        var sum2 = 0.0;
-        var j = 0;
-        var scale = 1.0 / ps.Length;
-        for (var d = scale / 2; d < 1; d += scale)
-        {
-            while (sum2 + ps[j].Likelihood < d)
-            {
-                sum2 += ps[j].Likelihood;
-                j++;
-            }
-            ps2.Add(ps[j]);
-        }
-        ps = ps2.ToArray();
-        NormalizeLikelihood(ref ps);
+        ps = ResamplingFunc(ps);
+        NormalizeLikelihood(ps);
         Particles = ps;
         return state;
     }
@@ -109,12 +115,11 @@ public sealed class ParticleFilter : NonlinearStateFilterBase
 
     // ------ private methods ------ //
 
-    private Particle Randomize(Particle p)
+    private void Randomize(Particle[] ps)
     {
-        var state = new DenseVector(p.State.Count);
-        for (int i = 0; i < _k; i++)
-            state[i] = Normal.Sample(p.State[i], Math.Sqrt(Q[i, i]));
-        return new(state, p.Likelihood);
+        for (int i = 0; i < ps.Length; i++)
+            for (int j = 0; j < _k; j++)
+                ps[i].State[j] += Q.Row(j).Select(q => Normal.Sample(0, Math.Sqrt(q))).Sum();
     }
 
     private double[] GetWeightedState(Particle[] ps)
@@ -126,7 +131,7 @@ public sealed class ParticleFilter : NonlinearStateFilterBase
         return state;
     }
 
-    private static void NormalizeLikelihood(ref Particle[] ps)
+    private static void NormalizeLikelihood(Particle[] ps)
     {
         var sum = 0.0;
         for (int i = 0; i < ps.Length; i++)

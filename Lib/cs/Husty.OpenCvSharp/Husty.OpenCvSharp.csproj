@@ -8,7 +8,7 @@
     <Description></Description>
     <PackageProjectUrl>https://github.com/husty530/Husty-public/tree/master/Lib/cs/Husty.OpenCvSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/husty530/Husty-public</RepositoryUrl>
-    <Version>2.0.8</Version>
+    <Version>2.0.9</Version>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageIcon>icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

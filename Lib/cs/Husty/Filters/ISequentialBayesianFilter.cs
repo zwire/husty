@@ -13,7 +13,7 @@ namespace Husty.Filters;
 /// where: W ~ Q, V ~ R
 /// </remarks>
 
-public interface INonlinearStateFilter
+public interface ISequentialBayesianFilter
 {
 
     /// <summary>time span</summary>
@@ -41,10 +41,10 @@ public interface INonlinearStateFilter
     public Vector<double> X { set; get; }
 
     /// <summary>alternative to A and B</summary>
-    public Func<TransitionVariables, Vector<double>> NonlinearTransitionFunction { set; get; }
+    public Func<TransitionVariables, Vector<double>> TransitionFunc { set; get; }
 
     /// <summary>alternative to C</summary>
-    public Func<ObservationVariables, Vector<double>> NonlinearObservationFunction { set; get; }
+    public Func<ObservationVariables, Vector<double>> ObservationFunc { set; get; }
 
     /// <summary>get next state</summary>
     /// <param name="u">(optional) control input</param>
@@ -56,7 +56,7 @@ public interface INonlinearStateFilter
 
 }
 
-public abstract class NonlinearStateFilterBase : INonlinearStateFilter
+public abstract class SequentialBayesianFilterBase : ISequentialBayesianFilter
 {
 
     /// <summary>state vector size</summary>
@@ -74,10 +74,10 @@ public abstract class NonlinearStateFilterBase : INonlinearStateFilter
     public Matrix<double> R { set; get; }
     public Matrix<double> P { set; get; }
     public Vector<double> X { set; get; }
-    public Func<TransitionVariables, Vector<double>> NonlinearTransitionFunction { set; get; }
-    public Func<ObservationVariables, Vector<double>> NonlinearObservationFunction { set; get; }
+    public Func<TransitionVariables, Vector<double>> TransitionFunc { set; get; }
+    public Func<ObservationVariables, Vector<double>> ObservationFunc { set; get; }
 
-    public NonlinearStateFilterBase(
+    public SequentialBayesianFilterBase(
         IEnumerable<double> x0,
         int observationVectorSize,
         int controlVectorSize
@@ -93,14 +93,14 @@ public abstract class NonlinearStateFilterBase : INonlinearStateFilter
         P = DenseMatrix.CreateIdentity(_k);
         Q = DenseMatrix.CreateIdentity(_k);
         R = DenseMatrix.CreateIdentity(_m);
-        NonlinearTransitionFunction = v =>
+        TransitionFunc = v =>
         {
             if  (B.RowCount is 0 || B.ColumnCount is 0 || v.U.Count is 0)
                 return A * v.X * v.Dt;
             else
                 return (A * v.X + B * v.U) * v.Dt;
         };
-        NonlinearObservationFunction = v => C * v.X;
+        ObservationFunc = v => C * v.X;
     }
 
     public abstract double[] Predict(params double[] u);
