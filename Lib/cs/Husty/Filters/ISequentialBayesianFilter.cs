@@ -88,7 +88,7 @@ public abstract class SequentialBayesianFilterBase : ISequentialBayesianFilter
         _n = controlVectorSize;
         X = DenseVector.OfEnumerable(x0);
         A = DenseMatrix.CreateIdentity(_k);
-        B = DenseMatrix.CreateDiagonal(_n, _k, 1);
+        B = DenseMatrix.CreateDiagonal(_k, _n, 1);
         C = DenseMatrix.CreateDiagonal(_m, _k, 1);
         P = DenseMatrix.CreateIdentity(_k);
         Q = DenseMatrix.CreateIdentity(_k);
