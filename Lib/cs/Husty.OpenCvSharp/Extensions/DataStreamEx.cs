@@ -6,7 +6,7 @@ namespace Husty.OpenCvSharp.Extensions;
 public static class DataStreamEx
 {
 
-    public static async Task<bool> WriteMatAsync(this TcpDataTransporter stream, Mat image)
+    public static async Task<bool> WriteMatAsync(this DataTransporter stream, Mat image)
     {
         Cv2.ImEncode(".png", image, out byte[] buf);
         var data = Convert.ToBase64String(buf);
@@ -14,7 +14,7 @@ public static class DataStreamEx
         return await stream.TryWriteLineAsync(sendmsg);
     }
 
-    public static async Task<Mat> ReadMatAsync(this TcpDataTransporter stream)
+    public static async Task<Mat> ReadMatAsync(this DataTransporter stream)
     {
         var (success, rcv) = await stream.TryReadLineAsync();
         if (!success) return null;

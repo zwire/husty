@@ -82,13 +82,13 @@ public sealed class TcpSocketServer : ICommunicationProtocol
         if (_client1 is not null && _client2 is null)
         {
             var stream = _client1.GetStream();
-            return new(true, new TcpDataTransporter(stream, stream, Encoding, NewLine));
+            return new(true, new DataTransporter(stream, stream, Encoding, NewLine));
         }
         else if (_client1 is not null && _client2 is not null)
         {
             var stream1 = _client1.GetStream();
             var stream2 = _client2.GetStream();
-            return new(true, new TcpDataTransporter(stream2, stream1, Encoding, NewLine));
+            return new(true, new DataTransporter(stream2, stream1, Encoding, NewLine));
         }
         else
         {

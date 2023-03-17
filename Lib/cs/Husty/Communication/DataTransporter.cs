@@ -2,7 +2,7 @@
 
 namespace Husty.Communication;
 
-public sealed class TcpDataTransporter : DataTransporterBase
+public sealed class DataTransporter : DataTransporterBase
 {
 
     // ------ fields ------ //
@@ -22,7 +22,7 @@ public sealed class TcpDataTransporter : DataTransporterBase
     
     // ------ constructors ------ //
 
-    internal TcpDataTransporter(
+    internal DataTransporter(
         Stream writingStream,
         Stream readingStream, 
         Encoding encoding,

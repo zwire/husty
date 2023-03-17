@@ -57,7 +57,7 @@ public sealed class NamedPipeServer : ICommunicationProtocol
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         if (timeout != default) cts.CancelAfter(timeout);
         await _connectionTask.WaitAsync(cts.Token).ConfigureAwait(false);
-        return new(true, new TcpDataTransporter(_writer, _reader, Encoding, NewLine));
+        return new(true, new DataTransporter(_writer, _reader, Encoding, NewLine));
     }
 
     public void Dispose()
