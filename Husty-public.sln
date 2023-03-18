@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{DE862315
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cs", "cs", "{B522F9B1-917C-4242-A55A-FB27F7465218}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "py", "py", "{0EE512F2-0740-4BAB-8CA3-56CBF8F022A9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Husty", "Lib\cs\Husty\Husty.csproj", "{D0E074D8-4014-410C-9A4E-FA400E12BD38}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tutorial", "Tutorial", "{567343D4-CEEF-42AC-8AC8-02A6391DA059}"
@@ -20,23 +18,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Husty.Lawicel", "Lib\cs\Husty.Lawicel\Husty.Lawicel.csproj", "{BBAF31C4-5858-46A8-AD49-52C98FE73BBF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Husty.SkywayGateway", "Lib\cs\Husty.SkywayGateway\Husty.SkywayGateway.csproj", "{A673C38F-2971-46FC-ABB9-C9495E44629C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "network", "network", "{78F94936-F5CB-49A7-9465-E8C63A3013D5}"
-	ProjectSection(SolutionItems) = preProject
-		Lib\py\network\data_stream.py = Lib\py\network\data_stream.py
-		Lib\py\network\skyway.py = Lib\py\network\skyway.py
-		Lib\py\network\tcp_socket.py = Lib\py\network\tcp_socket.py
-		Lib\py\network\udp_socket.py = Lib\py\network\udp_socket.py
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dnn", "dnn", "{0F41782B-684B-4F15-BF94-14A0592E7F6C}"
-	ProjectSection(SolutionItems) = preProject
-		Lib\py\dnn\keras_inference.py = Lib\py\dnn\keras_inference.py
-		Lib\py\dnn\nnabla_inference.py = Lib\py\dnn\nnabla_inference.py
-		Lib\py\yolo\yolov3v4_darknet.py = Lib\py\yolo\yolov3v4_darknet.py
-		Lib\py\yolo\yolox_onnx.py = Lib\py\yolo\yolox_onnx.py
-		Lib\py\yolo\yolo_utils.py = Lib\py\yolo\yolo_utils.py
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Camera", "Tools\Camera\Camera.csproj", "{3E14D073-76C0-4D36-B4F9-72482B3FF7E3}"
 EndProject
@@ -106,7 +87,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CanOpen", "Tutorial\CanOpen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageStreamBranch", "Tutorial\ImageStreamBranch\ImageStreamBranch.csproj", "{E21FCC1A-7FD1-49ED-9C3E-0B7EFDB3EAE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization", "Tutorial\Localization\Localization.csproj", "{7B5605FC-3964-4EA6-A184-0FF5C8FA906C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization", "Tutorial\Localization\Localization.csproj", "{7B5605FC-3964-4EA6-A184-0FF5C8FA906C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -569,12 +550,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{75520436-5610-418A-8237-3792A6D74416} = {B522F9B1-917C-4242-A55A-FB27F7465218}
 		{B522F9B1-917C-4242-A55A-FB27F7465218} = {9F680441-26D5-4D15-8115-83FDC9473DE8}
-		{0EE512F2-0740-4BAB-8CA3-56CBF8F022A9} = {9F680441-26D5-4D15-8115-83FDC9473DE8}
 		{D0E074D8-4014-410C-9A4E-FA400E12BD38} = {B522F9B1-917C-4242-A55A-FB27F7465218}
 		{BBAF31C4-5858-46A8-AD49-52C98FE73BBF} = {B522F9B1-917C-4242-A55A-FB27F7465218}
 		{A673C38F-2971-46FC-ABB9-C9495E44629C} = {B522F9B1-917C-4242-A55A-FB27F7465218}
-		{78F94936-F5CB-49A7-9465-E8C63A3013D5} = {0EE512F2-0740-4BAB-8CA3-56CBF8F022A9}
-		{0F41782B-684B-4F15-BF94-14A0592E7F6C} = {0EE512F2-0740-4BAB-8CA3-56CBF8F022A9}
 		{3E14D073-76C0-4D36-B4F9-72482B3FF7E3} = {DE862315-F19F-49E3-9DCC-A3EC043FF422}
 		{F03706F6-D5BB-479C-9AE6-82691C9ABA57} = {DE862315-F19F-49E3-9DCC-A3EC043FF422}
 		{8625A2C5-7F89-447F-A388-92A400CD3215} = {DE862315-F19F-49E3-9DCC-A3EC043FF422}

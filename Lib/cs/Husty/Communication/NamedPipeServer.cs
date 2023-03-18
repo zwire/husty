@@ -8,8 +8,8 @@ public sealed class NamedPipeServer : ICommunicationProtocol
 
     // ------ fields ------ //
 
-    private readonly NamedPipeServerStream _writer;
-    private readonly NamedPipeServerStream _reader;
+    private readonly NamedPipeServerStream _writingStream;
+    private readonly NamedPipeServerStream _readingStream;
     private readonly Task _connectionTask;
 
 
@@ -24,14 +24,14 @@ public sealed class NamedPipeServer : ICommunicationProtocol
 
     public NamedPipeServer(string pipeName)
     {
-        _reader = new(pipeName + "ClientToServer", PipeDirection.In);
-        _writer = new(pipeName + "ServerToClient", PipeDirection.Out);
+        _readingStream = new(pipeName + "ClientToServer", PipeDirection.In);
+        _writingStream = new(pipeName + "ServerToClient", PipeDirection.Out);
         _connectionTask = Task.Run(() =>
         {
             try
             {
-                _reader.WaitForConnection();
-                _writer.WaitForConnection();
+                _readingStream.WaitForConnection();
+                _writingStream.WaitForConnection();
             }
             catch
             {
@@ -57,13 +57,13 @@ public sealed class NamedPipeServer : ICommunicationProtocol
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         if (timeout != default) cts.CancelAfter(timeout);
         await _connectionTask.WaitAsync(cts.Token).ConfigureAwait(false);
-        return new(true, new DataTransporter(_writer, _reader, Encoding, NewLine));
+        return new(true, new DataTransporter(_writingStream, _readingStream, Encoding, NewLine));
     }
 
     public void Dispose()
     {
-        _writer?.Dispose();
-        _reader?.Dispose();
+        _writingStream?.Dispose();
+        _readingStream?.Dispose();
     }
 
 }

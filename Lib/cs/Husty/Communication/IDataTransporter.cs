@@ -6,6 +6,7 @@ public interface IDataTransporter : IDisposable
 {
 
     public string NewLine { get; }
+
     public Encoding Encoding { get; }
 
     public bool TryWrite(byte[] data);

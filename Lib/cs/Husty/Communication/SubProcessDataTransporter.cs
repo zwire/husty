@@ -1,12 +1,14 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace Husty.Communication;
 
-public sealed class DataTransporter : DataTransporterBase
-{
+public sealed class SubProcessDataTransporter : DataTransporterBase
+{ 
 
     // ------ fields ------ //
 
+    private readonly Process _process;
     private readonly Stream _writingStream;
     private readonly Stream _readingStream;
     private readonly StreamWriter _writer;
@@ -19,20 +21,28 @@ public sealed class DataTransporter : DataTransporterBase
 
     public override Stream BaseReadingStream => _readingStream;
 
-    
+
     // ------ constructors ------ //
 
-    internal DataTransporter(
-        Stream writingStream,
-        Stream readingStream, 
-        Encoding encoding,
-        string newLine
-    )
+    public SubProcessDataTransporter(string path, params object[] args)
     {
-        _writingStream = writingStream;
-        _readingStream = readingStream;
-        _writer = new(_writingStream, encoding) { NewLine = newLine };
-        _reader = new(_readingStream, encoding);
+        _process = new()
+        {
+            StartInfo = new()
+            {
+                FileName = path,
+                Arguments = string.Join(' ', args),
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+        _process.Start();
+        _writingStream = _process.StandardInput.BaseStream;
+        _readingStream = _process.StandardOutput.BaseStream;
+        _writer = _process.StandardInput;
+        _reader = _process.StandardOutput;
     }
 
 
@@ -40,8 +50,7 @@ public sealed class DataTransporter : DataTransporterBase
 
     protected override void DoDispose()
     {
-        _writingStream?.Dispose();
-        _readingStream?.Dispose();
+        _process.Dispose();
     }
 
     protected override async Task<bool> DoTryWriteAsync(byte[] data, CancellationToken ct)

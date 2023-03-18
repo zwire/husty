@@ -15,6 +15,16 @@ public abstract class DataTransporterBase : IDataTransporter
 
     public string NewLine { init; get; } = "\n";
     public Encoding Encoding { init; get; } = Encoding.UTF8;
+    public abstract Stream BaseWritingStream { get; }
+    public abstract Stream BaseReadingStream { get; }
+
+
+    // ------ constructors ------ //
+
+    public DataTransporterBase()
+    {
+        _cts = new();
+    }
 
 
     // ------ protected methods ------ //
@@ -24,14 +34,6 @@ public abstract class DataTransporterBase : IDataTransporter
     protected abstract Task<ResultExpression<byte[]>> DoTryReadAsync(int count, CancellationToken ct);
     protected abstract Task<bool> DoTryWriteLineAsync(string data, CancellationToken ct);
     protected abstract Task<ResultExpression<string>> DoTryReadLineAsync(CancellationToken ct);
-
-
-    // ------ constructors ------ //
-
-    public DataTransporterBase()
-    {
-        _cts = new();
-    }
 
 
     // ------ public methods ------ //

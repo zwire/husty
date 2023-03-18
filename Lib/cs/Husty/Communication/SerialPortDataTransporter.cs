@@ -2,12 +2,19 @@
 
 namespace Husty.Communication;
 
-public class SerialPortDataTransporter : DataTransporterBase
+public sealed class SerialPortDataTransporter : DataTransporterBase
 {
 
     // ------- fields ------- //
 
     private readonly SerialPort _port;
+
+
+    // ------ properties ------ //
+
+    public override Stream BaseWritingStream => _port.BaseStream;
+
+    public override Stream BaseReadingStream => _port.BaseStream;
 
 
     // ------- constructors ------- //
@@ -45,7 +52,7 @@ public class SerialPortDataTransporter : DataTransporterBase
     }
 
 
-    // ------ inherited methods ------ //
+    // ------ protected methods ------ //
 
     protected override void DoDispose()
     {

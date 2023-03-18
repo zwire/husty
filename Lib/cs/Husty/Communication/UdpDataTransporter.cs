@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Husty.Communication;
 
-public class UdpDataTransporter : DataTransporterBase
+public sealed class UdpDataTransporter : DataTransporterBase
 {
 
     // ------ fields ------ //
@@ -12,6 +12,13 @@ public class UdpDataTransporter : DataTransporterBase
     private UdpClient? _sender;
     private UdpClient? _receiver;
     private IPEndPoint[]? _targets;
+
+
+    // ------ properties ------ //
+
+    public override Stream BaseWritingStream => throw new NotImplementedException();
+
+    public override Stream BaseReadingStream => throw new NotImplementedException();
 
 
     // ------ public methods ------ //

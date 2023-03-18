@@ -4,12 +4,19 @@ using System.Text;
 
 namespace Husty.Communication;
 
-public class WebSocketDataTransporter : DataTransporterBase
+public sealed class WebSocketDataTransporter : DataTransporterBase
 {
 
     // ------ fields ------ //
 
     private readonly WebSocket _socket;
+
+
+    // ------ properties ------ //
+
+    public override Stream BaseWritingStream => throw new NotImplementedException();
+
+    public override Stream BaseReadingStream => throw new NotImplementedException();
 
 
     // ------ properties ------ //
