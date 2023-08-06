@@ -5,129 +5,129 @@ namespace Husty.Communication;
 public sealed class SerialPortDataTransporter : DataTransporterBase
 {
 
-    // ------- fields ------- //
+  // ------- fields ------- //
 
-    private readonly SerialPort _port;
-
-
-    // ------ properties ------ //
-
-    public override Stream BaseWritingStream => _port.BaseStream;
-
-    public override Stream BaseReadingStream => _port.BaseStream;
+  private readonly SerialPort _port;
 
 
-    // ------- constructors ------- //
+  // ------ properties ------ //
 
-    public SerialPortDataTransporter(
-        string portName, 
-        int baudRate, 
-        StopBits stopBits = StopBits.One,
-        Handshake handshake = default,
-        Parity parity = default,
-        int readTimeout = -1, 
-        int writeTimeout = -1
-    )
+  public override Stream BaseWritingStream => _port.BaseStream;
+
+  public override Stream BaseReadingStream => _port.BaseStream;
+
+
+  // ------- constructors ------- //
+
+  public SerialPortDataTransporter(
+      string portName,
+      int baudRate,
+      StopBits stopBits = StopBits.One,
+      Handshake handshake = default,
+      Parity parity = default,
+      int readTimeout = -1,
+      int writeTimeout = -1
+  )
+  {
+    _port = new()
     {
-        _port = new()
-        {
-            PortName = portName,
-            BaudRate = baudRate,
-            StopBits = stopBits,
-            Handshake = handshake,
-            Parity = parity,
-            ReadTimeout = readTimeout,
-            WriteTimeout = writeTimeout
-        };
-        try
-        {
-            _port.Open();
-            _port.DiscardInBuffer();
-            _port.DiscardOutBuffer();
-        }
-        catch
-        {
-            throw new Exception($"failed to open {portName}");
-        }
-    }
-
-
-    // ------ protected methods ------ //
-
-    protected override void DoDispose()
+      PortName = portName,
+      BaudRate = baudRate,
+      StopBits = stopBits,
+      Handshake = handshake,
+      Parity = parity,
+      ReadTimeout = readTimeout,
+      WriteTimeout = writeTimeout
+    };
+    try
     {
-        _port.Close();
+      _port.Open();
+      _port.DiscardInBuffer();
+      _port.DiscardOutBuffer();
     }
-
-    protected override Task<bool> DoTryWriteAsync(byte[] data, CancellationToken ct)
+    catch
     {
-        _port.Encoding = Encoding;
-        _port.NewLine = NewLine;
-        try
-        {
-            if (!_port.IsOpen) return Task.FromResult(false);
-            _port.Write(data, 0, data.Length);
-            return Task.FromResult(true);
-        }
-        catch
-        {
-            return Task.FromResult(false);
-        }
+      throw new Exception($"failed to open {portName}");
     }
+  }
 
-    protected override Task<ResultExpression<byte[]>> DoTryReadAsync(int count, CancellationToken ct)
+
+  // ------ protected methods ------ //
+
+  protected override void DoDispose()
+  {
+    _port.Close();
+  }
+
+  protected override Task<bool> DoTryWriteAsync(byte[] data, CancellationToken ct)
+  {
+    _port.Encoding = Encoding;
+    _port.NewLine = NewLine;
+    try
     {
-        _port.Encoding = Encoding;
-        _port.NewLine = NewLine;
-        var buf = new byte[count];
-        var progress = 0;
-        while (progress < count)
-        {
-            if (!_port.IsOpen) return Task.FromResult(new ResultExpression<byte[]>(true, default!));
-            progress += _port.Read(buf, progress, count - progress);
-        }
-        return Task.FromResult(new ResultExpression<byte[]>(true, buf));
+      if (!_port.IsOpen) return Task.FromResult(false);
+      _port.Write(data, 0, data.Length);
+      return Task.FromResult(true);
     }
-
-    protected override Task<bool> DoTryWriteLineAsync(string data, CancellationToken ct)
+    catch
     {
-        _port.Encoding = Encoding;
-        _port.NewLine = NewLine;
-        try
-        {
-            if (!_port.IsOpen) return Task.FromResult(false);
-            _port.WriteLine(data);
-            return Task.FromResult(true);
-        }
-        catch
-        {
-            return Task.FromResult(false);
-        }
+      return Task.FromResult(false);
     }
+  }
 
-    protected override Task<ResultExpression<string>> DoTryReadLineAsync(CancellationToken ct)
+  protected override Task<ResultExpression<byte[]>> DoTryReadAsync(int count, CancellationToken ct)
+  {
+    _port.Encoding = Encoding;
+    _port.NewLine = NewLine;
+    var buf = new byte[count];
+    var progress = 0;
+    while (progress < count)
     {
-        _port.Encoding = Encoding;
-        _port.NewLine = NewLine;
-        try
-        {
-            if (!_port.IsOpen) return Task.FromResult(new ResultExpression<string>(false, default!));
-            var data = _port.ReadLine();
-            if (data is null || data.Length is 0) return Task.FromResult(new ResultExpression<string>(false, default!));
-            return Task.FromResult(new ResultExpression<string>(true, data));
-        }
-        catch
-        {
-            return Task.FromResult(new ResultExpression<string>(false, default!));
-        }
+      if (!_port.IsOpen) return Task.FromResult(new ResultExpression<byte[]>(true, default!));
+      progress += _port.Read(buf, progress, count - progress);
     }
+    return Task.FromResult(new ResultExpression<byte[]>(true, buf));
+  }
 
-
-    // ------ static methods ------ //
-
-    public static string[] GetPortNames()
+  protected override Task<bool> DoTryWriteLineAsync(string data, CancellationToken ct)
+  {
+    _port.Encoding = Encoding;
+    _port.NewLine = NewLine;
+    try
     {
-        return SerialPort.GetPortNames();
+      if (!_port.IsOpen) return Task.FromResult(false);
+      _port.WriteLine(data);
+      return Task.FromResult(true);
     }
+    catch
+    {
+      return Task.FromResult(false);
+    }
+  }
+
+  protected override Task<ResultExpression<string>> DoTryReadLineAsync(CancellationToken ct)
+  {
+    _port.Encoding = Encoding;
+    _port.NewLine = NewLine;
+    try
+    {
+      if (!_port.IsOpen) return Task.FromResult(new ResultExpression<string>(false, default!));
+      var data = _port.ReadLine();
+      if (data is null || data.Length is 0) return Task.FromResult(new ResultExpression<string>(false, default!));
+      return Task.FromResult(new ResultExpression<string>(true, data));
+    }
+    catch
+    {
+      return Task.FromResult(new ResultExpression<string>(false, default!));
+    }
+  }
+
+
+  // ------ static methods ------ //
+
+  public static string[] GetPortNames()
+  {
+    return SerialPort.GetPortNames();
+  }
 
 }

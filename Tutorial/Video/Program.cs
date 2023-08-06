@@ -1,5 +1,5 @@
-﻿using OpenCvSharp;
-using Husty.OpenCvSharp.ImageStream;
+﻿using Husty.OpenCvSharp.ImageStream;
+using OpenCvSharp;
 
 // optional : you can set video capture properties served by OpenCvSharp
 var properties = new List<Properties>()
@@ -15,16 +15,16 @@ using var video = new VideoStream("..\\..\\..\\sample.mp4", properties);
 // capturing loop is asynchronize against main thread
 while (video.CurrentPosition < video.FrameCount - 1)
 {
-    // be careful that this instance may read null object.
-    var frame = video.Read();
-    if (frame is null) continue;
+  // be careful that this instance may read null object.
+  var frame = video.Read();
+  if (frame is null) continue;
 
-    // or you can read frame like OpenCV Python binding method
-    // using var frame = video.Read();
+  // or you can read frame like OpenCV Python binding method
+  // using var frame = video.Read();
 
-    Cv2.ImShow(" ", frame);
-    Cv2.WaitKey(1);
-    Console.WriteLine($"{video.CurrentPosition}");
+  Cv2.ImShow(" ", frame);
+  Cv2.WaitKey(1);
+  Console.WriteLine($"{video.CurrentPosition}");
 }
 
 Console.WriteLine("completed.");

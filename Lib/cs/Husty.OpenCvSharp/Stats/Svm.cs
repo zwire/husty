@@ -5,25 +5,25 @@ namespace Husty.OpenCvSharp.Stats;
 public sealed class Svm : BinaryStatsBase
 {
 
-    // ------ constructors ------ //
+  // ------ constructors ------ //
 
-    /// <summary>
-    /// OpenCvSharp 'SVM' class wrapper.
-    /// This class has accumulate & save & load methods for machine learning.
-    /// </summary>
-    public Svm(string modelPath = null) : base(modelPath) { }
+  /// <summary>
+  /// OpenCvSharp 'SVM' class wrapper.
+  /// This class has accumulate & save & load methods for machine learning.
+  /// </summary>
+  public Svm(string modelPath = null) : base(modelPath) { }
 
 
-    // ------ inherited methods ------ //
+  // ------ inherited methods ------ //
 
-    protected override StatModel DoLoadModel(string modelPath)
-    {
-        return SVM.Load(modelPath);
-    }
+  protected override StatModel DoLoadModel(string modelPath)
+  {
+    return SVM.Load(modelPath);
+  }
 
-    protected override StatModel DoCreateDefaultModel()
-    {
-        return SVM.Create();
-    }
+  protected override StatModel DoCreateDefaultModel()
+  {
+    return SVM.Create();
+  }
 
 }

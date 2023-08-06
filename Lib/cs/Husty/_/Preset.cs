@@ -5,37 +5,37 @@ namespace Husty;
 public sealed class Preset<T>
 {
 
-    // ------ fields ------ //
+  // ------ fields ------ //
 
-    private readonly T _defaultValue;
+  private readonly T _defaultValue;
 
 
-    // ------ constructors ------ //
+  // ------ constructors ------ //
 
-    public Preset(T defaultValue)
+  public Preset(T defaultValue)
+  {
+    _defaultValue = defaultValue;
+  }
+
+
+  // ------ public methods ------ //
+
+  public T Load()
+  {
+    try
     {
-        _defaultValue = defaultValue;
+      return JsonSerializer.Deserialize<T>(File.ReadAllText("preset.json"));
     }
-
-
-    // ------ public methods ------ //
-    
-    public T Load()
+    catch
     {
-        try
-        {
-            return JsonSerializer.Deserialize<T>(File.ReadAllText("preset.json"));
-        }
-        catch 
-        {
-            return _defaultValue;
-        }
+      return _defaultValue;
     }
+  }
 
-    public void Save(T value)
-    {
-        using var sw = new StreamWriter("preset.json", false);
-        sw.WriteLine(JsonSerializer.Serialize(value));
-    }
+  public void Save(T value)
+  {
+    using var sw = new StreamWriter("preset.json", false);
+    sw.WriteLine(JsonSerializer.Serialize(value));
+  }
 
 }

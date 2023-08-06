@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
-using OpenCvSharp;
-using Husty.OpenCvSharp.Yolo;
 using Husty.OpenCvSharp.Extensions;
+using Husty.OpenCvSharp.Yolo;
+using OpenCvSharp;
 
 // model files
 var cfg = "..\\..\\..\\model\\_.cfg";
@@ -30,8 +30,8 @@ Console.WriteLine(watch.ElapsedMilliseconds + " ms");
 // show results
 foreach (var r in results)
 {
-    r.DrawBox(img, new(0, 0, 255), 2);
-    Console.WriteLine($"{r.Label} : {r.Confidence * 100:f0}%");
+  r.DrawBox(img, new(0, 0, 255), 2);
+  Console.WriteLine($"{r.Label} : {r.Confidence * 100:f0}%");
 }
 Cv2.ImShow(" ", img);
 Cv2.WaitKey();

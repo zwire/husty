@@ -3,12 +3,12 @@
 public interface IVideoStream<TImage> : IImageStream<TImage>
 {
 
-    public int FrameCount { get; }
+  public int FrameCount { get; }
 
-    public int CurrentPosition { get; }
+  public int CurrentPosition { get; }
 
-    public bool IsEnd { get; }
+  public bool IsEnd { get; }
 
-    public void Seek(int position);
+  public void Seek(int position);
 
 }

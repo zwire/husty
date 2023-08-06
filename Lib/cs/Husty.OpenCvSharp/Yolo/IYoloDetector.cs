@@ -4,5 +4,5 @@ namespace Husty.OpenCvSharp.Yolo;
 
 public interface IYoloDetector : IDisposable
 {
-    public YoloResult[] Run(Mat frame);
+  public YoloResult[] Run(Mat frame);
 }

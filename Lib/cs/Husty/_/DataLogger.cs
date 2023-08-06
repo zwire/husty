@@ -8,66 +8,66 @@ public enum LogFileFormat { Json, Csv }
 public class DataLogger<T> : IDisposable where T : class
 {
 
-    // ------ fields ------ //
+  // ------ fields ------ //
 
-    private int _counter;
-    private StreamWriter _sw;
-    private readonly string _fileName;
-    private readonly LogFileFormat _format;
-    private readonly JsonSerializerOptions _option 
-        = new() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+  private int _counter;
+  private StreamWriter _sw;
+  private readonly string _fileName;
+  private readonly LogFileFormat _format;
+  private readonly JsonSerializerOptions _option
+      = new() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
 
 
-    // ------ constructors ------ //
+  // ------ constructors ------ //
 
-    public DataLogger(
-        LogFileFormat format, 
-        string? directory = null,
-        string? prefix = null,
-        string? suffix = null
-    )
+  public DataLogger(
+      LogFileFormat format,
+      string? directory = null,
+      string? prefix = null,
+      string? suffix = null
+  )
+  {
+    _format = format;
+    var ext = format is LogFileFormat.Json ? ".json" : ".csv";
+    var time = $"{DateTime.Now:yyyy-MM-dd-HH-mm-ss}";
+    directory ??= "log";
+    prefix = prefix is null ? "" : prefix + "_";
+    suffix = suffix is null ? "" : "_" + suffix;
+    if (!Directory.Exists(directory))
+      Directory.CreateDirectory(directory);
+    _fileName = $"{directory}\\{prefix}{time}{suffix}{ext}";
+    _sw = new(_fileName, false);
+  }
+
+
+  // ------ public methods ------ //
+
+  public void Write(T value)
+  {
+    if (_sw?.BaseStream is null || value is null) return;
+    var jstr = JsonSerializer.Serialize(value, _option);
+    if (_format is LogFileFormat.Json)
     {
-        _format = format;
-        var ext = format is LogFileFormat.Json ? ".json" : ".csv";
-        var time = $"{DateTime.Now:yyyy-MM-dd-HH-mm-ss}";
-        directory ??= "log";
-        prefix = prefix is null ? "" : prefix + "_";
-        suffix = suffix is null ? "" : "_" + suffix;
-        if (!Directory.Exists(directory)) 
-            Directory.CreateDirectory(directory);
-        _fileName = $"{directory}\\{prefix}{time}{suffix}{ext}";
-        _sw = new(_fileName, false);
+      _sw?.WriteLine(jstr);
     }
-
-
-    // ------ public methods ------ //
-
-    public void Write(T value)
+    else
     {
-        if (_sw?.BaseStream is null || value is null) return;
-        var jstr = JsonSerializer.Serialize(value, _option);
-        if (_format is LogFileFormat.Json)
-        {
-            _sw?.WriteLine(jstr);
-        }
-        else
-        {
-            if (_counter is 0)
-                _sw?.Write(Json2Csv.GetHeader(jstr));
-            _sw?.Write(Json2Csv.GetRow(jstr));
-        }
-        if (++_counter is 1000)
-        {
-            _counter = 1;
-            _sw?.Close();
-            _sw = new(_fileName, true);
-        }
+      if (_counter is 0)
+        _sw?.Write(Json2Csv.GetHeader(jstr));
+      _sw?.Write(Json2Csv.GetRow(jstr));
     }
-
-    public void Dispose()
+    if (++_counter is 1000)
     {
-        _sw?.Close();
-        _sw = null;
+      _counter = 1;
+      _sw?.Close();
+      _sw = new(_fileName, true);
     }
+  }
+
+  public void Dispose()
+  {
+    _sw?.Close();
+    _sw = null;
+  }
 
 }

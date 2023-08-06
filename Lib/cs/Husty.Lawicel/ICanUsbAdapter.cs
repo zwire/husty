@@ -5,18 +5,18 @@ public enum CanUsbStatus { Offline, Online }
 public interface ICanUsbAdapter : IDisposable
 {
 
-    public string AdapterName { get; }
+  public string AdapterName { get; }
 
-    public string Baudrate { get; }
+  public string Baudrate { get; }
 
-    public CanUsbStatus Status { get; }
+  public CanUsbStatus Status { get; }
 
-    public void Open();
+  public void Open();
 
-    public void Close();
+  public void Close();
 
-    public void Write(CanMessage message);
+  public void Write(CanMessage message);
 
-    public CanMessage Read();
+  public CanMessage Read();
 
 }

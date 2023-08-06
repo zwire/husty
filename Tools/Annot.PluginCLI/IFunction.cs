@@ -3,10 +3,10 @@
 public interface IFunction
 {
 
-    public string GetFunctionExplanation();
+  public string GetFunctionExplanation();
 
-    public string[] GetArgsExplanation();
+  public string[] GetArgsExplanation();
 
-    public void Run(string input, string output, string[] args);
+  public void Run(string input, string output, string[] args);
 
 }

@@ -7,7 +7,7 @@
     <Authors>Takumi Yamashita</Authors>
     <Description>Lawicel CANUSB adapter.
 It supports native DLL and VCP mode.</Description>
-    <Version>2.1.1</Version>
+    <Version>2.1.2</Version>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageProjectUrl>https://github.com/husty530/Husty-public/tree/master/Lib/cs/Husty.Lawicel</PackageProjectUrl>
     <RepositoryUrl>https://github.com/husty530/Husty-public</RepositoryUrl>

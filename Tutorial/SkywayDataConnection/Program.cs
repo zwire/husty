@@ -29,23 +29,23 @@ Console.WriteLine();
 // loop
 _ = Task.Run(async () =>
 {
-    var count = 0;
-    while (true)
-    {
-        // send
-        var msg = $"Message {count++} from {localId}.";
-        await stream.TryWriteLineAsync(msg);
-        Console.WriteLine("---> : " + msg);
-        // receive
-        var rcv = await stream.TryReadLineAsync();
-        if (rcv.HasValue)
-            Console.WriteLine("<--- : " + rcv.Value);
-        await Task.Delay(1000);
-    }
+  var count = 0;
+  while (true)
+  {
+    // send
+    var msg = $"Message {count++} from {localId}.";
+    await stream.TryWriteLineAsync(msg);
+    Console.WriteLine("---> : " + msg);
+    // receive
+    var rcv = await stream.TryReadLineAsync();
+    if (rcv.HasValue)
+      Console.WriteLine("<--- : " + rcv.Value);
+    await Task.Delay(1000);
+  }
 });
 
 Console.WriteLine("press ESC key to finish ...");
 while (Console.ReadKey().Key is not ConsoleKey.Escape)
-    Thread.Sleep(50);
+  Thread.Sleep(50);
 
 Console.WriteLine("completed.");

@@ -1,5 +1,5 @@
-﻿using OpenCvSharp;
-using Husty.OpenCvSharp.Extensions;
+﻿using Husty.OpenCvSharp.Extensions;
+using OpenCvSharp;
 using static System.Math;
 
 // settings

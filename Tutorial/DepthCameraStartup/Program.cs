@@ -1,9 +1,8 @@
 ﻿using System.Reactive.Linq;
-using OpenCvSharp;
 using Husty.Extensions;
 using Husty.OpenCvSharp.ImageStream;
 using Husty.OpenCvSharp.ThreeDimensionalImaging;
-using Kinect = Husty.OpenCvSharp.AzureKinect;
+using OpenCvSharp;
 using RealSense = Husty.OpenCvSharp.RealSense;
 
 IImageStream<BgrXyzImage> camera = null;
@@ -16,17 +15,17 @@ var connector = camera
     .TimeInterval()
     .Subscribe(v =>
     {
-        Console.WriteLine((int)v.Interval.TotalMilliseconds);
-        Cv2.ImShow(" ", v.Value.Bgr);
-        Cv2.SetMouseCallback(" ", (t, x, y, f, _) =>
+      Console.WriteLine((int)v.Interval.TotalMilliseconds);
+      Cv2.ImShow(" ", v.Value.Bgr);
+      Cv2.SetMouseCallback(" ", (t, x, y, f, _) =>
+      {
+        if (t is MouseEventTypes.LButtonDown)
         {
-            if (t is MouseEventTypes.LButtonDown)
-            {
-                var px = v.Value.GetPixel(new(x, y));
-                Console.WriteLine(px);
-            }
-        });
-        Cv2.WaitKey(1);
+          var px = v.Value.GetPixel(new(x, y));
+          Console.WriteLine(px);
+        }
+      });
+      Cv2.WaitKey(1);
     });
 
 Console.WriteLine("Press Enter key to exit...");

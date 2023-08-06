@@ -32,8 +32,8 @@ Console.WriteLine();
 // publish test video
 Process.Start(new ProcessStartInfo()
 {
-    FileName = "C:\\gstreamer\\1.0\\msvc_x86_64\\bin\\gst-launch-1.0",
-    Arguments =
+  FileName = "C:\\gstreamer\\1.0\\msvc_x86_64\\bin\\gst-launch-1.0",
+  Arguments =
         $"-v videotestsrc " +
         $"! videoscale ! video/x-raw,width=320,height=240 " +
         $"! videorate ! video/x-raw,framerate=30/1 " +
@@ -53,6 +53,6 @@ Process.Start(new ProcessStartInfo()
 
 Console.WriteLine("press ESC key to finish ...");
 while (Console.ReadKey().Key is not ConsoleKey.Escape)
-    Thread.Sleep(50);
+  Thread.Sleep(50);
 
 Console.WriteLine("completed.");

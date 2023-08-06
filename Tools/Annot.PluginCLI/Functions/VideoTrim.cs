@@ -5,37 +5,37 @@ namespace Annot.PluginCLI;
 public class VideoTrim : IFunction
 {
 
-    public string GetFunctionExplanation()
-    {
-        return "extract images from video sequence";
-    }
+  public string GetFunctionExplanation()
+  {
+    return "extract images from video sequence";
+  }
 
-    public string[] GetArgsExplanation()
+  public string[] GetArgsExplanation()
+  {
+    return new[]
     {
-        return new[]
-        {
             "input: input video file path",
             "output: output folder path",
             "args[0]: frame skip interval"
         };
-    }
+  }
 
-    public void Run(string input, string output, string[] args)
+  public void Run(string input, string output, string[] args)
+  {
+    using var cap = new VideoCapture(input);
+    cap.Set(VideoCaptureProperties.Fps, 1000);
+    var count = 0;
+    var imnum = 0;
+    var img = new Mat();
+    while (cap.Read(img))
     {
-        using var cap = new VideoCapture(input);
-        cap.Set(VideoCaptureProperties.Fps, 1000);
-        var count = 0;
-        var imnum = 0;
-        var img = new Mat();
-        while (cap.Read(img))
-        {
-            if (count++ % int.Parse(args[0]) is 0)
-            {
-                while (File.Exists($"{output}\\{imnum:d4}.png")) imnum++;
-                Cv2.ImWrite($"{output}\\{imnum:d4}.png", img);
-                Cv2.ImShow(" ", img);
-                Cv2.WaitKey(1);
-            }
-        }
+      if (count++ % int.Parse(args[0]) is 0)
+      {
+        while (File.Exists($"{output}\\{imnum:d4}.png")) imnum++;
+        Cv2.ImWrite($"{output}\\{imnum:d4}.png", img);
+        Cv2.ImShow(" ", img);
+        Cv2.WaitKey(1);
+      }
     }
+  }
 }

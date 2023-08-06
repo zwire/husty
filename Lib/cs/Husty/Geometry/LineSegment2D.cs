@@ -5,88 +5,88 @@ namespace Husty.Geometry;
 public class LineSegment2D : Line2D
 {
 
-    // ------ properties ------ //
+  // ------ properties ------ //
 
-    public Point2D Start { get; }
+  public Point2D Start { get; }
 
-    public Point2D End { get; }
+  public Point2D End { get; }
 
-    public double Length { get; }
+  public double Length { get; }
 
 
-    // ------ constructors ------ //
+  // ------ constructors ------ //
 
-    public LineSegment2D(Point2D start, Point2D end) : base(start, end)
+  public LineSegment2D(Point2D start, Point2D end) : base(start, end)
+  {
+    Start = start;
+    End = end;
+    Length = Sqrt(Pow(End.X - Start.X, 2) + Pow(End.Y - Start.Y, 2));
+  }
+
+
+  // ------ public methods ------ //
+
+  public Vector2D ToVector2D() => new(End.X - Start.X, End.Y - Start.Y);
+
+  public LineSegment2D GetReverse() => new(End, Start);
+
+  public override double GetY(double x)
+  {
+    if (Start.X < End.X)
     {
-        Start = start;
-        End = end;
-        Length = Sqrt(Pow(End.X - Start.X, 2) + Pow(End.Y - Start.Y, 2));
+      if (x >= Start.X && x <= End.X)
+        return base.GetY(x);
     }
-
-
-    // ------ public methods ------ //
-
-    public Vector2D ToVector2D() => new(End.X - Start.X, End.Y - Start.Y);
-
-    public LineSegment2D GetReverse() => new(End, Start);
-
-    public override double GetY(double x)
+    else
     {
-        if (Start.X < End.X)
-        {
-            if (x >= Start.X && x <= End.X)
-                return base.GetY(x);
-        }
-        else 
-        {
-            if (x >= End.X && x <= Start.X)
-                return base.GetY(x);
-        }
-        throw new ArgumentException("Given X is out of segment range.");
+      if (x >= End.X && x <= Start.X)
+        return base.GetY(x);
     }
+    throw new ArgumentException("Given X is out of segment range.");
+  }
 
-    public override double GetX(double y)
+  public override double GetX(double y)
+  {
+    if (Start.Y < End.Y)
     {
-        if (Start.Y < End.Y)
-        {
-            if (y >= Start.Y && y <= End.Y)
-                return base.GetX(y);
-        }
-        else 
-        {
-            if (y >= End.Y && y <= Start.Y)
-                return base.GetX(y);
-        }
-        throw new ArgumentException("Given Y is out of segment range.");
+      if (y >= Start.Y && y <= End.Y)
+        return base.GetX(y);
     }
+    else
+    {
+      if (y >= End.Y && y <= Start.Y)
+        return base.GetX(y);
+    }
+    throw new ArgumentException("Given Y is out of segment range.");
+  }
 
-    public Point2D GetNearestPoint(Point2D point)
+  public Point2D GetNearestPoint(Point2D point)
+  {
+    var perf = GetPerpendicularFoot(point);
+    if (perf.X < Start.X && perf.X < End.X)
     {
-        var perf = GetPerpendicularFoot(point);
-        if (perf.X < Start.X && perf.X < End.X)
-        {
-            if (Start.X < End.X)
-                return Start;
-            else
-                return End;
-        }
-        else if (perf.X > Start.X && perf.X > End.X)
-        {
-            if (Start.X > End.X)
-                return Start;
-            else
-                return End;
-        }
-        return perf;
+      if (Start.X < End.X)
+        return Start;
+      else
+        return End;
     }
+    else if (perf.X > Start.X && perf.X > End.X)
+    {
+      if (Start.X > End.X)
+        return Start;
+      else
+        return End;
+    }
+    return perf;
+  }
 
-    public Point2D[] ApproximateAsPoints(double intervalMeter)
-    {
-        var points = new List<Point2D>();
-        var vec = new Vector2D(Start, End).UnitVector;
-        for (double l = 0; l < Length; l += intervalMeter)
-            points.Add(Start + vec * l);
-        return points.ToArray();
-    }
+  public Point2D[] ApproximateAsPoints(double intervalMeter)
+  {
+    var points = new List<Point2D>();
+    var vec = new Vector2D(Start, End).UnitVector;
+    for (double l = 0; l < Length; l += intervalMeter)
+      points.Add(Start + vec * l);
+    return points.ToArray();
+  }
 
 }

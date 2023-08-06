@@ -1,5 +1,5 @@
-﻿using Husty.Extensions;
-using Husty.Communication;
+﻿using Husty.Communication;
+using Husty.Extensions;
 
 // get ports
 var names = SerialPortDataTransporter.GetPortNames();

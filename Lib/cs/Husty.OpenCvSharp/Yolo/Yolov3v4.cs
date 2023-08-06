@@ -7,93 +7,93 @@ namespace Husty.OpenCvSharp.Yolo;
 public sealed class Yolov3v4 : IYoloDetector
 {
 
-    // ------ fields ------ //
+  // ------ fields ------ //
 
-    private readonly Net _net;
-    private readonly Size _blobSize;
-    private readonly float _confThresh;
-    private readonly string[] _labels;
-    private readonly SpinLock _locker;
+  private readonly Net _net;
+  private readonly Size _blobSize;
+  private readonly float _confThresh;
+  private readonly string[] _labels;
+  private readonly SpinLock _locker;
 
 
-    // ------ constructors ------ //
+  // ------ constructors ------ //
 
-    /// <summary>
-    /// Initialize detector (Darknet YOLO v3 or v4)
-    /// </summary>
-    /// <param name="cfg">(.cfg) file</param>
-    /// <param name="weights">(.weights) file</param>
-    /// <param name="names">(.names) file</param>
-    /// <param name="blobSize">Must be multiple of 32</param>
-    /// <param name="confidenceThreshold"></param>
-    public Yolov3v4(string cfg, string weights, string names, Size blobSize, float confidenceThreshold = 0.5f)
+  /// <summary>
+  /// Initialize detector (Darknet YOLO v3 or v4)
+  /// </summary>
+  /// <param name="cfg">(.cfg) file</param>
+  /// <param name="weights">(.weights) file</param>
+  /// <param name="names">(.names) file</param>
+  /// <param name="blobSize">Must be multiple of 32</param>
+  /// <param name="confidenceThreshold"></param>
+  public Yolov3v4(string cfg, string weights, string names, Size blobSize, float confidenceThreshold = 0.5f)
+  {
+    if (blobSize.Width % 32 is not 0 || blobSize.Height % 32 is not 0)
+      throw new ArgumentException("Blob width and height value must be multiple of 32.");
+    if (confidenceThreshold < 0 || confidenceThreshold > 1)
+      throw new ArgumentOutOfRangeException("must be 0.0 - 1.0");
+    _locker = new();
+    _confThresh = confidenceThreshold;
+    _blobSize = blobSize;
+    _net = CvDnn.ReadNetFromDarknet(cfg, weights);
+    _labels = File.ReadAllLines(names);
+  }
+
+
+  // ------ public methods ------ //
+
+  public YoloResult[] Run(Mat frame)
+  {
+
+    using var blob = CvDnn.BlobFromImage(frame, 1.0 / 255, _blobSize, default, true, false);
+    Mat[] outs = null;
+    _locker.Safeguard(() =>
     {
-        if (blobSize.Width % 32 is not 0 || blobSize.Height % 32 is not 0)
-            throw new ArgumentException("Blob width and height value must be multiple of 32.");
-        if (confidenceThreshold < 0 || confidenceThreshold > 1)
-            throw new ArgumentOutOfRangeException("must be 0.0 - 1.0");
-        _locker = new();
-        _confThresh = confidenceThreshold;
-        _blobSize = blobSize;
-        _net = CvDnn.ReadNetFromDarknet(cfg, weights);
-        _labels = File.ReadAllLines(names);
-    }
+      if (!_net.IsDisposed)
+      {
+        _net.SetInput(blob);
+        var outNames = _net.GetUnconnectedOutLayersNames();
+        outs = outNames.Select(_ => new Mat()).ToArray();
+        _net.Forward(outs, outNames);
+      }
+    });
 
-
-    // ------ public methods ------ //
-
-    public YoloResult[] Run(Mat frame)
+    if (outs is null)
+      return Array.Empty<YoloResult>();
+    var ids = new List<int>();
+    var confs = new List<float>();
+    var probs = new List<float>();
+    var boxes = new List<Rect2d>();
+    unsafe
     {
-
-        using var blob = CvDnn.BlobFromImage(frame, 1.0 / 255, _blobSize, default, true, false);
-        Mat[] outs = null;
-        _locker.Safeguard(() =>
+      foreach (var pred in outs)
+      {
+        var p = (float*)pred.Data;
+        for (var i = 0; i < pred.Rows; i++, p += pred.Cols)
         {
-            if (!_net.IsDisposed)
-            {
-                _net.SetInput(blob);
-                var outNames = _net.GetUnconnectedOutLayersNames();
-                outs = outNames.Select(_ => new Mat()).ToArray();
-                _net.Forward(outs, outNames);
-            }
-        });
-
-        if (outs is null)
-            return Array.Empty<YoloResult>();
-        var ids = new List<int>();
-        var confs = new List<float>();
-        var probs = new List<float>();
-        var boxes = new List<Rect2d>();
-        unsafe
-        {
-            foreach (var pred in outs)
-            {
-                var p = (float*)pred.Data;
-                for (var i = 0; i < pred.Rows; i++, p += pred.Cols)
-                {
-                    if (p[4] > _confThresh)
-                    {
-                        Cv2.MinMaxLoc(pred.Row(i).ColRange(5, pred.Cols), out _, out var max, out _, out var maxLoc);
-                        ids.Add(maxLoc.X);
-                        confs.Add(p[4]);
-                        probs.Add((float)max);
-                        var x = (p[0] - p[2] / 2).OrAbove(0);
-                        var y = (p[1] - p[3] / 2).OrAbove(0);
-                        var w = p[2].OrBelow(1 - x);
-                        var h = p[3].OrBelow(1 - y);
-                        boxes.Add(new Rect2d(x, y, w, h));
-                    }
-                }
-                pred.Dispose();
-            }
+          if (p[4] > _confThresh)
+          {
+            Cv2.MinMaxLoc(pred.Row(i).ColRange(5, pred.Cols), out _, out var max, out _, out var maxLoc);
+            ids.Add(maxLoc.X);
+            confs.Add(p[4]);
+            probs.Add((float)max);
+            var x = (p[0] - p[2] / 2).OrAbove(0);
+            var y = (p[1] - p[3] / 2).OrAbove(0);
+            var w = p[2].OrBelow(1 - x);
+            var h = p[3].OrBelow(1 - y);
+            boxes.Add(new Rect2d(x, y, w, h));
+          }
         }
-        CvDnn.NMSBoxes(boxes, confs, _confThresh, 0.3f, out var indices);
-        return indices.Select(i => new YoloResult(boxes[i], confs[i], _labels[ids[i]], probs[i])).ToArray();
+        pred.Dispose();
+      }
     }
+    CvDnn.NMSBoxes(boxes, confs, _confThresh, 0.3f, out var indices);
+    return indices.Select(i => new YoloResult(boxes[i], confs[i], _labels[ids[i]], probs[i])).ToArray();
+  }
 
-    public void Dispose()
-    {
-        _locker.Safeguard(_net.Dispose);
-    }
+  public void Dispose()
+  {
+    _locker.Safeguard(_net.Dispose);
+  }
 
 }

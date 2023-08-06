@@ -1,53 +1,53 @@
 ﻿using System.Windows.Media.Imaging;
-using OpenCvSharp;
 using Husty.OpenCvSharp;
 using Husty.OpenCvSharp.DatasetFormat;
+using OpenCvSharp;
 
 namespace Annot.Attributes;
 
 internal interface IWpfInteractiveWindow : IInteractiveWindow
 {
 
-    public List<AnnotationData> History { get; }
+  public List<AnnotationData> History { get; }
 
-    public AnnotationData Annotation { get; }
+  public AnnotationData Annotation { get; }
 
-    public int ImageId { get; }
+  public int ImageId { get; }
 
-    public int LabelIndex { get; }
+  public int LabelIndex { get; }
 
-    public Scalar[] LabelColors { get; }
+  public Scalar[] LabelColors { get; }
 
-    public bool DrawMode { get; }
+  public bool DrawMode { get; }
 
-    public void Back();
+  public void Back();
 
-    public void SetColors(int[][] colors);
+  public void SetColors(int[][] colors);
 
-    public void SetLabelIndex(int index);
+  public void SetLabelIndex(int index);
 
-    public void SetDrawMode(bool on);
+  public void SetDrawMode(bool on);
 
-    public abstract void DeleteLast();
+  public abstract void DeleteLast();
 
-    public abstract void DeleteSelected();
+  public abstract void DeleteSelected();
 
-    public abstract void Clear();
+  public abstract void Clear();
 
-    public BitmapSource GetViewImage();
+  public BitmapSource GetViewImage();
 
-    internal BitmapSource InputMouseWheel(System.Windows.Point p, bool up);
+  internal BitmapSource InputMouseWheel(System.Windows.Point p, bool up);
 
-    internal BitmapSource InputLeftMouseDown(System.Windows.Point p);
+  internal BitmapSource InputLeftMouseDown(System.Windows.Point p);
 
-    internal BitmapSource InputLeftMouseUp(System.Windows.Point p);
+  internal BitmapSource InputLeftMouseUp(System.Windows.Point p);
 
-    internal BitmapSource InputRightMouseDown(System.Windows.Point p);
+  internal BitmapSource InputRightMouseDown(System.Windows.Point p);
 
-    internal BitmapSource InputMouseLeave(System.Windows.Point p);
+  internal BitmapSource InputMouseLeave(System.Windows.Point p);
 
-    internal BitmapSource InputMouseMove(System.Windows.Point p);
+  internal BitmapSource InputMouseMove(System.Windows.Point p);
 
-    internal void AcceptOtherKeyInput(string key);
+  internal void AcceptOtherKeyInput(string key);
 
 }
