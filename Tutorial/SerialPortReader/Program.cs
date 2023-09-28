@@ -1,4 +1,5 @@
-﻿using Husty.Communication;
+﻿using System.Reactive.Linq;
+using Husty.Communication;
 using Husty.Extensions;
 
 // get ports
@@ -9,7 +10,13 @@ if (names.Length is 0) throw new Exception("find no port!");
 var port = new SerialPortDataTransporter(names.First(), 115250);
 
 // read messages until key interrupt
-ObservableEx2.Loop(port.ReadLine).Subscribe(Console.WriteLine);
+ObservableEx2.Loop(async () =>
+  {
+    var result = await port.TryReadLineAsync();
+    return result.Match(x => x, e => e.ToString());
+  })
+  .Where(x => x != null)
+  .Subscribe(Console.WriteLine);
 ConsoleEx.WaitKey(ConsoleKey.Enter);
 
 // finalize

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using System;
 
 namespace Husty.Communication;
 
@@ -67,7 +68,7 @@ public sealed class SubProcessDataTransporter : DataTransporterBase
     }
   }
 
-  protected override async Task<ResultExpression<byte[]>> DoTryReadAsync(int count, CancellationToken ct)
+  protected override async Task<Result<byte[]>> DoTryReadAsync(int count, CancellationToken ct)
   {
     var bytes = new byte[count];
     try
@@ -75,17 +76,18 @@ public sealed class SubProcessDataTransporter : DataTransporterBase
       var offset = 0;
       do
       {
-        var size = await _readingStream.ReadAsync(bytes, offset, count, ct).ConfigureAwait(false);
+        var size = await _readingStream.ReadAsync(bytes.AsMemory(offset, count), ct).ConfigureAwait(false);
         if (size is 0) break;
         offset += size;
         count -= size;
       } while (count > 0);
-      if (offset is 0) return new(false, default!);
-      return new(true, bytes);
+      if (offset is 0)
+        return Result<byte[]>.Err(new("offset is 0"));
+      return Result<byte[]>.Ok(bytes);
     }
     catch
     {
-      return new(false, default!);
+      return Result<byte[]>.Err(new());
     }
   }
 
@@ -103,17 +105,18 @@ public sealed class SubProcessDataTransporter : DataTransporterBase
     }
   }
 
-  protected override async Task<ResultExpression<string>> DoTryReadLineAsync(CancellationToken ct)
+  protected override async Task<Result<string>> DoTryReadLineAsync(CancellationToken ct)
   {
     try
     {
       var line = await _reader.ReadLineAsync(ct).ConfigureAwait(false);
-      if (line is null) return new(false, default!);
-      return new(true, line);
+      if (line is null)
+        return Result<string>.Err(new("line is null"));
+      return Result<string>.Ok(line);
     }
     catch
     {
-      return new(false, default!);
+      return Result<string>.Err(new());
     }
   }
 

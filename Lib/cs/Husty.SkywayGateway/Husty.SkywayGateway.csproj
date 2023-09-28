@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Authors>Takumi Yamashita</Authors>
-    <Version>2.1.2</Version>
+    <Version>2.2.0</Version>
     <Company>$(Authors)</Company>
     <Product>$(AssemblyName)</Product>
     <PackageProjectUrl>https://github.com/husty530/Husty-public/tree/master/Lib/cs/Husty.SkywayGateway</PackageProjectUrl>
@@ -28,7 +28,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="RestSharp" Version="108.0.3" />
-    <PackageReference Include="System.Reactive" Version="5.0.0" />
+    <PackageReference Include="System.Reactive" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

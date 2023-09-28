@@ -50,10 +50,10 @@ public class CameraStream : IImageStream<BgrXyzImage>
       _ => throw new Exception()
     };
     _pool = new(2, () => new(
-        new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_8UC3),
-        new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC1),
-        new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC1),
-        new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC1))
+      new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_8UC3),
+      new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC1),
+      new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC1),
+      new Mat(FrameSize.Height, FrameSize.Width, MatType.CV_16UC1))
     );
     Fps = config.CameraFPS switch
     {
@@ -63,46 +63,24 @@ public class CameraStream : IImageStream<BgrXyzImage>
       _ => -1
     };
     var connectable = Observable
-        .Repeat(0, new EventLoopScheduler())
-        .TakeUntil(_ => _disposed)
-        .Select(_ =>
-        {
-          using var capture = _device.GetCapture();
-          if (_align is MatchingBase.Color)
-          {
-            using var colorFrame = capture.Color;
-            using var depthFrame = _transformation.DepthImageToColorCamera(capture.Depth);
-            using var pointCloudFrame = _transformation.DepthImageToPointCloud(depthFrame, CalibrationDeviceType.Color);
-            var frame = _pool.GetObject();
-            CopyColorPixels(colorFrame, frame.Bgr);
-            CopyPointCloudPixels(pointCloudFrame, frame.X, frame.Y, frame.Z);
-            return frame;
-          }
-          else
-          {
-            using var colorFrame = _transformation.ColorImageToDepthCamera(capture);
-            using var pointCloudFrame = _transformation.DepthImageToPointCloud(capture.Depth);
-            var frame = _pool.GetObject();
-            CopyColorPixels(colorFrame, frame.Bgr);
-            CopyPointCloudPixels(pointCloudFrame, frame.X, frame.Y, frame.Z);
-            return frame;
-          }
-        })
-        .Where(x => !x.IsDisposed && !x.Empty())
-        .Publish();
+      .Repeat(0, new EventLoopScheduler())
+      .TakeUntil(_ => _disposed)
+      .Select(_ => Read())
+      .Where(x => !x.IsDisposed && !x.Empty())
+      .Publish();
     connectable.Connect();
     ImageSequence = connectable;
   }
 
   public CameraStream(int id = 0, MatchingBase align = MatchingBase.Color)
-      : this(new DeviceConfiguration
-      {
-        ColorFormat = ImageFormat.ColorBGRA32,
-        ColorResolution = ColorResolution.R720p,
-        DepthMode = DepthMode.WFOV_2x2Binned,
-        SynchronizedImagesOnly = true,
-        CameraFPS = FPS.FPS30
-      }, id, align)
+    : this(new DeviceConfiguration
+    {
+      ColorFormat = ImageFormat.ColorBGRA32,
+      ColorResolution = ColorResolution.R720p,
+      DepthMode = DepthMode.WFOV_2x2Binned,
+      SynchronizedImagesOnly = true,
+      CameraFPS = FPS.FPS30
+    }, id, align)
   { }
 
 
@@ -110,9 +88,26 @@ public class CameraStream : IImageStream<BgrXyzImage>
 
   public BgrXyzImage Read()
   {
-    while (!_disposed)
-      if (ImageSequence.FirstOrDefaultAsync().Wait() is BgrXyzImage img) return img;
-    return null;
+    using var capture = _device.GetCapture();
+    if (_align is MatchingBase.Color)
+    {
+      using var colorFrame = capture.Color;
+      using var depthFrame = _transformation.DepthImageToColorCamera(capture.Depth);
+      using var pointCloudFrame = _transformation.DepthImageToPointCloud(depthFrame, CalibrationDeviceType.Color);
+      var frame = _pool.GetObject();
+      CopyColorPixels(colorFrame, frame.Bgr);
+      CopyPointCloudPixels(pointCloudFrame, frame.X, frame.Y, frame.Z);
+      return frame;
+    }
+    else
+    {
+      using var colorFrame = _transformation.ColorImageToDepthCamera(capture);
+      using var pointCloudFrame = _transformation.DepthImageToPointCloud(capture.Depth);
+      var frame = _pool.GetObject();
+      CopyColorPixels(colorFrame, frame.Bgr);
+      CopyPointCloudPixels(pointCloudFrame, frame.X, frame.Y, frame.Z);
+      return frame;
+    }
   }
 
   public void Dispose()
@@ -149,9 +144,9 @@ public class CameraStream : IImageStream<BgrXyzImage>
     var w = pointCloudFrame.WidthPixels;
     var h = pointCloudFrame.HeightPixels;
     if (
-        xMat.IsDisposed || xMat.Width != w || xMat.Height != h || xMat.Type() != MatType.CV_16UC1 ||
-        yMat.IsDisposed || yMat.Width != w || yMat.Height != h || yMat.Type() != MatType.CV_16UC1 ||
-        zMat.IsDisposed || zMat.Width != w || zMat.Height != h || zMat.Type() != MatType.CV_16UC1
+      xMat.IsDisposed || xMat.Width != w || xMat.Height != h || xMat.Type() != MatType.CV_16UC1 ||
+      yMat.IsDisposed || yMat.Width != w || yMat.Height != h || yMat.Type() != MatType.CV_16UC1 ||
+      zMat.IsDisposed || zMat.Width != w || zMat.Height != h || zMat.Type() != MatType.CV_16UC1
     )
       return;
     var pdAry = pointCloudFrame.GetPixels<Short3>().Span;

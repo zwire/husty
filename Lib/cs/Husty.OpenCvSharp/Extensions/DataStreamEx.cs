@@ -16,9 +16,9 @@ public static class DataStreamEx
 
   public static async Task<Mat> ReadMatAsync(this DataTransporter stream)
   {
-    var (success, rcv) = await stream.TryReadLineAsync();
-    if (!success) return null;
-    var data = rcv.Split(',')[1];
+    var result = await stream.TryReadLineAsync();
+    if (!result.IsOk) return null;
+    var data = result.Unwrap().Split(',')[1];
     var bytes = Convert.FromBase64String(data);
     return Cv2.ImDecode(bytes, ImreadModes.Unchanged);
   }

@@ -19,8 +19,8 @@ public class Communication_Test
       await stream.TryWriteAsJsonAsync<Message>(new(msg, i), default, ct);
       await Task.Delay(10, ct);
       if (ct.IsCancellationRequested) continue;
-      var (s, v) = await stream.TryReadAsJsonAsync<Message>(default, ct);
-      if (s) msgs.Add(v);
+      var result = await stream.TryReadAsJsonAsync<Message>(default, ct);
+      if (result.IsOk) msgs.Add(result.Unwrap());
       await Task.Delay(10, ct);
     }
     stream.Dispose();
@@ -30,17 +30,17 @@ public class Communication_Test
   private static async Task<Message[]> Test_TcpServerAsync(string msg, CancellationToken ct)
   {
     using var sock = new TcpSocketServer(3000);
-    var (success, stream) = await sock.GetStreamAsync(default, ct);
-    if (!success) return default!;
-    return await EchoAsync(stream, msg, ct);
+    var result = await sock.GetStreamAsync(default, ct);
+    if (!result.IsOk) return default!;
+    return await EchoAsync(result.Unwrap(), msg, ct);
   }
 
   private static async Task<Message[]> Test_TcpClientAsync(string msg, CancellationToken ct)
   {
     var sock = new TcpSocketClient("127.0.0.1", 3000);
-    var (success, stream) = await sock.GetStreamAsync();
-    if (!success) return default!;
-    return await EchoAsync(stream, msg, ct);
+    var result = await sock.GetStreamAsync();
+    if (!result.IsOk) return default!;
+    return await EchoAsync(result.Unwrap(), msg, ct);
   }
 
   private static async Task<Message[]> Test_WebSocketServerAsync(string msg, CancellationToken ct)

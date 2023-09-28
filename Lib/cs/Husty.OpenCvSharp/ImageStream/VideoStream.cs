@@ -46,19 +46,12 @@ public sealed class VideoStream : IVideoStream<Mat>
     FrameSize = new(_cap.FrameWidth, _cap.FrameHeight);
     FrameCount = _cap.FrameCount;
     var connectable = Observable
-        .Repeat(0, new EventLoopScheduler())
-        .TakeUntil(_ => _disposed)
-        .Where(_ => !IsEnd)
-        .Select(_ =>
-        {
-          if (IsEnd) return null;
-          _cap.Set(VideoCaptureProperties.PosFrames, _positionIndex++);
-          var frame = _pool.GetObject();
-          Task.Delay(1000 / Fps).Wait();
-          return _cap.Read(frame) ? frame : null;
-        })
-        .Where(x => x is not null)
-        .Publish();
+      .Repeat(0, new EventLoopScheduler())
+      .TakeUntil(_ => _disposed)
+      .Where(_ => !IsEnd)
+      .Select(_ => Read())
+      .Where(x => x is not null)
+      .Publish();
     connectable.Connect();
     ImageSequence = connectable;
   }
@@ -68,9 +61,11 @@ public sealed class VideoStream : IVideoStream<Mat>
 
   public Mat Read()
   {
-    while (!_disposed)
-      if (ImageSequence.FirstOrDefaultAsync().Wait() is Mat img) return img;
-    return null;
+    if (IsEnd) return null;
+    _cap.Set(VideoCaptureProperties.PosFrames, _positionIndex++);
+    var frame = _pool.GetObject();
+    Task.Delay(1000 / Fps).Wait();
+    return _cap.Read(frame) ? frame : null;
   }
 
   public void Seek(int position)

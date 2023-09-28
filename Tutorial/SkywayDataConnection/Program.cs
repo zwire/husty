@@ -38,8 +38,8 @@ _ = Task.Run(async () =>
     Console.WriteLine("---> : " + msg);
     // receive
     var rcv = await stream.TryReadLineAsync();
-    if (rcv.HasValue)
-      Console.WriteLine("<--- : " + rcv.Value);
+    if (rcv.IsOk)
+      Console.WriteLine("<--- : " + rcv.Unwrap());
     await Task.Delay(1000);
   }
 });

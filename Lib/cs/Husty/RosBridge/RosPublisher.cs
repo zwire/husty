@@ -4,7 +4,7 @@ using Husty.Communication;
 
 namespace Husty.RosBridge;
 
-public class RosPublisher<TMsg> : IDisposable, IAsyncDisposable
+public class RosPublisher<TMsg> : IAsyncDisposable
 {
 
   // ------ fields ------- //
@@ -31,11 +31,6 @@ public class RosPublisher<TMsg> : IDisposable, IAsyncDisposable
 
   // ------ public methods ------ //
 
-  public static RosPublisher<TMsg> Create(WebSocketDataTransporter stream, string topic, CancellationToken ct = default)
-  {
-    return CreateAsync(stream, topic, ct).GetAwaiter().GetResult();
-  }
-
   public static async Task<RosPublisher<TMsg>> CreateAsync(WebSocketDataTransporter stream, string topic, CancellationToken ct = default)
   {
     var type = typeof(TMsg).FullName.Split('.').LastOrDefault().Replace('+', '/');
@@ -46,11 +41,6 @@ public class RosPublisher<TMsg> : IDisposable, IAsyncDisposable
   public async Task WriteAsync(TMsg msg, CancellationToken ct = default)
   {
     await _stream.TryWriteAsync(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(new { op = "publish", topic = Topic, type = Type, msg })), default, ct).ConfigureAwait(false);
-  }
-
-  public void Dispose()
-  {
-    DisposeAsync().AsTask().Wait();
   }
 
   public async ValueTask DisposeAsync()

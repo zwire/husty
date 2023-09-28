@@ -3,9 +3,9 @@ using Husty.Extensions;
 using Husty.RosBridge;
 
 using var stream = await WebSocketDataTransporter.CreateClientAsync("127.0.0.1", 9090);
-using var subscriber = RosSubscriber<rcl_interfaces.msg.Log>.Create(stream, "/rosout");
+await using var subscriber = await RosSubscriber<rcl_interfaces.msg.Log>.CreateAsync(stream, "/rosout");
 subscriber.MessageReceived.Subscribe(x => Console.WriteLine(x.msg));
-using var publisher = RosPublisher<geometry_msgs.msg.Twist>.Create(stream, "/turtle1/cmd_vel");
+await using var publisher = await RosPublisher<geometry_msgs.msg.Twist>.CreateAsync(stream, "/turtle1/cmd_vel");
 
 ConsoleEx.WaitKeyUntil(key =>
 {

@@ -43,21 +43,17 @@ public sealed class NamedPipeClient : ICommunicationProtocol
 
   // ------ public methods ------ //
 
-  public ResultExpression<IDataTransporter> GetStream()
-  {
-    return GetStreamAsync().Result;
-  }
-
-  public async Task<ResultExpression<IDataTransporter>> GetStreamAsync(
-      TimeSpan timeout = default,
-      CancellationToken ct = default
+  public async Task<Result<IDataTransporter>> GetStreamAsync(
+    TimeSpan timeout = default,
+    CancellationToken ct = default
   )
   {
-    if (ct.IsCancellationRequested) return new(false, default!);
+    if (ct.IsCancellationRequested)
+      return Result<IDataTransporter>.Err(new("cancelled"));
     using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
     if (timeout != default) cts.CancelAfter(timeout);
     await _connectionTask.WaitAsync(cts.Token).ConfigureAwait(false);
-    return new(true, new DataTransporter(_writingStream, _readingStream, Encoding, NewLine));
+    return Result<IDataTransporter>.Ok(new DataTransporter(_writingStream, _readingStream, Encoding, NewLine));
   }
 
   public void Dispose()

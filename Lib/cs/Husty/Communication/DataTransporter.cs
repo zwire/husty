@@ -23,10 +23,10 @@ public sealed class DataTransporter : DataTransporterBase
   // ------ constructors ------ //
 
   internal DataTransporter(
-      Stream writingStream,
-      Stream readingStream,
-      Encoding encoding,
-      string newLine
+    Stream writingStream,
+    Stream readingStream,
+    Encoding encoding,
+    string newLine
   )
   {
     _writingStream = writingStream;
@@ -58,7 +58,7 @@ public sealed class DataTransporter : DataTransporterBase
     }
   }
 
-  protected override async Task<ResultExpression<byte[]>> DoTryReadAsync(int count, CancellationToken ct)
+  protected override async Task<Result<byte[]>> DoTryReadAsync(int count, CancellationToken ct)
   {
     var bytes = new byte[count];
     try
@@ -71,12 +71,13 @@ public sealed class DataTransporter : DataTransporterBase
         offset += size;
         count -= size;
       } while (count > 0);
-      if (offset is 0) return new(false, default!);
-      return new(true, bytes);
+      if (offset is 0)
+        return Result<byte[]>.Err(new("offset is 0"));
+      return Result<byte[]>.Ok(bytes);
     }
     catch
     {
-      return new(false, default!);
+      return Result<byte[]>.Err(new());
     }
   }
 
@@ -94,17 +95,18 @@ public sealed class DataTransporter : DataTransporterBase
     }
   }
 
-  protected override async Task<ResultExpression<string>> DoTryReadLineAsync(CancellationToken ct)
+  protected override async Task<Result<string>> DoTryReadLineAsync(CancellationToken ct)
   {
     try
     {
       var line = await _reader.ReadLineAsync(ct).ConfigureAwait(false);
-      if (line is null) return new(false, default!);
-      return new(true, line);
+      if (line is null)
+        return Result<string>.Err(new("null"));
+      return Result<string>.Ok(line);
     }
     catch
     {
-      return new(false, default!);
+      return Result<string>.Err(new());
     }
   }
 

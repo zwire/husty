@@ -60,7 +60,7 @@ public sealed class WebSocketDataTransporter : DataTransporterBase
     }
   }
 
-  protected override async Task<ResultExpression<byte[]>> DoTryReadAsync(int count, CancellationToken ct)
+  protected override async Task<Result<byte[]>> DoTryReadAsync(int count, CancellationToken ct)
   {
     try
     {
@@ -69,7 +69,7 @@ public sealed class WebSocketDataTransporter : DataTransporterBase
       if (result.MessageType is WebSocketMessageType.Close)
       {
         await _socket.CloseAsync(WebSocketCloseStatus.NormalClosure, null, ct).ConfigureAwait(false);
-        return new(false, default!);
+        return Result<byte[]>.Err(new("closed"));
       }
       data = data.AsSpan(new Range(0, result.Count)).ToArray();
       while (!result.EndOfMessage)
@@ -81,11 +81,11 @@ public sealed class WebSocketDataTransporter : DataTransporterBase
         Array.Copy(d0, data, d0.Length);
         Array.Copy(d1, 0, data, d0.Length, d1.Length);
       }
-      return new(true, data);
+      return Result<byte[]>.Ok(data);
     }
     catch
     {
-      return new(false, default!);
+      return Result<byte[]>.Err(new());
     }
   }
 
@@ -102,15 +102,17 @@ public sealed class WebSocketDataTransporter : DataTransporterBase
     }
   }
 
-  protected override async Task<ResultExpression<string>> DoTryReadLineAsync(CancellationToken ct)
+  protected override async Task<Result<string>> DoTryReadLineAsync(CancellationToken ct)
   {
     var txt = "";
     while (true)
     {
-      var (success, data) = await DoTryReadAsync(4096, ct).ConfigureAwait(false);
-      if (!success) return new(false, default!);
-      txt += Encoding.GetString(data);
-      if (NewLine is "" || txt.Contains(NewLine)) return new(true, txt.TrimEnd());
+      var result = await DoTryReadAsync(4096, ct).ConfigureAwait(false);
+      if (!result.IsOk)
+        return Result<string>.Err(new("failed to read data"));
+      txt += Encoding.GetString(result.Unwrap());
+      if (NewLine is "" || txt.Contains(NewLine)) 
+        return Result<string>.Ok(txt.TrimEnd());
     }
   }
 

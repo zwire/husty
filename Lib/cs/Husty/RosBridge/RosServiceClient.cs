@@ -4,7 +4,7 @@ using Husty.Communication;
 
 namespace Husty.RosBridge;
 
-public class RosServiceClient<TReq, TRes> : IDisposable, IAsyncDisposable
+public class RosServiceClient<TReq, TRes> : IAsyncDisposable
 {
 
   private record SubType(string op, string service, TRes values);
@@ -35,18 +35,13 @@ public class RosServiceClient<TReq, TRes> : IDisposable, IAsyncDisposable
 
   // ------ public methods ------ //
 
-  public static RosServiceClient<TReq, TRes> Create(WebSocketDataTransporter stream, string service, CancellationToken? ct = null)
-  {
-    return CreateAsync(stream, service, ct).GetAwaiter().GetResult();
-  }
-
-  public static async Task<RosServiceClient<TReq, TRes>> CreateAsync(WebSocketDataTransporter stream, string service, CancellationToken? ct = null)
+  public static Task<RosServiceClient<TReq, TRes>> CreateAsync(WebSocketDataTransporter stream, string service, CancellationToken? ct = null)
   {
     var type = typeof(TReq).FullName.Split('.').LastOrDefault().Replace('+', '/').Replace("/Request", "");
     var type2 = typeof(TRes).FullName.Split('.').LastOrDefault().Replace('+', '/').Replace("/Response", "");
     if (type != type2)
       throw new ArgumentException();
-    return new(stream, service, type);
+    return Task.FromResult<RosServiceClient<TReq, TRes>>(new(stream, service, type));
   }
 
   public async Task<TRes> CallAsync(TReq req, CancellationToken ct = default)
@@ -54,10 +49,10 @@ public class RosServiceClient<TReq, TRes> : IDisposable, IAsyncDisposable
     await _stream.TryWriteAsync(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(new { op = "call_service", service = Service, args = req })), default, ct).ConfigureAwait(false);
     while (!_cts.IsCancellationRequested)
     {
-      var (success, rcv) = await _stream.TryReadAsync(4096, default, ct).ConfigureAwait(false);
-      if (success)
+      var r = await _stream.TryReadAsync(4096, default, ct).ConfigureAwait(false);
+      if (r.IsOk)
       {
-        var data = Encoding.ASCII.GetString(rcv);
+        var data = Encoding.ASCII.GetString(r.Unwrap());
         if (data.Contains("service_response") && data.Contains(Service))
         {
           var x = JsonSerializer.Deserialize<SubType>(data);
@@ -69,11 +64,6 @@ public class RosServiceClient<TReq, TRes> : IDisposable, IAsyncDisposable
       }
     }
     return default;
-  }
-
-  public void Dispose()
-  {
-    DisposeAsync().AsTask().Wait();
   }
 
   public async ValueTask DisposeAsync()

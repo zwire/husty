@@ -20,13 +20,13 @@ public sealed class SerialPortDataTransporter : DataTransporterBase
   // ------- constructors ------- //
 
   public SerialPortDataTransporter(
-      string portName,
-      int baudRate,
-      StopBits stopBits = StopBits.One,
-      Handshake handshake = default,
-      Parity parity = default,
-      int readTimeout = -1,
-      int writeTimeout = -1
+    string portName,
+    int baudRate,
+    StopBits stopBits = StopBits.One,
+    Handshake handshake = default,
+    Parity parity = default,
+    int readTimeout = -1,
+    int writeTimeout = -1
   )
   {
     _port = new()
@@ -75,7 +75,7 @@ public sealed class SerialPortDataTransporter : DataTransporterBase
     }
   }
 
-  protected override Task<ResultExpression<byte[]>> DoTryReadAsync(int count, CancellationToken ct)
+  protected override Task<Result<byte[]>> DoTryReadAsync(int count, CancellationToken ct)
   {
     _port.Encoding = Encoding;
     _port.NewLine = NewLine;
@@ -83,10 +83,10 @@ public sealed class SerialPortDataTransporter : DataTransporterBase
     var progress = 0;
     while (progress < count)
     {
-      if (!_port.IsOpen) return Task.FromResult(new ResultExpression<byte[]>(true, default!));
+      if (!_port.IsOpen) return Task.FromResult(Result<byte[]>.Err(new("port is not open")));
       progress += _port.Read(buf, progress, count - progress);
     }
-    return Task.FromResult(new ResultExpression<byte[]>(true, buf));
+    return Task.FromResult(Result<byte[]>.Ok(buf));
   }
 
   protected override Task<bool> DoTryWriteLineAsync(string data, CancellationToken ct)
@@ -105,20 +105,20 @@ public sealed class SerialPortDataTransporter : DataTransporterBase
     }
   }
 
-  protected override Task<ResultExpression<string>> DoTryReadLineAsync(CancellationToken ct)
+  protected override Task<Result<string>> DoTryReadLineAsync(CancellationToken ct)
   {
     _port.Encoding = Encoding;
     _port.NewLine = NewLine;
     try
     {
-      if (!_port.IsOpen) return Task.FromResult(new ResultExpression<string>(false, default!));
+      if (!_port.IsOpen) return Task.FromResult(Result<string>.Err(new("port is not open")));
       var data = _port.ReadLine();
-      if (data is null || data.Length is 0) return Task.FromResult(new ResultExpression<string>(false, default!));
-      return Task.FromResult(new ResultExpression<string>(true, data));
+      if (data is null || data.Length is 0) return Task.FromResult(Result<string>.Err(new("failed to read data")));
+      return Task.FromResult(Result<string>.Ok(data));
     }
     catch
     {
-      return Task.FromResult(new ResultExpression<string>(false, default!));
+      return Task.FromResult(Result<string>.Err(new("failed to read data")));
     }
   }
 

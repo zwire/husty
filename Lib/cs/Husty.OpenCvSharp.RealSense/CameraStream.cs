@@ -38,7 +38,7 @@ public class CameraStream : IImageStream<BgrXyzImage>
   // ------ constructors ------ //
 
   public CameraStream(Size size, MatchingBase align = MatchingBase.Color, int fps = 30,
-      bool disparityTransform = true, bool spatialFilter = true, bool temporalFilter = true, bool holeFillingFilter = true)
+    bool disparityTransform = true, bool spatialFilter = true, bool temporalFilter = true, bool holeFillingFilter = true)
   {
     _pool = new(2, () => new(
         new Mat(size.Height, size.Width, MatType.CV_8UC3),
@@ -83,27 +83,11 @@ public class CameraStream : IImageStream<BgrXyzImage>
     if (fps > 50) fps = 50;
     Fps = fps;
     var connectable = Observable
-        .Repeat(0, new EventLoopScheduler())
-        .TakeUntil(_ => _disposed)
-        .Select(_ =>
-        {
-          using var frames1 = _pipeline.WaitForFrames();
-          using var frames2 = _align.Process(frames1);
-          using var frames3 = frames2.AsFrameSet();
-          using var color = frames3.ColorFrame.DisposeWith(frames3);
-          using var depth1 = frames3.DepthFrame.DisposeWith(frames3);
-          using var depth2 = _depthto?.Process(depth1) ?? depth1;
-          using var depth3 = _sfill?.Process(depth2) ?? depth2;
-          using var depth4 = _tfill?.Process(depth3) ?? depth3;
-          using var depth5 = _todepth?.Process(depth4) ?? depth4;
-          using var depth6 = _hfill?.Process(depth5) ?? depth5;
-          var frame = _pool.GetObject();
-          CopyColorPixels(color, frame.Bgr);
-          CopyPointCloudPixels(depth6, frame.X, frame.Y, frame.Z, color.Width, color.Height);
-          return frame;
-        })
-        .Where(x => !x.IsDisposed && !x.Empty())
-        .Publish();
+      .Repeat(0, new EventLoopScheduler())
+      .TakeUntil(_ => _disposed)
+      .Select(_ => Read())
+      .Where(x => !x.IsDisposed && !x.Empty())
+      .Publish();
     connectable.Connect();
     ImageSequence = connectable;
   }
@@ -113,9 +97,20 @@ public class CameraStream : IImageStream<BgrXyzImage>
 
   public BgrXyzImage Read()
   {
-    while (!_disposed)
-      if (ImageSequence.FirstOrDefaultAsync().Wait() is BgrXyzImage img) return img;
-    return null;
+    using var frames1 = _pipeline.WaitForFrames();
+    using var frames2 = _align.Process(frames1);
+    using var frames3 = frames2.AsFrameSet();
+    using var color = frames3.ColorFrame.DisposeWith(frames3);
+    using var depth1 = frames3.DepthFrame.DisposeWith(frames3);
+    using var depth2 = _depthto?.Process(depth1) ?? depth1;
+    using var depth3 = _sfill?.Process(depth2) ?? depth2;
+    using var depth4 = _tfill?.Process(depth3) ?? depth3;
+    using var depth5 = _todepth?.Process(depth4) ?? depth4;
+    using var depth6 = _hfill?.Process(depth5) ?? depth5;
+    var frame = _pool.GetObject();
+    CopyColorPixels(color, frame.Bgr);
+    CopyPointCloudPixels(depth6, frame.X, frame.Y, frame.Z, color.Width, color.Height);
+    return frame;
   }
 
   public void Dispose()
@@ -140,9 +135,9 @@ public class CameraStream : IImageStream<BgrXyzImage>
   private unsafe static void CopyPointCloudPixels(Frame frame, Mat xMat, Mat yMat, Mat zMat, int width, int height)
   {
     if (
-        xMat.IsDisposed || xMat.Width != width || xMat.Height != height || xMat.Type() != MatType.CV_16UC1 ||
-        yMat.IsDisposed || yMat.Width != width || yMat.Height != height || yMat.Type() != MatType.CV_16UC1 ||
-        zMat.IsDisposed || zMat.Width != width || zMat.Height != height || zMat.Type() != MatType.CV_16UC1
+      xMat.IsDisposed || xMat.Width != width || xMat.Height != height || xMat.Type() != MatType.CV_16UC1 ||
+      yMat.IsDisposed || yMat.Width != width || yMat.Height != height || yMat.Type() != MatType.CV_16UC1 ||
+      zMat.IsDisposed || zMat.Width != width || zMat.Height != height || zMat.Type() != MatType.CV_16UC1
     )
       return;
     using var pdFrame0 = new PointCloud();

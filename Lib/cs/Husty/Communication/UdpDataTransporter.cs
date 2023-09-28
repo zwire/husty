@@ -68,19 +68,20 @@ public sealed class UdpDataTransporter : DataTransporterBase
     throw new InvalidOperationException("sender is not set");
   }
 
-  protected override async Task<ResultExpression<byte[]>> DoTryReadAsync(int count, CancellationToken ct)
+  protected override async Task<Result<byte[]>> DoTryReadAsync(int count, CancellationToken ct)
   {
     if (_receiver is UdpClient r)
     {
       try
       {
         var data = await r.ReceiveAsync(ct).ConfigureAwait(false);
-        if (data.Buffer.Length is 0) return new(false, default!);
-        return new(true, data.Buffer);
+        if (data.Buffer.Length is 0)
+          return Result<byte[]>.Err(new("buffer length is 0"));
+        return Result<byte[]>.Ok(data.Buffer);
       }
       catch
       {
-        return new(false, default!);
+        return Result<byte[]>.Err(new());
       }
     }
     throw new InvalidOperationException("receiver is not set");
@@ -91,15 +92,17 @@ public sealed class UdpDataTransporter : DataTransporterBase
     return await DoTryWriteAsync(Encoding.GetBytes(data + NewLine), ct).ConfigureAwait(false);
   }
 
-  protected override async Task<ResultExpression<string>> DoTryReadLineAsync(CancellationToken ct)
+  protected override async Task<Result<string>> DoTryReadLineAsync(CancellationToken ct)
   {
     var txt = "";
     while (true)
     {
-      var (success, data) = await DoTryReadAsync(0, ct).ConfigureAwait(false);
-      if (!success) return new(false, default!);
-      txt += Encoding.GetString(data);
-      if (NewLine is "" || txt.Contains(NewLine)) return new(true, txt.TrimEnd());
+      var result = await DoTryReadAsync(0, ct).ConfigureAwait(false);
+      if (!result.IsOk)
+        return Result<string>.Err(new("failed to read data"));
+      txt += Encoding.GetString(result.Unwrap());
+      if (NewLine is "" || txt.Contains(NewLine)) 
+        return Result<string>.Ok(txt.TrimEnd());
     }
   }
 

@@ -38,15 +38,11 @@ public sealed class CameraStream : IImageStream<Mat>
     Channels = (int)_cap.Get(VideoCaptureProperties.Channel);
     FrameSize = new(_cap.FrameWidth, _cap.FrameHeight);
     var connectable = Observable
-        .Repeat(0, new EventLoopScheduler())
-        .TakeUntil(_ => _disposed)
-        .Select(_ =>
-        {
-          var frame = _pool.GetObject();
-          return _cap.Read(frame) ? frame : null;
-        })
-        .Where(x => x is not null)
-        .Publish();
+      .Repeat(0, new EventLoopScheduler())
+      .TakeUntil(_ => _disposed)
+      .Select(_ => Read())
+      .Where(x => x is not null)
+      .Publish();
     connectable.Connect();
     ImageSequence = connectable;
   }
@@ -56,9 +52,8 @@ public sealed class CameraStream : IImageStream<Mat>
 
   public Mat Read()
   {
-    while (!_disposed)
-      if (ImageSequence.FirstOrDefaultAsync().Wait() is Mat img) return img;
-    return null;
+    var frame = _pool.GetObject();
+    return _cap.Read(frame) ? frame : null;
   }
 
   public void Dispose()

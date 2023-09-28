@@ -26,7 +26,7 @@ public static class PortManager
 
   // ------ public methods ------ //
 
-  public static string SearchPort(int baudrate, params string[] keyPetterns)
+  public static async Task<string> SearchPortAsync(int baudrate, params string[] keyPetterns)
   {
     foreach (var p in SerialPortDataTransporter.GetPortNames())
     {
@@ -39,9 +39,9 @@ public static class PortManager
           {
             try
             {
-              var (success, line) = port.TryReadLineAsync().Result;
-              if (!success) break;
-              if (line.Contains(key) is true)
+              var r = await port.TryReadLineAsync().ConfigureAwait(false);
+              if (!r.IsOk) break;
+              if (r.Unwrap().Contains(key) is true)
               {
                 Debug.WriteLine($"find port: '{p}' for {keyPetterns.Aggregate((line, k) => line += $"{k} ")}");
                 return p;

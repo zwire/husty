@@ -6,7 +6,7 @@ using Husty.Communication;
 
 namespace Husty.RosBridge;
 
-public class RosSubscriber<TMsg> : IDisposable, IAsyncDisposable
+public class RosSubscriber<TMsg> : IAsyncDisposable
 {
 
   private record SubType(string op, string topic, TMsg msg);
@@ -43,10 +43,10 @@ public class RosSubscriber<TMsg> : IDisposable, IAsyncDisposable
       {
         try
         {
-          var (success, rcv) = _stream.TryReadAsync(4096, default, _cts.Token).Result;
-          if (success && Encoding.ASCII.GetString(rcv).Contains(topic))
+          var result = _stream.TryReadAsync(4096, default, _cts.Token).Result;
+          if (result.IsOk && Encoding.ASCII.GetString(result.Unwrap()).Contains(topic))
           {
-            var x = JsonSerializer.Deserialize<SubType>(rcv);
+            var x = JsonSerializer.Deserialize<SubType>(result.Unwrap());
             if (x is not null)
             {
               _subject.OnNext(x.msg);
@@ -61,21 +61,11 @@ public class RosSubscriber<TMsg> : IDisposable, IAsyncDisposable
 
   // ------ public methods ------ //
 
-  public static RosSubscriber<TMsg> Create(WebSocketDataTransporter stream, string topic, CancellationToken ct = default)
-  {
-    return CreateAsync(stream, topic, ct).Result;
-  }
-
   public static async Task<RosSubscriber<TMsg>> CreateAsync(WebSocketDataTransporter stream, string topic, CancellationToken ct = default)
   {
     var type = typeof(TMsg).FullName.Split('.').LastOrDefault().Replace('+', '/');
     await stream.TryWriteAsync(Encoding.ASCII.GetBytes(JsonSerializer.Serialize(new { op = "subscribe", topic, type })), default, ct).ConfigureAwait(false);
     return new(stream, topic, type);
-  }
-
-  public void Dispose()
-  {
-    DisposeAsync().AsTask().Wait();
   }
 
   public async ValueTask DisposeAsync()

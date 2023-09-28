@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <Description>The utility of XInput and Logitech steering wheel SDK.
 Target framework is only WinForms or WPF.</Description>
-    <Version>2.1.2</Version>
+    <Version>2.2.0</Version>
     <Authors>Takumi Yamashita</Authors>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/husty530/Husty-public</RepositoryUrl>
@@ -15,7 +15,7 @@ Target framework is only WinForms or WPF.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Vortice.XInput" Version="2.3.0" />
+    <PackageReference Include="Vortice.XInput" Version="3.2.0" />
   </ItemGroup>
 
   <ItemGroup>

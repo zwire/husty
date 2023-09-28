@@ -65,34 +65,30 @@ public sealed class TcpSocketServer : ICommunicationProtocol
 
   // ------ public methods ------ //
 
-  public ResultExpression<IDataTransporter> GetStream()
-  {
-    return GetStreamAsync().Result;
-  }
-
-  public async Task<ResultExpression<IDataTransporter>> GetStreamAsync(
+  public async Task<Result<IDataTransporter>> GetStreamAsync(
       TimeSpan timeout = default,
       CancellationToken ct = default
   )
   {
-    if (ct.IsCancellationRequested) return new(false, default!);
+    if (ct.IsCancellationRequested)
+      return Result<IDataTransporter>.Err(new("cancelled"));
     using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
     if (timeout != default) cts.CancelAfter(timeout);
     await _connectionTask.WaitAsync(cts.Token).ConfigureAwait(false);
     if (_client1 is not null && _client2 is null)
     {
       var stream = _client1.GetStream();
-      return new(true, new DataTransporter(stream, stream, Encoding, NewLine));
+      return Result<IDataTransporter>.Ok(new DataTransporter(stream, stream, Encoding, NewLine));
     }
     else if (_client1 is not null && _client2 is not null)
     {
       var stream1 = _client1.GetStream();
       var stream2 = _client2.GetStream();
-      return new(true, new DataTransporter(stream2, stream1, Encoding, NewLine));
+      return Result<IDataTransporter>.Ok(new DataTransporter(stream2, stream1, Encoding, NewLine));
     }
     else
     {
-      return new(false, default!);
+      return Result<IDataTransporter>.Err(new());
     }
   }
 

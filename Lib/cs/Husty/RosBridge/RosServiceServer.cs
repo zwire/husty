@@ -4,7 +4,7 @@ using Husty.Communication;
 
 namespace Husty.RosBridge;
 
-public class RosServiceServer<TReq, TRes> : IDisposable, IAsyncDisposable
+public class RosServiceServer<TReq, TRes> : IAsyncDisposable
 {
 
   private record SubType(string op, string id, string service, TReq args);
@@ -39,10 +39,10 @@ public class RosServiceServer<TReq, TRes> : IDisposable, IAsyncDisposable
       {
         try
         {
-          var (success, rcv) = _stream.TryReadAsync(4096, default, _cts.Token).Result;
-          if (success)
+          var result = _stream.TryReadAsync(4096, default, _cts.Token).Result;
+          if (result.IsOk)
           {
-            var data = Encoding.ASCII.GetString(rcv);
+            var data = Encoding.ASCII.GetString(result.Unwrap());
             if (data.Contains(service))
             {
               var x = JsonSerializer.Deserialize<SubType>(data);
@@ -75,16 +75,6 @@ public class RosServiceServer<TReq, TRes> : IDisposable, IAsyncDisposable
 
   // ------ public methods ------ //
 
-  public static RosServiceServer<TReq, TRes> Create(
-      WebSocketDataTransporter stream,
-      string topic,
-      Func<TReq, TRes> func,
-      CancellationToken ct = default
-  )
-  {
-    return CreateAsync(stream, topic, func, ct).Result;
-  }
-
   public static async Task<RosServiceServer<TReq, TRes>> CreateAsync(
       WebSocketDataTransporter stream,
       string service,
@@ -103,11 +93,6 @@ public class RosServiceServer<TReq, TRes> : IDisposable, IAsyncDisposable
   public void SetFunction(Func<TReq, TRes> func)
   {
     _func = func;
-  }
-
-  public void Dispose()
-  {
-    DisposeAsync().AsTask().Wait();
   }
 
   public async ValueTask DisposeAsync()

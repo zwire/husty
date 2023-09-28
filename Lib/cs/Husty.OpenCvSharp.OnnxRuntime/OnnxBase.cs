@@ -48,7 +48,6 @@ public abstract class OnnxBase<TInput, TOutput> : IDisposable
       case Provider.Dnnl: options.AppendExecutionProvider_Dnnl(); break;
       case Provider.MIGraphX: options.AppendExecutionProvider_MIGraphX(); break;
       case Provider.Nnapi: options.AppendExecutionProvider_Nnapi(); break;
-      case Provider.ROCM: options.AppendExecutionProvider_ROCM(); break;
       case Provider.TensorRT: options.AppendExecutionProvider_Tensorrt(); break;
     }
     options.GraphOptimizationLevel = optimization switch
