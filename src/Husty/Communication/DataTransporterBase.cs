@@ -63,7 +63,7 @@ public abstract class DataTransporterBase : IDataTransporter
   )
   {
     using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct, _cts.Token);
-    if (cts.Token.IsCancellationRequested) 
+    if (cts.Token.IsCancellationRequested)
       return Result<byte[]>.Err(new("cancelled"));
     if (timeout != default) cts.CancelAfter(timeout);
     return await DoTryReadAsync(count, cts.Token).ConfigureAwait(false);
@@ -113,7 +113,7 @@ public abstract class DataTransporterBase : IDataTransporter
     try
     {
       var obj = JsonSerializer.Deserialize<T>(result.Unwrap());
-      if (obj is null) 
+      if (obj is null)
         return Result<T>.Err(new("null"));
       return Result<T>.Ok(obj);
     }

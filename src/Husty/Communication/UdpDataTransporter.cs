@@ -101,7 +101,7 @@ public sealed class UdpDataTransporter : DataTransporterBase
       if (!result.IsOk)
         return Result<string>.Err(new("failed to read data"));
       txt += Encoding.GetString(result.Unwrap());
-      if (NewLine is "" || txt.Contains(NewLine)) 
+      if (NewLine is "" || txt.Contains(NewLine))
         return Result<string>.Ok(txt.TrimEnd());
     }
   }
