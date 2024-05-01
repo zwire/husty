@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Version>2.2.1</Version>
+    <Description>Intel RealSense SDK wrapper depending on Husty.OpenCvSharp</Description>
+    <Authors>Takumi Yamashita</Authors>
+    <PackageProjectUrl>https://github.com/zwire/husty/tree/master/src/Husty.OpenCvSharp.RealSense</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/zwire/husty</RepositoryUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Intel.RealSenseWithNativeDll" Version="2.51.1.1" />
+    <Content Include="realsense2.dll" Pack="true">
+        <PackageCopyToOutput>true</PackageCopyToOutput>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Husty.OpenCvSharp\Husty.OpenCvSharp.csproj" />
+  </ItemGroup>
+
+</Project>

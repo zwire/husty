@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Version>2.2.1</Version>
+    <Authors>Takumi Yamashita</Authors>
+    <Company>$(Authors)</Company>
+    <Product>$(AssemblyName)</Product>
+    <Description>ONNX Runtime depending on Husty.OpenCvSharp</Description>
+    <PackageProjectUrl>https://github.com/zwire/husty/tree/master/src/Husty.OpenCvSharp.OnnxRuntime</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/zwire/husty</RepositoryUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.17.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Husty.OpenCvSharp\Husty.OpenCvSharp.csproj" />
+  </ItemGroup>
+
+</Project>

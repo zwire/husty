@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -14,17 +14,17 @@
 
   <ItemGroup>
     <PackageReference Include="MahApps.Metro" Version="2.4.10" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.0.0" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
-    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.8.0.20230708" />
-    <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.8.0.20230708" />
-    <PackageReference Include="ReactiveProperty.Core" Version="9.3.2" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.9.0.20240103" />
+    <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.9.0.20240103" />
+    <PackageReference Include="ReactiveProperty.Core" Version="9.5.0" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Lib\cs\Husty.OpenCvSharp.AzureKinect\Husty.OpenCvSharp.AzureKinect.csproj" />
-    <ProjectReference Include="..\..\Lib\cs\Husty.OpenCvSharp.RealSense\Husty.OpenCvSharp.RealSense.csproj" />
+    <ProjectReference Include="..\..\src\Husty.OpenCvSharp.AzureKinect\Husty.OpenCvSharp.AzureKinect.csproj" />
+    <ProjectReference Include="..\..\src\Husty.OpenCvSharp.RealSense\Husty.OpenCvSharp.RealSense.csproj" />
   </ItemGroup>
 
 </Project>

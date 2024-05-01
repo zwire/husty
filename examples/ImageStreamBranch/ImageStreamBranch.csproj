@@ -4,10 +4,10 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ConsoleAppFramework" Version="4.2.4" />
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.9.0.20240103" />
   </ItemGroup>
 
